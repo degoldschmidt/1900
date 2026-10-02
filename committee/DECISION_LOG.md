@@ -179,3 +179,16 @@ Fifteen audit notes filed to `round-1C-voting/pitches/audits/` (three per finali
 
 ### 15:50 — Correction step opened (Event E-018)
 Each lead author instructed to apply all three audits to their pitch in place and to append a *Corrections applied* ledger mapping every audit item to the change made (or stating why an item was not applied).
+
+### 15:50–15:55 — Corrections applied (Event E-019)
+Every lead author applied all three audits in place and appended a *Corrections applied* ledger: C07 12 of 12 items (P01); C01 13 of 13 (P07; H1 applied as "March 1913, the First Balkan War's last phase" rather than the audit's literal "June 1913", with the reasoning recorded in the ledger); C04 14 of 14 (P10); C17 14 of 14 (P08); C13 13 of 13 (P04). No item was declined. Final lengths including ledgers: C07 3,250 · C01 3,576 · C04 3,345 · C17 3,984 · C13 3,770 words.
+
+### 15:56 — Pitch document built and published (Decision D-009)
+- `pitches/build.py` renders the committee's own files (final candidates, tally with every panelist's one-line justification and champion statement, the five corrected pitches, the fifteen audit notes) into `pitches/index.html` (standalone) and `pitches/artifact.html` (fragment). Contents: the verdict board; the brief and prohibition; the six-station process line; the roster; the vote as a Borda bar chart and a 20×10 rank matrix with per-cell justifications; the five pitches with champion statements, audit notes and corrections ledgers; the fifteen remaining candidates with full ratified text and the panel's justifications; the record. Both themes designed; the chart ramps were validated with the data-visualisation palette checker (six steps per theme).
+- Published privately for the owner at https://claude.ai/artifact/DUCzC7ewT6u5zobPWZvKDY (version 1).
+
+### 15:56 — Decision round 1 closed (Decision D-010)
+- Outcome: five finalist pitches, in the panel's order — C07 The Departure Is the Turn; C01 Several Masters, One Truth; C04 The Legend Portfolio; C17 The Paper Hunter; C13 Faster Than the Wire — on a ratified list of twenty candidates, built from 120 proposals.
+- Totals: 10 panelists · 120 proposals · 100 nominations over 67 proposals · 50 merge proposals · 46 flags · 20 candidates · 30 amendments proposed, 30 carried, 0 objections · 10 valid ballots, no ties · 5 pitches · 15 audits · 66 audit items applied, 0 declined.
+- Interruptions recorded: a usage-limit pause (13:28–15:27 UTC) and an exhausted-credit cut-off (15:42) — in both cases every file had already been written and nothing was lost or altered.
+- All work is committed locally on `claude/spy-life-sim-game-design-lvtgcg`; pushing was deferred at the owner's instruction (and the remote refuses the push until the Claude GitHub App is authorised for the repository).
