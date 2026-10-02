@@ -120,3 +120,9 @@ All ten panelists replied **AMEND** (0 RATIFY), each with exactly three amendmen
 - Secret ballot per `round-1C-voting/BALLOT_TEMPLATE.md`: each panelist ranks all 20 (1 = best), scores each 0–10, gives a one-line justification per candidate and a ≤150-word champion statement for their #1. Panelists may not read one another's ballots.
 - Voting question put to the panel: *"If the owner could build only one of these as the game's defining concept — the spine around which the other systems are arranged — which should it be?"* Criteria: the five directives; captivating and addictive on an honest, specific argument; coherence as ONE game; feasibility of the engine; historical accuracy as mechanics.
 - Tally method (fixed in the Charter before any proposal existed): Borda primary (21 − rank), mean score secondary, first-place count tiebreak, seeded coin toss last; `tally.py` validates every ballot (all 20 ranked exactly once, scores in range). Top 5 become finalists for full pitches.
+
+### 13:24–13:28 — Round 1C ballots received, part one (Event E-011)
+Ballots filed and validated: P01 (champion C07), P03 (champion C07), P04 (champion C07), P06 (champion C15), P08 (champion C04). Each ranks all 20, scores 0–10, and carries a ≤150-word champion statement. The Secretary has not read the ballots beyond validation and the panelists' own one-line reports; no tally is run until all ten are in.
+
+### 13:28 — Interruption: account usage limit (Event E-012)
+Five panelists (P02, P05, P07, P09, P10) were cut off mid-ballot by the account's session usage limit (HTTP 429, "resets 14:50 UTC"). No ballot was written by any of them, so no partial or invalid ballot exists. Their agent contexts are preserved; the Secretary will resume each after the reset with the same instruction, and the vote remains secret (no ballot has been read or tallied). The five completed ballots are committed unchanged.
