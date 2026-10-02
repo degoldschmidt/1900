@@ -5,23 +5,23 @@ I build simulation engines, and I read the five directives as one requirement: a
 
 ## P02.01 — Elastic Time
 - **Type:** game-defining system
-- **Central mechanical hook:** No turns, no fixed tick. The world is a discrete-event simulation: time jumps from the player's present to the next event that touches them while everything else advances through the same queue. A quiet winter passes in minutes; a closing cordon takes an hour.
+- **Central mechanical hook:** No turns, no fixed tick. The world is a discrete-event simulation: time jumps from the player's present to the next event touching them while everything else advances through the same queue. A quiet winter passes in minutes; a closing cordon takes an hour.
 - **How it plays (core loop):** The diary is the scheduler's visible face: commitments and expected arrivals in order (a departure, rent due, an awaited cable, tonight's hotel registration reaching the police). Choose an action; the engine advances to the next relevant event, resolving the world between. Waiting costs: expenses accrue, hunters move, offers expire. Granularity follows danger: minutes near a reveal, days at sea.
-- **Directive coverage:** Time pressure primary. Travel: departures are queue events. Deception: cover stories must fit a checkable timeline. Economy: debts fall due. Politics: ultimatums and mobilisation timetables. Hunt: pursuers' moves share the queue, unseen but felt.
-- **Historical grounding:** Bradshaw's monthly guides, several daily postal deliveries, multiple newspaper editions, hotel registration deadlines, the 1914 mobilisation timetables that made war's outbreak a railway problem.
+- **Directive coverage:** Time pressure primary. Travel: departures are queue events. Deception: cover stories must fit a checkable timeline. Economy: debts fall due. Politics: ultimatums, mobilisation timetables. Hunt: pursuers' moves share the queue, unseen but felt.
+- **Historical grounding:** Bradshaw's monthly guides, several daily postal deliveries, multiple newspaper editions, hotel registration deadlines, the 1914 mobilisation timetables that made war a railway problem.
 - **Why captivating & addictive:** "One more event" compulsion: each advance delivers a result and a decision. An opaque queue makes arrivals variable-ratio reinforcement. Tension/relief cycles emerge from event density, not scripting; the world's indifference makes agency precious.
 - **Engine implications:** A global priority queue of timestamped events with dependency edges; entities subscribe to event types; level-of-detail scheduling runs distant entities coarsely, nearby ones finely, with deterministic catch-up from seed plus aggregate state on arrival. Total ordering (time, priority, insertion id) makes saves "seed + input log" and replay exact. Handlers are data-driven rules.
-- **Risks / open questions:** Players may feel they skip their own life; the UI must show what will pass; conversations need a fine-grained "now" within the frame.
+- **Risks / open questions:** Players may feel they skip their life; the UI must show what will pass; conversations need a fine-grained "now" within the frame.
 
 ## P02.02 — Faster Than the Wire
 - **Type:** whole-game concept
 - **Central mechanical hook:** The spy's life is a race between the player's body on the transport network and news of the player on the communications network. Facts travel at their medium's speed: a telegram reaches any cable office in minutes but carries only words; a photograph takes days by post; rumour walks.
 - **How it plays (core loop):** Act (steal, broker, bribe). A notoriety map shows what each place knows about each identity. Route to beat the slow channels and land where the fast one does not yet carry your face: a night train outruns tomorrow's newspaper, not tonight's wire. Bribe a telegraph clerk to delay the wire; switch identity where only the old name arrived.
-- **Directive coverage:** Travel and hunt primary. Deception: identities are the subjects of facts. Coding: ciphered police cables act slower. Economy: bribes, cable costs, speed. Politics: wartime censorship and 1914 passport controls add checkpoints.
+- **Directive coverage:** Travel and hunt primary. Deception: identities are the facts' subjects. Coding: ciphered police cables act slower. Economy: bribes, cables, speed. Politics: wartime censorship and 1914 passport controls add checkpoints.
 - **Historical grounding:** Telegraph against post latency; wanted notices in daily editions; photographs by post; Scotland Yard fingerprint cards from 1901; the 1910 arrest of a transatlantic fugitive by ship's wireless.
 - **Why captivating & addictive:** A legible risk model rewards planning; near misses ("the description arrived an hour after I left") are the strongest hook. Loss aversion over identities; mastery of two overlaid networks; the rush of being just ahead.
 - **Engine implications:** Two graphs: time-expanded transport, and an information network of channels with latency distributions and capacities. Facts are entities (subject, content type, confidence, timestamp); propagation schedules arrival events at institution nodes; NPCs query their institution rather than holding knowledge; hunters search only facts that reached theirs. Hop-count bounded.
-- **Risks / open questions:** Must not collapse into pure flight; latencies need tuning so the race is winnable but tense; teaching the network without a lecture.
+- **Risks / open questions:** Must not collapse into pure flight; latencies need tuning for a winnable but tense race; teaching the network without a lecture.
 
 ## P02.03 — The Default Timeline
 - **Type:** whole-game concept
