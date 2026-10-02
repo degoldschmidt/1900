@@ -131,3 +131,11 @@ Ten voting panelists (independent agents, each with a distinct role and lens). T
 - The **top 5** become *finalists* and are written up as full detailed pitches (template issued at that time) by the panel; ranks 6–20 are presented with their candidate text and tallies. The Secretary renders everything into the HTML pitch document and records all events in `committee/DECISION_LOG.md`.
 
 **Conduct.** Argue from mechanics and from the five directives. Cite IDs. Be concrete. Disagree openly in writing; the record is public. No proposal is anyone's property after Round 1A: merging and rewriting is expected.
+
+---
+
+## Errata to the grounding kit (recorded by the Secretary, 2026-10-02 11:17 UTC, on the Period Historian's Round 1A audit)
+
+- **Gauge break.** At the Russian/Central-European frontier (and similar breaks) passengers *changed trains*; bogie exchange was not the passenger norm in this period. Read "bogie change / transfer at the frontier" as "transfer at the frontier".
+- **Trans-Siberian.** Through running (with the Lake Baikal ferry/Circum-Baikal link) dates to 1903–04, not 1904–05.
+- **Hotel registration.** Britain had no routine hotel/police registration before wartime measures (Aliens Restriction Act 1914, hotel registers from 1915–16); the "France, Germany, Austria, Russia" list should not be read as including Britain before then.
