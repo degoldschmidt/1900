@@ -86,3 +86,20 @@ All ten reviews filed and verified compliant by the Secretary's script (`round-1
 ### 12:48 — Round 1B-3 (Ratification) opened (Event E-006)
 - All ten panelists instructed to read the draft and file RATIFY or AMEND (≤3 amendments) per `RATIFICATION_TEMPLATE.md`. Grounds for amendment: directive/prohibition breach, factual error, near-duplicate candidates, a nominated proposal wrongly dropped or mis-homed, misleading title, a mechanic watered down by the merge. Ranking preferences are not grounds (that is the Round 1C vote).
 - Procedure fixed for carrying amendments: after all ten ratifications are in, the Secretary compiles every amendment (`compile_amendments.py` → `AMENDMENTS.md`) and each panelist seconds or objects to each in one line; an amendment carries with ≥2 supporters (proposer + seconder) or when it corrects a directive violation or factual error (Charter §6). The Rapporteur then applies carried amendments and publishes `CANDIDATES_FINAL.md`.
+
+### 12:50–12:54 — Round 1B-3 ratifications received (Event E-007)
+All ten panelists replied **AMEND** (0 RATIFY), each with exactly three amendments: 30 in total, compiled by `compile_amendments.py` into `AMENDMENTS.md` (6,583 words). By type: 4 *correct*, 8 *merge*, 18 *clarify*; no *swap-out* or *split* — nobody asked to remove or replace a candidate, so the twenty candidates themselves stand and the amendments concern their content, membership and consistency.
+
+**Convergent amendments (already ≥2 proposers, so they carry under Charter §6):**
+- Add P08.11 *Poacher and Gamekeeper* to C05 as a hunter-side/inverse mode on the same belief engine — proposed independently by **six** panelists (A-P02-2, A-P03-3, A-P04-3, A-P05-3, A-P08-2, A-P09-1).
+- Home P07.07 *Doomed Projects* in C10 as a Tier-1 political-venture type with explicit extraction scoring — **three** panelists (A-P03-2, A-P07-1, A-P09-3).
+- Declare C17 the single record/fact substrate of which C01/C04/C06/C12/C13 stores are views — **two** panelists (A-P05-1, A-P08-3).
+
+**Factual corrections (carry on statement, subject to the Historian's confirmation in seconding):** A-P03-1 (C06: British photographic passports February 1915, compulsory November 1915; German decree 31 July 1914; France early August 1914); A-P01-1 (C03: an 1886 Anglo-Russian extradition treaty existed; sanctuary turns on the 1870 Act's political-offence exception — P07's Notes independently asked the Historian to verify this). P03's Notes carry five further corrections (British registration harmonised across C02/C04/C17; Baghdad concession vs the Ottoman Public Debt Administration; Playfair wording; gold-export ban wording; capitulations verb in C03).
+
+**Engine corrections (P02):** A-P02-1 (C11: year-end compaction may touch only derived state; the event record stays append-only so event ids and replay stay exact); A-P02-3 (C10: one dated regime-parameter layer owned by C10's tier schema and read by C02/C03/C06/C09/C13).
+
+**Other amendments** (one proposer each, need a second): A-P01-2 (C16 shows hunter inference only), A-P01-3 (C04 canonical linkage test = timetable incompatibility), A-P04-1 (C07: make routes-as-knowledge members), A-P04-2 (C09: disruption layer and war graph), A-P05-2 (C04: circles of repute as members), A-P06-1 (C08: debt-shedding bound explicit), A-P06-2 (C18: pay on corroboration), A-P06-3 (C06: provenance = C17 filtered by item), A-P07-2 (C09: rung dates Tier 0), A-P07-3 (C01: budget loop), A-P08-1 (C13: notoriety map is a self-forecast), A-P09-2 (C19: specific hooks), A-P10-1 (C08: obligations ledger), A-P10-2 (C02: body rules), A-P10-3 (C11: rust model as counted member).
+
+### 12:55 — Seconding opened (Event E-008)
+- All ten panelists instructed to read `AMENDMENTS.md` and file `ratification/P<NN>-seconds.md` per `SECONDING_TEMPLATE.md`: one position (SECOND / OBJECT / ABSTAIN / PROPOSER) with a one-line reason for each of the 30 amendments. The Historian is asked to confirm or refute the two factual corrections. Objections do not block under the fixed rule but are recorded and reported to the Rapporteur.
