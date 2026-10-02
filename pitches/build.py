@@ -55,6 +55,7 @@ def load_pitch(cid):
     if not files: return None
     md = open(files[0], encoding="utf-8").read()
     md = re.sub(r"^# .*\n", "", md, count=1)  # title rendered by the page
+    md = re.sub(r"^\s*\*Rank \d+ of 20[^\n]*\*\s*\n", "", md, count=1)  # byline duplicated by the page header
     return mdlite.convert(md, shift=1)
 
 def load_audit(cid, kind):
@@ -182,7 +183,7 @@ def results_section():
     <ol class="bars">{''.join(bars)}</ol>
   </figure>
   <figure class="chart">
-    <figcaption><strong>How each panelist ranked each candidate</strong> <span class="muted">· darker is higher · hover or focus a cell for that panelist's one-line reason</span></figcaption>
+    <figcaption><strong>How each panelist ranked each candidate</strong> <span class="muted">· the stronger the fill, the higher the rank · hover or focus a cell for that panelist's one-line reason</span></figcaption>
     <div class="matrix-wrap"><table class="matrix"><thead><tr><th scope="col">Candidate</th>{head}<th scope="col">Borda</th></tr></thead><tbody>{''.join(body)}</tbody></table></div>
   </figure>
   <div class="champions"><p class="label">Each panelist's champion</p><ul>{''.join(champs)}</ul></div>
@@ -377,12 +378,12 @@ main{min-width:0}
 .chart figcaption{margin-bottom:.9rem;color:var(--ink)}
 .axis{display:grid;grid-template-columns:minmax(0,1fr) 3.2rem;margin-bottom:.35rem}
 .axis span{display:none}
-@media (min-width:720px){.axis{grid-template-columns:17rem minmax(0,1fr) 3.2rem} .axis span{display:block}}
+@media (min-width:720px){.axis{grid-template-columns:19rem minmax(0,1fr) 3.2rem} .axis span{display:block}}
 .axis{position:relative;font-family:var(--font-mono);font-size:.72rem;color:var(--muted)}
-@media (min-width:720px){.axis::before{content:"";grid-column:2;display:flex} .axis span{position:absolute;transform:translateX(-50%)} .axis span:nth-child(1){left:17rem} .axis span:nth-child(2){left:calc(17rem + (100% - 17rem - 3.2rem)*.25)} .axis span:nth-child(3){left:calc(17rem + (100% - 17rem - 3.2rem)*.5)} .axis span:nth-child(4){left:calc(17rem + (100% - 17rem - 3.2rem)*.75)} .axis span:nth-child(5){left:calc(100% - 3.2rem)}}
+@media (min-width:720px){.axis::before{content:"";grid-column:2;display:flex} .axis span{position:absolute;transform:translateX(-50%)} .axis span:nth-child(1){left:19rem} .axis span:nth-child(2){left:calc(19rem + (100% - 19rem - 3.2rem)*.25)} .axis span:nth-child(3){left:calc(19rem + (100% - 19rem - 3.2rem)*.5)} .axis span:nth-child(4){left:calc(19rem + (100% - 19rem - 3.2rem)*.75)} .axis span:nth-child(5){left:calc(100% - 3.2rem)}}
 .bars{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:2px}
 .bar-row{display:grid;grid-template-columns:minmax(0,1fr) 3.2rem;gap:.15rem .75rem;align-items:center;padding:.2rem .25rem;border-radius:3px;cursor:default}
-@media (min-width:720px){.bar-row{grid-template-columns:17rem minmax(0,1fr) 3.2rem}}
+@media (min-width:720px){.bar-row{grid-template-columns:19rem minmax(0,1fr) 3.2rem}}
 .bar-row:hover,.bar-row:focus-visible{background:var(--surface-2)}
 .bar-label{display:flex;gap:.5rem;align-items:baseline;min-width:0;font-size:.92rem}
 .bar-label a{color:var(--ink);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -397,7 +398,7 @@ main{min-width:0}
 .matrix{border-collapse:separate;border-spacing:2px;font-size:.85rem;min-width:720px;width:100%}
 .matrix th{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.04em;color:var(--muted);text-align:left;font-weight:500;padding:.2rem .35rem;white-space:nowrap}
 .matrix thead th{text-align:center}
-.matrix tbody th{max-width:17rem;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-body);font-size:.9rem;color:var(--ink);letter-spacing:0;text-transform:none}
+.matrix tbody th{max-width:19rem;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-body);font-size:.9rem;color:var(--ink);letter-spacing:0;text-transform:none}
 .cell{text-align:center;font-family:var(--font-mono);font-variant-numeric:tabular-nums;width:2.6rem;height:1.9rem;border-radius:3px;color:var(--ink);cursor:default}
 .cell:hover,.cell:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
 .s1{background:var(--r1)} .s2{background:var(--r2)} .s3{background:var(--r3);color:var(--on-strong)} .s4{background:var(--r4);color:var(--on-strong)} .s5{background:var(--r5);color:var(--on-strong)} .s6{background:var(--r6);color:var(--on-strong)}
