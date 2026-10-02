@@ -164,3 +164,9 @@ The Secretary ran `tally.py` over the ten ballots (method fixed in the Charter: 
 ### 15:30 — Finalist pitch writing opened (Event E-014)
 - Lead authors assigned by provenance (author of each candidate's lead proposal, or its champion): C07 → P01; C01 → P07; C04 → P10; C17 → P08; C13 → P04 (P02 authored C13's lead text but serves as engine auditor for all five, so the travel/communications designer who co-authored a member proposal leads). Template: `round-1C-voting/PITCH_TEMPLATE.md`.
 - Audit step to follow: P03 (historical accuracy), P02 (engine feasibility) and P09 (hook honesty) each audit all five pitches in parallel and file notes; lead authors then apply the corrections. Audit notes will be shown alongside each pitch in the owner's document.
+
+### 15:37–15:42 — Finalist pitches filed (Event E-015)
+All five lead authors filed complete pitches to `round-1C-voting/pitches/` (12 template sections each): C07 (P01, 2,908 words), C01 (P07, 2,867), C04 (P10, 2,633), C17 (P08, 3,067), C13 (P04, 3,075). Four authors' processes were terminated by an exhausted usage-credit balance while sending their confirmation reports, after their files were complete; the Secretary verified completeness against the template and committed the files unchanged. No content was lost.
+
+### 15:43 — Audit step opened (Event E-016)
+P03 (historical accuracy), P02 (engine feasibility and cross-pitch consistency) and P09 (hook honesty) instructed to audit all five pitches in parallel and file notes-only reports to `round-1C-voting/pitches/audits/` (one file per pitch per auditor; verdict, numbered corrections with location and reason, notes). Lead authors apply corrections afterwards; auditors do not edit the pitches, so no two agents write the same file.
