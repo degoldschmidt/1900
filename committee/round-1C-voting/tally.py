@@ -17,7 +17,13 @@ ROW = re.compile(r"^\|\s*(\d{1,2})\s*\|\s*(C\d{2})\b[^|]*\|\s*(\d{1,2}(?:\.\d+)?
 
 def parse(path):
     ranks, scores, just = {}, {}, {}
+    champion, in_champ = [], False
     for line in open(path, encoding="utf-8"):
+        if line.startswith("## "):
+            in_champ = "champion" in line.lower()
+            continue
+        if in_champ and line.strip():
+            champion.append(line.strip())
         m = ROW.match(line.rstrip("\n"))
         if not m:
             continue
@@ -31,13 +37,14 @@ def parse(path):
     extra = [c for c in ranks if c not in CANDS]
     if missing or extra or sorted(ranks.values()) != list(range(1, 21)):
         raise SystemExit(f"{path}: invalid ballot (missing={missing}, extra={extra}, ranks={sorted(ranks.values())})")
-    return ranks, scores, just
+    return ranks, scores, just, " ".join(champion)
 
-def main(paths):
-    borda = defaultdict(int); score = defaultdict(list); firsts = defaultdict(int); per_ballot = {}
+def main(paths, json_out=None):
+    import json, os
+    borda = defaultdict(int); score = defaultdict(list); firsts = defaultdict(int); per_ballot = {}; justs = {}; champs = {}
     for p in sorted(paths):
-        ranks, scores, just = parse(p)
-        per_ballot[p] = (ranks, scores)
+        ranks, scores, just, champion = parse(p)
+        per_ballot[p] = (ranks, scores); justs[p] = just; champs[p] = champion
         for c in CANDS:
             borda[c] += 21 - ranks[c]
             score[c].append(scores[c])
@@ -63,6 +70,22 @@ def main(paths):
     ties = [(a, b) for a, b in zip(order, order[1:]) if borda[a] == borda[b]]
     if ties:
         print("\nBorda ties broken by secondary/tiebreak rules: " + ", ".join(f"{a}={b}" for a, b in ties))
+    if json_out:
+        pan = lambda p: os.path.basename(p)[:3]
+        data = {"method": "Borda primary (21 - rank), mean score secondary, first-place count tiebreak, seeded coin toss last",
+                "ballots": [pan(p) for p in sorted(per_ballot)],
+                "results": [{"rank": i, "id": c, "borda": borda[c], "mean": round(statistics.mean(score[c]), 2),
+                             "median": statistics.median(score[c]), "firsts": firsts[c],
+                             "best": min(per_ballot[p][0][c] for p in per_ballot), "worst": max(per_ballot[p][0][c] for p in per_ballot),
+                             "ranks": {pan(p): per_ballot[p][0][c] for p in sorted(per_ballot)},
+                             "scores": {pan(p): per_ballot[p][1][c] for p in sorted(per_ballot)},
+                             "justifications": {pan(p): justs[p][c] for p in sorted(per_ballot)}} for i, c in enumerate(order, 1)],
+                "champions": {pan(p): {"candidate": next(c for c in CANDS if per_ballot[p][0][c] == 1), "statement": champs[p]} for p in sorted(per_ballot)}}
+        json.dump(data, open(json_out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 if __name__ == "__main__":
-    main(sys.argv[1:] or glob.glob("ballots/*.md"))
+    args = sys.argv[1:]
+    json_out = None
+    if "--json" in args:
+        i = args.index("--json"); json_out = args[i + 1]; args = args[:i] + args[i + 2:]
+    main(args or glob.glob("ballots/*.md"), json_out)
