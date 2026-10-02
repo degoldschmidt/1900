@@ -126,3 +126,41 @@ Ballots filed and validated: P01 (champion C07), P03 (champion C07), P04 (champi
 
 ### 13:28 — Interruption: account usage limit (Event E-012)
 Five panelists (P02, P05, P07, P09, P10) were cut off mid-ballot by the account's session usage limit (HTTP 429, "resets 14:50 UTC"). No ballot was written by any of them, so no partial or invalid ballot exists. Their agent contexts are preserved; the Secretary will resume each after the reset with the same instruction, and the vote remains secret (no ballot has been read or tallied). The five completed ballots are committed unchanged.
+
+### 13:25–13:27 — Round 1C ballots received, part two (Event E-013)
+On inspection after the usage-limit reset, the five interrupted panelists (P02, P05, P07, P09, P10) had each written a complete ballot (file times 13:27:05–13:27:26) before their processes were cut off while reporting; the Secretary's validator accepts all ten. Champions by ballot: P01 C07 · P02 C07 · P03 C07 · P04 C07 · P05 C01 · P06 C15 · P07 C01 · P08 C04 · P09 C07 · P10 C04. Champion statements run 141–159 words (two slightly over the 150-word guide; accepted).
+
+### 15:30 — Round 1C tally and result (Decision D-008)
+The Secretary ran `tally.py` over the ten ballots (method fixed in the Charter: Borda primary, mean score secondary, first-place count tiebreak). No Borda ties occurred anywhere in the table. Full output in `round-1C-voting/RESULTS.md`; machine-readable in `pitches/data/results.json`.
+
+| Final rank | Candidate | Borda | Mean score | Median score | 1st-place votes | Best rank | Worst rank |
+|---|---|---|---|---|---|---|---|
+| 1 | C07 | 188 | 8.60 | 9.0 | 5 | 1 | 5 |
+| 2 | C01 | 185 | 8.50 | 8.5 | 2 | 1 | 5 |
+| 3 | C04 | 181 | 8.30 | 8.0 | 2 | 1 | 4 |
+| 4 | C17 | 155 | 7.80 | 8.0 | 0 | 2 | 10 |
+| 5 | C13 | 145 | 7.50 | 8.0 | 0 | 2 | 14 |
+| 6 | C11 | 141 | 7.40 | 7.5 | 0 | 2 | 12 |
+| 7 | C05 | 139 | 7.50 | 8.0 | 0 | 3 | 13 |
+| 8 | C10 | 122 | 7.30 | 7.0 | 0 | 2 | 14 |
+| 9 | C18 | 118 | 7.00 | 7.0 | 0 | 6 | 17 |
+| 10 | C15 | 112 | 6.90 | 7.0 | 1 | 1 | 15 |
+| 11 | C02 | 102 | 6.70 | 7.0 | 0 | 5 | 17 |
+| 12 | C08 | 99 | 6.60 | 7.0 | 0 | 6 | 13 |
+| 13 | C03 | 79 | 6.40 | 6.0 | 0 | 8 | 17 |
+| 14 | C12 | 69 | 6.30 | 6.0 | 0 | 8 | 18 |
+| 15 | C09 | 62 | 6.10 | 6.0 | 0 | 11 | 19 |
+| 16 | C06 | 59 | 6.10 | 6.0 | 0 | 13 | 17 |
+| 17 | C19 | 55 | 5.90 | 6.0 | 0 | 6 | 19 |
+| 18 | C14 | 49 | 5.90 | 6.0 | 0 | 10 | 19 |
+| 19 | C16 | 24 | 5.10 | 5.0 | 0 | 14 | 20 |
+| 20 | C20 | 16 | 4.80 | 5.0 | 0 | 17 | 20 |
+
+
+- **Finalists (top 5):** C07 *The Departure Is the Turn* (Borda 188/200, mean 8.60, five first-place votes, never ranked below 5th) · C01 *Several Masters, One Truth* (185, 8.50, two firsts) · C04 *The Legend Portfolio* (181, 8.30, two firsts) · C17 *The Paper Hunter* (155, 7.80) · C13 *Faster Than the Wire* (145, 7.50).
+- Reading of the result: the panel converged on a spine — the timetable as the game's clock (C07) — with the two identity systems (C01 several masters; C04 legends) as the dramatic engine and the record/latency substrate (C17, C13) as the hunt's mechanism. C11 *Thirty Winters* missed the final five by four Borda points; C05 *Hunters on the Same Bradshaw* by six.
+- Decision D-008: the five finalists proceed to full pitches; ranks 6–20 are presented with their final candidate text and tallies.
+
+### 15:30 — Finalist pitch writing opened (Event E-014)
+- Lead authors assigned by provenance (author of each candidate's lead proposal, or its champion): C07 → P01; C01 → P07; C04 → P10; C17 → P08; C13 → P04 (P02 authored C13's lead text but serves as engine auditor for all five, so the travel/communications designer who co-authored a member proposal leads). Template: `round-1C-voting/PITCH_TEMPLATE.md`.
+- Audit step to follow: P03 (historical accuracy), P02 (engine feasibility) and P09 (hook honesty) each audit all five pitches in parallel and file notes; lead authors then apply the corrections. Audit notes will be shown alongside each pitch in the owner's document.
