@@ -1,0 +1,382 @@
+[
+ {
+  "id": "C01",
+  "title": "Several Masters, One Truth",
+  "support": 7,
+  "fields": {
+   "Type": "whole-game concept",
+   "One-line pitch": "Several services and commercial principals pay you at once, each holding its own model of you; retire before those models are reconciled.",
+   "Central hook": "Each paymaster is a faction with a belief store of facts about you; your report is composed from held tokens and fabrications; stores are compared only at dated reconciliation events, and contradiction turns a patron into a hunter.",
+   "How it plays": "Minute to minute: take each service's requirements, decide who gets which fragment and who gets chickenfeed, report in its cipher. Session: deliveries scored for novelty and corroboration; lies booked as consistency debt, payable by making them true. Campaign: the alliance calendar schedules reckonings — 1907 opens channels between employers, 1914 fuses Entente counter-intelligence, 1917 leaks a fallen service's files; a belief flipping to \"double\" stops pay and starts the hunt. Each service's annual secret-service vote rises with the successes credited to it and funds both the prices it pays for requirements and its counter-intelligence capacity, so your deliveries pay for the hunters who will one day read you.",
+   "Directive coverage": "Politics and deception/coding primary; the hunt at the end. Secondary: economy (retainers), travel (handlers in several capitals), items (reports, plans), time (liaison dates), the life (accounts over decades).",
+   "Why captivating & addictive": "Sustained dramatic irony; near-misses you controlled; each added master is a self-set difficulty slider; betrayal emerges from your own inconsistencies, so dread of the cross-check and relief at the paid report are honest.",
+   "Engine implications": "One faction entity: a provenance-tagged fact store per identity, a yearly budget that is a Tier 1 output of credited Tier 2 outcomes (scaling task value and hunter capacity — C05's watcher and cable budgets), a requirements generator and alliance-gated liaison edges; reconciliation only at liaison or audit events; suspicion scales with the product of confidences; token-based composition, never free text. Belief stores are C17 views (one tuple type with an authorship field), so a reconciliation at liaison between two services that know you under different legends is itself a linkage-event source (C04).",
+   "Historical grounding": "Secret Service Bureau (1909), Deuxième Bureau, Evidenzbureau, Abteilung IIIb, Okhrana foreign bureau; annual secret-service votes; Entente liaison 1914–18; Okhrana files seized, partly burned, partly published in 1917.",
+   "Provenance": "P07.01 (lead), P02.10, P05.09, P01.07, P09.11; M-P05-2, M-P07-2, M-P09-1; draws on P07.06 (C03), P06.01 (C15).",
+   "Support": "7 (P01, P02, P03, P05, P07, P09, P10); merge proposed by P05, P07, P09.",
+   "Flags addressed": "P09.11 (duplicate ×3) and P01.07 (duplicate) absorbed, keeping consistency debt; P05.09 title collision resolved by renaming.",
+   "Amendments applied": "A-P05-1, A-P07-3."
+  }
+ },
+ {
+  "id": "C02",
+  "title": "Comfort or Cover",
+  "support": 5,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "Every convenience is registered and every anonymous alternative hurts: each night you choose between the sleeper and the register, and your body keeps the books.",
+   "Central hook": "Every purchasable service — class, berth, lodging, instrument, channel, cab — carries one cost vector: money, time, health, standing, trace; the four forced-disclosure points (register, frontier, bank, cable) harvest the trace, and the body pays for the quiet end.",
+   "How it plays": "Thirty seconds: pick class, hotel, instrument and channel; the planner shows an exposure forecast beside the fare — a self-forecast from your own records. Day: first class buys officials' conversation and writes your name into lists; third class and gold coin write nothing and cost sleep; cities carry seasonal disease, so routing is also health routing. Season: hardship accrues as health stocks (fatigue, disease, wounds) and a shabbiness that draws police attention; drink and cards relieve stress at compounding cost. Recovery runs in weeks while neither world nor hunt pauses, so convalescence is a forced wait that doubles as a planning phase. Treatment writes C17 records (a sanatorium season), so a sanatorium hides and registers you at once; a limp or a scar is a portrait-parlé identifier. Age (C11) lowers health ceilings and lengthens every timer; chronic conditions (tuberculosis, gas-damaged lungs from 1915) are permanent modifiers with flare rules.",
+   "Directive coverage": "Travel, the hunt and the life (health, ageing) primary. Secondary: economy (price of anonymity), deception (class matches legend), items (coin against instruments), politics (requisition), time.",
+   "Why captivating & addictive": "Approach-avoidance conflict: you want the berth and fear the register; consequences stay attributable; loss aversion on health and cover means no profile dominates.",
+   "Engine implications": "Service entries carry (duration, price, visibility vector) plus health and standing deltas; trace records consumed only through C17; registration coverage: a C10 row; health as stocks with timers and per-city seasonal exposure tables; treatment as scheduled multi-week actions coupled to hunt and travel; vice stocks (craving, tolerance).",
+   "Historical grounding": "Wagons-Lits supplements; registration in Germany, Austria, France, Russia; in Britain nobody is registered before August 1914 (aliens from the Aliens Restriction Order of 5 August 1914, British subjects from the National Registration Act 1915, general hotel registers from the Aliens Order 1920); no antibiotics; influenza 1918–20.",
+   "Provenance": "P08.02 (lead), P01.04, P09.09, P04.07, P10.07, P10.06; M-P01-2, M-P08-3, M-P09-5 (dial half), M-P10-2.",
+   "Support": "5 (P01, P04, P08, P09, P10); merge proposed by P01, P08, P09, P10.",
+   "Flags addressed": "P10.06 kept mechanical per P09 (gambling diegetic only, ledger cost visible).",
+   "Amendments applied": "A-P08-1 (forecast named), A-P10-2; P03 correction 1."
+  }
+ },
+ {
+  "id": "C03",
+  "title": "The Liaison Map: Jurisdiction, Alliances and the Archive",
+  "support": 5,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "No single hunter: each service is bounded by law and by liaison channels that open and close on the diplomatic calendar; nothing archived is deleted.",
+   "Central hook": "Independent hunters bounded by extradition law — which turns on how an offence is characterised — and by consular courts; dossiers copy along alliance edges with delay, pass partially to successor regimes and reopen under archive reviews — the world clock decides who knows what, when.",
+   "How it plays": "Daily: route through the seams — a Sûreté lead dies at the frontier unless Paris cables Brussels; London is sanctuary for offences that can be characterised as political, until wartime alien registration — ordinary crimes are extraditable under the 1886 treaty, so how a service frames your offence decides its reach; in Ottoman lands to 1 October 1914, Egypt, Shanghai and Persia the passport you present decides which court tries you. Yearly: watch realignments and race a merger — thin the file, become indispensable to the receiving service, or retire the identity. Decades: a 1902 fingerprint card or a 1916 cable copy decrypted in 1919 resurfaces; pre-empt by burning registers, choosing courier over cable.",
+   "Directive coverage": "Hunt and politics primary. Secondary: deception (identity hygiene; offence framing), travel (seams are frontiers), items (the file), economy (inquiry agents, including creditors of burned legends, C08), time (merger dates, long fuse), the life (ageing faces).",
+   "Why captivating & addictive": "Foreseeable dread: you know the date your past arrives; a readable geography of safety shifting every few game-years; catharsis when a collapse wipes a slate or the last copy burns.",
+   "Engine implications": "N faction stores (C17 views) with a liaison graph and a cooperation/extradition matrix (service × jurisdiction × offence class × date) that reads the C10 parameter layer; archive nodes store event ids, not copies; macro-events schedule reviews with per-archive destruction fractions.",
+   "Historical grounding": "Extradition Act 1870 (political-offence exception, s.3, as construed in the 1890s) and the Anglo-Russian Treaty for the Mutual Surrender of Fugitive Criminals, signed in London 24 November 1886 and in force from 1887; Ottoman capitulations to 1 October 1914; Okhrana Paris bureau; Okhrana abolished March 1917; Vienna commission 1923.",
+   "Provenance": "P08.04 (lead), P03.06, P07.06, P02.11, P08.12; M-P03-4, M-P07-4, M-P08-5.",
+   "Support": "5 (P03, P05, P07, P08, P10); merge proposed by P03, P07, P08.",
+   "Flags addressed": "P07.06 (P03): partial archive survival, no institutional Cheka inheritance; P02.11/P08.12 (P03 audit): retrospective reading is a rare review event; P03.06's \"no Anglo-Russian treaty\" corrected (A-P01-1).",
+   "Amendments applied": "A-P01-1, A-P02-3; P03 correction 5."
+  }
+ },
+ {
+  "id": "C04",
+  "title": "The Legend Portfolio: Several Lives at Once",
+  "support": 5,
+  "fields": {
+   "Type": "whole-game concept",
+   "One-line pitch": "Legends are the unit of account: they keep running in other cities whether or not you wear them, and the hunt advances only by linking two names.",
+   "Central hook": "A legend is an entity owning a fact-graph whose weights decay unless fed by acts under that name, with its own residence, accounts, debts and burn; hunters keep one dossier per legend and advance only through linkage events. Canonical link: two names whose records could have been produced by one body on the real timetable are a link candidate; records no connection could reconcile keep the names apart.",
+   "How it plays": "Daily: every act under a name deepens its record-set and writes a witness record. Weekly: plan a circuit so unattended lives do not go stale and stay provably incompatible; a linkage-risk indicator warns before you arrive as A on B's ticket. Standing is held per name per circle (a mess, a bourse), decays with time and distance, and gossip crosses bridging institutions (bank, club, consulate) at a rate: a scandal under one name surfaces elsewhere weeks later and, where one person sits in two circles, becomes a linkage event beside handwriting or a shared trunk. Crisis: burn a legend to collapse a hunter's fix into pursuit of a ghost.",
+   "Directive coverage": "The life, deception and the hunt primary. Secondary: travel (verification latency is routing), items (papers), economy (upkeep; standing sizes credit), politics (internment from 1914), time.",
+   "Why captivating & addictive": "IKEA and endowment effects: burning a legend nurtured for twenty hours bites without killing; granular failure keeps players playing.",
+   "Engine implications": "Identity entities; unattended ones run at low detail and materialise deterministically on arrival; identity-tagged evidence with a link-detection pass (fastest-path queries); sparse name × circle standing vectors propagated along bridges, breadth-capped per tick; legend fact-graphs are C17 views, so liaison reconciliation between services knowing different names is a linkage source (C01).",
+   "Historical grounding": "Meldewesen; in Britain nobody is registered before August 1914 (aliens from 5 August 1914, British subjects from 1915): a British legend can be invented until 1915, a foreign one only until August 1914; Germany's resident cards are where inventions die; photographic passports February 1915.",
+   "Provenance": "P10.02 (lead), P02.04, P08.03, P09.03, P03.10, P06.07, P10.04; M-P05-1, M-P10-1; folded options P05.11, P05.12; draws on P05.01, P04.12 (C14).",
+   "Support": "5 → 5 (P01, P02, P05, P09, P10; P10.04's nominator counted); merge proposed by P05, P10.",
+   "Flags addressed": "P05.11 (×4) bounded to a donor record-set; P05.12 (×2) an optional, seizable notebook; P10.02 dates corrected per P03.",
+   "Amendments applied": "A-P01-3, A-P05-1, A-P05-2; P03 correction 1."
+  }
+ },
+ {
+  "id": "C05",
+  "title": "Hunters on the Same Bradshaw",
+  "support": 5,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "Pursuers are agents on your timetable: they reason only from delivered records, cannot teleport, and cordon a city only where their men can be in time.",
+   "Central hook": "Each service holds weighted hypotheses propagated along the real transport graph and reweighted only by delivered evidence; notices move at wire speed between offices, watchers by train; concentrated weight triggers a cordon over a city's exits.",
+   "How it plays": "Leg by leg: hypotheses advance along the timetable; split them by changing mode, travel out of profile, or take the night train that outruns the morning dispatch. Hunters profile you, query ledgers where weight concentrates. Climax: read the signs and find the pre-dawn departure from the unwatched halt, or go to ground until the cordon decays. Inverse mode: between fugitive stretches take a counter-espionage or inquiry commission and run the same engine from the other chair — delayed ledger extracts (C17), watchers at termini, piers and frontier posts, cables to foreign police who may refuse (C03), hypotheses pruned with Bradshaw's, a cordon sprung early (leaky) or late (expensive) — against an AI quarry that leaves records, buys decoys and dry-cleans; your expense claims and cables are records too.",
+   "Directive coverage": "Hunt and travel primary. Secondary: deception (false registrations poison the set), items (tickets, stamps), economy (finite hunter budgets), politics (war adds checkpoints), time, the life (C11's turning-hunter exit).",
+   "Why captivating & addictive": "Deduction made geographic and legible: \"can they reach the frontier before me?\" is computable by the player, so outwitting is earned; the hunter is a mind, not a meter. Skill transfers across the chairs; playing the hunter is the honest tutorial for the belief engine.",
+   "Engine implications": "One time-expanded graph serves routing, reachability and cordon cuts for all agents; particle-filter-like propagation with noisy reachability (hunters never omniscient); reweighting at institutional cadence; the hypothesis set is a weighted board a human can use; the quarry agent reuses the player-facing trace systems — no second simulation; watcher and cable budgets come from the services' votes (C01); hypotheses consume C14's habit model.",
+   "Historical grounding": "Police circulars telegraphed to stations and frontier posts; Bradshaw's consulted to test alibis; private inquiry agencies taking pursuit contracts.",
+   "Provenance": "P08.05 (lead), P02.08, P08.07, P08.11; M-P04-2, M-P08-2; draws on P04.06 (C13), P08.01 (C17), P08.06 (watchers, dry-cleaning).",
+   "Support": "5 → 5 (P01, P02, P04, P08, P09; P08.11's nominator counted); merge proposed by P04, P08.",
+   "Flags addressed": "P02.08's exact-reachability risk fixed by P08.05's noise; P09.02 (P03): reweighting follows institutional rhythms.",
+   "Amendments applied": "A-P02-2, A-P03-3, A-P04-3, A-P05-3, A-P08-2, A-P09-1 (consolidated); A-P07-3 (budgets)."
+  }
+ },
+ {
+  "id": "C06",
+  "title": "Papers and Provenance",
+  "support": 5,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "Every document and artifact is a composed, provenanced object whose safety and value depend on what the inspector has learned; every frontier is a test whose odds you shape before a deterministic resolution.",
+   "Central hook": "Documents are items with fields (stock, seal, signature, serial, stamps, dates), each with a quality; travel edges carry dated document requirements; inspectors have depth profiles; an item's custody chain yields its heat against the inspector's known facts. An examination is a probabilistic depth draw (inspector profile, the bearer's plausibility, class, bribes, regime) followed by a deterministic field-by-field resolution against the item and the inspector's facts.",
+   "How it plays": "Before a journey: predict who inspects and how deeply (a gendarme glances at a seal; a consulate wires the issuing register) and forge only the quality needed. At the frontier: the regime record flips with the world clock; inspection resolves field by field; stamps append to the legend's itinerary. Holding: a passport is good until its forger's arrest reaches that post; verbs: sell, plant, leverage, launder, destroy.",
+   "Directive coverage": "Items and deception primary. Secondary: travel, economy (forgeable instruments), politics (documents follow regime), hunt (a failed paper is a hard fix), time (1914, 1915, 1920 flips).",
+   "Why captivating & addictive": "Crafting satisfaction plus calibrated risk (\"good enough for a gendarme, not a consul\"); a trusted passport turning hot is felt as a wound; a knowable test rewards preparation.",
+   "Engine implications": "Documents as typed field vectors; inspector depth profiles per institution and year; edge requirement tables are rows of the C10 parameter layer; provenance is C17's record store filtered by item id (issued, bought, stolen, copied, forged, crossed a frontier at a time, pawned, planted); the inspector's known facts are its institution's C17 view widened by C03 liaison; inspectors' fact stores and the fields of forged papers are C17 views; C19's luggage and cargo write to the same store.",
+   "Historical grounding": "Passport-free Western Europe against Russian and Ottoman regimes; Germany imposed passports by Bundesrat decree of 31 July 1914, France in the first days of August 1914; British passports carry photographs from February 1915 and are compulsory for everyone entering or leaving the United Kingdom from November 1915; 1920 League booklet; hallmarks, serials, stolen-bond circulars.",
+   "Provenance": "P05.06 (lead), P03.05, P04.04, P02.07, P06.03, P01.08; M-P03-3, M-P05-4, M-P06-4; draws on P06.04 (verbs), P05.10.",
+   "Support": "5 (P02, P03, P04, P05, P06); merge proposed by P03, P05, P06.",
+   "Flags addressed": "P05.10 (P06: duplicate, money printer) folded with pay-on-corroboration and copy marks; P06.04's double-selling bounded by exposure.",
+   "Amendments applied": "A-P02-3, A-P03-1, A-P05-1, A-P06-3."
+  }
+ },
+ {
+  "id": "C07",
+  "title": "The Departure Is the Turn",
+  "support": 4,
+  "fields": {
+   "Type": "whole-game concept",
+   "One-line pitch": "The world is a discrete-event simulation faced by the timetable and the diary; decision points are departures, and every verb sits in the slack between them.",
+   "Central hook": "The connection (arrival to next departure, when you are visible and spending) is the atomic unit of tension; every action has a duration competing for those gaps; time jumps to the next event touching you. The board you plan on is the subgraph you know: each edge, learned from a dated guide, a poster or a porter, carries source, edition and confidence and goes stale as the network changes.",
+   "How it plays": "Thirty seconds: what fits before the 14:05 express (bank, poste restante, meeting, wait). Ten minutes: a day of time-stamped slots; a tight connection risks a seasonal delay, a loose one means dead hours of exposure and expense. Session: every pause sits in sight of a departure, so sessions end aboard a night train. Campaign: the master graph is date-versioned and multi-modal — tunnels and lines open (Simplon 1906, Lötschberg 1913, Amur 1916), services are suspended or rerouted (Orient Express 1914, Simplon-Orient 1919), motor cabs, airships and airlines (1919) appear — so knowledge is re-bought and saleable; stale editions fail as ghost connections; hunters hold their own known graph, so their unknown connections are your escapes; long legs are sealed sessions; news arrives only at ports or by wireless.",
+   "Directive coverage": "Travel and time pressure primary. Secondary: deception, items, economy and politics as timed actions; the hunt reads the same timetable; the life as a diary of rent days.",
+   "Why captivating & addictive": "The \"one more leg\" pull of 80 Days generalised to every verb; near-misses; Zeigarnik tension from booked departures not yet earned; slack management as the mastery curve.",
+   "Engine implications": "A global priority queue of timestamped events with total ordering, so a save is seed plus input log and replay is exact; level-of-detail scheduling; timetables as monthly tables with connection-scan queries; per-agent known-edge overlay {learned date, source, confidence}; the planner routes on the overlay, the simulator executes the truth and emits ghost-connection events.",
+   "Historical grounding": "Bradshaw's monthly Continental Guide; through-trains and Wagons-Lits; mail deliveries; Trans-Siberian through running 1903–04, Baikal link closed 1904.",
+   "Provenance": "P01.01 (lead), P02.01, P04.02, P09.01, P04.01, P03.07; M-P01-1, M-P02-1, M-P04-1, M-P09-4, M-P04-3; draws on P01.09, P04.10, P04.08 (C09).",
+   "Support": "4 → 4 (P01, P02, P04, P09; added members' nominator counted); merge proposed by P01, P02, P04, P09.",
+   "Flags addressed": "P04.01/P04.08 Circum-Baikal corrected to 1904; P02.01's \"opaque queue\" reframed per P09.",
+   "Amendments applied": "A-P04-1."
+  }
+ },
+ {
+  "id": "C08",
+  "title": "One Ledger: Money with a Body, Debt with a Calendar",
+  "support": 4,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "Money is a portfolio of period instruments with weight, a name and a paper trail; ownership costs on a calendar; creditors are the second hunter.",
+   "Central hook": "One ledger per legend with three accounts — cash as typed instruments (gold, letters of credit), dated debts with jurisdictional enforcement, and an obligations ledger of dated lines owed to people (staff, dependants, patrons), each a tuple of demand frequency, cost, loyalty and leverage, never a character; every action moves two; heat is a derived summary of hunters' holdings.",
+   "How it plays": "Per journey: compose a purse — gold anonymous but seizable; letters of credit draw only at listed correspondents. Monthly: burn is continuous, income lumpy, so you borrow; default is public — a protested bill, a gazette notice — or an advance is recalled as coerced tasking. Ruin is disclosure, not escape: protests and gazettes are C17 records; a burned legend's creditor becomes a private hunter (C03) with a budget proportional to the debt, seeking the C04 linkage; lenders size credit to record-set depth, so a thin name cannot borrow enough to make burning it pay; C15's bankruptcy hands the books to a receiver for public examination. Missed obligations become leverage (letters, denunciations); hunters pressure a dependant to produce an approach event you may not detect (surfaced in C16's autopsy); discharge (expensive, final), hide, or cut (loyalty turns hostile). Decades: 1914 sequestration, 1917 nationalisation, 1923 hyperinflation.",
+   "Directive coverage": "Economy, time pressure and the life primary. Secondary: hunt (drawings, gazettes), travel (where you can draw), deception (which name signs), items, politics (currency regimes).",
+   "Why captivating & addictive": "Hyperbolic discounting makes borrowing seductive and the bill dreadful; loss aversion before a known collapse; insolvency a playable reset.",
+   "Engine implications": "Instrument entities with location, owner, trace flag; recurring debits; creditor agents with patience timers escalating into hunters that read C17 and C03; obligation entities with calendars, loyalty decay and leverage payloads; hunter targeting over the obligation graph; publication events feed C17; currency regimes as C10 rows.",
+   "Historical grounding": "Gold parities; Bankruptcy Act 1883, official receivers 1890; 1914 moratorium; Soviet decrees 1917–18; gold export banned or obstructed (no British legal ban until 1919), confiscated only in Soviet Russia.",
+   "Provenance": "P06.08 (lead), P10.09, P01.03, P01.05, P10.08, P06.02, P03.04, P06.11; M-P01-4, M-P06-3, M-P10-4, M-P06-2; draws on P09.06.",
+   "Support": "4 (P01, P03, P06, P10); merge proposed by P01, P06, P10.",
+   "Flags addressed": "P01.03 (P08): heat a derived summary; P06.11 corrected; debt-shedding bound written in.",
+   "Amendments applied": "A-P06-1, A-P10-1; P03 correction 4."
+  }
+ },
+ {
+  "id": "C09",
+  "title": "The Timetable of War",
+  "support": 4,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "Crises climb ladders with deadlines, mobilisation seizes your trains, and war is a regime you prepare for, trade inside and read by counting carriages.",
+   "Central hook": "Crises are state machines whose rungs alter parameters and leave ratchets; at general mobilisation military flows claim the civilian graph; war runs as an overlay over travel, identity, money and hunting. War is the extreme case of a yearly disruption layer — seasonal closures (Baltic ice; Baikal by icebreaker, rails on the ice in 1904, the Circum-Baikal line from 1904–05), strikes (1905, 1910, 1911) and seeded accidents — forecastable at a price, so buffer time is insurance. Rung dates and outcomes, mobilisation dates, entries and armistices are Tier 0 with zero elasticity; Tier 1 jitter touches only local parameters (a post's closing hour, which stations control posts watch); lesser wars share the fixed calendar.",
+   "How it plays": "Before the first rung: read price twitches; run toward or away. At mobilisation: the timetable collapses, frontiers close, requisition strips stock. Inside the war: contraband lists make trade illegal and lucrative; nationality decides internment or call-up; neutral capitals hold every service's buyers; you count train composition and report through censored neutral post. The network is different, not closed: North Sea crossings under mine and submarine risk; the single Haparanda–Torneå route to Russia (change of train and gauge; sledge until 1919); the electrified Belgian–Dutch frontier from 1915; a collapsing venture (C10) hands a city to a regime whose service hunts you.",
+   "Directive coverage": "Politics/warfare, time pressure and travel primary. Secondary: coding (neutral post, cable cuts), items (schedules, permits), economy (blockade margins), deception (nationality), hunt (emergency powers), the life (internment).",
+   "Why captivating & addictive": "An unstoppable ladder makes countdown tension pure; diegetic appointments; flow-sampling is legible partial information.",
+   "Engine implications": "Ladders as data (rungs, ratchets); regime overlays as modifier stacks on edges, prices and law; military flows as scheduled edge loads, civilian capacity the remainder; observers sample loads noisily; a disruption layer of scheduled plus seeded edge modifiers shared by all agents; overlays and loads as C10 rows.",
+   "Historical grounding": "The 48-hour Austrian and 12-hour German ultimatums of July 1914; five cables cut 5 August; Belgian train-watching 1916–18.",
+   "Provenance": "P03.09 (lead), P07.03, P07.04, P03.11, P04.08; M-P03-5, M-P07-3, M-P02-3 (war half); draws on P07.07 (C10).",
+   "Support": "4 → 4 (P03, P04, P07, P09; P04.08 unnominated); merge proposed by P02, P03, P07.",
+   "Flags addressed": "P03.11 (P10: scope) carried as the vertical slice; P07.04 internment staged per P03.",
+   "Amendments applied": "A-P02-3, A-P04-2, A-P07-2 (P08's gloss); draws on P07.07 (A-P03-2, A-P09-3)."
+  }
+ },
+ {
+  "id": "C10",
+  "title": "Tramlines and Switchpoints: Bounded History with an Inquest",
+  "support": 4,
+  "fields": {
+   "Type": "whole-game concept",
+   "One-line pitch": "History runs as recorded, everything at your scale is yours to perturb, and a computed inquest shows your life as a diff against it.",
+   "Central hook": "Every fact carries a tier: Tier 0 (wars, revolutions, treaties) is immovable rail; Tier 1 moves within jittered windows under saturating pressure accumulators; Tier 2 is free; a regional tension field prices every fare, border and payout.",
+   "How it plays": "Daily: read the papers to estimate the field; weekly, work where gradients pay. Rarely: influence with lagged, saturating effect; stolen gunnery tables change which yard gets the next order, never whether the race happens. Foreknowledge is priced: shorting shipping before 1914 raises a prescience score read as insider knowledge; the inquest traces every moved outcome to your acts. Ventures: join or sponsor a coup, rising or concession war as a staged project with resource gates (funds, arms, loyalty, backing, timing) and feasibility hidden behind intelligence quality; where Tier 0 forbids success the project is scored from its first stage on extraction — money, people, reputation out before collapse — and collapse spawns a pursuit state (C05) and a regime change (C09).",
+   "Directive coverage": "Politics and time pressure primary. Secondary: travel, economy (foreknowledge trades), deception (influence), items (lever weight), hunt (prescience; venture collapse), the life (the inquest).",
+   "Why captivating & addictive": "\"I mattered, and the world is still real\"; detective pleasure tracing cause through the graph; meta-knowledge becoming diegetic danger; commitment escalation redeemed by exit timing, honest because extraction is scored from the first stage.",
+   "Engine implications": "Macro-events as a DAG (preconditions, date, tier, elasticity); pressure accumulators that decay and saturate; a propagator reschedules Tier 1 dependents; every delta carries its causing event id, so the inquest is computed; project templates as stage graphs with collapse triggers; the inquest reports each venture's footprint. C10's tiered, dated schema is the single parameter layer over the two graphs: C06's, C09's, C03's, C13's and C02's regime tables are rows of one table keyed by (edge or jurisdiction, date, tier).",
+   "Historical grounding": "The grounding-kit calendar as Tier 0; the 1906 Serbian artillery order; Allied-mission conspiracies of 1918; émigré counter-revolution; the 1912 US arms embargo on Mexico.",
+   "Provenance": "P07.02 (lead), P02.03, P01.10, P07.08, P07.07; M-P07-1, M-P02-3 (history half); draws on P07.11.",
+   "Support": "4 → 4 (P01, P02, P03, P07; P07.07's nominator counted); merge proposed by P02, P07.",
+   "Flags addressed": "P02.03 (directive 1, ×5): kit dates immovable, jitter and pressure on Tiers 1–2 only, DAG and inquest kept; P01.10 saturates.",
+   "Amendments applied": "A-P02-3, A-P03-2, A-P07-1, A-P09-3 (consolidated)."
+  }
+ },
+ {
+  "id": "C11",
+  "title": "Thirty Winters: Exits and the Second Agent",
+  "support": 4,
+  "fields": {
+   "Type": "whole-game concept",
+   "One-line pitch": "One world runs 1895–1925; your agent ages on three clocks; every ending is a steerable system state, and losing the agent never loses the campaign.",
+   "Central hook": "An exit dashboard shows distance to each ending — retirement (clean name, stable currency, non-extraditing haven), exile, ruin, capture, turning hunter — with a live valuation; on death or succession a new agent begins in a world that remembers.",
+   "How it plays": "Yearly, an audit batch-applies ageing, rust, compounding and the hunt's rising baseline. Early years are forgiving; late years are the hunt. On any day you may liquidate and retire; retiring on roubles in 1916 is visibly a mistake. Capture is never game over; ruin is survivable; succession hands over assets, every debt, standings and a two-subject hunters' file; routes and codes persist only in your head. Skills (languages, ciphers, forgery, riding, motoring, wireless, bookkeeping) grow only by use; disuse decays them toward a retained floor, so mastery returns at a discount but costs time; rusty skills emit tells, which are C17 witness records; age bends the curves (physical early, cognitive late, social longest); the period moves the skill map (motoring rare in 1900, expected by 1920); C20's roll rung and C12's bluff read these values, so player-head mastery and character skill share one ladder.",
+   "Directive coverage": "The life, economy and time pressure primary. Secondary: politics (havens change), hunt (retirement holds only for unknown names; turning hunter is C05's inverse mode), travel, deception (the clean legend), items.",
+   "Why captivating & addictive": "Honest \"one more job\": sunk cost pulls you to protect what you built, the escalating board to risk it; failure costs the agent, not the player's competence.",
+   "Engine implications": "Append-only, event-sourced life record; decay and rust evaluated lazily; year-boundary snapshots and batched evaluation — compaction applies only to derived state (standings, stocks, valuations); the event record is append-only, never pruned, because C03, C06, C10 and C16 reference events by id and replay must stay exact; skills as (level, last-used, floor); exit conditions as declarative queries; continuous valuation of the estate; succession as state transfer; multi-subject hunter files.",
+   "Historical grounding": "Annuities as retirement instruments; the extradition patchwork; émigré destinations; expropriation 1917 and hyperinflation 1923 destroying retirements in the wrong currency; motor licensing.",
+   "Provenance": "P09.04 (lead), P09.12, P10.12, P10.01, P10.05; M-P09-2, M-P10-5; draws on P10.11 (audit), P08.09 (C16).",
+   "Support": "4 → 4 (P02, P06, P09, P10; P10.05's nominator counted); merge proposed by P09, P10.",
+   "Flags addressed": "none on members; P09.12's score weighs legend cleanliness and file size per P06's audit.",
+   "Amendments applied": "A-P02-1, A-P10-3."
+  }
+ },
+ {
+  "id": "C12",
+  "title": "The Exchange: Claims, Calls, Prices and Pitches",
+  "support": 4,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "Every face-to-face act is one information game of claims, evidence, bluffs and calls, and every lie becomes a debt with a maturity date.",
+   "Central hook": "Parties hold Composure, Rapport, Leverage, Agenda and play Assert, Probe, Offer, Press, Concede, Deflect, Call; a Call demands evidence; bluffs resolve against suspicion; every Assert enters a claims ledger with a maturity the world's clock tests.",
+   "How it plays": "In the room: read an NPC's tell profile, back claims with documents, call bluffs with timetable facts. Afterwards: service a maturing lie, roll it over with a supporting lie, or buy it back; untested lies harden; defaulted ones become leads. Bribery plays against a hidden reservation price; recruitment is a pitch sized to a motivation profile; interrogation is the same game from the other chair, and its question patterns leak the hunters' dossier — one of C16's windows.",
+   "Directive coverage": "Deception/conversation primary. Secondary: items (evidence), economy (offers, bribes), politics (faction agendas), travel (timetable facts are admissible), hunt (survivable interrogation), time (maturities), the life (standing per circle, C04).",
+   "Why captivating & addictive": "Bluff and call are tense because the uncertainty is the opponent's belief; tell-reading is a mastery curve; debt psychology applied to lies; the only in-world probe for what others believe.",
+   "Engine implications": "Bounded belief sets for a hot set of NPCs, summaries elsewhere; lies as propositions with holder set, truth-distance and a world-clock test event; officials with reservation price and loyalty decay; detection scaling with bribe frequency; typed claims only. NPC belief sets are C17 views — one tuple type, with the authorship field distinguishing an asserted claim from a world record, so a lie's truth-distance is the difference between a claim and the world log; bluff and tell resolution read the character's skill values (C11).",
+   "Historical grounding": "Calling cards, letters of introduction and club references as continuously tested standing; blackmail of indebted officers; baksheesh against Prussian rigidity; Prevention of Corruption Act 1906.",
+   "Provenance": "P05.03 (lead), P05.02, P06.09, P05.08; M-P05-5; draws on P10.04 (circles of repute, now a C04 member), P10.08 (leverage lines, C08).",
+   "Support": "4 (P02, P03, P05, P06); merge proposed by P05.",
+   "Flags addressed": "none on members; P06's \"always pay\" caution applied through frequency-scaled detection.",
+   "Amendments applied": "A-P05-1; reads A-P10-3 (skill values); listed as a window in C16 per A-P01-2 (P05's caveat)."
+  }
+ },
+ {
+  "id": "C13",
+  "title": "Faster Than the Wire: The Information Front",
+  "support": 4,
+  "fields": {
+   "Type": "whole-game concept",
+   "One-line pitch": "Your body moves at train speed, news of you at cable speed: race your own description, and trade in the gap before the bourse hears.",
+   "Central hook": "Two graphs: the transport network and a communications network (cable, post, wireless, editions) whose edges carry latency, office hours and jurisdiction gating; every fact about an identity propagates at its medium's speed; you see a self-forecast of its front, computed from your own visible acts and the published latency of each channel.",
+   "How it plays": "After a visible act the planner's self-forecast shows where your description has probably reached; outrun it (a night train beats tomorrow's newspaper, not tonight's wire), slow it or change the thing described. The same layer is your window on the world. Bourses reprice only when news arrives, so a stolen tender opens a window of hours — but every trade is a timestamped record correlable with later news.",
+   "Directive coverage": "Travel, hunt and economy primary. Secondary: deception (planted news), coding (ciphered cables act slower), politics (censorship and cable cuts rewire the graph), time (minutes to days), items (editions).",
+   "Why captivating & addictive": "Dread made legible — you see what chases you and plan; near-misses are earned; information-gap curiosity makes the evening edition irresistible; knowing before they do.",
+   "Engine implications": "Facts as entities scheduling arrival events at institution nodes — this is C17's lag-and-reader model computed on the communications graph, not a second propagation mechanism; hunters query their institution; lazy propagation on query, hop-bounded; bourse prices as functions of arrived facts; trade records as evidence; prescience (C10) and bourse depth bound profit; the self-forecast reads only the player's own act log and channel parameters, never faction stores — the same object as C02's exposure forecast and C17's trail estimate — while what hunters actually hold surfaces only through C16's windows; censorship and cable-cut rewiring are rows of the C10 parameter layer.",
+   "Historical grounding": "All Red Line 1902; shipboard wireless from the mid-1900s; Reuters, Havas and Wolff territories; multi-edition dailies; cables cut August 1914.",
+   "Provenance": "P02.02 (lead), P01.06, P04.06, P09.05, P02.09, P03.08, P06.10; M-P01-5, M-P02-2, M-P03-2, M-P06-5; draws on P07.08 (C10), P05.04.",
+   "Support": "4 (P02, P03, P04, P06); merge proposed by P01, P02, P03, P06.",
+   "Flags addressed": "P02.02 merged with P01.06; P06.10 merged, market income bounded emergently by bourse depth, trades-as-evidence and prescience (P06), not by an exogenous cap; P07.12's plant-and-trade exploit closed per P06.",
+   "Amendments applied": "A-P02-3 (noted), A-P08-1, A-P08-3."
+  }
+ },
+ {
+  "id": "C14",
+  "title": "Routine Is a Trail",
+  "support": 3,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "Your personal calendar shares one scheduler with your operations, and the hunter reads your habits: what makes a legend plausible makes you catchable.",
+   "Central hook": "Every kept appointment writes a witness record; hunters mine periodicity and habit profiles, score itineraries against the pattern a cover implies, predict presence from observable obligations, and test two legends' records against the fastest connection between them.",
+   "How it plays": "Weekly: route to honour dated promises — a bill maturing in Vienna, a registered lease — or renegotiate, proxy or default. Each identity carries an itinerary template; legs out of pattern raise examination odds. Keep two lives provably incompatible — no connection fast enough to be one body — which is C04's canonical linkage test, fed by the habit profiles mined here. Read the hunter's inferred regularities and choose which habits to break; a sudden break is itself an anomaly; false routine can be a trap.",
+   "Directive coverage": "Hunt, time pressure, the life and deception primary. Secondary: travel (routines are routes; alibi arithmetic), economy (remittances), politics (hunters' inference power), items (letters, tickets as evidence).",
+   "Why captivating & addictive": "A dilemma that never resolves — plausibility against predictability — turns life-sim upkeep into stealth decisions; being modelled is uncanny and compelling; a veteran's dossier is thin.",
+   "Engine implications": "Unified scheduler for personal and operational events; dated obligation entities; pattern mining over the witness log at institutional ticks, cached; explainable plausibility scoring against identity templates; correlation via fastest-path queries; hunters see only observable obligations; the habit model is one object that C05's hypotheses consume; the witness log is a C17 view.",
+   "Historical grounding": "Okhrana external-surveillance logs; bourgeois regularity (quarter-days, club nights, spa seasons); commercial travellers as an unremarked passenger class; shrinking journey times as new services open.",
+   "Provenance": "P09.10 (lead), P10.10, P09.06, P04.09, P04.12; M-P04-5, M-P09-3, M-P10-3; draws on P10.08 (C08), P02.05 (C17).",
+   "Support": "3 (P08, P09, P10); merge proposed by P04, P09, P10.",
+   "Flags addressed": "none; scoring kept explainable per P04.09's own risk note.",
+   "Amendments applied": "none directly; cross-references clarified per A-P01-3 (P04.12 stays a member here; the alibi test is C04's rule) and P08's seconding (one habit model, consumed by C05)."
+  }
+ },
+ {
+  "id": "C15",
+  "title": "The Concession House",
+  "support": 3,
+  "fields": {
+   "Type": "whole-game concept",
+   "One-line pitch": "You run a commission and concession house whose business funds the spying and whose spying wins the business; its books are the artifact that hangs you.",
+   "Central hook": "The firm is a legal person with a public and a true ledger; a concession is a project with political preconditions (company, guaranteeing bank, sovereign grant, legation backing) and a rumoured-to-voided state machine, valued against a polity stability converging to history.",
+   "How it plays": "Session: find a grant in play, travel to the grantor's capital, assemble the chain against rival Powers' agents; steal the rival bid, bribe the clerk who times the decree. Month: finance with bills, ship, collect commission; reconcile the books so spy money becomes trade income. Years: hold the syndicate seat or sell; 1917–18 expropriates Russia; the firm can go bankrupt while you walk away — but bankruptcy hands the books to a receiver for public examination (C08), and venture finance for C10's doomed projects flows through the same books, paying only in Tier 1–2 wins.",
+   "Directive coverage": "Economy and politics primary. Secondary: travel (capitals and territory), deception (the firm as legend), items (deeds, tenders), hunt (inquiry agents), time (option expiries), the life (visible means of support).",
+   "Why captivating & addictive": "Long payoffs interleaved with short tension; the Zeigarnik pull of a deal left half-closed; permanent near-solvency because two loops relieve each other's pressure; \"sell now or hold\" recurring.",
+   "Engine implications": "Transaction log with two ledger views and an audit AI; project objects as dependency chains with political preconditions; contract state machines on the world clock; rival bidding; polity stability converging to dated regime changes.",
+   "Historical grounding": "The 1903 Baghdad Railway concession, granted by Ottoman irade, its kilometric guarantees secured on revenues administered by the Public Debt Administration; Persian oil 1901, struck 1908; arms-firm commission agents; Trading with the Enemy Acts.",
+   "Provenance": "P03.12 (lead), P06.06, P07.10, P06.01, P06.05; M-P06-1, M-P07-5; draws on P02.12 (C18), P07.07 (C10).",
+   "Support": "3 (P06, P07, P10); merge proposed by P06, P07 (nine flaggers).",
+   "Flags addressed": "P07.10 (×9) and P06.06 (×3) merged, counted once; stability bounded to convergence (P07); P06.01 title collision resolved by renaming.",
+   "Amendments applied": "A-P06-1 (receiver rule), A-P09-3 (draws on P07.07); P03 correction 2."
+  }
+ },
+ {
+  "id": "C16",
+  "title": "The Four Windows",
+  "support": 3,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "You never read hunter inference — what the services have concluded — except through costly windows; your own trail is always visible, computed from your own records, and says nothing about what was read or inferred.",
+   "Central hook": "Hunter belief is exposed only through known consolidation rhythms with unknown content; what hunters publish and what you publish back; a list of inferred habits obtainable at risk; a replayable reconstruction of the evidence chain after capture; and — a window of the same kind — the interrogation room (C12), where question patterns leak the dossier. C17's exposure map, C02's forecast and C04's linkage indicator are own-record views, not windows.",
+   "How it plays": "Daily: buy the editions (description, reward, later a photograph) and answer in kind: agony-column cipher, a planted sighting, a paid paragraph. Registers collect nightly, gazettes weekly, circulars monthly, tightening in wartime: a tempo of boldness and retreat. After an arrest: see the dossier as built — register, cable copy, the timetable deduction excluding other routes — then continue: interrogation, remand, expulsion or a sentence; the autopsy also surfaces approach events made on your dependants (C08) and replays C05's inference over C17's records.",
+   "Directive coverage": "Hunt primary. Secondary: deception (planted sightings), coding (agony-column ciphers), economy (paragraphs, bail), politics (exchanges; censorship), travel (circulation areas), time (editions as rhythm), the life (sentences consume years).",
+   "Why captivating & addictive": "Fairness attribution best predicts persistence after loss; the autopsy converts loss into mastery and reads as a story; dread sought daily; relief when the edition is silent.",
+   "Engine implications": "Deterministic, seed-replayable simulation with provenance on every inference, also the engine's debugging tool; publications as broadcast events with circulation geometry and recall multipliers, relayed by agencies with delay; cadence from institutional parameters; procedural notice text; windows read faction stores only through these channels, and own-trail views never do.",
+   "Historical grounding": "Police Gazette and Steckbrief traditions; half-tone photography in dailies from the 1900s; the agony column as covert channel; expulsion or short sentences as prewar agents' fate; wartime courts-martial.",
+   "Provenance": "P08.09 (lead), P09.02, P08.08; M-P08-4; draws on P09.10 (C14), P01.09 (reveal clock inferred, never displayed), P01.11, P05.08 (interrogation, C12).",
+   "Support": "3 (P01, P08, P09); merge proposed by P08.",
+   "Flags addressed": "P09.02 (P03): rhythms derive from institutional clocks, no visible calendar strip; P07.12's planted-news exploit closed as in C13.",
+   "Amendments applied": "A-P01-2 (with P05's caveat), A-P08-3, A-P10-1 (P08's caveat)."
+  }
+ },
+ {
+  "id": "C17",
+  "title": "The Paper Hunter: One Evidence Engine",
+  "support": 3,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "Never observed, only recorded: every act writes a record into an institutional ledger with coverage, lag and fidelity; hunters read only what reached them; every other hunt candidate reads this store.",
+   "Central hook": "One append-only record store whose entries are one tuple (subject, predicate, value, confidence, source, time, authorship, readers): world-emitted records (a hotel slip) and asserted claims (an Assert in C12, a report token in C01, a forged field in C06) are one type, differing only in authorship; a faction's dossier is its filtered view of both; a lie's truth-distance (C12) is the difference between a claim and the world log; the authorship field makes manufactured evidence a first-class verb.",
+   "How it plays": "The convenient act writes a record; the awkward one writes none. Day: reason about the hunter's probable knowledge; route around it. Week: thin your trail (cleaning writes a record too); or feed the hunter a through-ticket never used — fabrications must fit the timetable or be discarded, raising scepticism. Steal the dossier: remove a page and deduction regresses.",
+   "Directive coverage": "Hunt primary. Secondary: travel (tickets, stamps), economy (drafts, decoys), deception (which identity signs), items (a labelled trunk), politics (who reads which ledger), time.",
+   "Why captivating & addictive": "Mundane verbs turn tense; a legible exposure map sustains fear without helplessness; deceiving a visible, learning reasoner is the richest agency.",
+   "Engine implications": "C17 is the single record substrate of the hunt: C02's traces, C05's evidence, C03's faction stores, C08's gazettes, C13's arriving facts, C14's witness log, C16's autopsy and C19's cargo records are rows or filtered views of this one log; C13's arrival events are this log's lag-and-reader model; C16's autopsy replays C05's inference over these records; the player's trail view is a filter over their own records (the self-forecast shared with C02 and C13); dossiers and inference appear only through C16's windows; dossiers as indexed filters; lazy materialisation (books, not clerks); per-service scepticism learner; local clocks and calendars convert displayed times.",
+   "Historical grounding": "Meldewesen (slips reach the police within a day); Russian passport desks; in Britain nobody is registered before August 1914 (aliens from 5 August 1914, British subjects from 1915, general hotel registers from 1920); Russian registers Julian to 1918.",
+   "Provenance": "P08.01 (lead), P03.01, P02.05, P04.05, P08.10; M-P03-1, M-P08-1, M-P09-5 (ledger half); draws on P03.07 (calendar rule).",
+   "Support": "3 (P03, P05, P08); merge proposed by P03, P08, P09.",
+   "Flags addressed": "P04.05 folded, trace table kept; P01.03's heat (P08) derived here; P03.07's calendar rule attached.",
+   "Amendments applied": "A-P01-2, A-P05-1, A-P08-1, A-P08-3; P03 correction 1."
+  }
+ },
+ {
+  "id": "C18",
+  "title": "Wants and Windows: The World Posts Its Own Jobs",
+  "support": 3,
+  "fields": {
+   "Type": "whole-game concept",
+   "One-line pitch": "No authored missions: factions derive goals from the world state and post time-windowed, located commissions for which you are one candidate among rivals.",
+   "Central hook": "Wants (who pays for what, by when) and windows (where and when obtainable) are generated by world state; offers exclude each other by travel time; secrets carry per-faction value curves that rise toward a crisis and collapse on publication.",
+   "How it plays": "Morning: scan the board (editions, rumours, handlers), filtered by location and what factions believe about each identity. Decide by timetable (can I get there?), hunt state (does it cross a cordon?) and politics (who is angered); match window to want before either closes. Factions pay on corroboration: a delivery is scored against the faction's other sources after a verification lag (hours at a bourse, weeks at a registry); a fabricated window is paid provisionally and, when contradicted, reverses as credit loss and suspicion (C01's consistency debt); a secret sold twice loses its exclusivity premium and the copies carry marks (C06). A slow player watches a rival take the job; lapsed offers report their outcomes; fulfilment perturbs the state that generates the next wants.",
+   "Directive coverage": "Economy, politics and time pressure primary. Secondary: travel (matching constraint), items (value curves), deception (fabricated windows), hunt (counter-intelligence posts jobs targeting you), the life (jobs pay rent).",
+   "Why captivating & addictive": "Mutual exclusivity makes choice meaningful: every acceptance is a visible refusal from geometry, not timers; counterfactual feedback from lapsed offers fuels \"next time\"; open wants are open loops.",
+   "Engine implications": "Faction planners re-planning only when subscribed state changes; tasks needing an agent become commissions in a bid market; wants and windows as typed records from templates; faction goals only Tier 1–2 objectives; payment events carry a verification timer and a reversal branch.",
+   "Historical grounding": "Commission agents for arms firms; concession brokering in Persia and Manchuria; services buying documents from freelancers and paying by results; agency wires as the public signal of demand.",
+   "Provenance": "P02.12 (lead), P01.02, P09.07, P07.05; M-P01-3, M-P02-5, M-P07-5 (board half).",
+   "Support": "3 (P01, P06, P07); merge proposed by P01, P02, P07.",
+   "Flags addressed": "P02.12 (P07): Tier 0 events are exogenous inputs planners react to, never outputs; P01.02's variable-ratio framing reworded per P09.",
+   "Amendments applied": "A-P06-2."
+  }
+ },
+ {
+  "id": "C19",
+  "title": "Everything That Moves Has an Itinerary",
+  "support": 3,
+  "fields": {
+   "Type": "whole-game concept",
+   "One-line pitch": "The timetable that moves you also moves your luggage, crates, couriers, letters, sub-agents, each with an itinerary; your plans compile into the world's scheduler.",
+   "Central hook": "Any entity holds an itinerary; an operation is a task DAG with windows and fallbacks that the engine validates against the timetable, compiles and re-plans when the world intrudes; a compromised node cascades through all in flight.",
+   "How it plays": "Pack: hand luggage is searched at frontiers; registered luggage goes ahead by slow freight; left-luggage receipts are tradable keys. Consign: a crate under a false manifest moves at freight speed, examined by C06's two-step rule — a depth draw whose odds are visible before you commit, then deterministic resolution — and pursued only through C17's records, never a second hunter board. Dispatch: couriers and sub-agents act by cable and post, reporting late, garbled or, if turned, false. Presence is fast and visible; delegation slow and corruptible; decide where your body goes.",
+   "Directive coverage": "Travel, items and economy primary. Secondary: hunt (cargo is a record; the network is traced), deception (manifests), coding (code books for delegation), politics (contraband, blockade), time (cargo never sleeps).",
+   "Why captivating & addictive": "Two bodies in play: the crate on the freight timetable is a second hidden-movement cliffhanger (\"will it make the transshipment?\") resolved by a rendezvous you planned; delegation is a Zeigarnik open loop — you learn three days later what a sub-agent did, late, garbled or false; the customs gamble shows its odds before you commit and stakes artifacts you own; repairing a cascading plan against the clock is flow, and every cascade is a crisis of your own making.",
+   "Engine implications": "Declarative plan DAGs; critical path and slack on the timetable; one planner for all agents; itinerary-holder entities; examination by C06's seeded depth draw (edge, date, papers, manifest); agents with loyalty and message queues.",
+   "Historical grounding": "Weight-based excess charges; sealed through luggage; grande and petite vitesse goods classes; bills of lading and Lloyd's insurance; transshipment ports; 1914 gun-running.",
+   "Provenance": "P02.06 (lead), P04.03, P04.11, P06.12, P01.12; M-P02-4, M-P04-4; draws on P06.10's luggage trade loop (C13).",
+   "Support": "3 (P02, P04, P06); merge proposed by P02, P04.",
+   "Flags addressed": "P06.12 (P01: scope) bounded — cargo writes records into C17's ledger, no separate hunter board; the body stays central.",
+   "Amendments applied": "A-P09-2 (with P08's caveat); aligned with A-P06-3."
+  }
+ },
+ {
+  "id": "C20",
+  "title": "Codes, Ciphers, Censors and Copies",
+  "support": 2,
+  "fields": {
+   "Type": "game-defining system (pitched as a game)",
+   "One-line pitch": "Every message has readers: a cable's office copy outlives you, letters pass learning censors, and intercepts are ciphertexts you break by hand, book, bureau or roll.",
+   "Central hook": "An abstraction ladder (hand, book, bureau, roll) yields one object; censors score letter components with date-improving heuristics, so codes have half-lives; a captured book reads traffic until its owner rotates it when visible exploitation raises hidden suspicion.",
+   "How it plays": "Composing: shave words (cables cost per word); commercial code anyone with the edition reads, or private cipher, admitted only from deposited lists after August 1914; route by courier for permanence over speed. Reading: frequency and crib tools make Playfair feasible by hand; novices pay a bureau or use a book (incriminating). Every decrypt used is a wager: exploit and risk the source, or hold.",
+   "Directive coverage": "Coding and deception primary. Secondary: items (code books, inks), economy (tariffs, bureau fees), politics (wartime censorship), travel (intercepts worth a train), hunt (reading hunters' traffic), time (censor delays).",
+   "Why captivating & addictive": "Puzzle \"aha\" and competence, a skill acquired, not a stat raised; novices progress while experts earn faster, cheaper intelligence; the source-burning dilemma is tension with legible consequence.",
+   "Engine implications": "String-level encryption of templated plaintexts with a crib vocabulary; the abstract rung returns identical outputs and reads the character's cipher skill (C11), so player-head mastery and character skill coexist on one ladder; messages as entities with routing paths, copy-holders and decay; copies and censors' flags are C17 records; per-office anomaly scoring with date-indexed parameters; per-faction hidden compromise-suspicion.",
+   "Historical grounding": "Bentley's code; Playfair in the Boer War and the Great War; naval code books captured 1914; Room 40; ADFGVX 1918; Okhrana black cabinets; wartime postal censorship.",
+   "Provenance": "P05.05 (lead), P03.03, P03.02, P09.08; M-P05-3; draws on P05.04 (C13), P02.11 (C03).",
+   "Support": "2 (P03, P05); merge proposed by P05 (P01, P02 concur via flags).",
+   "Flags addressed": "P09.08 (×2) merged — source-burning and the teaching staircase kept; the paid rung always exists; plaintexts templated per P02.",
+   "Amendments applied": "none directly; P03 correction 3; reads A-P10-3 (skill values)."
+  }
+ }
+]
