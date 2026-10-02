@@ -57,3 +57,7 @@ P03 flagged three inaccuracies in the Charter's grounding kit (gauge break = cha
 `committee/round-1B-synthesis/ALL_PROPOSALS.md` compiled verbatim from the ten final files (120 proposals, ~40,000 words) with an index table of ID, title, type and panelist. Nothing was edited. *(Typo fix 11:19: three word counts in the table above corrected to the Secretary's measurement of the final files.)*
 
 *Housekeeping:* pushes to the remote are refused (HTTP 403: the Claude GitHub App is not authorised for this repository). The owner instructed "just commit for now, no pushing"; all work is committed locally on `claude/spy-life-sim-game-design-lvtgcg`.
+
+### 11:20 — Round 1B-1 (Review & Nominate) opened (Event E-003)
+- All ten panelists (the same agents, continuing with their Round 1A context) were instructed to read the entire compiled pool and the Charter errata, and to file a review per `REVIEW_TEMPLATE.md`: exactly 10 nominations (≤3 own), ≤5 merge proposals, ≤5 flags, plus role-lens audit notes. Each panelist was assigned an audit lens matching their role: P01 coherence of the loop; P02 feasibility and a common engine spine; P03 historical accuracy; P04 travel depth; P05 information systems; P06 economic integrity; P07 world-clock integrity; P08 hunt fairness; P09 hook honesty; P10 the life as a whole.
+- Panelists may not read one another's reviews in this sub-round (independent judgement first; deliberation happens on the Rapporteur's draft in 1B-3).
