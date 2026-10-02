@@ -34,17 +34,17 @@ Related files:
 ### 10:53–11:16 — Round 1A submissions received (Event E-001)
 All ten panelists filed within ~23 minutes. Each submission was format-checked by the Secretary (heading regex, eight required fields, ≥10 proposals) and spot-checked for the prohibition (named persons, plot, art/tone vocabulary): clean. Panelists trimmed their files after first writing them; the Secretary committed each state as it appeared and compiled the pool only from final versions.
 
-| Panelist | File | Proposals | Words (final) | Final report |
+| Panelist | File | Proposals | Words (final, Secretary's whitespace count) | Final report |
 |---|---|---|---|---|
 | P01 Core Loop & Systems | `P01-core-loop.md` | 12 | 3,780 | 11:05 |
-| P02 Simulation Engine | `P02-engine.md` | 12 | 3,840 | 11:12 |
-| P03 Period Historian | `P03-historian.md` | 12 | 3,787 | 11:16 |
+| P02 Simulation Engine | `P02-engine.md` | 12 | 3,783 | 11:12 |
+| P03 Period Historian | `P03-historian.md` | 12 | 3,846 | 11:16 |
 | P04 Travel & Logistics | `P04-travel.md` | 12 | 3,697 | 11:08 |
 | P05 Deception/Conversation/Crypto | `P05-deception.md` | 12 | 3,709 | 11:08 |
 | P06 Economy/Business/Artifacts | `P06-economy.md` | 12 | 3,748 | 11:04 |
 | P07 Politics & Warfare | `P07-politics.md` | 12 | 3,759 | 11:09 |
 | P08 Pursuit & Hidden Information | `P08-pursuit.md` | 12 | 3,805 | 11:06 |
-| P09 Player Psychology & Retention | `P09-psychology.md` | 12 | 3,981 | 11:11 |
+| P09 Player Psychology & Retention | `P09-psychology.md` | 12 | 3,745 | 11:11 |
 | P10 Life-Sim & Progression | `P10-life-sim.md` | 12 | 3,839 | 11:09 |
 
 - **Total: 120 proposals** (owner's minimum was 100). Every panelist marked at least two proposals as "risky but potentially brilliant"; whole-game concepts and game-defining systems are both well represented.
@@ -54,6 +54,6 @@ All ten panelists filed within ~23 minutes. Each submission was format-checked b
 P03 flagged three inaccuracies in the Charter's grounding kit (gauge break = change of train, not bogie exchange; Trans-Siberian through running 1903–04; Britain had no routine hotel registration before 1914–16). The Secretary appended an *Errata* section to `CHARTER.md` rather than silently editing the kit, so the record shows what panelists read in Round 1A. All panelists will be told of the errata when Round 1B opens.
 
 ### 11:17 — Pool compiled; Round 1A closed (Event E-002)
-`committee/round-1B-synthesis/ALL_PROPOSALS.md` compiled verbatim from the ten final files (120 proposals, ~40,000 words) with an index table of ID, title, type and panelist. Nothing was edited.
+`committee/round-1B-synthesis/ALL_PROPOSALS.md` compiled verbatim from the ten final files (120 proposals, ~40,000 words) with an index table of ID, title, type and panelist. Nothing was edited. *(Typo fix 11:19: three word counts in the table above corrected to the Secretary's measurement of the final files.)*
 
 *Housekeeping:* pushes to the remote are refused (HTTP 403: the Claude GitHub App is not authorised for this repository). The owner instructed "just commit for now, no pushing"; all work is committed locally on `claude/spy-life-sim-game-design-lvtgcg`.
