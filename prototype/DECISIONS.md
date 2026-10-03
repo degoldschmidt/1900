@@ -150,3 +150,34 @@ Already settled by the kit changes:
 | 15 | C04 | Keep the second hunting service and the photograph rule | Keep; decide at G1 by source coverage |
 
 Question 10 bears on C04's hook. Before the war, linking two legends depends mostly on the player's own footprint crossing jurisdictions. The owner should weigh this at G1, together with the wartime source sub-gate.
+
+## 2026-10-03 12:50 — Keyer calibration, round 2; D1 closed (Event P-E008; Decision P-005)
+
+**Set-up.** Three fresh synthetic pages with sealed ground truth, 677 cells per keyer:
+- seed 31: light degradation, mrn/aft style;
+- seed 37: light degradation, mrn/aft style, 15 rows;
+- seed 41: heavy blur, 12 trains.
+
+Two new blind keyers worked from the revised briefs, then one resolver.
+
+**Results**
+
+| | cells | value errors | exact errors | illegible |
+|---|---|---|---|---|
+| single keyers (A+B) | 1,354 | 0 (0.00%) | 20 | 8 |
+| resolved | 677 | **0 (0.00%)** | 19 | 14 (2.1%) |
+
+- **Both targets are met** on all three pages: single keyer ≤ 1.0% and resolved ≤ 0.1%, measured on value errors.
+- **Illegible cells.** All 14 are on blurred prints. Ten are footnote symbols (†/‡/§, b/p) and four are header train numbers. All five train-number readings the resolver offered in its notes were correct: 308, 186, 396a, 352a and 388.
+- **Exact errors.** These are all typography: bold on the ditto marks under bold station names, which one keyer and then the resolver judged heavy, and one separator.
+
+**Decision P-005 (scoring refinement, made after seeing round 2's single-keyer results, and stated as such):**
+- Bold counts toward the value error rate only on body cells, where it marks p.m. times. On station names and train numbers it is emphasis no game uses.
+- Two keyers abstaining on the same reading count as concordant for the re-key threshold. The cell still goes to the resolver.
+- Under the round-1 rules these round-2 single keyers would have shown 18 extra label-bold "errors". None changes data any game reads.
+
+**Across both rounds.** One value error survived resolution in 1,301 resolved cells: round 1's header `108` read as `106`. It came before the confusable-digit rule. With the final briefs, no value error survived. Abstention is 0% on light-degradation pages and 2–6% on heavy-blur pages, so scan resolution decides the waiver workload.
+
+**D1 is closed.** The data tooling runs end to end on synthetic pages and keyer error is within target. Calibration costs about 120,000 tokens per keyer per 9-crop round and 170,000–200,000 per resolver. This feeds the pilot (D2) throughput estimate.
+
+**Waiting on access.** The remaining milestones need sources: D0 discovery, G1, the D2 pilot, transcription, historian review and freezes, and then the three builds. The four library domains still do not connect (re-checked 12:50).
