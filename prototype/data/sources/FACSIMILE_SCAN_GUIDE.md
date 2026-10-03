@@ -1,6 +1,13 @@
 # Photographing the Bradshaw's Continental facsimile
 
-Gate G1 (decision P-007) takes the 1913 *Bradshaw's Continental Railway Guide* as the timetable anchor. The guide is available as a modern printed facsimile. Your photos are the scans: the keyers read them, and every transcribed time cites the page it came from. The photos are never committed to the repository; only the transcribed values and their citations are.
+Gate G1 (decisions P-007 and P-009) takes a printed facsimile of *Bradshaw's Continental Railway Guide* as the timetable anchor. Your photos are the scans: the keyers read them, and every transcribed time cites the page it came from. The photos are never committed to the repository; only the transcribed values and their citations are.
+
+**Which book.**
+- **Best:** *Bradshaw's August 1914 Continental Guide*, the David & Charles facsimile of 1972, later reprinted. It reproduces the issue in force at the outbreak of war, which is exactly the plan's anchor month. Second-hand copies are common. archive.org holds it only as a borrow-only scan that cannot be fetched from here.
+- **Also usable:** the 1913 facsimile. That makes the anchor 1913, held into 1914 under the approved rule and flagged as a gap.
+- Whichever you use, photograph its title page first so the issue month is on record.
+
+**Already covered online.** The Berlin – Dresden – Prague – Vienna route (no. 9 below) comes from the Dresden library's digitised regional timetables: winter 1913/14 and summer 1914. Photograph it from the facsimile only if it is quick; it serves as a cross-check.
 
 ## 1. What to photograph, in this order
 

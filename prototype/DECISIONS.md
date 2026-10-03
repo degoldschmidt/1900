@@ -274,3 +274,23 @@ If the field accepts wildcards: `*.europeana.eu`, `*.deutsche-digitale-bibliothe
 **Deferred:**
 - The Tier-0 political event tests (T5a, T5b), since the invented world has no history. The code paths exist and are exercised through test overrides.
 - The browser half of the replay test (T7), which waits for stage 2.
+
+## 2026-10-03 13:45 — D0, second pass in the newly opened libraries (Event P-E012; Decision P-009)
+
+**Access.** These are reachable: the Europeana API, SLUB Dresden (its `/data/kitodo/` paths serve METS, images, OCR and PDFs; the viewer pages have a bot check), the Munich digital collections, both Berlin State Library hosts, and Polona. These are not: `www.europeana.eu`, `www.deutsche-digitale-bibliothek.de`, `labs.ddb.de`, `www.delpher.nl`, `resolver.kb.nl`, `anno.onb.ac.at` and `digital.onb.ac.at`.
+
+**Finding.**
+1. **No national or international timetable for 1912–1915 is in full view** in any reachable library. That covers archive.org, Gallica, the Munich collections (Bavarian Kursbuch only to 1901), the Berlin State Library, Polona and Europeana (maps only).
+2. **One regional series is fully usable:** SLUB Dresden's *R. Fritzsches Kursbuch für Sachsen, das übrige Mitteldeutschland, Böhmen und Schlesien*. It has OCR and 300 dpi page images, verified by download (1299×1842). The issues:
+   - summer 1911 to winter 1915/16;
+   - in particular **Winter 1913/14** (valid 1 October 1913 – 30 April 1914, `rfrkuf_394077458-19130002`), **Summer 1914** (1 May – 30 September 1914, `rfrkuf_394077458-19140001`) and **Winter 1914/15** (`rfrkuf_394077458-19140002`).
+
+   It covers the tier-A corridor **Berlin – Dresden – Bodenbach – Prague – Vienna**, and Breslau – Oderberg in part. A sample of its OCR found no Eydtkuhnen, Herbesthal, Bentheim or Cologne tables.
+3. ***Bradshaw's August 1914 Continental Guide* exists as a facsimile** (David & Charles, 1972; also a 1980 edition). archive.org has it as a borrow-only scan (`bradshawsaugust10000unse`) that cannot be fetched. It covers every tier-A corridor and matches the planned anchor month exactly.
+
+**Decision P-009 (within the owner's G1 choices P-007):**
+- The preferred book to photograph is the **August 1914** facsimile, if the owner can get one; the 1913 facsimile remains acceptable. `FACSIMILE_SCAN_GUIDE.md` is updated.
+- **Berlin – Vienna comes from the Fritzsche Kursbuch** (source `slub-…`, to be added to the fetch tools): Summer 1914 is the anchor and Winter 1913/14 the earlier issue.
+- **C07's changeover scenario (S1) can now be real.** The Fritzsche pair sits exactly either side of the 1 May 1914 change, so S1 is re-pointed to the Berlin – Dresden – Prague – Vienna corridor.
+- **The D2 pilot moves to Berlin – Vienna in Fritzsche Summer 1914** (both directions). It needs no owner photos, so it can start now. The planned pilot corridor, Berlin – St Petersburg, waits for the facsimile.
+- Winter 1914/15 gives a wartime comparison on the same corridor.
