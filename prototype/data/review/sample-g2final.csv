@@ -1,5 +1,5 @@
 sample_id,source_id,table_ref,page_seq,crop_id,kind,col,row,page_region,rate_permille,reread_text,reread_marks,reread_sure,note
-Sg2final-0001,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,0,0,"389,193,51,28",553,,,,excluded from H2: the cell was a sign example whose stored reading build/brief/signs/index.md printed (P-E021); re-read by H3
+Sg2final-0001,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,0,0,"389,193,51,28",553,2 30,u,y,"H3 (re-read; H1/H2 had seen the stored reading in the sign-example index, P-E021): minutes underlined; the | below the cell belongs to the next row"
 Sg2final-0002,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,5,0,"651,193,61,28",553,8 47,i,y,H2: sheet01 t2; re-checked on a no-wash crop (3.2x): no underline
 Sg2final-0003,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,7,0,"774,193,53,28",553,10 20,,y,H2: sheet01 t3; re-checked on a no-wash crop (3.2x): no underline
 Sg2final-0004,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,8,0,"827,193,60,28",553,1 02,i,y,H2: sheet01 t4; re-checked on a no-wash crop (3.2x): no underline
@@ -32,7 +32,7 @@ Sg2final-0030,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,54,"1
 Sg2final-0031,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,16,55,"349,143,54,27",553,10 22,u;i,y,H2: sheet02 t31; re-checked on a no-wash crop (3.2x): underline directly under the minutes
 Sg2final-0032,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,17,55,"403,143,55,27",553,6 30,u,y,H2: sheet02 t32; re-checked on a no-wash crop (3.2x): underline directly under the minutes
 Sg2final-0033,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,20,55,"565,143,63,27",553,—,,y,H2: sheet03 t33
-Sg2final-0034,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,21,55,"628,143,57,27",553,,,,excluded from H2: the cell was a sign example whose stored reading build/brief/signs/index.md printed (P-E021); re-read by H3
+Sg2final-0034,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,21,55,"628,143,57,27",553,2 25,fn:•,y,"H3 (re-read; H1/H2 had seen the stored reading in the sign-example index, P-E021): small filled dot before the hour: about 34 px across at 4x like the small-dot example (36 px) and well under the large-disc example (55 px); no underline"
 Sg2final-0035,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,55,"685,143,62,27",553,—,,y,H2: sheet03 t35
 Sg2final-0036,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,23,55,"747,143,53,27",553,5 52,u,y,H2: sheet03 t36; re-checked on a no-wash crop (3.2x): underline directly under the minutes
 Sg2final-0037,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,24,55,"800,143,54,27",553,—,,y,H2: sheet03 t37
@@ -63,19 +63,19 @@ Sg2final-0061,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,61,
 Sg2final-0062,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,26,61,"908,1657,54,35",553,12 09,u,y,H2: sheet04 t62; re-checked on a no-wash crop (3.2x): underline directly under the minutes
 Sg2final-0063,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,27,61,"962,1657,63,35",553,2 25,u,y,H2: sheet04 t63 + wider crop: thick underline under 25
 Sg2final-0064,sl-rfrkuf_394077458-19140001,12,58,12-c0-3-r0-40-v2,cell,0,0,"412,370,125,23",549,2 42,u,y,H1: zoom checked: underline under 42
-Sg2final-0065,sl-rfrkuf_394077458-19140001,12,58,12-c0-3-r0-40-v2,cell,1,0,"537,370,63,23",549,,,,excluded from H1: the cell was a sign example whose stored reading build/brief/signs/index.md printed (P-E021); re-read by H3
+Sg2final-0065,sl-rfrkuf_394077458-19140001,12,58,12-c0-3-r0-40-v2,cell,1,0,"537,370,63,23",549,5 45,fn:§;u,y,"H3 (re-read; H1/H2 had seen the stored reading in the sign-example index, P-E021): section sign before the hour; minutes underlined"
 Sg2final-0066,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,6,0,"853,370,64,23",549,2 18,,y,H1: zoom checked: 8 clear
 Sg2final-0067,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,9,0,"1043,370,63,23",549,7 1?,u,x,"H1: second minute figure blotted into the underline: 3 or 8 (not 2), cannot tell; compared with this column's italic 3 (r3) and an italic 8 (c2 r3) on the scan, both fit equally"
 Sg2final-0068,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,11,0,"1168,370,52,23",549,9 54,u,y,"H1: heavy print; hour checked against the 9 of r1 in the same column on the scan (it matches the 9, not an 8)"
-Sg2final-0069,sl-rfrkuf_394077458-19140001,12,58,12-c0-3-r0-40-v2,cell,1,1,"537,393,63,26",549,,,,excluded from H1: the cell was a sign example whose stored reading build/brief/signs/index.md printed (P-E021); re-read by H3
+Sg2final-0069,sl-rfrkuf_394077458-19140001,12,58,12-c0-3-r0-40-v2,cell,1,1,"537,393,63,26",549,5 50,u,y,"H3 (re-read; H1/H2 had seen the stored reading in the sign-example index, P-E021): minutes underlined; no sign"
 Sg2final-0070,sl-rfrkuf_394077458-19140001,12,58,12-c0-3-r0-40-v2,cell,2,1,"600,393,63,26",549,|,,y,H1
-Sg2final-0071,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,5,1,"790,393,63,26",549,,,,excluded from H1: the cell was a sign example whose stored reading build/brief/signs/index.md printed (P-E021); re-read by H3
+Sg2final-0071,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,5,1,"790,393,63,26",549,8 33,,y,"H3 (re-read; H1/H2 had seen the stored reading in the sign-example index, P-E021): no underline and no sign; hour figure printed heavy (bold not marked)"
 Sg2final-0072,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,7,1,"917,393,63,26",549,|,,y,H1
 Sg2final-0073,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,11,1,"1168,393,52,26",549,9 59,u,y,H1
 Sg2final-0074,sl-rfrkuf_394077458-19140001,12,58,12-c0-3-r0-40-v2,cell,2,2,"600,419,63,26",549,7 26,,y,H1
 Sg2final-0075,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,6,2,"853,419,64,26",549,2 26,,y,H1
 Sg2final-0076,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,7,2,"917,419,63,26",549,4 26,,y,H1
-Sg2final-0077,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,9,2,"1043,419,63,26",549,,,,excluded from H1: the cell was a sign example whose stored reading build/brief/signs/index.md printed (P-E021); re-read by H3
+Sg2final-0077,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,9,2,"1043,419,63,26",549,7 21,u,y,"H3 (re-read; H1/H2 had seen the stored reading in the sign-example index, P-E021): italic figures with the second minute digit a slanted 1; minutes underlined; the | ending just above the cell belongs to the row above"
 Sg2final-0078,sl-rfrkuf_394077458-19140001,12,58,12-c0-3-r0-40-v2,cell,0,3,"412,445,125,27",549,2 54,u,y,H1
 Sg2final-0079,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,5,3,"790,445,63,27",549,8 39,,y,H1
 Sg2final-0080,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,6,3,"853,445,64,27",549,2 30,,y,H1
@@ -112,7 +112,7 @@ Sg2final-0110,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,15,88,
 Sg2final-0111,sl-rfrkuf_394077458-19140001,12,59,12-c16-19-r48-88-v2,cell,19,88,"792,1494,52,33",549,—,,y,H1: line under the cell is the table's full-width rule
 Sg2final-0112,sl-rfrkuf_394077458-19140001,12,59,12-c20-23-r48-88-v2,cell,21,88,"908,1494,62,33",549,12 16,u,y,"H1: short underline under 16, then the table's full-width rule below"
 Sg2final-0113,sl-rfrkuf_394077458-19140001,12,59,12-c20-23-r48-88-v2,cell,22,88,"970,1494,64,33",549,2 16,u,y,"H1: short underline under 16, then the table's full-width rule below"
-Sg2final-0114,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,0,0,"298,94,61,34",548,,,,excluded from H2: the cell was a sign example whose stored reading build/brief/signs/index.md printed (P-E021); re-read by H3
+Sg2final-0114,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,0,0,"298,94,61,34",548,9 55,fn:!;u,y,"H3 (re-read; H1/H2 had seen the stored reading in the sign-example index, P-E021): ! stands at the left edge of c0 straddling the cell box (about two thirds in the pale margin; checked on the single zoom); the next row has the same ! before its time; italic figures; minutes underlined"
 Sg2final-0115,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,2,0,"413,94,53,34",548,—,,y,H2: sheet05 t65
 Sg2final-0116,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,4,0,"528,94,52,34",548,2 30,u;i,y,H2: sheet05 t66; re-checked on a no-wash crop (3.2x): underline directly under the minutes
 Sg2final-0117,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,6,0,"634,94,49,34",548,7 10,i,y,H2: sheet05 t67 + wider crop

@@ -335,20 +335,24 @@ describe('margins and keying rounds (P-013)', () => {
     expect(beyond).toBeLessThan(170);
   });
 
-  it('a washed zoom keeps an underline just below the cell at full contrast and washes the context beyond (P-E021)', async () => {
+  it('a washed zoom keeps an underline just below the cell and a sign across its column rule at full contrast, and washes the context beyond (P-E021)', async () => {
     const dir = mkdtempSync(join(tmpdir(), 'p1900-wash-'));
-    // The cell's box is [50, 30, 60, 20]: an underline 2–4 px below its bottom edge, and a mark 12–14 px below it.
+    // The cell's box is [50, 30, 60, 20]: an underline 2–4 px below its bottom edge, a mark 12–14 px below it,
+    // a sign straddling its left edge (x 44–52), and a mark well left of it (x 32–34).
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100"><rect width="200" height="100" fill="#fff"/>
-      <rect x="60" y="52" width="40" height="2" fill="#000"/><rect x="60" y="62" width="40" height="2" fill="#000"/></svg>`;
+      <rect x="60" y="52" width="40" height="2" fill="#000"/><rect x="60" y="62" width="40" height="2" fill="#000"/>
+      <rect x="44" y="34" width="8" height="10" fill="#000"/><rect x="32" y="34" width="2" height="10" fill="#000"/></svg>`;
     writeFileSync(join(dir, 'p1.png'), await sharp(Buffer.from(svg)).png().toBuffer());
     const page = await loadPage(join(dir, 'p1.png'), 0);
     const png = await renderZoom(page, [30, 10, 100, 60], [50, 30, 60, 20], 2, 'wash');
     const { data, info } = await sharp(png).raw().toBuffer({ resolveWithObject: true });
     const at = (px: number, py: number) => grey(data, info.width, info.channels, (px - 30) * 2, (py - 10) * 2);
     expect(at(80, 53)).toBeLessThan(60); // the underline: full black
-    const beyond = at(80, 63); // past the clear strip: washed grey
-    expect(beyond).toBeGreaterThan(90);
-    expect(beyond).toBeLessThan(170);
+    expect(at(46, 39)).toBeLessThan(60); // the sign across the left edge: full black
+    for (const beyond of [at(80, 63), at(33, 39)]) { // past the clear strips: washed grey
+      expect(beyond).toBeGreaterThan(90);
+      expect(beyond).toBeLessThan(170);
+    }
   });
 
   it('gives a re-cut table new crop ids (crop_round), so the earlier round\'s keyings are kept', async () => {

@@ -8,8 +8,8 @@
  * numbered tiles, up to 16 per sheet (4×4). A tile is the cell cut from its page scan at page_region
  * (the panel's deskew applied, as for the crops), with context around it, magnified 2× to 4×
  * (make-crops.ts renderZoom, the code of the resolver and sample zooms): the cell is at full contrast
- * with red ticks outside the image at its four edges, the context is washed pale (except a strip just
- * above and below the cell, where an underline or a sign may sit past the row line: make-crops.ts
+ * with red ticks outside the image at its four edges, the context is washed pale (except a strip round
+ * the cell, where an underline may sit below the row line or a sign across a column rule: make-crops.ts
  * WASH_CLEAR), and nothing is drawn on the print (an outline would sit where an underline is printed). A band over the image carries a
  * large tile number, running through the run's sheets, and the cell's key (table · c<col> · r<row>).
  * A tile NEVER carries a transcription: only the location fields of a sample row are read (never
