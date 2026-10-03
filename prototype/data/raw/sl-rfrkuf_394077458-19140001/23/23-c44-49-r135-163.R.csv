@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c44-49-r135-163,header,44,0,528,,y,agree,
+23-c44-49-r135-163,header,45,0,448,,y,agree,
+23-c44-49-r135-163,header,46,0,D 55,,y,agree,
+23-c44-49-r135-163,header,47,0,D 65,,y,agree,
+23-c44-49-r135-163,header,48,0,534,,y,agree,
+23-c44-49-r135-163,header,49,0,452,,y,agree,
+23-c44-49-r135-163,header,44,1,II.-IV,,y,agree,
+23-c44-49-r135-163,header,45,1,I.-IV.,,y,agree,
+23-c44-49-r135-163,header,46,1,I.-III.,,y,agree,
+23-c44-49-r135-163,header,47,1,I.-III.,,y,agree,
+23-c44-49-r135-163,header,48,1,II.-IV,,y,agree,
+23-c44-49-r135-163,header,49,1,I.-III.,,y,agree,
+23-c44-49-r135-163,label,0,135,a. Tetschen …,fn:□,y,other,square to fn:□; two leader dots to one …
+23-c44-49-r135-163,label,0,149,us Bodenbach …,fn:□,n,other,name cut at crop's left edge (us); square to fn:□; leader dot to …
+23-c44-49-r135-163,label,0,163,in Dresden Hbf.,,n,A,fragment of a cut figure before in at crop edge not keyed
+23-c44-49-r135-163,cell,44,135,—,,y,agree,
+23-c44-49-r135-163,cell,45,135,—,,y,agree,
+23-c44-49-r135-163,cell,46,135,—,,y,agree,
+23-c44-49-r135-163,cell,47,135,—,,y,agree,
+23-c44-49-r135-163,cell,48,135,—,,y,agree,
+23-c44-49-r135-163,cell,49,135,4 35,b,n,A,3 open left; 5 flat flag; heavier than light 2 37 in c44
+23-c44-49-r135-163,cell,44,149,,,y,agree,
+23-c44-49-r135-163,cell,45,149,1 45,,y,agree,
+23-c44-49-r135-163,cell,46,149,2 55,i,y,agree,
+23-c44-49-r135-163,cell,47,149,4 02,i,y,agree,
+23-c44-49-r135-163,cell,48,149,—,,y,agree,
+23-c44-49-r135-163,cell,49,149,4 36,b,n,A,6 closed lower bowl; heavy face as r135
+23-c44-49-r135-163,cell,44,163,2 37,,y,agree,
+23-c44-49-r135-163,cell,45,163,3 42,,y,agree,
+23-c44-49-r135-163,cell,46,163,3 52,i,y,agree,
+23-c44-49-r135-163,cell,47,163,5 00,i,y,agree,
+23-c44-49-r135-163,cell,48,163,5 21,,y,agree,
+23-c44-49-r135-163,cell,49,163,6 23,b;u,n,A,6 closed bowl; 3 open left; underlined; heavy face

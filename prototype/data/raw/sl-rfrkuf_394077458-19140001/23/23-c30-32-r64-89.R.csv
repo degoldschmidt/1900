@@ -1,0 +1,19 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c30-32-r64-89,header,30,0,D 52,,y,agree,
+23-c30-32-r64-89,header,31,0,D196,,n,A,9 closed upper bowl; 6 closed lower bowl; arrow beside is separate
+23-c30-32-r64-89,header,32,0,561,,y,agree,
+23-c30-32-r64-89,header,30,1,I-III,,n,A,blurred; I-III without stops
+23-c30-32-r64-89,header,31,1,I.-III.,,n,A,blurred; stops after I and III visible
+23-c30-32-r64-89,header,32,1,I.-IV,,n,A,I.-IV with stop after I only
+23-c30-32-r64-89,label,0,64,aus Dresden Hbf. 4,,n,A,aus (a slightly cut); 4 printed after Hbf.
+23-c30-32-r64-89,label,0,78,62 in Bodenbach …,fn:□,y,other,62 kept; square to fn:□; leader dot to …
+23-c30-32-r64-89,label,0,89,62 in Tetschen …,fn:□,y,other,62 kept; square to fn:□; leader dot to …
+23-c30-32-r64-89,cell,30,64,9 55,u;i,y,A,italic; both minute 5s with flat flag; underlined
+23-c30-32-r64-89,cell,31,64,10 53,u;i,y,agree,
+23-c30-32-r64-89,cell,32,64,11 10,u,n,A,upright; minutes underlined
+23-c30-32-r64-89,cell,30,78,,,y,agree,
+23-c30-32-r64-89,cell,31,78,,,y,agree,
+23-c30-32-r64-89,cell,32,78,,,y,agree,
+23-c30-32-r64-89,cell,30,89,10 52,u;i,n,B,half-disc sits above the cell box as the lower end of the vertical rule of the note above; not printed with the time
+23-c30-32-r64-89,cell,31,89,11 51,u;i,n,B,half-disc ends the vertical rule of the note above; outside the cell
+23-c30-32-r64-89,cell,32,89,,,y,agree,

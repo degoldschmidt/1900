@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c19-24-r32-57,header,19,0,445,,n,A,same face as neighbouring train numbers 531 535 537 (not keyed bold)
+23-c19-24-r32-57,header,20,0,531,,y,agree,
+23-c19-24-r32-57,header,21,0,535,,y,agree,
+23-c19-24-r32-57,header,22,0,537,,y,agree,
+23-c19-24-r32-57,header,23,0,577,,y,agree,
+23-c19-24-r32-57,header,24,0,44?,,x,illegible,third digit cut off at crop's right edge
+23-c19-24-r32-57,header,19,1,I-IV,,y,agree,
+23-c19-24-r32-57,header,20,1,II.-IV.,,y,agree,
+23-c19-24-r32-57,header,21,1,II.-IV.,,y,agree,
+23-c19-24-r32-57,header,22,1,II-IV,,y,agree,
+23-c19-24-r32-57,header,23,1,II. III.,,y,agree,
+23-c19-24-r32-57,header,24,1,I-I?,,x,illegible,class cut off at crop's right edge
+23-c19-24-r32-57,label,0,32,aus Dresden Hbf. 4,,y,A,full name; 4 printed after Hbf.
+23-c19-24-r32-57,label,0,46,62 in Bodenbach …,fn:□,y,other,62 kept; square to fn:□; leader dot to …
+23-c19-24-r32-57,label,0,57,62 in Tetschen …,fn:□,y,other,62 kept; square to fn:□; two leader dots to one …
+23-c19-24-r32-57,cell,19,32,2 22,b,n,A,heavy face; heavier than c20 2 40
+23-c19-24-r32-57,cell,20,32,2 40,,y,agree,
+23-c19-24-r32-57,cell,21,32,3 15,b,n,A,heavy 3 rounded open top; 5 flat flag
+23-c19-24-r32-57,cell,22,32,4 00,fn:?,x,illegible,4 00 clear in light face; tiny raised dot after the minutes may be a mark or a speck; not identifiable
+23-c19-24-r32-57,cell,23,32,—,,y,agree,
+23-c19-24-r32-57,cell,24,32,4?,,x,illegible,time cut off at crop's right edge
+23-c19-24-r32-57,cell,19,46,4 08,b,n,A,8 with waist; face heavier than underlined 6 08 in c23
+23-c19-24-r32-57,cell,20,46,,,y,agree,
+23-c19-24-r32-57,cell,21,46,—,,y,agree,
+23-c19-24-r32-57,cell,22,46,—,,y,agree,
+23-c19-24-r32-57,cell,23,46,6 08,u,y,agree,
+23-c19-24-r32-57,cell,24,46,6?,,x,illegible,time cut off at crop's right edge
+23-c19-24-r32-57,cell,19,57,4 08,b;fn:!,n,A,clear ! sign before the time; same face as r46
+23-c19-24-r32-57,cell,20,57,,,y,agree,
+23-c19-24-r32-57,cell,21,57,—,,y,agree,
+23-c19-24-r32-57,cell,22,57,—,,y,agree,
+23-c19-24-r32-57,cell,23,57,,,y,agree,
+23-c19-24-r32-57,cell,24,57,,,n,A,only fragments of a sideways note; column partly cut at crop edge

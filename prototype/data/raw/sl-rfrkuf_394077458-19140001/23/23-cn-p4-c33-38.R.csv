@@ -1,0 +1,9 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-cn-p4-c33-38,footnote,0,0,□ In Tetschen u. Bodenbach Zoll- abfertigung.,c:37;c:38;c:39;fn:□,n,A,boxed note with square sign; line ends (hen ach g.) cut at the crop's right edge but visible portions match
+23-cn-p4-c33-38,footnote,0,1,§ Über Schreckenstein. Nur vom 16./5. bis 31./8.,c:37;fn:§,y,agree,
+23-cn-p4-c33-38,footnote,0,2,Schlaf- wagen Karlsbad- Berlin.,c:33,n,A,right line Schlaf-…wagen and left line Karlsbad-…Berlin. split by times 1 42-1 50
+23-cn-p4-c33-38,footnote,0,3,Schlafwagen Wien-Berlin.,c:34,y,agree,
+23-cn-p4-c33-38,footnote,0,4,Speisewagen Tetsch.-Berlin,c:36,n,A,Speisewagen then Tetsch.-Berlin on the right line; small gap after the hyphen is spacing
+23-cn-p4-c33-38,footnote,0,5,Schlafwagen Wien-Leipzig.,c:36,n,A,Schlafwagen then Wien-Leipzig. on the left line
+23-cn-p4-c33-38,footnote,0,6,Speise- wagen Prag- Berlin.,c:38,n,A,right line Speise-…wagen and left line Prag-…Berlin.
+23-cn-p4-c33-38,footnote,0,7,in Riesa,c:37,n,A,in Riesa under a brace

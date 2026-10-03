@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c55-60-r175-202,header,55,0,E 138,,n,A,3 open left; 8 with waist
+23-c55-60-r175-202,header,56,0,578,,y,agree,
+23-c55-60-r175-202,header,57,0,456,fn:•,n,A,round dot before 456; 5 flag and 6 closed bowl clear
+23-c55-60-r175-202,header,58,0,566,,y,agree,
+23-c55-60-r175-202,header,59,0,574,,y,agree,
+23-c55-60-r175-202,header,60,0,458,,y,agree,
+23-c55-60-r175-202,header,55,1,I.-III.,,y,agree,
+23-c55-60-r175-202,header,56,1,II.III.,,n,A,II.III. with stops
+23-c55-60-r175-202,header,57,1,I.-IV.,,y,agree,
+23-c55-60-r175-202,header,58,1,IV.,,y,agree,
+23-c55-60-r175-202,header,59,1,II. III.,,y,agree,
+23-c55-60-r175-202,header,60,1,I.-III.,,y,agree,
+23-c55-60-r175-202,label,0,175,a. Tetschen …,fn:□,y,other,square to fn:□; two leader dots to one …
+23-c55-60-r175-202,label,0,188,aus Bodenbach …,fn:□,y,other,square to fn:□; leader dot to …
+23-c55-60-r175-202,label,0,202,62 in Dresden Hbf. …,,y,other,Hbf. keeps its stop; the separate leader dot to …
+23-c55-60-r175-202,cell,55,175,—,,y,agree,
+23-c55-60-r175-202,cell,56,175,—,,y,agree,
+23-c55-60-r175-202,cell,57,175,9 12,u;fn:•,n,A,round dot before the time; minutes underlined
+23-c55-60-r175-202,cell,58,175,—,,y,agree,
+23-c55-60-r175-202,cell,59,175,—,,y,agree,
+23-c55-60-r175-202,cell,60,175,10 23,b;u,n,B,heavy face clearly heavier than light 9 30 and 11 10 in c58
+23-c55-60-r175-202,cell,55,188,8 33,u;i,y,agree,
+23-c55-60-r175-202,cell,56,188,—,,y,agree,
+23-c55-60-r175-202,cell,57,188,9 12,u,y,agree,
+23-c55-60-r175-202,cell,58,188,9 30,u,y,agree,
+23-c55-60-r175-202,cell,59,188,—,,y,agree,
+23-c55-60-r175-202,cell,60,188,10 26,b;u,n,B,heavy face as 10 23 above
+23-c55-60-r175-202,cell,55,202,9 47,u;i,y,agree,
+23-c55-60-r175-202,cell,56,202,10 29,u,y,agree,
+23-c55-60-r175-202,cell,57,202,11 02,u,y,agree,
+23-c55-60-r175-202,cell,58,202,11 10,u,y,agree,
+23-c55-60-r175-202,cell,59,202,11 58,u,y,agree,
+23-c55-60-r175-202,cell,60,202,12 09,b;u,n,B,heavy face as c60 above; heavier than c58 11 10

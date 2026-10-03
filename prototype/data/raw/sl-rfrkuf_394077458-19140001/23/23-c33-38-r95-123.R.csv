@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c33-38-r95-123,header,33,0,D 2,,n,A,figure has flat base of a 2; blurred top
+23-c33-38-r95-123,header,34,0,D 67,,y,agree,
+23-c33-38-r95-123,header,35,0,436,,y,agree,
+23-c33-38-r95-123,header,36,0,D 51,,y,agree,
+23-c33-38-r95-123,header,37,0,512,,y,agree,
+23-c33-38-r95-123,header,38,0,D 61,,y,agree,
+23-c33-38-r95-123,header,33,1,I-III.,,y,agree,
+23-c33-38-r95-123,header,34,1,I-III,,y,agree,
+23-c33-38-r95-123,header,35,1,I-IV.,,y,agree,
+23-c33-38-r95-123,header,36,1,I.-III.,,y,agree,
+23-c33-38-r95-123,header,37,1,II.-IV,,y,agree,
+23-c33-38-r95-123,header,38,1,I.-III.,,y,agree,
+23-c33-38-r95-123,label,0,95,a. Tetschen …,fn:□,y,other,square to fn:□; two leader dots to one …
+23-c33-38-r95-123,label,0,109,aus Bodenbach …,fn:□,y,other,square to fn:□; leader dot to …
+23-c33-38-r95-123,label,0,123,62 in Dresden Hbf.,,y,agree,
+23-c33-38-r95-123,cell,33,95,—,,y,agree,
+23-c33-38-r95-123,cell,34,95,4 28,u;i,y,agree,
+23-c33-38-r95-123,cell,35,95,—,,y,agree,
+23-c33-38-r95-123,cell,36,95,6 07,i,y,agree,
+23-c33-38-r95-123,cell,37,95,—,,y,agree,
+23-c33-38-r95-123,cell,38,95,—,,y,agree,
+23-c33-38-r95-123,cell,33,109,1 20,u;i,y,agree,
+23-c33-38-r95-123,cell,34,109,|,,y,A,thin vertical rule starts in the cell and runs down
+23-c33-38-r95-123,cell,35,109,5 15,b;u,n,A,heavy 5 with flat flag; minutes underlined
+23-c33-38-r95-123,cell,36,109,|,,n,A,vertical rule runs through the cell between two sideways notes
+23-c33-38-r95-123,cell,37,109,—,,y,agree,
+23-c33-38-r95-123,cell,38,109,8 35,i,y,agree,
+23-c33-38-r95-123,cell,33,123,2 25,u;i,y,agree,
+23-c33-38-r95-123,cell,34,123,5 26,u;i,y,agree,
+23-c33-38-r95-123,cell,35,123,6 55,b,n,A,6 closed lower bowl; 5s with flat flag; heavy face
+23-c33-38-r95-123,cell,36,123,7 08,i,y,agree,
+23-c33-38-r95-123,cell,37,123,9 10,,y,agree,
+23-c33-38-r95-123,cell,38,123,9 39,i,y,agree,

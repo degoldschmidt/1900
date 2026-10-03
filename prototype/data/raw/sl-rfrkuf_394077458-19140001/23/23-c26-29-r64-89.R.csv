@@ -1,0 +1,24 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c26-29-r64-89,header,26,0,451,,y,agree,
+23-c26-29-r64-89,header,27,0,D 56,,y,agree,
+23-c26-29-r64-89,header,28,0,451,,n,A,5 with flat flag as in 451 of c26
+23-c26-29-r64-89,header,29,0,453,,y,agree,
+23-c26-29-r64-89,header,26,1,I.-IV.,,y,agree,
+23-c26-29-r64-89,header,27,1,I.-III.,,y,agree,
+23-c26-29-r64-89,header,28,1,I.-IV.,,y,agree,
+23-c26-29-r64-89,header,29,1,I.-IV.,,y,agree,
+23-c26-29-r64-89,label,0,64,aus Dresden Hbf. 4,,n,A,aus visible (a slightly cut); 4 printed after Hbf.
+23-c26-29-r64-89,label,0,78,62 in Bodenbach …,fn:□,y,other,62 kept; square to fn:□; leader dot to …
+23-c26-29-r64-89,label,0,89,62 in Tetschen …,fn:□,y,other,62 kept; square to fn:□; leader dot to …
+23-c26-29-r64-89,cell,26,64,6 30,u,y,agree,
+23-c26-29-r64-89,cell,27,64,7 05,u;i,y,agree,
+23-c26-29-r64-89,cell,28,64,—,,y,agree,
+23-c26-29-r64-89,cell,29,64,8 12,b;u,n,A,8 with waist; heavy hour; minutes underlined
+23-c26-29-r64-89,cell,26,78,—,,y,agree,
+23-c26-29-r64-89,cell,27,78,8 04,u;i,y,agree,
+23-c26-29-r64-89,cell,28,78,8 41,b;u,n,A,hour as heavy as 8 12 and 10 00 in c29; minutes underlined
+23-c26-29-r64-89,cell,29,78,10 00,b;u,n,A,same face as the column's other times; underlined
+23-c26-29-r64-89,cell,26,89,—,,y,agree,
+23-c26-29-r64-89,cell,27,89,—,,y,agree,
+23-c26-29-r64-89,cell,28,89,8 39,b;u;fn:!,n,A,clear ! before time; 3 open left; face as 8 41 above
+23-c26-29-r64-89,cell,29,89,10 01,b;u,n,A,same face as 10 00 above; underlined

@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c7-12-r0-26,header,7,0,509,,y,agree,
+23-c7-12-r0-26,header,8,0,E137,,n,A,3 open on the left; 7 clear
+23-c7-12-r0-26,header,9,0,E139,,n,A,3 open left; 9 with tail
+23-c7-12-r0-26,header,10,0,437,,y,A,3 open left
+23-c7-12-r0-26,header,11,0,517,,y,agree,
+23-c7-12-r0-26,header,12,0,D 68,,n,A,6 closed lower bowl; 8 with waist
+23-c7-12-r0-26,header,7,1,I.-III.,,y,agree,
+23-c7-12-r0-26,header,8,1,I-III,,n,A,I-III blurred but three strokes after hyphen
+23-c7-12-r0-26,header,9,1,I.-III.,,y,agree,
+23-c7-12-r0-26,header,10,1,I-III,,y,agree,
+23-c7-12-r0-26,header,11,1,II.-IV,,y,agree,
+23-c7-12-r0-26,header,12,1,I.-III.,,y,agree,
+23-c7-12-r0-26,label,0,0,us Dresden Hbf. 4,,n,A,name cut at crop's left edge (us = aus); 4 printed after Hbf.
+23-c7-12-r0-26,label,0,14,in Bodenbach …,fn:□,y,other,square sign to fn:□; leader dot to …
+23-c7-12-r0-26,label,0,26,2 in Tetschen …,fn:□,n,other,2 at crop edge is tail of a cut number (other panels print 62); square to fn:□; leader dot to …
+23-c7-12-r0-26,cell,7,0,7 03,,y,agree,
+23-c7-12-r0-26,cell,8,0,7 10,i,n,A,italic 7 10; right side of 0 faint
+23-c7-12-r0-26,cell,9,0,7 53,i,y,agree,
+23-c7-12-r0-26,cell,10,0,8 30,b,n,A,8 with waist; heavy face
+23-c7-12-r0-26,cell,11,0,9 11,,y,agree,
+23-c7-12-r0-26,cell,12,0,10 00,i,y,agree,
+23-c7-12-r0-26,cell,7,14,8 20,,y,agree,
+23-c7-12-r0-26,cell,8,14,8 34,i,y,agree,
+23-c7-12-r0-26,cell,9,14,|,,n,A,thin vertical rule through the cell
+23-c7-12-r0-26,cell,10,14,10 07,b,n,A,heavy face
+23-c7-12-r0-26,cell,11,14,,,y,A,only sideways note text and the note box's lower rule
+23-c7-12-r0-26,cell,12,14,,,y,agree,
+23-c7-12-r0-26,cell,7,26,,,y,agree,
+23-c7-12-r0-26,cell,8,26,8 35,i,y,agree,
+23-c7-12-r0-26,cell,9,26,9 19,i,y,agree,
+23-c7-12-r0-26,cell,10,26,—,,y,agree,
+23-c7-12-r0-26,cell,11,26,—,,y,agree,
+23-c7-12-r0-26,cell,12,26,10 53,i,y,agree,

@@ -1,0 +1,7 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-cn-p1-c7-12,footnote,0,0,Nur Sonn-u. Festtags sowie am 2. Juni.,c:11,y,A,boxed note in c11 reads as A
+23-cn-p1-c7-12,footnote,0,1,Speisewagen Dresden-Wien Fr. J. Bf.,c:12,n,A,Speisewagen is the first (rightmost) sideways line; then Dresden-Wien Fr. J. Bf.
+23-cn-p1-c7-12,footnote,0,2,Nur Sonn- und Festtags.,c:9,y,agree,
+23-cn-p1-c7-12,footnote,0,3,? über Wschetat-Priwor Prag Fr. J. Bf.-Gmünd.,c:11;fn:?,x,illegible,sideways sign is a cross shape with a blob; dagger vs double dagger not decidable (context: † in c8 and c12)
+23-cn-p1-c7-12,footnote,0,4,Nur Sonn- und Festtags sowie am 2. Juni.,c:7,y,agree,
+23-cn-p1-c7-12,footnote,0,5,! Ank. Wien Fr. J. Bf.,c:11;fn:!,n,A,sign has the stem and dot of ! (as before 7 45 in c12)

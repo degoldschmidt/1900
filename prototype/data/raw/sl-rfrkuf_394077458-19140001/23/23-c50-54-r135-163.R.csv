@@ -1,0 +1,29 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c50-54-r135-163,header,50,0,D 53,,y,agree,
+23-c50-54-r135-163,header,51,0,544,,y,agree,
+23-c50-54-r135-163,header,52,0,548,,y,agree,
+23-c50-54-r135-163,header,53,0,454,,y,agree,
+23-c50-54-r135-163,header,54,0,554,,y,agree,
+23-c50-54-r135-163,header,50,1,I-III.,,y,agree,
+23-c50-54-r135-163,header,51,1,II.-IV,,y,agree,
+23-c50-54-r135-163,header,52,1,II. III.,,y,agree,
+23-c50-54-r135-163,header,53,1,I-III.,,y,agree,
+23-c50-54-r135-163,header,54,1,II.-IV,,y,agree,
+23-c50-54-r135-163,label,0,135,a. Tetschen …,fn:□,y,other,square to fn:□; two leader dots to one …
+23-c50-54-r135-163,label,0,149,us Bodenbach …,fn:□,n,other,name cut at crop's left edge (us); square to fn:□; leader dot to …
+23-c50-54-r135-163,label,0,163,in Dresden Hbf.,,n,A,fragment of a cut figure before in at crop edge not keyed
+23-c50-54-r135-163,cell,50,135,5 44,i,y,agree,
+23-c50-54-r135-163,cell,51,135,—,,y,agree,
+23-c50-54-r135-163,cell,52,135,—,,y,agree,
+23-c50-54-r135-163,cell,53,135,7 04,b;u,n,A,heavy 7 as in 7 03 and 8 54 below; minutes underlined
+23-c50-54-r135-163,cell,54,135,□,,y,other,a square sign printed alone in the cell (as the station sign); both keyers left it blank
+23-c50-54-r135-163,cell,50,149,5 45,i,y,agree,
+23-c50-54-r135-163,cell,51,149,—,,y,agree,
+23-c50-54-r135-163,cell,52,149,—,,y,agree,
+23-c50-54-r135-163,cell,53,149,7 03,b;u,n,A,3 open left; underlined; heavy face as r135
+23-c50-54-r135-163,cell,54,149,—,,y,agree,
+23-c50-54-r135-163,cell,50,163,6 53,u;i,n,A,italic; first minute digit has the flat top flag of 5 as in 5 45 above; underlined
+23-c50-54-r135-163,cell,51,163,7 50,u,y,agree,
+23-c50-54-r135-163,cell,52,163,8 37,u,y,agree,
+23-c50-54-r135-163,cell,53,163,8 54,b;u,n,A,8 with waist; 5 flat flag; heavy; underlined
+23-c50-54-r135-163,cell,54,163,9 29,u,y,agree,

@@ -1,0 +1,39 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c0-6-r0-26,header,0,0,431,,y,agree,
+23-c0-6-r0-26,header,1,0,D 1,,y,agree,
+23-c0-6-r0-26,header,2,0,433,,y,agree,
+23-c0-6-r0-26,header,3,0,501,,y,agree,
+23-c0-6-r0-26,header,4,0,435,fn:◗,n,A,half-disc sign before 435; last digit has flat top flag of 5 as in 435a
+23-c0-6-r0-26,header,5,0,435a,,y,agree,
+23-c0-6-r0-26,header,6,0,505,,n,A,both 5s have the flat top flag; 0 between
+23-c0-6-r0-26,header,0,1,I.-IV.,,y,agree,
+23-c0-6-r0-26,header,1,1,I-III,,y,A,I-III printed without stops
+23-c0-6-r0-26,header,2,1,I.-III.,,y,agree,
+23-c0-6-r0-26,header,3,1,II.-IV,,y,agree,
+23-c0-6-r0-26,header,4,1,I.-IV,,y,agree,
+23-c0-6-r0-26,header,5,1,IV.,,y,agree,
+23-c0-6-r0-26,header,6,1,II-IV,,n,A,II-IV; right arm of V hidden under column rule
+23-c0-6-r0-26,label,0,0,us Dresden Hbf. 4,,n,A,name cut at crop's left edge (us = aus); 4 printed after Hbf.
+23-c0-6-r0-26,label,0,14,in Bodenbach …,fn:□,y,other,square sign to fn:□; single leader dot to …
+23-c0-6-r0-26,label,0,26,2 in Tetschen …,fn:□,n,other,small 2 printed before name at crop edge (number kept); square to fn:□; leader dot to …
+23-c0-6-r0-26,cell,0,0,12 22,u,y,agree,
+23-c0-6-r0-26,cell,1,0,2 30,u;i,n,A,"italic 2 30 underlined; right side of italic 0 faint, no waist"
+23-c0-6-r0-26,cell,2,0,3 40,u,n,other,"rule under the minutes at hour baseline (as underline in c1), below the cell box edge; upright"
+23-c0-6-r0-26,cell,3,0,5 00,u,y,agree,
+23-c0-6-r0-26,cell,4,0,6 00,b,n,A,heavy face as c6 6 24
+23-c0-6-r0-26,cell,5,0,6 06,fn:?,x,illegible,6 06 clear; sign before the time looks like ? and cannot be identified
+23-c0-6-r0-26,cell,6,0,6 24,b,n,A,heavy face; 6 with closed bowl
+23-c0-6-r0-26,cell,0,14,2 18,u,y,agree,
+23-c0-6-r0-26,cell,1,14,3 40,u;i,y,A,italic underlined minutes
+23-c0-6-r0-26,cell,2,14,5 22,u,y,agree,
+23-c0-6-r0-26,cell,3,14,7 02,,y,agree,
+23-c0-6-r0-26,cell,4,14,7 58,b,n,A,8 with waist; heavy face
+23-c0-6-r0-26,cell,5,14,8 04,,y,agree,
+23-c0-6-r0-26,cell,6,14,—,,y,agree,
+23-c0-6-r0-26,cell,0,26,2 20,u,y,agree,
+23-c0-6-r0-26,cell,1,26,3 41,u;i,y,A,italic underlined minutes
+23-c0-6-r0-26,cell,2,26,5 21,u,y,agree,
+23-c0-6-r0-26,cell,3,26,,,y,A,blank; dot at top belongs to sideways note above
+23-c0-6-r0-26,cell,4,26,,,y,agree,
+23-c0-6-r0-26,cell,5,26,,,y,agree,
+23-c0-6-r0-26,cell,6,26,—,,y,agree,

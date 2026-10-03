@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c13-18-r32-57,header,13,0,439,,y,agree,
+23-c13-18-r32-57,header,14,0,521,,y,agree,
+23-c13-18-r32-57,header,15,0,D 62,,y,agree,
+23-c13-18-r32-57,header,16,0,D 66,,y,agree,
+23-c13-18-r32-57,header,17,0,443,,y,agree,
+23-c13-18-r32-57,header,18,0,529,,y,agree,
+23-c13-18-r32-57,header,13,1,I.-III.,,y,agree,
+23-c13-18-r32-57,header,14,1,II.-IV,,y,agree,
+23-c13-18-r32-57,header,15,1,I-III.,,y,agree,
+23-c13-18-r32-57,header,16,1,I-III.,,y,agree,
+23-c13-18-r32-57,header,17,1,I.-III,,y,agree,
+23-c13-18-r32-57,header,18,1,II.-IV.,,y,agree,
+23-c13-18-r32-57,label,0,32,aus Dresden Hbf. 4,,y,A,full name visible; 4 printed after Hbf.
+23-c13-18-r32-57,label,0,46,62 in Bodenbach …,fn:□,y,other,62 kept; square to fn:□; leader dot to …
+23-c13-18-r32-57,label,0,57,62 in Tetschen …,fn:□,y,other,62 kept; square to fn:□; two leader dots to one …
+23-c13-18-r32-57,cell,13,32,10 06,,y,agree,
+23-c13-18-r32-57,cell,14,32,10 45,,y,agree,
+23-c13-18-r32-57,cell,15,32,11 30,i,y,agree,
+23-c13-18-r32-57,cell,16,32,12 10,i,y,agree,
+23-c13-18-r32-57,cell,17,32,12 53,b,n,B,strokes heavier than light 10 06 in c13; same face as c18 1 55
+23-c13-18-r32-57,cell,18,32,1 55,,y,agree,
+23-c13-18-r32-57,cell,13,46,11 50,,y,agree,
+23-c13-18-r32-57,cell,14,46,—,,y,agree,
+23-c13-18-r32-57,cell,15,46,12 39,i,y,agree,
+23-c13-18-r32-57,cell,16,46,1 07,i,y,agree,
+23-c13-18-r32-57,cell,17,46,2 29,b,n,B,heavy 2 as in 12 53 above; heavier than c13 11 50
+23-c13-18-r32-57,cell,18,46,,,y,agree,
+23-c13-18-r32-57,cell,13,57,11 49,,y,agree,
+23-c13-18-r32-57,cell,14,57,,,y,agree,
+23-c13-18-r32-57,cell,15,57,12 39,i,y,agree,
+23-c13-18-r32-57,cell,16,57,—,,y,agree,
+23-c13-18-r32-57,cell,17,57,—,,y,agree,
+23-c13-18-r32-57,cell,18,57,—,,y,agree,

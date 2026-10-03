@@ -1,0 +1,29 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+23-c39-43-r95-123,header,39,0,516,,y,agree,
+23-c39-43-r95-123,header,40,0,442,,y,agree,
+23-c39-43-r95-123,header,41,0,444,,y,agree,
+23-c39-43-r95-123,header,42,0,E 140,,y,agree,
+23-c39-43-r95-123,header,43,0,446,,n,A,last digit at crop edge but closed lower bowl of 6 visible
+23-c39-43-r95-123,header,39,1,II.-IV,,y,agree,
+23-c39-43-r95-123,header,40,1,I.-IV.,,y,agree,
+23-c39-43-r95-123,header,41,1,I-IV.,,y,agree,
+23-c39-43-r95-123,header,42,1,I.-III.,,n,A,stops after I and III visible
+23-c39-43-r95-123,header,43,1,I.-IV,,n,other,I.-IV visible at the crop edge; a final stop may be cut off
+23-c39-43-r95-123,label,0,95,a. Tetschen …,fn:□,y,other,square to fn:□; two leader dots to one …
+23-c39-43-r95-123,label,0,109,aus Bodenbach …,fn:□,y,other,square to fn:□; leader dot to …
+23-c39-43-r95-123,label,0,123,62 in Dresden Hbf.,,y,agree,
+23-c39-43-r95-123,cell,39,95,—,,y,agree,
+23-c39-43-r95-123,cell,40,95,8 48,b,n,A,8 with waist; heavy hour as in c40 below
+23-c39-43-r95-123,cell,41,95,—,,y,agree,
+23-c39-43-r95-123,cell,42,95,—,,y,agree,
+23-c39-43-r95-123,cell,43,95,12 1?,,x,illegible,last minute digit cut off at crop's right edge
+23-c39-43-r95-123,cell,39,109,,,y,agree,
+23-c39-43-r95-123,cell,40,109,8 48,b,n,A,8 with waist; heavy face as r95
+23-c39-43-r95-123,cell,41,109,10 30,,y,agree,
+23-c39-43-r95-123,cell,42,109,12 02,i,y,agree,
+23-c39-43-r95-123,cell,43,109,|,,n,A,thin vertical rule through the cell at crop edge
+23-c39-43-r95-123,cell,39,123,10 38,,y,agree,
+23-c39-43-r95-123,cell,40,123,10 48,b,n,A,8 with waist; same face as 10 13 above
+23-c39-43-r95-123,cell,41,123,12 08,,y,agree,
+23-c39-43-r95-123,cell,42,123,1 10,i,y,agree,
+23-c39-43-r95-123,cell,43,123,1 48,,n,A,8 shows waist on the left side; right edge of cell cut
