@@ -1,0 +1,18 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c11-15-r31-43-v2,header,11,0,,i,n,A,c11 time 9 21 slants clearly: italic
+126-c11-15-r31-43-v2,header,12,0,,,y,agree,
+126-c11-15-r31-43-v2,header,13,0,,,y,agree,
+126-c11-15-r31-43-v2,header,14,0,,i,n,A,c14 times 9 55/11 16 in the upper block slant; 7 22 here less clearly
+126-c11-15-r31-43-v2,header,15,0,,i,y,A,c15 times 8 00 and 10 53/12 09 slant: italic
+126-c11-15-r31-43-v2,label,0,31,in Prag Ö. N.W.B.,,n,A,in Prag Ö. N.W.B. in worn small capitals
+126-c11-15-r31-43-v2,label,0,43,4?7 i. Wien N W.Bf,,x,illegible,middle figure of the table number blurred (5 or 8); context suggests 457; no stop printed after N or after Bf
+126-c11-15-r31-43-v2,cell,11,31,—,,y,A,a dash under the 7 30 of the row above
+126-c11-15-r31-43-v2,cell,12,31,10 41,b;u,n,B,thick heavy upright; minutes underlined
+126-c11-15-r31-43-v2,cell,13,31,—,,y,A,a dash under the 12 28 of the row above
+126-c11-15-r31-43-v2,cell,14,31,|,,n,A,a thin vertical rule down the middle of the cell
+126-c11-15-r31-43-v2,cell,15,31,|,,n,A,a thin vertical rule down the middle of the cell beside the column rule
+126-c11-15-r31-43-v2,cell,11,43,9 21,u,y,agree,
+126-c11-15-r31-43-v2,cell,12,43,6 17,b,y,B,thick heavy upright figures
+126-c11-15-r31-43-v2,cell,13,43,,,y,agree,
+126-c11-15-r31-43-v2,cell,14,43,7 22,,y,A,7 22 clear
+126-c11-15-r31-43-v2,cell,15,43,8 00,,y,agree,

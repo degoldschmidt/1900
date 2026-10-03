@@ -1,0 +1,18 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c6-10-r31-43-v2,header,6,0,,,y,A,header band holds only the table rule
+126-c6-10-r31-43-v2,header,7,0,,i,n,A,c7 times 10 00/11 06 in the upper block slant; 4 06 here less clearly: italic kept with doubt
+126-c6-10-r31-43-v2,header,8,0,,,y,agree,
+126-c6-10-r31-43-v2,header,9,0,,i,y,agree,
+126-c6-10-r31-43-v2,header,10,0,,,y,A,header band holds only the table rule
+126-c6-10-r31-43-v2,label,0,31,in Prag Ö. N.W.B.,,n,A,in Prag Ö. N.W.B. in worn small capitals
+126-c6-10-r31-43-v2,label,0,43,4?7 i. Wien N W.Bf,,x,illegible,middle figure of the table number blurred (5 or 8); context suggests 457; no stop printed after N or after Bf
+126-c6-10-r31-43-v2,cell,6,31,1 57,b,y,B,thick heavy upright figures
+126-c6-10-r31-43-v2,cell,7,31,—,,y,agree,
+126-c6-10-r31-43-v2,cell,8,31,6 15,b;u,y,B,thick heavy upright; minutes underlined
+126-c6-10-r31-43-v2,cell,9,31,3 45,,y,agree,
+126-c6-10-r31-43-v2,cell,10,31,—,,y,agree,
+126-c6-10-r31-43-v2,cell,6,43,10 30,b;u,n,B,thick heavy upright; minutes underlined
+126-c6-10-r31-43-v2,cell,7,43,4 06,u;fn:°,n,A,small ring no taller than the minutes before 4; minutes underlined
+126-c6-10-r31-43-v2,cell,8,43,9 16,b;u,y,B,thick heavy upright; minutes underlined
+126-c6-10-r31-43-v2,cell,9,43,9 36,u,y,agree,
+126-c6-10-r31-43-v2,cell,10,43,—,,y,agree,

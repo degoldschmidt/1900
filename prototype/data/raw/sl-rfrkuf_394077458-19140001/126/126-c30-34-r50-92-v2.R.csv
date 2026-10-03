@@ -1,0 +1,36 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c30-34-r50-92-v2,header,30,0,I.-III,i,y,agree,
+126-c30-34-r50-92-v2,header,31,0,I-III,,n,A,I-III
+126-c30-34-r50-92-v2,header,32,0,I-III,,n,A,I-III
+126-c30-34-r50-92-v2,header,33,0,I.-III,,y,agree,
+126-c30-34-r50-92-v2,header,34,0,I-III,,y,agree,
+126-c30-34-r50-92-v2,label,0,50,aus Wien N.W.Bf.,,n,A,aus cut at the crop edge; Wien N.W.Bf. as keyed
+126-c30-34-r50-92-v2,label,0,62,a. Prag Ö. N.W.B.,,n,A,a. Prag Ö. N.W.B. in worn small capitals
+126-c30-34-r50-92-v2,label,0,64,a. Prag F. J. B. 122,,y,A,F. J. B. printed with spaces
+126-c30-34-r50-92-v2,label,0,91,i. Tetsch. N.W.B. 121 147,,y,agree,
+126-c30-34-r50-92-v2,label,0,92,in Dresd. Hbf. 23,,n,A,in cut at the edge; Dresd. Hbf. 23
+126-c30-34-r50-92-v2,cell,30,50,8 50,,y,agree,
+126-c30-34-r50-92-v2,cell,31,50,4 55,b,y,B,thick heavy upright figures
+126-c30-34-r50-92-v2,cell,32,50,7 10,b,y,B,thick heavy upright figures
+126-c30-34-r50-92-v2,cell,33,50,6 44,b;u,n,B,thick heavy upright; minutes underlined
+126-c30-34-r50-92-v2,cell,34,50,11 15,b,y,B,thick heavy upright figures
+126-c30-34-r50-92-v2,cell,30,62,2 01,,y,agree,
+126-c30-34-r50-92-v2,cell,31,62,6 19,u,y,agree,
+126-c30-34-r50-92-v2,cell,32,62,4 40,b,y,B,thick heavy upright figures
+126-c30-34-r50-92-v2,cell,33,62,—,,y,agree,
+126-c30-34-r50-92-v2,cell,34,62,—,,y,agree,
+126-c30-34-r50-92-v2,cell,30,64,2 50,,y,agree,
+126-c30-34-r50-92-v2,cell,31,64,5 55,b,y,B,thick heavy upright figures
+126-c30-34-r50-92-v2,cell,32,64,6 28,u,y,agree,
+126-c30-34-r50-92-v2,cell,33,64,Ank.,,y,agree,
+126-c30-34-r50-92-v2,cell,34,64,Ank.,,y,agree,
+126-c30-34-r50-92-v2,cell,30,91,5 25,,y,agree,
+126-c30-34-r50-92-v2,cell,31,91,8 20,b;u,y,B,thick heavy upright; minutes underlined
+126-c30-34-r50-92-v2,cell,32,91,10 04,b;u,y,B,thick heavy upright; minutes underlined
+126-c30-34-r50-92-v2,cell,33,91,,,y,agree,
+126-c30-34-r50-92-v2,cell,34,91,,,y,agree,
+126-c30-34-r50-92-v2,cell,30,92,6 53,u,y,B,rule under 53 visible in the zoom
+126-c30-34-r50-92-v2,cell,31,92,—,,y,agree,
+126-c30-34-r50-92-v2,cell,32,92,12 09,b;u,n,B,thick heavy upright; a rule under 09 at the cell foot
+126-c30-34-r50-92-v2,cell,33,92,,,y,agree,
+126-c30-34-r50-92-v2,cell,34,92,,,y,agree,

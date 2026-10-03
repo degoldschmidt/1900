@@ -1,0 +1,21 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c0-5-r31-43-v2,header,0,0,,,y,agree,
+126-c0-5-r31-43-v2,header,1,0,,,y,agree,
+126-c0-5-r31-43-v2,header,2,0,,,y,A,header band holds only the table rule
+126-c0-5-r31-43-v2,header,3,0,,,n,A,c3 8 32 slants but 8 24 is upright: column not judged italic
+126-c0-5-r31-43-v2,header,4,0,,i,n,A,c4 time 3 00 slants clearly: italic
+126-c0-5-r31-43-v2,header,5,0,,,y,agree,
+126-c0-5-r31-43-v2,label,0,31,in Prag Ö. N.W.B.,,n,A,in Prag Ö. N.W.B. in worn small capitals
+126-c0-5-r31-43-v2,label,0,43,4?7 i. Wien N W.Bf,,x,illegible,middle figure of the table number blurred (5 or 8); context suggests 457; no stop printed after N or after Bf
+126-c0-5-r31-43-v2,cell,0,31,ab,,y,agree,
+126-c0-5-r31-43-v2,cell,1,31,ab,,y,agree,
+126-c0-5-r31-43-v2,cell,2,31,|,,y,agree,
+126-c0-5-r31-43-v2,cell,3,31,8 32,,y,agree,
+126-c0-5-r31-43-v2,cell,4,31,ab,,y,agree,
+126-c0-5-r31-43-v2,cell,5,31,—,,y,agree,
+126-c0-5-r31-43-v2,cell,0,43,2 13,b,n,B,thick heavy upright figures
+126-c0-5-r31-43-v2,cell,1,43,10 02,b,y,B,thick heavy upright figures
+126-c0-5-r31-43-v2,cell,2,43,,,y,agree,
+126-c0-5-r31-43-v2,cell,3,43,8 24,b,n,B,thick heavy upright figures
+126-c0-5-r31-43-v2,cell,4,43,3 00,,y,agree,
+126-c0-5-r31-43-v2,cell,5,43,7 19,b;u,y,B,thick heavy upright; minutes underlined

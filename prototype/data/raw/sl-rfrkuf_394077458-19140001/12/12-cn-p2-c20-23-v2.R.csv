@@ -1,0 +1,7 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+12-cn-p2-c20-23-v2,footnote,0,0,° Verkehrt erst vom 31. Mai ab.,c:23;fn:°,y,A,small ring before Verkehrt erst / vom 31. Mai ab. in c23
+12-cn-p2-c20-23-v2,footnote,0,1,Schlafwagen Berlin-Karlsbad,c:22,y,agree,
+12-cn-p2-c20-23-v2,footnote,0,2,Speisewagen Berlin-Tetschen.,c:20,y,agree,
+12-cn-p2-c20-23-v2,footnote,0,3,292 II-IV,c:23,y,agree,
+12-cn-p2-c20-23-v2,footnote,0,4,"* Eisenb.-Dir. Berlin, v Gr. Lichterfelde bis Röderau Eisenb.-Dir. Halle, ab Röderau Sächs. Staatsb.",c:23;fn:*,n,A,asterisk opens the c23 note; right turned line first then the left; v without stop as keyed
+12-cn-p2-c20-23-v2,footnote,0,5,Schlafwagen Berlin-Karlsb.,c:22,y,agree,

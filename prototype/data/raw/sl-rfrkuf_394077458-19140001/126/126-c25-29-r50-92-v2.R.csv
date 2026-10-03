@@ -1,0 +1,36 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c25-29-r50-92-v2,header,25,0,I-III,,y,agree,
+126-c25-29-r50-92-v2,header,26,0,I-III,,y,A,I-III between heavy rules
+126-c25-29-r50-92-v2,header,27,0,I-III,,y,agree,
+126-c25-29-r50-92-v2,header,28,0,I-III,,y,agree,
+126-c25-29-r50-92-v2,header,29,0,I-III,,n,A,first I printed short and worn; I-III
+126-c25-29-r50-92-v2,label,0,50,aus Wien N.W.Bf.,,n,A,aus cut at the crop edge; Wien N.W.Bf. as keyed
+126-c25-29-r50-92-v2,label,0,62,a. Prag Ö. N.W.B.,,n,A,a. Prag Ö. N.W.B. in worn small capitals
+126-c25-29-r50-92-v2,label,0,64,a. Prag F. J. B. 122,,y,A,F. J. B. printed with spaces
+126-c25-29-r50-92-v2,label,0,91,i. Tetsch. N.W.B. 121 147,,y,agree,
+126-c25-29-r50-92-v2,label,0,92,in Dresd. Hbf. 23,,n,A,in cut at the edge; Dresd. Hbf. 23
+126-c25-29-r50-92-v2,cell,25,50,—,,y,agree,
+126-c25-29-r50-92-v2,cell,26,50,6 24,b,y,B,thick heavy upright figures
+126-c25-29-r50-92-v2,cell,27,50,—,,y,agree,
+126-c25-29-r50-92-v2,cell,28,50,—,,y,agree,
+126-c25-29-r50-92-v2,cell,29,50,1 47,b,y,B,thick heavy upright figures
+126-c25-29-r50-92-v2,cell,25,62,Ank.,,y,agree,
+126-c25-29-r50-92-v2,cell,26,62,—,,y,agree,
+126-c25-29-r50-92-v2,cell,27,62,—,,y,agree,
+126-c25-29-r50-92-v2,cell,28,62,10 48,b,y,B,thick heavy upright figures
+126-c25-29-r50-92-v2,cell,29,62,—,,y,agree,
+126-c25-29-r50-92-v2,cell,25,64,,,y,agree,
+126-c25-29-r50-92-v2,cell,26,64,Ank.,,y,agree,
+126-c25-29-r50-92-v2,cell,27,64,Ank.,,y,agree,
+126-c25-29-r50-92-v2,cell,28,64,11 30,b,y,B,thick heavy upright figures
+126-c25-29-r50-92-v2,cell,29,64,Ank.,,y,agree,
+126-c25-29-r50-92-v2,cell,25,91,,,y,agree,
+126-c25-29-r50-92-v2,cell,26,91,,,y,agree,
+126-c25-29-r50-92-v2,cell,27,91,,,y,agree,
+126-c25-29-r50-92-v2,cell,28,91,4 14,b,y,B,thick heavy upright figures
+126-c25-29-r50-92-v2,cell,29,91,,,y,agree,
+126-c25-29-r50-92-v2,cell,25,92,,,y,agree,
+126-c25-29-r50-92-v2,cell,26,92,,,y,agree,
+126-c25-29-r50-92-v2,cell,27,92,,,y,agree,
+126-c25-29-r50-92-v2,cell,28,92,6 23,b;u,n,B,thick heavy upright; a rule under 23 at the cell foot
+126-c25-29-r50-92-v2,cell,29,92,,,y,agree,

@@ -1,0 +1,24 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c6-10-r1-29-v2,header,6,0,,,n,A,header band holds only the table rule
+126-c6-10-r1-29-v2,header,7,0,,i,y,A,c7 times 10 00/11 06 slant: italic
+126-c6-10-r1-29-v2,header,8,0,,,y,agree,
+126-c6-10-r1-29-v2,header,9,0,,i,y,agree,
+126-c6-10-r1-29-v2,header,10,0,,,y,A,header band holds only the table rule
+126-c6-10-r1-29-v2,label,0,1,? Dresden Hbf. 23,,x,illegible,a small worn sign or abbreviation before Dresden cannot be identified
+126-c6-10-r1-29-v2,label,0,2,a. Tetschen N.W.B. 131 14?,,x,illegible,last figure cut at the column edge; 131 worn but readable
+126-c6-10-r1-29-v2,label,0,29,in Prag F. J. B. 122,,n,A,first small capital has the top bar of an F; spaced F. J. B.
+126-c6-10-r1-29-v2,cell,6,1,7 10,,y,agree,
+126-c6-10-r1-29-v2,cell,7,1,10 00,,y,agree,
+126-c6-10-r1-29-v2,cell,8,1,10 06,b,n,B,heavy upright like 2 22 below
+126-c6-10-r1-29-v2,cell,9,1,11 30,,y,agree,
+126-c6-10-r1-29-v2,cell,10,1,,,y,agree,
+126-c6-10-r1-29-v2,cell,6,2,8 44,b,y,B,thick heavy upright figures
+126-c6-10-r1-29-v2,cell,7,2,11 06,,y,agree,
+126-c6-10-r1-29-v2,cell,8,2,2 22,b,y,B,thick heavy upright figures
+126-c6-10-r1-29-v2,cell,9,2,12 59,,y,agree,
+126-c6-10-r1-29-v2,cell,10,2,,,n,B,a turned brace belonging to the sideways note Ausser-dem in c10; not a dash of the train
+126-c6-10-r1-29-v2,cell,6,29,12 40,b,y,B,thick heavy upright figures
+126-c6-10-r1-29-v2,cell,7,29,ab,,y,agree,
+126-c6-10-r1-29-v2,cell,8,29,4 40,,y,A,4 40 in thin light figures
+126-c6-10-r1-29-v2,cell,9,29,3 54,,y,agree,
+126-c6-10-r1-29-v2,cell,10,29,ab,,n,A,worn ab as in c7

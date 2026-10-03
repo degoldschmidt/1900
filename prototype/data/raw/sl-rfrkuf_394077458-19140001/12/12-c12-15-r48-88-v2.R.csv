@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+12-c12-15-r48-88-v2,header,12,0,,,y,agree,
+12-c12-15-r48-88-v2,header,13,0,804,,y,agree,
+12-c12-15-r48-88-v2,header,14,0,D 68,i,n,A,D 68 clear in the zoom; c14 times 6 53/9 40/9 41/9 47 slant: italic
+12-c12-15-r48-88-v2,header,15,0,282,,y,agree,
+12-c12-15-r48-88-v2,header,12,1,,,y,agree,
+12-c12-15-r48-88-v2,header,13,1,II-IV,,y,agree,
+12-c12-15-r48-88-v2,header,14,1,I-III.,,y,agree,
+12-c12-15-r48-88-v2,header,15,1,I-IV.,,y,agree,
+12-c12-15-r48-88-v2,label,0,48,a. Berlin Anh. Bf. 315,,y,agree,
+12-c12-15-r48-88-v2,label,0,85,189 in Dresden-Neustadt,,n,A,small table figure 189: middle figure closed above and below; last with an open tail
+12-c12-15-r48-88-v2,label,0,86,aus Dresden-Neustadt …,,y,agree,
+12-c12-15-r48-88-v2,label,0,87,1?1 i. Dresden Wettinerstr.,,x,illegible,middle figure of the small table number: 8 or 9 not told apart (looks like the last figure of 189 in the zoom); context 181 or 191
+12-c12-15-r48-88-v2,label,0,88,198 〃 Dresden Hbf.,,n,A,198 (a speck after the 1) and a ditto mark before Dresden
+12-c12-15-r48-88-v2,cell,12,48,,,y,A,cell empty; only the top of a rule from the row below
+12-c12-15-r48-88-v2,cell,13,48,5 35,u,y,agree,
+12-c12-15-r48-88-v2,cell,14,48,6 53,,y,agree,
+12-c12-15-r48-88-v2,cell,15,48,6 15,b,n,B,thick strokes like the 282 header; heavier than the thin c13 times
+12-c12-15-r48-88-v2,cell,12,85,7 58,b,n,other,c12 thick like 8 01 below; heavier than the thin c13 10 48
+12-c12-15-r48-88-v2,cell,13,85,10 48,,y,agree,
+12-c12-15-r48-88-v2,cell,14,85,9 40,,y,agree,
+12-c12-15-r48-88-v2,cell,15,85,12 15,b,n,B,thick strokes; heavier than c13
+12-c12-15-r48-88-v2,cell,12,86,8 01,b,n,B,thick 8 01; heavier than c13
+12-c12-15-r48-88-v2,cell,13,86,10 50,,y,agree,
+12-c12-15-r48-88-v2,cell,14,86,9 41,,y,agree,
+12-c12-15-r48-88-v2,cell,15,86,12 18,b,n,B,thick strokes; first minute figure printed broken (a short 1)
+12-c12-15-r48-88-v2,cell,12,87,8 04,b,n,B,thick strokes as r86
+12-c12-15-r48-88-v2,cell,13,87,10 53,,y,agree,
+12-c12-15-r48-88-v2,cell,14,87,|,,y,agree,
+12-c12-15-r48-88-v2,cell,15,87,12 21,b,n,B,thick strokes
+12-c12-15-r48-88-v2,cell,12,88,8 09,b,n,B,thick strokes as r86
+12-c12-15-r48-88-v2,cell,13,88,10 58,,y,agree,
+12-c12-15-r48-88-v2,cell,14,88,9 47,,y,agree,
+12-c12-15-r48-88-v2,cell,15,88,12 26,b,n,B,thick strokes

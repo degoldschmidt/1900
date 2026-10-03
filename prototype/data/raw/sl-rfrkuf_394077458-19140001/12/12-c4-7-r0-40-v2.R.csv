@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+12-c4-7-r0-40-v2,header,4,0,,,y,agree,
+12-c4-7-r0-40-v2,header,5,0,295,,n,A,295 clear in lighter face
+12-c4-7-r0-40-v2,header,6,0,28?,,x,illegible,heavy blurred face: last figure looks like the middle 8; open left of a 3 not visible; context suggests 283
+12-c4-7-r0-40-v2,header,7,0,D 55,i,n,A,D 55; c7 times 4 20/4 26/4 27/6 51 slant: italic
+12-c4-7-r0-40-v2,header,4,1,,,y,agree,
+12-c4-7-r0-40-v2,header,5,1,II-IV,,y,agree,
+12-c4-7-r0-40-v2,header,6,1,I-IV,,y,agree,
+12-c4-7-r0-40-v2,header,7,1,I.-III,,y,agree,
+12-c4-7-r0-40-v2,label,0,0,a. Dresden Hbf.,,y,agree,
+12-c4-7-r0-40-v2,label,0,1,? Dresd. Wettinerstr.,,x,illegible,a short narrow figure fragment before Dresd. at the column edge; not identifiable
+12-c4-7-r0-40-v2,label,0,2,4 i. Dresden-Neustadt,,n,B,small 4 printed tight before i.
+12-c4-7-r0-40-v2,label,0,3,a. Dresden-Neustadt,,n,B,only a dot before a.; no figure printed
+12-c4-7-r0-40-v2,label,0,40,198 i.Berlin Anh.Bf.312,,n,A,printed tight: i.Berlin Anh.Bf.312 (no space after the stops)
+12-c4-7-r0-40-v2,cell,4,0,,,y,agree,
+12-c4-7-r0-40-v2,cell,5,0,8 28,fn:§,n,A,section sign before 8 28; light face
+12-c4-7-r0-40-v2,cell,6,0,2 18,b,n,B,c6 2 18 in thick strokes against the thin c5 8 28
+12-c4-7-r0-40-v2,cell,7,0,4 20,,y,agree,
+12-c4-7-r0-40-v2,cell,4,1,,,y,agree,
+12-c4-7-r0-40-v2,cell,5,1,8 33,,y,agree,
+12-c4-7-r0-40-v2,cell,6,1,2 23,b,n,B,heavy face as r0
+12-c4-7-r0-40-v2,cell,7,1,|,,y,agree,
+12-c4-7-r0-40-v2,cell,4,2,,,y,agree,
+12-c4-7-r0-40-v2,cell,5,2,8 36,,y,agree,
+12-c4-7-r0-40-v2,cell,6,2,2 26,b,n,B,heavy face as r0
+12-c4-7-r0-40-v2,cell,7,2,4 26,,y,agree,
+12-c4-7-r0-40-v2,cell,4,3,,,y,agree,
+12-c4-7-r0-40-v2,cell,5,3,8 39,,y,agree,
+12-c4-7-r0-40-v2,cell,6,3,2 30,b,n,B,heavy face as r0
+12-c4-7-r0-40-v2,cell,7,3,4 27,,y,agree,
+12-c4-7-r0-40-v2,cell,4,40,,,y,agree,
+12-c4-7-r0-40-v2,cell,5,40,11 30,,n,A,11 30 clear (column italic; not keyed on body cells)
+12-c4-7-r0-40-v2,cell,6,40,7 52,b;u,n,B,thick heavy 7 52; minutes underlined
+12-c4-7-r0-40-v2,cell,7,40,6 51,u,y,agree,

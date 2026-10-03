@@ -1,0 +1,24 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c11-15-r1-29-v2,header,11,0,,,y,agree,
+126-c11-15-r1-29-v2,header,12,0,,,y,agree,
+126-c11-15-r1-29-v2,header,13,0,,,y,agree,
+126-c11-15-r1-29-v2,header,14,0,,i,y,agree,
+126-c11-15-r1-29-v2,header,15,0,,i,y,A,c15 times 10 53/12 09/2 40 slant: italic
+126-c11-15-r1-29-v2,label,0,1,? Dresden Hbf. 23,,x,illegible,a small worn sign or abbreviation before Dresden cannot be identified
+126-c11-15-r1-29-v2,label,0,2,a. Tetschen N.W.B. 131 14?,,x,illegible,last figure cut at the column edge; 131 worn but readable
+126-c11-15-r1-29-v2,label,0,29,in Prag F. J. B. 122,,n,A,first small capital has the top bar of an F; spaced F. J. B.
+126-c11-15-r1-29-v2,cell,11,1,2 22,b,y,B,thick heavy upright figures
+126-c11-15-r1-29-v2,cell,12,1,2 22,b,y,B,thick heavy upright figures
+126-c11-15-r1-29-v2,cell,13,1,6 30,b;u,y,B,thick heavy upright; minutes underlined
+126-c11-15-r1-29-v2,cell,14,1,9 55,u,n,A,9 55 with a rule under the minutes
+126-c11-15-r1-29-v2,cell,15,1,10 53,u,n,A,10 53 with a rule under the minutes
+126-c11-15-r1-29-v2,cell,11,2,4 52,,n,A,4 52 in lighter strokes than the heavy 5 05 beside it
+126-c11-15-r1-29-v2,cell,12,2,5 05,b,y,B,thick heavy upright figures
+126-c11-15-r1-29-v2,cell,13,2,9 20,b,n,other,heavy upright; no rule under 20 in the zoom
+126-c11-15-r1-29-v2,cell,14,2,11 16,u,y,agree,
+126-c11-15-r1-29-v2,cell,15,2,12 09,u,y,B,rule under 09 visible in the zoom
+126-c11-15-r1-29-v2,cell,11,29,ab,,y,agree,
+126-c11-15-r1-29-v2,cell,12,29,9 05,b;u,y,B,heavy upright; minutes underlined
+126-c11-15-r1-29-v2,cell,13,29,ab,,n,B,worn ab under the boxed 12 23
+126-c11-15-r1-29-v2,cell,14,29,|,,n,B,a thin vertical rule runs down the middle of the cell
+126-c11-15-r1-29-v2,cell,15,29,2 40,u,y,agree,

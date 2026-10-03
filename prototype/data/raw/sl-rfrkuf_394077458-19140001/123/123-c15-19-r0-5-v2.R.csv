@@ -1,0 +1,30 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+123-c15-19-r0-5-v2,header,15,0,I-III,,y,agree,
+123-c15-19-r0-5-v2,header,16,0,II. III,,n,A,II. III with a space
+123-c15-19-r0-5-v2,header,17,0,I-III,i,y,agree,
+123-c15-19-r0-5-v2,header,18,0,I.-III,,y,agree,
+123-c15-19-r0-5-v2,header,19,0,II.III,,n,A,II.III
+123-c15-19-r0-5-v2,label,0,0,a. Dresd. Hbf. 23 i.,,n,A,a. Dresd. Hbf. with raised 23 and i.
+123-c15-19-r0-5-v2,label,0,1,〃 Bodenb. 113 〃,,n,A,ditto marks either side of Bodenb.; raised 113 with the last figure open on the left
+123-c15-19-r0-5-v2,label,0,3,a. Prag(F.J.B.)1 7 18,,n,other,boxed figure is a 7 with raised smaller 18 (raised-minutes rule: 7 18); small 1 after the bracket
+123-c15-19-r0-5-v2,label,0,5,850 i. Wien F.J.B. 150 a.,,n,A,850i.Wien printed tight; figures 850 and raised 150 clear
+123-c15-19-r0-5-v2,cell,15,0,12 09,b;u;fn:□,n,B,heavy upright; sign before 12 is a narrow hollow rectangle with straight sides (as opening the □ note of c16)
+123-c15-19-r0-5-v2,cell,16,0,—,,y,agree,
+123-c15-19-r0-5-v2,cell,17,0,2 25,u,y,agree,
+123-c15-19-r0-5-v2,cell,18,0,—,,y,agree,
+123-c15-19-r0-5-v2,cell,19,0,9 39,,y,agree,
+123-c15-19-r0-5-v2,cell,15,1,10 04,b;u;fn:□,n,B,heavy upright; same narrow hollow rectangle
+123-c15-19-r0-5-v2,cell,16,1,—,,y,agree,
+123-c15-19-r0-5-v2,cell,17,1,12 58,u,y,agree,
+123-c15-19-r0-5-v2,cell,18,1,—,,y,agree,
+123-c15-19-r0-5-v2,cell,19,1,8 15,,y,agree,
+123-c15-19-r0-5-v2,cell,15,3,5 22,b,n,B,heavy upright like 6 10 below
+123-c15-19-r0-5-v2,cell,16,3,8 00,b;u,y,B,thick heavy upright; minutes underlined
+123-c15-19-r0-5-v2,cell,17,3,10 18,u,y,agree,
+123-c15-19-r0-5-v2,cell,18,3,11 57,b;u,y,B,thick heavy 11 57; minutes underlined
+123-c15-19-r0-5-v2,cell,19,3,4 16,b;u,y,B,heavy upright; minutes underlined
+123-c15-19-r0-5-v2,cell,15,5,6 10,b,n,B,thick heavy 6 10
+123-c15-19-r0-5-v2,cell,16,5,,,y,agree,
+123-c15-19-r0-5-v2,cell,17,5,4 15,,y,agree,
+123-c15-19-r0-5-v2,cell,18,5,12 06,b,y,B,thick heavy 12 06
+123-c15-19-r0-5-v2,cell,19,5,—,,y,agree,

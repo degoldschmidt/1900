@@ -1,0 +1,30 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+123-c10-14-r0-5-v2,header,10,0,I.-III,i,y,agree,
+123-c10-14-r0-5-v2,header,11,0,I.-III,,n,A,I.-III
+123-c10-14-r0-5-v2,header,12,0,II.III,,n,A,II.III clear
+123-c10-14-r0-5-v2,header,13,0,I.-III,i,n,A,first I worn to a thin curve; c13 times 3 52/2 40/12 17/7 00 slant: italic
+123-c10-14-r0-5-v2,header,14,0,I.-III,i,n,A,c14 times 6 53/5 20/2 36/8 25 slant: italic
+123-c10-14-r0-5-v2,label,0,0,a. Dresd. Hbf. 23 i.,,n,A,a. Dresd. Hbf. with raised 23 and i.
+123-c10-14-r0-5-v2,label,0,1,〃 Bodenb. 113 〃,,n,A,ditto marks either side of Bodenb.; raised 113 with the last figure open on the left
+123-c10-14-r0-5-v2,label,0,3,a. Prag(F.J.B.)1 7 18,,n,other,boxed figure is a 7 with raised smaller 18 (raised-minutes rule: 7 18); small 1 after the bracket
+123-c10-14-r0-5-v2,label,0,5,850 i. Wien F.J.B. 150 a.,,n,A,850i.Wien printed tight; figures 850 and raised 150 clear
+123-c10-14-r0-5-v2,cell,10,0,5 26,u;fn:?,x,illegible,sign before 5 is a narrow hollow oval of minute height: neither clearly the small ring nor the square
+123-c10-14-r0-5-v2,cell,11,0,1 10,,y,agree,
+123-c10-14-r0-5-v2,cell,12,0,6 23,b;u,y,B,thick heavy upright; minutes underlined
+123-c10-14-r0-5-v2,cell,13,0,3 52,,y,agree,
+123-c10-14-r0-5-v2,cell,14,0,6 53,u,y,agree,
+123-c10-14-r0-5-v2,cell,10,1,4 10,u;fn:?,x,illegible,same narrow hollow oval sign as r0: not identifiable
+123-c10-14-r0-5-v2,cell,11,1,11 37,b,n,B,thick heavy 11 37
+123-c10-14-r0-5-v2,cell,12,1,4 21,,y,A,4 21 in thin light figures
+123-c10-14-r0-5-v2,cell,13,1,2 40,,y,agree,
+123-c10-14-r0-5-v2,cell,14,1,5 20,,y,agree,
+123-c10-14-r0-5-v2,cell,10,3,1 23,u,y,agree,
+123-c10-14-r0-5-v2,cell,11,3,6 45,b,n,B,heavy upright like 11 37 above
+123-c10-14-r0-5-v2,cell,12,3,10 40,,n,A,10 40 in thin light figures like 4 21
+123-c10-14-r0-5-v2,cell,13,3,12 17,,y,agree,
+123-c10-14-r0-5-v2,cell,14,3,2 36,,y,agree,
+123-c10-14-r0-5-v2,cell,10,5,—,,n,A,a dash; the arrow left of it belongs to the label column
+123-c10-14-r0-5-v2,cell,11,5,8 30,b;u,y,B,thick heavy upright; minutes underlined
+123-c10-14-r0-5-v2,cell,12,5,9 05,b;u,y,B,heavy upright; minutes underlined
+123-c10-14-r0-5-v2,cell,13,5,7 00,,y,agree,
+123-c10-14-r0-5-v2,cell,14,5,8 25,,y,agree,

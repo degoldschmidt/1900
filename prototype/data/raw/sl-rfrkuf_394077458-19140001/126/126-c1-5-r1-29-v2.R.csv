@@ -1,0 +1,24 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c1-5-r1-29-v2,header,1,0,,,y,agree,
+126-c1-5-r1-29-v2,header,2,0,,,y,A,header band holds only the table rule
+126-c1-5-r1-29-v2,header,3,0,,,n,A,header band holds only the table rule
+126-c1-5-r1-29-v2,header,4,0,,,n,A,header band holds only the table rule
+126-c1-5-r1-29-v2,header,5,0,,,y,agree,
+126-c1-5-r1-29-v2,label,0,1,? Dresden Hbf. 23,,x,illegible,a small worn sign or abbreviation before Dresden cannot be identified
+126-c1-5-r1-29-v2,label,0,2,a. Tetschen N.W.B. 131 14?,,x,illegible,last figure cut at the column edge; 131 worn but readable
+126-c1-5-r1-29-v2,label,0,29,in Prag F. J. B. 122,,n,A,first small capital has the top bar of an F; spaced F. J. B.
+126-c1-5-r1-29-v2,cell,1,1,,,y,agree,
+126-c1-5-r1-29-v2,cell,2,1,,,y,agree,
+126-c1-5-r1-29-v2,cell,3,1,2 30,u,y,agree,
+126-c1-5-r1-29-v2,cell,4,1,—,,y,agree,
+126-c1-5-r1-29-v2,cell,5,1,—,,y,agree,
+126-c1-5-r1-29-v2,cell,1,2,,,y,agree,
+126-c1-5-r1-29-v2,cell,2,2,,,y,agree,
+126-c1-5-r1-29-v2,cell,3,2,3 48,b;u,y,B,thick heavy upright 3 48 against the italic 2 30 above; minutes underlined
+126-c1-5-r1-29-v2,cell,4,2,6 05,b,y,B,thick heavy upright figures
+126-c1-5-r1-29-v2,cell,5,2,,,y,agree,
+126-c1-5-r1-29-v2,cell,1,29,,,n,A,only the stop of the sideways note; no time
+126-c1-5-r1-29-v2,cell,2,29,ab,,y,agree,
+126-c1-5-r1-29-v2,cell,3,29,—,,y,agree,
+126-c1-5-r1-29-v2,cell,4,29,9 51,,y,agree,
+126-c1-5-r1-29-v2,cell,5,29,ab,,n,A,worn ab like c2's ab
