@@ -1,0 +1,31 @@
+{
+  "created": 1727000000,
+  "d1": "ia800300.us.archive.org",
+  "d2": "ia600300.us.archive.org",
+  "dir": "/12/items/bradshawscontine1914brad",
+  "files": [
+    { "name": "bradshawscontine1914brad.pdf", "source": "derivative", "format": "Text PDF", "size": "98123456" },
+    { "name": "bradshawscontine1914brad_djvu.txt", "source": "derivative", "format": "DjVuTXT", "size": "3456789" },
+    { "name": "bradshawscontine1914brad_jp2.zip", "source": "derivative", "format": "Single Page Processed JP2 ZIP", "size": "812345678" },
+    { "name": "bradshawscontine1914brad_meta.xml", "source": "original", "format": "Metadata" }
+  ],
+  "files_count": 4,
+  "item_last_updated": 1727000000,
+  "item_size": 912345678,
+  "metadata": {
+    "identifier": "bradshawscontine1914brad",
+    "mediatype": "texts",
+    "collection": ["university_of_toronto", "toronto"],
+    "creator": "Bradshaw, George, 1801-1853",
+    "date": "1914",
+    "imagecount": "1186",
+    "language": "eng",
+    "possible-copyright-status": "NOT_IN_COPYRIGHT",
+    "publisher": "London : Henry Blacklock & Co.",
+    "title": "Bradshaw's continental railway, steam transit, and general guide, for travellers through Europe",
+    "volume": "June 1914"
+  },
+  "server": "ia800300.us.archive.org",
+  "uniq": 123456789,
+  "workable_servers": ["ia800300.us.archive.org", "ia600300.us.archive.org"]
+}

@@ -1,0 +1,150 @@
+{
+  "plan_version": 1,
+  "years": [1910, 1916],
+  "notes": [
+    "Titles and queries for the guides and Baedekers named in PLAN.md (Data workstream, step 1).",
+    "archive_org.queries are Lucene queries for advancedsearch.php; 'mediatype:texts' is added by run.ts.",
+    "gallica.queries are CQL for the SRU endpoint; periodical records with gallica.issues=true are expanded to their issues for the years listed.",
+    "HathiTrust's Bib API looks volumes up by identifier only: open hathitrust.catalog_search in the catalog UI and paste the OCLC numbers, record numbers or htids found into the lists.",
+    "title_must_match: every listed word (accent- and case-folded; alternatives separated by '|') must appear in a result's title, otherwise the result is dropped as noise.",
+    "Years are filtered after the search: results dated outside 'years' are dropped; undated results are kept with a note."
+  ],
+  "entries": [
+    {
+      "id": "bradshaw-continental",
+      "title": "Bradshaw's Continental Railway Guide",
+      "kind": "guide",
+      "title_must_match": ["bradshaw", "continental"],
+      "archive_org": { "queries": ["title:(bradshaw* AND continental)", "title:(continental railway guide) AND creator:(bradshaw)"] },
+      "hathitrust": { "catalog_search": "Bradshaw's continental railway guide", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.title all \"Bradshaw continental\""] }
+    },
+    {
+      "id": "bradshaw-british",
+      "title": "Bradshaw's General Railway and Steam Navigation Guide (British Bradshaw)",
+      "kind": "guide",
+      "title_must_match": ["bradshaw"],
+      "archive_org": { "queries": ["title:(bradshaw* AND (railway OR monthly) AND guide) -continental"] },
+      "hathitrust": { "catalog_search": "Bradshaw's general railway and steam navigation guide", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": [] }
+    },
+    {
+      "id": "cooks-continental",
+      "title": "Cook's Continental Time Tables and Tourist's Handbook",
+      "kind": "guide",
+      "title_must_match": ["cook", "continental"],
+      "archive_org": { "queries": ["title:(cook* AND continental AND (time OR timetable))"] },
+      "hathitrust": { "catalog_search": "Cook's continental time tables", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.title all \"Cook continental time tables\""] }
+    },
+    {
+      "id": "livret-chaix",
+      "title": "Livret-Chaix (Livret-Chaix continental; Livret-Chaix des chemins de fer)",
+      "kind": "guide",
+      "title_must_match": ["chaix"],
+      "archive_org": { "queries": ["title:(livret AND chaix)"] },
+      "hathitrust": { "catalog_search": "Livret-Chaix", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.title all \"livret chaix\"", "gallica all \"livret-chaix continental\""], "issues": true }
+    },
+    {
+      "id": "reichs-kursbuch",
+      "title": "Reichs-Kursbuch",
+      "kind": "guide",
+      "title_must_match": ["kursbuch"],
+      "archive_org": { "queries": ["title:(reichs-kursbuch OR reichskursbuch OR (reichs AND kursbuch))"] },
+      "hathitrust": { "catalog_search": "Reichs-Kursbuch", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.title all \"Reichs-Kursbuch\""] }
+    },
+    {
+      "id": "officieele-reisgids",
+      "title": "Officieele Reisgids voor de spoorwegen en stoomtramdiensten in Nederland",
+      "kind": "guide",
+      "title_must_match": ["reisgids"],
+      "archive_org": { "queries": ["title:(officieele AND reisgids)", "title:(reisgids AND spoorwegen)"] },
+      "hathitrust": { "catalog_search": "Officieele reisgids spoorwegen", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": [] }
+    },
+    {
+      "id": "baedeker-northern-germany",
+      "title": "Baedeker, Northern Germany (1913) / Nord-Deutschland",
+      "kind": "baedeker",
+      "title_must_match": ["germany|deutschland"],
+      "archive_org": { "queries": ["title:(northern germany) AND creator:(baedeker)", "title:(nord-deutschland OR norddeutschland) AND creator:(baedeker)"] },
+      "hathitrust": { "catalog_search": "Baedeker Northern Germany", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.creator all \"Baedeker\" and dc.title all \"Allemagne du Nord\""] }
+    },
+    {
+      "id": "baedeker-russia",
+      "title": "Baedeker, Russia (1914) / Russland",
+      "kind": "baedeker",
+      "title_must_match": ["russia|russland|russie"],
+      "archive_org": { "queries": ["title:(russia) AND creator:(baedeker)", "title:(russland) AND creator:(baedeker)"] },
+      "hathitrust": { "catalog_search": "Baedeker Russia with Teheran Port Arthur and Peking", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.creator all \"Baedeker\" and dc.title all \"Russie\""] }
+    },
+    {
+      "id": "baedeker-belgium-holland",
+      "title": "Baedeker, Belgium and Holland / Belgien und Holland",
+      "kind": "baedeker",
+      "title_must_match": ["belgium|belgien|belgique"],
+      "archive_org": { "queries": ["title:(belgium AND holland) AND creator:(baedeker)", "title:(belgien AND holland) AND creator:(baedeker)"] },
+      "hathitrust": { "catalog_search": "Baedeker Belgium and Holland", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.creator all \"Baedeker\" and dc.title all \"Belgique Hollande\""] }
+    },
+    {
+      "id": "baedeker-paris",
+      "title": "Baedeker, Paris and its Environs",
+      "kind": "baedeker",
+      "title_must_match": ["paris"],
+      "archive_org": { "queries": ["title:(paris AND environs) AND creator:(baedeker)"] },
+      "hathitrust": { "catalog_search": "Baedeker Paris and its environs", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.creator all \"Baedeker\" and dc.title all \"Paris et ses environs\""] }
+    },
+    {
+      "id": "baedeker-london",
+      "title": "Baedeker, London and its Environs",
+      "kind": "baedeker",
+      "title_must_match": ["london|londres"],
+      "archive_org": { "queries": ["title:(london AND environs) AND creator:(baedeker)"] },
+      "hathitrust": { "catalog_search": "Baedeker London and its environs", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.creator all \"Baedeker\" and dc.title all \"Londres\""] }
+    },
+    {
+      "id": "baedeker-austria-hungary",
+      "title": "Baedeker, Austria-Hungary / Österreich-Ungarn",
+      "kind": "baedeker",
+      "title_must_match": ["austria|osterreich|oesterreich|autriche"],
+      "archive_org": { "queries": ["title:(austria AND hungary) AND creator:(baedeker)", "title:(osterreich OR österreich) AND creator:(baedeker)"] },
+      "hathitrust": { "catalog_search": "Baedeker Austria-Hungary", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.creator all \"Baedeker\" and dc.title all \"Autriche-Hongrie\""] }
+    },
+    {
+      "id": "statutes-uk-1914",
+      "title": "Public General Acts 1914 (Aliens Restriction Act, Defence of the Realm Act)",
+      "kind": "statute",
+      "title_must_match": ["acts|statutes"],
+      "archive_org": { "queries": ["title:(public general acts) AND year:1914", "title:(statutes) AND title:(1914)"] },
+      "hathitrust": { "catalog_search": "Public general acts 1914", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": [] }
+    },
+    {
+      "id": "reichsgesetzblatt",
+      "title": "Reichs-Gesetzblatt 1914–1915",
+      "kind": "gazette",
+      "title_must_match": ["gesetzblatt"],
+      "archive_org": { "queries": ["title:(reichs-gesetzblatt OR reichsgesetzblatt)"] },
+      "hathitrust": { "catalog_search": "Reichs-Gesetzblatt", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": [] }
+    },
+    {
+      "id": "le-temps",
+      "title": "Le Temps (Paris daily) — dated events",
+      "kind": "newspaper",
+      "title_must_match": ["temps"],
+      "archive_org": { "queries": [] },
+      "hathitrust": { "catalog_search": "", "oclc": [], "recordnumber": [], "htid": [] },
+      "gallica": { "queries": ["dc.title all \"Le Temps\""], "issues": false },
+      "notes": "Only the periodical record is catalogued; single dated issues are looked up later with the Issues service (the Le Temps periodical ark is believed to be cb34431794k — verify)."
+    }
+  ]
+}

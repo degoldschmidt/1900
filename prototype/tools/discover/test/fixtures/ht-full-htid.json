@@ -1,0 +1,26 @@
+{
+  "records": {
+    "009876543": {
+      "recordURL": "https://catalog.hathitrust.org/Record/009876543",
+      "titles": ["Russia, with Teheran, Port Arthur, and Peking : handbook for travellers"],
+      "isbns": [],
+      "issns": [],
+      "oclcs": ["2391784"],
+      "lccns": ["14013555"],
+      "publishDates": ["1914"],
+      "marc-xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><collection xmlns=\"http://www.loc.gov/MARC21/slim\"><record><leader>00000cam a2200000 a 4500</leader><controlfield tag=\"001\">009876543</controlfield><controlfield tag=\"008\">881109s1914    gw a     b    001 0 eng d</controlfield><datafield tag=\"100\" ind1=\"1\" ind2=\" \"><subfield code=\"a\">Baedeker, Karl,</subfield><subfield code=\"d\">1837-1911.</subfield></datafield><datafield tag=\"245\" ind1=\"1\" ind2=\"0\"><subfield code=\"a\">Russia, with Teheran, Port Arthur, and Peking :</subfield><subfield code=\"b\">handbook for travellers /</subfield></datafield><datafield tag=\"250\" ind1=\" \" ind2=\" \"><subfield code=\"a\">[1st English ed.]</subfield></datafield><datafield tag=\"260\" ind1=\" \" ind2=\" \"><subfield code=\"a\">Leipzig :</subfield><subfield code=\"b\">K. Baedeker ;</subfield><subfield code=\"a\">New York :</subfield><subfield code=\"b\">C. Scribner's Sons,</subfield><subfield code=\"c\">1914.</subfield></datafield><datafield tag=\"300\" ind1=\" \" ind2=\" \"><subfield code=\"a\">lxiv, 590 p. :</subfield><subfield code=\"b\">maps, plans ;</subfield><subfield code=\"c\">16 cm.</subfield></datafield></record></collection>"
+    }
+  },
+  "items": [
+    {
+      "orig": "University of California",
+      "fromRecord": "009876543",
+      "htid": "uc2.ark:/13960/t3bz6xk1m",
+      "itemURL": "https://hdl.handle.net/2027/uc2.ark:/13960/t3bz6xk1m",
+      "rightsCode": "pd",
+      "lastUpdate": "20190301",
+      "enumcron": false,
+      "usRightsString": "Full view"
+    }
+  ]
+}
