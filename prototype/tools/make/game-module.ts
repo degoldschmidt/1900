@@ -13,6 +13,20 @@ import type { Command } from '../../kit/src/sim/sim.ts';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyModule = GameModule<any, Command, any>;
 
+// Kit code reads the build-time flags esbuild defines for the pages; the Node tools run the
+// simulation as a debug build would (records frozen, synthetic data allowed).
+const g = globalThis as { __DEBUG__?: boolean; __BUILD_ID__?: string };
+g.__DEBUG__ ??= true;
+g.__BUILD_ID__ ??= 'node';
+
+/** A game's mechanics-preview bundle (invented data; C07 only so far), when it has one. */
+export function previewBundlePath(game: GameId): string {
+  return join(ROOT, 'games', game, 'preview', 'world.bundle.json');
+}
+
+/** `--preview` on the command line: use the game's preview world instead of the compiled data. */
+export const wantsPreview = (args: readonly string[]): boolean => args.includes('--preview');
+
 export function gameIdOf(name: string): GameId {
   const g = (GAMES as readonly string[]).find((x) => x === name);
   if (!g) throw new Error(`Unknown game "${name}"`);
@@ -27,8 +41,13 @@ export async function loadGameModule(game: GameId): Promise<AnyModule> {
   return mod.module;
 }
 
-export function loadRawBundle(game: GameId): GameBundle {
+export function loadRawBundle(game: GameId, opts: { preview?: boolean } = {}): GameBundle {
+  if (opts.preview) {
+    const file = previewBundlePath(game);
+    if (!existsSync(file)) throw new Error(`${game} has no preview world (games/${game}/preview/world.bundle.json)`);
+    return decodeBundle(readFileSync(file, 'utf8'));
+  }
   const file = join(ROOT, 'build', 'data', `${game}.bundle.json`);
-  if (!existsSync(file)) throw new Error(`No compiled data for ${game}: run npm run data:compile first`);
+  if (!existsSync(file)) throw new Error(`No compiled data for ${game}: run npm run data:compile first (or pass --preview for a preview world)`);
   return decodeBundle(readFileSync(file, 'utf8'));
 }

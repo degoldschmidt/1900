@@ -3,11 +3,22 @@
  * francs in centimes; marks in pfennig; gulden in cents; kronen in heller; roubles in kopecks.
  * Conversion uses exact rational parities (BigInt) taken from cited parameter rows.
  */
-export type Currency = 'GBP' | 'FRF' | 'BEF' | 'CHF' | 'DEM' | 'NLG' | 'AUK' | 'RUB' | 'USD';
+export type HistoricalCurrency = 'GBP' | 'FRF' | 'BEF' | 'CHF' | 'DEM' | 'NLG' | 'AUK' | 'RUB' | 'USD';
+/**
+ * Invented currencies of synthetic worlds (test fixtures, a game's mechanics preview), written
+ * "SYN_" + code. They count 100 minor units to the unit and never appear in release data.
+ */
+export type SyntheticCurrency = `SYN_${string}`;
+export type Currency = HistoricalCurrency | SyntheticCurrency;
 
 export interface Money { cur: Currency; minor: number }
 
-export const MINOR_PER_UNIT: Record<Currency, number> = { GBP: 960, FRF: 100, BEF: 100, CHF: 100, DEM: 100, NLG: 100, AUK: 100, RUB: 100, USD: 100 };
+export const MINOR_PER_UNIT: Record<HistoricalCurrency, number> = { GBP: 960, FRF: 100, BEF: 100, CHF: 100, DEM: 100, NLG: 100, AUK: 100, RUB: 100, USD: 100 };
+
+export const isSynthetic = (cur: Currency): cur is SyntheticCurrency => cur.startsWith('SYN_');
+
+/** Minor units per unit of any currency (synthetic currencies count 100). */
+export const minorPerUnit = (cur: Currency): number => (isSynthetic(cur) ? 100 : MINOR_PER_UNIT[cur]);
 
 export const money = (cur: Currency, minor: number): Money => {
   if (!Number.isSafeInteger(minor)) throw new Error(`Money must be an integer number of minor units, got ${minor}`);
@@ -43,12 +54,16 @@ export function convert(m: Money, p: Parity): Money {
   return money(p.to, Number(neg ? -q : q));
 }
 
-const SYMBOL: Record<Currency, [string, string]> = {
+const SYMBOL: Record<HistoricalCurrency, [string, string]> = {
   GBP: ['£', ''], FRF: ['', ' fr.'], BEF: ['', ' fr.'], CHF: ['', ' fr.'], DEM: ['', ' M.'], NLG: ['fl. ', ''], AUK: ['', ' K.'], RUB: ['', ' rbl.'], USD: ['$', ''],
 };
 
-/** "£2 3s. 6½d." style for pounds; decimal with the period's abbreviation for the rest. */
-export function format(m: Money): string {
+/**
+ * "£2 3s. 6½d." style for pounds; decimal with the period's abbreviation for the rest. `unit`
+ * replaces the abbreviation after the figure (a synthetic currency's display unit; without it the
+ * code after "SYN_" is shown).
+ */
+export function format(m: Money, unit?: string): string {
   const neg = m.minor < 0;
   const abs = Math.abs(m.minor);
   let body: string;
@@ -65,10 +80,10 @@ export function format(m: Money): string {
     if (pence || frac || parts.length === 0) parts.push(`${pence}${frac}d.`);
     body = parts.join(' ');
   } else {
-    const per = MINOR_PER_UNIT[m.cur];
+    const per = minorPerUnit(m.cur);
     const whole = Math.floor(abs / per);
     const cents = String(abs - whole * per).padStart(2, '0');
-    const [pre, post] = SYMBOL[m.cur];
+    const [pre, post] = unit !== undefined ? ['', ` ${unit}`] : isSynthetic(m.cur) ? ['', ` ${m.cur.slice(4)}`] : SYMBOL[m.cur];
     body = `${pre}${whole}.${cents}${post}`;
   }
   return neg ? `−${body}` : body;

@@ -248,3 +248,29 @@ The photos enter as source `os-bradshaw-continental-1913` through the new `tools
 - `polona.pl` (Polish).
 
 If the field accepts wildcards: `*.europeana.eu`, `*.deutsche-digitale-bibliothek.de`, `*.slub-dresden.de`, `*.digitale-sammlungen.de`, `*.staatsbibliothek-berlin.de`, `*.kb.nl`, `*.onb.ac.at`. The search targets are a Reichs-Kursbuch or a regional Prussian Kursbuch for spring and summer 1914, the Dutch Officieele Reisgids, Austrian Kursbücher, and Russian timetable pages.
+
+## 2026-10-03 13:20 — C07 preview, stage 1: rules, invented world, view models (Event P-E011)
+
+**Built:**
+- The real C07 rules, per `design/RULES.md`: 7 commands, 23 event types, one file per §5 module, and `metrics.ts` for every §1 metric.
+- Design values DV-C07-001 to 070 in `design/design-values.json`. Number 061 (pay for away offers) is new, and 062–070 are inline constants moved out of the rules.
+- The invented world `preview/world.bundle.json` (161 KB, `synthetic: true`, `preview-1`, 18 April – 12 May 1914):
+  - three invented countries, each with its own currency and railway clock, one of them with odd-second time;
+  - 8 cities plus 4 frontier towns, and 103 trips;
+  - a winter guide and a summer guide that changes over on 1 May, producing all four ghost statuses, plus a cheaper local guide.
+- Scenarios `preview-tutorial` and `preview-changeover`, with golden scripts.
+- View models for every screen.
+- 55 new tests; 357 in total pass.
+
+**Kit and tools:**
+- K3 (a known graph can exclude modes and operators).
+- Invented currency codes `SYN_*` with display units.
+- `--preview` for golden runs and playtest analysis; golden records also store the metrics.
+- The Node tools define `__DEBUG__`.
+- The import check applies the forecast rule to views (the autopsy view excepted).
+
+**Rules change (Decision P-008), departing from RULES.md §5.5:** a player keeps every guide edition bought. For each travel day the planner uses the newest owned edition already in force on that day. Dropping the older edition, as the spec said, would leave no correct guide for the remaining winter days after buying the summer guide early. The ghost-connection hypothesis (H07-3) is unaffected: holding only the old guide after the changeover still produces ghosts.
+
+**Deferred:**
+- The Tier-0 political event tests (T5a, T5b), since the invented world has no history. The code paths exist and are exercised through test overrides.
+- The browser half of the replay test (T7), which waits for stage 2.

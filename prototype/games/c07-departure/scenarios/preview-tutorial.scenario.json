@@ -1,0 +1,33 @@
+{
+  "id": "preview-tutorial",
+  "title": "Preview: the first errand",
+  "note": "Mechanics preview on an invented railway, not history. Two and a half days in Corvenia: one short commission (Corlaine, then Port-Ancel), the diary, a booking, the slack before a train, and a change across Aubrevaux whose odds the planner shows.",
+  "endRule": "chain",
+  "seed": 1914,
+  "start": { "city": "SYN_C_AUB", "date": "1914-04-21", "time": "08:00" },
+  "end": { "city": "SYN_C_AUB", "date": "1914-04-23", "time": "22:00" },
+  "legend": { "id": "SYN_L_AGENT", "nationality": "SYN_J_VH", "home": "SYN_J_VH", "papers": { "passport": true, "visas": [] } },
+  "place": { "city": "SYN_C_AUB", "station": "SYN_S_AUBN", "venue": "station" },
+  "guides": ["SYN_E_W14"],
+  "hunter": "SYN_I_AR_POL",
+  "values": [
+    { "id": "SC-TUT-001", "name": "starting cash", "value": { "cur": "SYN_CVN", "minor": 6000 }, "rationale": "Enough for two journeys and a night; little more." },
+    { "id": "SC-TUT-002", "name": "letter of credit", "value": { "cur": "GBP", "minor": 19200 }, "rationale": "£20 drawable at the Aubrevaux and Corlaine correspondents." },
+    { "id": "SC-TUT-003", "name": "commission pay", "value": { "cur": "GBP", "minor": 4800 }, "rationale": "£5 for the two meetings." },
+    { "id": "SC-TUT-004", "name": "stage windows", "value": "Corlaine 21 Apr 15.00–19.00; Port-Ancel 22 Apr 13.00–18.00", "rationale": "The first fits the afternoon trains; the second needs either the tight morning change across Aubrevaux or a night in Aubrevaux." }
+  ],
+  "cash": [{ "cur": "SYN_CVN", "minor": 6000 }],
+  "credit": { "cur": "GBP", "minor": 19200 },
+  "correspondents": ["SYN_I_BK_AUB", "SYN_I_BK_COR"],
+  "rent": null,
+  "bill": null,
+  "offers": [
+    {
+      "id": "SYN_CH_TUT", "pay": { "cur": "GBP", "minor": 4800 },
+      "stages": [
+        { "city": "SYN_C_COR", "open": { "date": "1914-04-21", "time": "15:00" }, "close": { "date": "1914-04-21", "time": "19:00" } },
+        { "city": "SYN_C_PAN", "open": { "date": "1914-04-22", "time": "13:00" }, "close": { "date": "1914-04-22", "time": "18:00" } }
+      ]
+    }
+  ]
+}

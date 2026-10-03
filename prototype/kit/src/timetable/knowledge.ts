@@ -6,6 +6,7 @@
  */
 import type { Timetable } from './model.ts';
 import type { GraphView } from './expand.ts';
+import type { Mode } from './types.ts';
 import type { DayNumber } from '../time/calendar.ts';
 import type { Instant } from '../time/instant.ts';
 
@@ -21,11 +22,36 @@ export interface LearnedEdge {
   confidence: number;
 }
 
+/** Trips an agent never considers, whatever its guides print (e.g. a police service that knows only its own state railways). */
+export interface KnownExclusion {
+  modes?: Mode[];
+  operators?: string[];
+}
+
 export interface KnownGraph {
   id: string;
   version: number;
   editions: string[];
   learned: LearnedEdge[];
+  /** Modes and operators outside this agent's view (absent: none excluded). Learned trains do not override it. */
+  exclude?: KnownExclusion;
+}
+
+/** Sets the exclusion (sorted, so equal exclusions give equal state). */
+export function setExclusion(kg: KnownGraph, ex: KnownExclusion): void {
+  const out: KnownExclusion = {};
+  if (ex.modes?.length) out.modes = [...new Set(ex.modes)].sort();
+  if (ex.operators?.length) out.operators = [...new Set(ex.operators)].sort();
+  if (out.modes || out.operators) kg.exclude = out; else delete kg.exclude;
+  kg.version++;
+}
+
+/** Whether a trip falls outside the agent's view by mode or operator. */
+export function excludedTrip(tt: Timetable, kg: KnownGraph, trip: number): boolean {
+  const ex = kg.exclude;
+  if (!ex) return false;
+  const t = tt.trips[trip]!;
+  return (ex.modes?.includes(t.mode) ?? false) || (ex.operators?.includes(t.operator) ?? false);
 }
 
 export function newKnownGraph(id: string, editions: string[]): KnownGraph {
@@ -43,13 +69,19 @@ export function learn(kg: KnownGraph, edge: LearnedEdge): void {
   kg.version++;
 }
 
-/** Trips usable in the agent's view: printed in an owned edition or learned, minus those known not to run. */
+/**
+ * Trips usable in the agent's view: printed in an owned edition or learned, minus those known not
+ * to run and those outside its exclusion (mode or operator; part of the cache key).
+ */
 export function knownView(tt: Timetable, kg: KnownGraph): GraphView {
   const learned = new Map(kg.learned.map((e) => [`${e.trainKey}\u0000${e.edition}`, e.confidence] as const));
   const editions = new Set(kg.editions);
+  const ex = kg.exclude;
+  const exKey = ex ? `|x:${(ex.modes ?? []).join(',')};${(ex.operators ?? []).join(',')}` : '';
   return {
-    key: `kg:${kg.id}@${kg.version}`,
+    key: `kg:${kg.id}@${kg.version}${exKey}`,
     uses: (trip, day) => {
+      if (ex && excludedTrip(tt, kg, trip)) return false;
       const t = tt.trips[trip]!;
       const conf = learned.get(`${t.trainKey}\u0000${t.edition}`);
       if (conf === 0) return false;

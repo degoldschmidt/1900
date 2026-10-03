@@ -4,6 +4,8 @@
  *  - games/<g>/src/ui/ imports only views/, ui/, #kit/ui, #kit/data, #kit/time/format and preact;
  *  - forecasts and indicators (files whose name contains "forecast" or "indicator") never import
  *    the record store, delivery, readers or the hunter; they work from ownTrail copies and public rows;
+ *  - views (games/<g>/src/views/) are held to the same rule, except an autopsy view, which opens the
+ *    hidden side only after a game has ended;
  *  - the kit never imports a game.
  */
 import { readFileSync } from 'node:fs';
@@ -32,7 +34,7 @@ export function checkFile(file: string, src: string): string[] {
   const problems: string[] = [];
   const game = GAMES.find((g) => file.startsWith(`games/${g}/`));
   const isUi = /\/src\/ui\//.test(file);
-  const isForecast = /(forecast|indicator)[^/]*\.tsx?$/.test(file);
+  const isForecast = /(forecast|indicator)[^/]*\.tsx?$/.test(file) || (/\/src\/views\//.test(file) && !/\/views\/autopsy[^/]*$/.test(file));
   for (const spec of importsOf(src)) {
     const target = resolveSpec(file, spec);
     if (file.startsWith('kit/') && target.startsWith('games/')) problems.push(`${file}: the kit imports a game (${spec})`);

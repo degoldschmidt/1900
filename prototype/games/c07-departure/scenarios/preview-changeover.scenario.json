@@ -1,0 +1,37 @@
+{
+  "id": "preview-changeover",
+  "title": "Preview: the changeover",
+  "note": "Mechanics preview on an invented railway, not history. The analogue of S1: twelve days across the summer timetable change of 1 May, a chain of meetings Aubrevaux – Corlaine – Quellingen – Tolvenberg whose last two windows fall after the change, holding only the winter guide; the Ardesian political police subscribed from the start; rent on 1 May and a bill at Tolvenberg on 7 May.",
+  "endRule": "chain",
+  "seed": 1914,
+  "start": { "city": "SYN_C_AUB", "date": "1914-04-27", "time": "09:00" },
+  "end": { "city": "SYN_C_AUB", "date": "1914-05-09", "time": "21:00" },
+  "legend": { "id": "SYN_L_AGENT", "nationality": "SYN_J_VH", "home": "SYN_J_VH", "papers": { "passport": true, "visas": [] } },
+  "place": { "city": "SYN_C_AUB", "station": "SYN_S_AUBN", "venue": "station" },
+  "guides": ["SYN_E_W14"],
+  "hunter": "SYN_I_AR_POL",
+  "values": [
+    { "id": "SC-CHG-001", "name": "starting cash", "value": { "cur": "SYN_CVN", "minor": 12000 }, "rationale": "A few days in Corvenia; marks must be drawn later." },
+    { "id": "SC-CHG-002", "name": "letter of credit", "value": { "cur": "GBP", "minor": 57600 }, "rationale": "£60 drawable at four correspondents." },
+    { "id": "SC-CHG-003", "name": "commission pay", "value": { "cur": "GBP", "minor": 28800 }, "rationale": "£30 on the last meeting." },
+    { "id": "SC-CHG-004", "name": "rent", "value": { "cur": "GBP", "minor": 7680 }, "rationale": "£8 a month from the credit, due 1 May." },
+    { "id": "SC-CHG-005", "name": "bill", "value": { "cur": "GBP", "minor": 24000 }, "rationale": "£25 domiciled at the Tolvenberg correspondent, maturing 7 May." },
+    { "id": "SC-CHG-006", "name": "stage windows", "value": "Aubrevaux 27 Apr 14.00–18.00; Corlaine 29 Apr 10.00–16.00; Quellingen 2 May 10.00–18.00; Tolvenberg 4 May 12.00–20.00", "rationale": "The last two fall after the changeover, so the winter guide misleads on that corridor." }
+  ],
+  "cash": [{ "cur": "SYN_CVN", "minor": 12000 }],
+  "credit": { "cur": "GBP", "minor": 57600 },
+  "correspondents": ["SYN_I_BK_AUB", "SYN_I_BK_COR", "SYN_I_BK_QUE", "SYN_I_BK_TOL"],
+  "rent": { "amount": { "cur": "GBP", "minor": 7680 }, "firstDue": { "city": "SYN_C_AUB", "date": "1914-05-01", "time": "09:00" }, "everyDays": 30 },
+  "bill": { "amount": { "cur": "GBP", "minor": 24000 }, "bank": "SYN_I_BK_TOL", "maturity": "1914-05-07" },
+  "offers": [
+    {
+      "id": "SYN_CH_1", "pay": { "cur": "GBP", "minor": 28800 },
+      "stages": [
+        { "city": "SYN_C_AUB", "open": { "date": "1914-04-27", "time": "14:00" }, "close": { "date": "1914-04-27", "time": "18:00" } },
+        { "city": "SYN_C_COR", "open": { "date": "1914-04-29", "time": "10:00" }, "close": { "date": "1914-04-29", "time": "16:00" } },
+        { "city": "SYN_C_QUE", "open": { "date": "1914-05-02", "time": "10:00" }, "close": { "date": "1914-05-02", "time": "18:00" } },
+        { "city": "SYN_C_TOL", "open": { "date": "1914-05-04", "time": "12:00" }, "close": { "date": "1914-05-04", "time": "20:00" } }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+[
+ {
+  "k": 0,
+  "cmd": {
+   "type": "planVerb",
+   "verb": "drawCredit",
+   "args": {
+    "amount": 960
+   }
+  }
+ },
+ {
+  "k": 0,
+  "cmd": {
+   "type": "book",
+   "cls": 2,
+   "sleeper": false,
+   "legs": [
+    {
+     "tripId": "SYN_T_W14_D15",
+     "day": 5223,
+     "from": "SYN_S_AUBN",
+     "to": "SYN_S_COR"
+    }
+   ],
+   "ui": {
+    "sinceArrivalMs": 64000,
+    "source": "planner"
+   }
+  }
+ },
+ {
+  "k": 5,
+  "cmd": {
+   "type": "planVerb",
+   "verb": "meet",
+   "args": {
+    "offer": "SYN_CH_TUT",
+    "stage": 0
+   }
+  }
+ },
+ {
+  "k": 5,
+  "cmd": {
+   "type": "planVerb",
+   "verb": "posteRestante",
+   "args": {}
+  }
+ },
+ {
+  "k": 5,
+  "cmd": {
+   "type": "book",
+   "cls": 3,
+   "sleeper": false,
+   "legs": [
+    {
+     "tripId": "SYN_T_W14_D16",
+     "day": 5223,
+     "from": "SYN_S_COR",
+     "to": "SYN_S_AUBN"
+    }
+   ],
+   "ui": {
+    "sinceArrivalMs": 121000,
+    "source": "default"
+   }
+  }
+ },
+ {
+  "k": 21,
+  "cmd": {
+   "type": "planVerb",
+   "verb": "lodge",
+   "args": {
+    "tier": "modest"
+   }
+  }
+ },
+ {
+  "k": 21,
+  "cmd": {
+   "type": "book",
+   "cls": 3,
+   "sleeper": false,
+   "legs": [
+    {
+     "tripId": "SYN_T_W14_O41",
+     "day": 5224,
+     "from": "SYN_S_AUBO",
+     "to": "SYN_S_PAN"
+    }
+   ],
+   "ui": {
+    "sinceArrivalMs": 45000,
+    "source": "planner"
+   }
+  }
+ },
+ {
+  "k": 33,
+  "cmd": {
+   "type": "endSession"
+  }
+ },
+ {
+  "k": 35,
+  "cmd": {
+   "type": "planVerb",
+   "verb": "meet",
+   "args": {
+    "offer": "SYN_CH_TUT",
+    "stage": 1
+   }
+  }
+ }
+]

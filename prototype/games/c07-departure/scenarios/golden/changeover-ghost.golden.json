@@ -1,0 +1,33 @@
+{
+  "script": "changeover-ghost",
+  "scenario": "preview-changeover",
+  "seed": 1914,
+  "dataHash": "6d892a8a302d350c",
+  "processed": 258,
+  "commands": 7,
+  "logHash": "88e994ecbbb2f3fa",
+  "hash": "cb33f26cbbe6edb4",
+  "reason": "world adds DV-C07-065..070; fares logged by station name; verified resets at boarding",
+  "metrics": {
+    "ending": "ruined",
+    "H07-1.verbsPerStay": 4,
+    "H07-1.waitShare": 972,
+    "H07-1.stays": 1,
+    "H07-2.bufferRatio": null,
+    "H07-2.missesForecast": null,
+    "H07-2.misses": 0,
+    "H07-2.blame": null,
+    "H07-3.verifyAfterGhost": 1000,
+    "H07-3.verifyBeforeGhost": 0,
+    "H07-3.repeatGhosts": 0,
+    "H07-3.ghosts": 1,
+    "H07-3.fair": null,
+    "H07-4.stopsAboardNight": null,
+    "H07-5.attribution": null,
+    "H07-5.explicable": null,
+    "H07-5.cordonFeasible": true,
+    "H07-5.cordons": 2,
+    "H07-6.planMs": 120000,
+    "H07-6.defaultShare": 500
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "scenario": "preview-changeover",
+  "note": "Holding the winter guide: the first meeting in Aubrevaux, then the Tolvenberg Express booked for 2 May, after the changeover, which has left half an hour early (a ghost). Buy the summer guide at the bookstall and take the Meridian Express that night with a berth; end a session aboard.",
+  "steps": [
+    { "cmd": { "type": "planVerb", "verb": "drawCredit", "args": { "amount": 4800 } } },
+    { "cmd": { "type": "planVerb", "verb": "meet", "args": { "offer": "SYN_CH_1", "stage": 0 } } },
+    { "cmd": { "type": "book", "cls": 2, "sleeper": false, "legs": [{ "tripId": "SYN_T_W14_D11", "day": 5234, "from": "SYN_S_AUBN", "to": "SYN_S_TOLW" }], "ui": { "sinceArrivalMs": 150000, "source": "planner" } } },
+    { "wait": { "untilTrace": "ghost", "maxEvents": 200000 }, "cmd": { "type": "planVerb", "verb": "buyGuide", "args": { "edition": "SYN_E_S14" } } },
+    { "wait": { "untilTrace": "verbEnd" }, "cmd": { "type": "planVerb", "verb": "checkBoard", "args": {} } },
+    { "cmd": { "type": "book", "cls": 1, "sleeper": true, "legs": [{ "tripId": "SYN_T_S14_MERID_E", "day": 5234, "from": "SYN_S_AUBN", "to": "SYN_S_TOLW" }], "ui": { "sinceArrivalMs": 90000, "source": "default" } } },
+    { "wait": { "untilTrace": "board" }, "cmd": { "type": "endSession" } }
+  ],
+  "end": { "untilTrace": "ending", "maxEvents": 400000 }
+}

@@ -1,0 +1,16 @@
+{
+  "scenario": "preview-tutorial",
+  "note": "Draw cash, take the Corvenian Mail to Corlaine, meet, collect the post, back to Aubrevaux for the night, the morning train from the other station to Port-Ancel, the second meeting: delivered.",
+  "steps": [
+    { "cmd": { "type": "planVerb", "verb": "drawCredit", "args": { "amount": 960 } } },
+    { "cmd": { "type": "book", "cls": 2, "sleeper": false, "legs": [{ "tripId": "SYN_T_W14_D15", "day": 5223, "from": "SYN_S_AUBN", "to": "SYN_S_COR" }], "ui": { "sinceArrivalMs": 64000, "source": "planner" } } },
+    { "wait": { "untilTrace": "arrival" }, "cmd": { "type": "planVerb", "verb": "meet", "args": { "offer": "SYN_CH_TUT", "stage": 0 } } },
+    { "cmd": { "type": "planVerb", "verb": "posteRestante", "args": {} } },
+    { "cmd": { "type": "book", "cls": 3, "sleeper": false, "legs": [{ "tripId": "SYN_T_W14_D16", "day": 5223, "from": "SYN_S_COR", "to": "SYN_S_AUBN" }], "ui": { "sinceArrivalMs": 121000, "source": "default" } } },
+    { "wait": { "untilTrace": "arrival" }, "cmd": { "type": "planVerb", "verb": "lodge", "args": { "tier": "modest" } } },
+    { "cmd": { "type": "book", "cls": 3, "sleeper": false, "legs": [{ "tripId": "SYN_T_W14_O41", "day": 5224, "from": "SYN_S_AUBO", "to": "SYN_S_PAN" }], "ui": { "sinceArrivalMs": 45000, "source": "planner" } } },
+    { "wait": { "untilTrace": "board" }, "cmd": { "type": "endSession" } },
+    { "wait": { "untilTrace": "arrival" }, "cmd": { "type": "planVerb", "verb": "meet", "args": { "offer": "SYN_CH_TUT", "stage": 1 } } }
+  ],
+  "end": { "untilTrace": "ending" }
+}

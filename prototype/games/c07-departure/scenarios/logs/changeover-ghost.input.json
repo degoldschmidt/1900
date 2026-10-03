@@ -1,0 +1,87 @@
+[
+ {
+  "k": 0,
+  "cmd": {
+   "type": "planVerb",
+   "verb": "drawCredit",
+   "args": {
+    "amount": 4800
+   }
+  }
+ },
+ {
+  "k": 0,
+  "cmd": {
+   "type": "planVerb",
+   "verb": "meet",
+   "args": {
+    "offer": "SYN_CH_1",
+    "stage": 0
+   }
+  }
+ },
+ {
+  "k": 0,
+  "cmd": {
+   "type": "book",
+   "cls": 2,
+   "sleeper": false,
+   "legs": [
+    {
+     "tripId": "SYN_T_W14_D11",
+     "day": 5234,
+     "from": "SYN_S_AUBN",
+     "to": "SYN_S_TOLW"
+    }
+   ],
+   "ui": {
+    "sinceArrivalMs": 150000,
+    "source": "planner"
+   }
+  }
+ },
+ {
+  "k": 100,
+  "cmd": {
+   "type": "planVerb",
+   "verb": "buyGuide",
+   "args": {
+    "edition": "SYN_E_S14"
+   }
+  }
+ },
+ {
+  "k": 103,
+  "cmd": {
+   "type": "planVerb",
+   "verb": "checkBoard",
+   "args": {}
+  }
+ },
+ {
+  "k": 103,
+  "cmd": {
+   "type": "book",
+   "cls": 1,
+   "sleeper": true,
+   "legs": [
+    {
+     "tripId": "SYN_T_S14_MERID_E",
+     "day": 5234,
+     "from": "SYN_S_AUBN",
+     "to": "SYN_S_TOLW"
+    }
+   ],
+   "ui": {
+    "sinceArrivalMs": 90000,
+    "source": "default"
+   }
+  }
+ },
+ {
+  "k": 116,
+  "cmd": {
+   "type": "endSession"
+  }
+ }
+]

@@ -3,7 +3,10 @@
  * The save code holds the scenario, seed, input log and questionnaire answers; replaying it
  * rebuilds the exact game, and the game module's `metrics` reads the hypothesis measures from it.
  *
- *   npm run playtest:analyze -- <save code | file with codes | folder of .txt files> [--out report]
+ *   npm run playtest:analyze -- <save code | file with codes | folder of .txt files> [--out report] [--preview]
+ *
+ * `--preview` replays on the game's invented preview world (C07 mechanics preview) instead of the
+ * compiled data; a save is still refused if its data hash differs.
  *
  * Writes a Markdown report (and a CSV beside it with --out). A save made on other data than the
  * current bundle is reported and skipped, since its replay would not be the game that was played.
@@ -14,7 +17,7 @@ import { decodeSave, type SaveCode } from '../../kit/src/sim/savecode.ts';
 import { Sim, type Command } from '../../kit/src/sim/sim.ts';
 import type { Metric } from '../../kit/src/sim/module.ts';
 import type { GameBundle } from '../../kit/src/data/bundle.ts';
-import { gameIdOf, loadGameModule, loadRawBundle, type AnyModule } from '../make/game-module.ts';
+import { gameIdOf, loadGameModule, loadRawBundle, wantsPreview, type AnyModule } from '../make/game-module.ts';
 
 export interface Analysis {
   game: string;
@@ -87,7 +90,8 @@ async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const outIdx = args.indexOf('--out');
   const out = outIdx >= 0 ? args[outIdx + 1] : undefined;
-  const inputs = args.filter((_, i) => i !== outIdx && (outIdx < 0 || i !== outIdx + 1));
+  const preview = wantsPreview(args);
+  const inputs = args.filter((a, i) => a !== '--preview' && i !== outIdx && (outIdx < 0 || i !== outIdx + 1));
   const codes = collectCodes(inputs);
   if (codes.length === 0) throw new Error('Give at least one save code, a file of codes, or a folder of .txt files');
   const cache = new Map<string, { mod: AnyModule; raw: GameBundle }>();
@@ -101,7 +105,7 @@ async function main(): Promise<void> {
     let entry = cache.get(save.game);
     if (!entry) {
       const g = gameIdOf(save.game);
-      entry = { mod: await loadGameModule(g), raw: loadRawBundle(g) };
+      entry = { mod: await loadGameModule(g), raw: loadRawBundle(g, { preview }) };
       cache.set(save.game, entry);
     }
     rows.push(analyzeSave(save, entry.mod, entry.raw));

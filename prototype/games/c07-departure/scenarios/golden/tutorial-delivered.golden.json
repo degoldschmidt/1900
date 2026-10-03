@@ -1,0 +1,33 @@
+{
+  "script": "tutorial-delivered",
+  "scenario": "preview-tutorial",
+  "seed": 1914,
+  "dataHash": "6d892a8a302d350c",
+  "processed": 37,
+  "commands": 9,
+  "logHash": "860fdaaac97f82c8",
+  "hash": "195de67d654b5ad4",
+  "reason": "world adds DV-C07-065..070; fares logged by station name; verified resets at boarding",
+  "metrics": {
+    "ending": "delivered",
+    "H07-1.verbsPerStay": 1,
+    "H07-1.waitShare": 662,
+    "H07-1.stays": 3,
+    "H07-2.bufferRatio": null,
+    "H07-2.missesForecast": null,
+    "H07-2.misses": 0,
+    "H07-2.blame": null,
+    "H07-3.verifyAfterGhost": null,
+    "H07-3.verifyBeforeGhost": 0,
+    "H07-3.repeatGhosts": null,
+    "H07-3.ghosts": 0,
+    "H07-3.fair": null,
+    "H07-4.stopsAboardNight": null,
+    "H07-5.attribution": null,
+    "H07-5.explicable": null,
+    "H07-5.cordonFeasible": true,
+    "H07-5.cordons": 0,
+    "H07-6.planMs": 64000,
+    "H07-6.defaultShare": 333
+  }
+}

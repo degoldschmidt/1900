@@ -1,4 +1,622 @@
 {
-  "note": "Game-rule constants labelled as design values (not historical data). Each entry: {id, value, unit, rationale}. Empty until this game's rules are built.",
-  "values": []
+ "note": "Game-rule constants of C07, labelled as design values (not historical data). Each entry: {id, value, unit, rationale}. Read by the rules through the bundle's designValues; DV-C07-061 to 064 name constants RULES.md states inline.",
+ "values": [
+  {
+   "id": "DV-C07-001",
+   "value": 900,
+   "unit": "s",
+   "rationale": "Board margin: on the platform before departure."
+  },
+  {
+   "id": "DV-C07-002",
+   "value": 1800,
+   "unit": "s",
+   "rationale": "Venue to station or back: a cab or a walk in a capital."
+  },
+  {
+   "id": "DV-C07-003",
+   "value": 1200,
+   "unit": "s",
+   "rationale": "Venue to venue within one city."
+  },
+  {
+   "id": "DV-C07-004",
+   "value": 7200,
+   "unit": "s",
+   "rationale": "Minimum stay counted by H07-1; excludes bare changes."
+  },
+  {
+   "id": "DV-C07-005",
+   "value": {
+    "draw": 2700,
+    "post": 1200,
+    "meet": 3600,
+    "compose": 1800,
+    "handIn": 900,
+    "guide": 600,
+    "porter": 600,
+    "board": 300,
+    "lodge": 1200
+   },
+   "unit": "s",
+   "rationale": "Counter times per verb; tune in playtest."
+  },
+  {
+   "id": "DV-C07-006",
+   "value": 172800,
+   "unit": "s",
+   "rationale": "Porter horizon: he knows two days of his own station."
+  },
+  {
+   "id": "DV-C07-007",
+   "value": 10800,
+   "unit": "s",
+   "rationale": "Board horizon: a station board shows hours, not days."
+  },
+  {
+   "id": "DV-C07-008",
+   "value": {
+    "open": 21600,
+    "close": 82800
+   },
+   "unit": "s after local midnight",
+   "rationale": "Bookstall and porter hours 06:00-23:00; no source planned."
+  },
+  {
+   "id": "DV-C07-009",
+   "value": 14400,
+   "unit": "s",
+   "rationale": "Cable reply lag: a same-day answer."
+  },
+  {
+   "id": "DV-C07-010",
+   "value": {
+    "lagSec": 86400,
+    "amount": {
+     "cur": "GBP",
+     "minor": 19200
+    },
+    "cap": {
+     "cur": "GBP",
+     "minor": 57600
+    }
+   },
+   "unit": "s; GBP farthings",
+   "rationale": "Money by wire takes a day; £20 per remittance, £60 in all."
+  },
+  {
+   "id": "DV-C07-011",
+   "value": {
+    "commission": 5,
+    "spread": 30
+   },
+   "unit": "permille",
+   "rationale": "Instruments cost money: bank commission and change spread."
+  },
+  {
+   "id": "DV-C07-012",
+   "value": [
+    "GBP",
+    "FRF",
+    "BEF",
+    "DEM",
+    "RUB"
+   ],
+   "unit": "order",
+   "rationale": "Auto-change order; currencies not listed follow by code, so the order stays deterministic."
+  },
+  {
+   "id": "DV-C07-013",
+   "value": 1,
+   "unit": "day",
+   "rationale": "Guide distribution lag: an issue reaches the bookstalls a day later."
+  },
+  {
+   "id": "DV-C07-014",
+   "value": [
+    25200,
+    61200
+   ],
+   "unit": "s after local midnight",
+   "rationale": "Newspaper editions at 07:00 and 17:00."
+  },
+  {
+   "id": "DV-C07-015",
+   "value": {
+    "porter": 900,
+    "cable": 950
+   },
+   "unit": "permille",
+   "rationale": "Confidence of hearsay vs a written answer."
+  },
+  {
+   "id": "DV-C07-016",
+   "value": {
+    "days": 1
+   },
+   "unit": "days after the miss",
+   "rationale": "Ticket stays valid to the end of the next day after a miss; stand-in until a cited rule."
+  },
+  {
+   "id": "DV-C07-017",
+   "value": {
+    "1": 120,
+    "2": 80,
+    "3": 48,
+    "sleeper": 160
+   },
+   "unit": "GBP farthings per scheduled hour",
+   "rationale": "Design fare, only where no fare row exists; labelled on screen."
+  },
+  {
+   "id": "DV-C07-018",
+   "value": {
+    "edges": [
+     0,
+     1,
+     600,
+     1800,
+     3600,
+     7200
+    ],
+    "w": [
+     600,
+     250,
+     100,
+     35,
+     15
+    ]
+   },
+   "unit": "s; permille",
+   "rationale": "Delay CDF, express: rare long delays."
+  },
+  {
+   "id": "DV-C07-019",
+   "value": {
+    "edges": [
+     0,
+     1,
+     600,
+     1800,
+     3600,
+     7200
+    ],
+    "w": [
+     500,
+     300,
+     140,
+     45,
+     15
+    ]
+   },
+   "unit": "s; permille",
+   "rationale": "Delay CDF, ordinary: slower trains lose more."
+  },
+  {
+   "id": "DV-C07-020",
+   "value": {
+    "edges": [
+     0,
+     1,
+     600,
+     1800,
+     3600,
+     7200
+    ],
+    "w": [
+     550,
+     250,
+     120,
+     50,
+     30
+    ]
+   },
+   "unit": "s; permille",
+   "rationale": "Delay CDF, boat: weather tail."
+  },
+  {
+   "id": "DV-C07-021",
+   "value": {
+    "edges": [
+     0,
+     1,
+     600,
+     1800,
+     3600,
+     7200
+    ],
+    "w": [
+     200,
+     250,
+     250,
+     180,
+     120
+    ]
+   },
+   "unit": "s; permille",
+   "rationale": "Delay CDF in a crisis; dated by crisis rows (S2 only)."
+  },
+  {
+   "id": "DV-C07-022",
+   "value": {
+    "minChange": 900,
+    "gauge": 2700
+   },
+   "unit": "s",
+   "rationale": "Default minimum change and gauge transfer, only where no row exists."
+  },
+  {
+   "id": "DV-C07-023",
+   "value": {
+    "sleeper": 2,
+    "1": 4,
+    "2": 6,
+    "3": 10
+   },
+   "unit": "permille per hour",
+   "rationale": "Ride health cost: cheap nights wear; doubled 22:00-06:00 local."
+  },
+  {
+   "id": "DV-C07-024",
+   "value": {
+    "lodged": 40,
+    "berth": 35,
+    "seat1": 10,
+    "seat2": 6,
+    "seat3": 0,
+    "waitingRoom": 5
+   },
+   "unit": "permille per hour",
+   "rationale": "Rest gain by place: rest competes for slack."
+  },
+  {
+   "id": "DV-C07-025",
+   "value": {
+    "threshold": 300,
+    "penalty": 250
+   },
+   "unit": "permille",
+   "rationale": "Tired agents are slow: below the threshold every verb takes longer."
+  },
+  {
+   "id": "DV-C07-026",
+   "value": 86400,
+   "unit": "s",
+   "rationale": "Collapse rest: health 0 costs a day."
+  },
+  {
+   "id": "DV-C07-027",
+   "value": 800,
+   "unit": "permille",
+   "rationale": "Starting health: room to spend."
+  },
+  {
+   "id": "DV-C07-028",
+   "value": {
+    "slip": 950,
+    "ticket": {
+     "1": 400,
+     "2": 250,
+     "3": 100
+    },
+    "sleeper": 900,
+    "customs": 200,
+    "witness": 300,
+    "sighting": 800
+   },
+   "unit": "permille",
+   "rationale": "Record confidences: named records far above anonymous ones."
+  },
+  {
+   "id": "DV-C07-029",
+   "value": [
+    43200,
+    129600
+   ],
+   "unit": "s",
+   "rationale": "Cooperation lag from a local police to the service, only where no cited row exists."
+  },
+  {
+   "id": "DV-C07-030",
+   "value": 0,
+   "unit": "day",
+   "rationale": "Hunter edition lag: the police hold the official issue on its day."
+  },
+  {
+   "id": "DV-C07-031",
+   "value": "param row hunt.known per service: the modes and operators its timetable knowledge covers",
+   "unit": "list",
+   "rationale": "Makes escapes by unknown connections possible (K3)."
+  },
+  {
+   "id": "DV-C07-032",
+   "value": {
+    "n": 64,
+    "stay": 600,
+    "maxRides": 3,
+    "fanout": 4,
+    "missWatched": 300
+   },
+   "unit": "count; s; permille",
+   "rationale": "Particle filter size and moves: cheap and stable."
+  },
+  {
+   "id": "DV-C07-033",
+   "value": 7200,
+   "unit": "s",
+   "rationale": "Hunt tick: re-plan cadence."
+  },
+  {
+   "id": "DV-C07-034",
+   "value": "cities whose jurisdiction is the service's (data), with their frontier posts",
+   "unit": "list",
+   "rationale": "Where the service may watch and arrest."
+  },
+  {
+   "id": "DV-C07-035",
+   "value": 250,
+   "unit": "permille",
+   "rationale": "Cordon mass threshold: act on a likely city only."
+  },
+  {
+   "id": "DV-C07-036",
+   "value": {
+    "max": 3,
+    "dur": 172800
+   },
+   "unit": "count; s",
+   "rationale": "Watchers are scarce."
+  },
+  {
+   "id": "DV-C07-037",
+   "value": 3600,
+   "unit": "s",
+   "rationale": "Notice by wire to a local police office."
+  },
+  {
+   "id": "DV-C07-038",
+   "value": "param row hunt.bases per service: the cities watchers leave from",
+   "unit": "list",
+   "rationale": "Headquarters."
+  },
+  {
+   "id": "DV-C07-039",
+   "value": 3600,
+   "unit": "s",
+   "rationale": "Watchers leave within the hour."
+  },
+  {
+   "id": "DV-C07-040",
+   "value": {
+    "post": 1800,
+    "arrest": 1800
+   },
+   "unit": "s",
+   "rationale": "Posting and arrest delays leave a window to escape."
+  },
+  {
+   "id": "DV-C07-041",
+   "value": 259200,
+   "unit": "s",
+   "rationale": "Cordon horizon: belief decays beyond it."
+  },
+  {
+   "id": "DV-C07-042",
+   "value": {
+    "station": 350,
+    "classMod": {
+     "1": 100,
+     "2": 0,
+     "3": -100
+    },
+    "frontier": 900
+   },
+   "unit": "permille",
+   "rationale": "Detection chance: passports make frontiers sharp."
+  },
+  {
+   "id": "DV-C07-043",
+   "value": 500,
+   "unit": "permille",
+   "rationale": "The player notices a watcher: a warning before the arrest."
+  },
+  {
+   "id": "DV-C07-044",
+   "value": 2,
+   "unit": "count",
+   "rationale": "Maximum held offers: forces a choice."
+  },
+  {
+   "id": "DV-C07-045",
+   "value": [
+    300,
+    500,
+    200
+   ],
+   "unit": "permille for 0/1/2 errands",
+   "rationale": "A claimant most days."
+  },
+  {
+   "id": "DV-C07-046",
+   "value": 10800,
+   "unit": "s",
+   "rationale": "Errand window: fits one stay."
+  },
+  {
+   "id": "DV-C07-047",
+   "value": 28800,
+   "unit": "s after local midnight",
+   "rationale": "Offer batch at 08:00 local: the morning post."
+  },
+  {
+   "id": "DV-C07-048",
+   "value": {
+    "min": {
+     "cur": "GBP",
+     "minor": 240
+    },
+    "max": {
+     "cur": "GBP",
+     "minor": 960
+    }
+   },
+   "unit": "GBP farthings, paid in local cash",
+   "rationale": "Errand pay 5s to £1: small but real."
+  },
+  {
+   "id": "DV-C07-049",
+   "value": 400,
+   "unit": "permille",
+   "rationale": "Away offer chance: a tempting alternative."
+  },
+  {
+   "id": "DV-C07-050",
+   "value": 21600,
+   "unit": "s",
+   "rationale": "Away window: tight enough to exclude the held stage."
+  },
+  {
+   "id": "DV-C07-051",
+   "value": 600,
+   "unit": "permille",
+   "rationale": "A rival delivers a lapsed offer: lapses have consequences."
+  },
+  {
+   "id": "DV-C07-052",
+   "value": 604800,
+   "unit": "s",
+   "rationale": "Rent arrears grace: one week."
+  },
+  {
+   "id": "DV-C07-053",
+   "value": 0,
+   "unit": "day",
+   "rationale": "Bill grace; stand-in until a cited rule."
+  },
+  {
+   "id": "DV-C07-054",
+   "value": 1250,
+   "unit": "permille",
+   "rationale": "Buffer-growth threshold (analysis only)."
+  },
+  {
+   "id": "DV-C07-055",
+   "value": 600,
+   "unit": "permille",
+   "rationale": "Blame 'plan' share (analysis only)."
+  },
+  {
+   "id": "DV-C07-056",
+   "value": 500,
+   "unit": "permille",
+   "rationale": "Verify-after-ghost share (analysis only)."
+  },
+  {
+   "id": "DV-C07-057",
+   "value": 400,
+   "unit": "permille",
+   "rationale": "Stops-aboard-night share (analysis only)."
+  },
+  {
+   "id": "DV-C07-058",
+   "value": 600,
+   "unit": "permille",
+   "rationale": "Correct attribution share (analysis only)."
+  },
+  {
+   "id": "DV-C07-059",
+   "value": 500,
+   "unit": "permille",
+   "rationale": "Lodging point in a cited price range (midpoint); sources give ranges, rules need one price."
+  },
+  {
+   "id": "DV-C07-060",
+   "value": {
+    "open": 28800,
+    "close": 72000
+   },
+   "unit": "s after local midnight",
+   "rationale": "Police office hours 08:00-20:00, only where no row exists."
+  },
+  {
+   "id": "DV-C07-061",
+   "value": {
+    "min": {
+     "cur": "GBP",
+     "minor": 960
+    },
+    "max": {
+     "cur": "GBP",
+     "minor": 3840
+    }
+   },
+   "unit": "GBP farthings, paid to credit",
+   "rationale": "Away offer pay £1 to £4 (not in RULES.md section 6, which names no away pay; added for the build)."
+  },
+  {
+   "id": "DV-C07-062",
+   "value": 7,
+   "unit": "days",
+   "rationale": "Planning horizon: a slot must start within 7 days (RULES.md 5.1)."
+  },
+  {
+   "id": "DV-C07-063",
+   "value": 6,
+   "unit": "count",
+   "rationale": "Planner: successive departures shown (RULES.md section 9)."
+  },
+  {
+   "id": "DV-C07-064",
+   "value": 100,
+   "unit": "permille",
+   "rationale": "Planner default pick: earliest arrival with miss odds at most this (RULES.md section 9)."
+  },
+  {
+   "id": "DV-C07-065",
+   "value": {
+    "after": 3600,
+    "step": 900,
+    "steps": 32
+   },
+   "unit": "s; s; count",
+   "rationale": "Errand meeting opens an hour after the batch plus a quarter-hour step drawn from 32 (RULES.md 5.6)."
+  },
+  {
+   "id": "DV-C07-066",
+   "value": 7200,
+   "unit": "s",
+   "rationale": "An away offer's window starts at the earliest arrival leaving two hours after the batch (RULES.md 5.6)."
+  },
+  {
+   "id": "DV-C07-067",
+   "value": 3600,
+   "unit": "s",
+   "rationale": "The departure board announces the delays of trains due within the hour (RULES.md 5.2)."
+  },
+  {
+   "id": "DV-C07-068",
+   "value": {
+    "from": 79200,
+    "to": 21600
+   },
+   "unit": "s after local midnight",
+   "rationale": "Night for ride health is 22:00-06:00 local (RULES.md 5.3)."
+  },
+  {
+   "id": "DV-C07-069",
+   "value": 86400,
+   "unit": "s",
+   "rationale": "H07-3.repeatGhosts counts ghosts more than a day after the first (RULES.md section 1)."
+  },
+  {
+   "id": "DV-C07-070",
+   "value": {
+    "awayEa": 259200,
+    "planner": 172800,
+    "board": 86400
+   },
+   "unit": "s",
+   "rationale": "Search horizons: earliest arrivals for away offers, the planner's itineraries, the board's rows."
+  }
+ ]
 }

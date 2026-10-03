@@ -4,11 +4,12 @@
  * (scenarios/golden/<name>.golden.json). Tests then check that
  *   - the script still produces exactly the logged commands at the logged positions,
  *   - a straight replay of the log reaches the golden hash,
- *   - restoring any monthly snapshot and replaying the rest reaches the same hash.
+ *   - restoring any monthly snapshot and replaying the rest reaches the same hash,
+ *   - the game's hypothesis metrics (when it has them) are those stored.
  */
 import { runScript, type Script } from '../../kit/src/sim/scenario.ts';
 import { Sim, type Command, type InputEntry } from '../../kit/src/sim/sim.ts';
-import type { GameModule } from '../../kit/src/sim/module.ts';
+import type { GameModule, Metric } from '../../kit/src/sim/module.ts';
 import { canonicalJson } from '../../kit/src/sim/canonical.ts';
 import { hash64 } from '../../kit/src/sim/hash.ts';
 
@@ -23,6 +24,8 @@ export interface GoldenRecord {
   hash: string;
   /** Why the golden value last changed (required by golden:update). */
   reason: string;
+  /** The module's metrics on the finished run, without questionnaire answers (games with metrics). */
+  metrics?: Record<string, Metric>;
 }
 
 export interface GoldenRun<C extends Command> { log: Array<InputEntry<C>>; golden: GoldenRecord }
@@ -32,13 +35,12 @@ export function runGolden<S, C extends Command, B>(
 ): GoldenRun<C> {
   const scenario = mod.scenario(bundle, script.scenario);
   const res = runScript(mod.game, bundle, scenario, script);
-  return {
-    log: res.log,
-    golden: {
-      script: name, scenario: scenario.id, seed: scenario.seed, dataHash, processed: res.sim.processed,
-      commands: res.log.length, logHash: hash64(canonicalJson(res.log)), hash: res.hash, reason,
-    },
+  const golden: GoldenRecord = {
+    script: name, scenario: scenario.id, seed: scenario.seed, dataHash, processed: res.sim.processed,
+    commands: res.log.length, logHash: hash64(canonicalJson(res.log)), hash: res.hash, reason,
   };
+  if (mod.metrics) golden.metrics = mod.metrics(res.sim, {});
+  return { log: res.log, golden };
 }
 
 /** Problems found when re-checking a golden record; empty when everything matches. */
@@ -57,6 +59,7 @@ export function checkGolden<S, C extends Command, B>(
   const straight = new Sim(mod.game, bundle, scenario);
   straight.replayLog(log, golden.processed);
   if (straight.hash() !== golden.hash) problems.push(`${golden.script}: straight replay hash ${straight.hash()} differs from golden ${golden.hash}`);
+  if (golden.metrics && mod.metrics && canonicalJson(mod.metrics(straight, {})) !== canonicalJson(golden.metrics)) problems.push(`${golden.script}: metrics differ from golden`);
   for (const snap of straight.snapshots) {
     const re = Sim.restore(mod.game, bundle, scenario, snap);
     re.replayLog(log, golden.processed);

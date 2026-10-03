@@ -53,6 +53,8 @@ describe('import boundaries', () => {
   it('keeps forecasts away from stores and hunters', () => {
     expect(checkFile('games/c07-departure/src/rules/forecast.ts', "import { RecordStore } from '#kit/records/store.ts';")).not.toEqual([]);
     expect(checkFile('games/c07-departure/src/rules/forecast.ts', "import type { RecordTuple } from '#kit/records/tuple.ts';")).toEqual([]);
+    expect(checkFile('games/c07-departure/src/views/board.ts', "import { mass } from '#kit/hunter/belief.ts';")).not.toEqual([]);
+    expect(checkFile('games/c07-departure/src/views/autopsy.ts', "import type { RecordTuple } from '#kit/records/delivery.ts';")).toEqual([]);
   });
   it('keeps the kit independent of games', () => {
     expect(checkFile('kit/src/sim/sim.ts', "import x from '../../../games/c07-departure/src/game.ts';")).not.toEqual([]);

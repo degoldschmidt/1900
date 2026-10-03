@@ -4,11 +4,12 @@
  * record and appended to scenarios/golden/CHANGES.md.
  *
  *   npm run golden:update -- c07 --reason "delay draw now keyed per train and day"
+ *   npm run golden:update -- c07 --preview --reason "…"   # on the game's invented preview world
  */
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, appendFileSync } from 'node:fs';
 import { join, basename } from 'node:path';
 import { ROOT, resolveGames } from './paths.ts';
-import { loadGameModule, loadRawBundle } from './game-module.ts';
+import { loadGameModule, loadRawBundle, wantsPreview } from './game-module.ts';
 import { runGolden, type GoldenRecord } from './golden.ts';
 import type { Script } from '../../kit/src/sim/scenario.ts';
 import type { Command } from '../../kit/src/sim/sim.ts';
@@ -28,7 +29,7 @@ async function main(): Promise<void> {
     const scripts = existsSync(join(dir, 'scripts')) ? readdirSync(join(dir, 'scripts')).filter((f) => f.endsWith('.script.json')).sort() : [];
     if (scripts.length === 0) { console.log(`${game}: no scenario scripts`); continue; }
     const mod = await loadGameModule(game);
-    const raw = loadRawBundle(game);
+    const raw = loadRawBundle(game, { preview: wantsPreview(args) });
     const bundle = mod.bundleFrom(raw);
     mkdirSync(join(dir, 'logs'), { recursive: true });
     mkdirSync(join(dir, 'golden'), { recursive: true });
