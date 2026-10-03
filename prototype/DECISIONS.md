@@ -181,3 +181,7 @@ Two new blind keyers worked from the revised briefs, then one resolver.
 **D1 is closed.** The data tooling runs end to end on synthetic pages and keyer error is within target. Calibration costs about 120,000 tokens per keyer per 9-crop round and 170,000–200,000 per resolver. This feeds the pilot (D2) throughput estimate.
 
 **Waiting on access.** The remaining milestones need sources: D0 discovery, G1, the D2 pilot, transcription, historian review and freezes, and then the three builds. The four library domains still do not connect (re-checked 12:50).
+
+## 2026-10-03 11:15 — Access re-check after the owner's change (Event P-E009)
+
+The owner reported opening the four library domains. All four still get "403 to CONNECT" from the environment proxy, both in this session's container and in a fresh throwaway session started in the same environment at 11:05 (since archived). The environment is still listed as "Default - trusted network access", so the change has not reached its policy. The owner will re-check and save Network access: Custom, with the four domains and the package-manager defaults. The D0 run-book is in `PLAN.md` (addendum of 3 October).

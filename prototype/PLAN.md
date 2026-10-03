@@ -367,3 +367,31 @@ Common to all three:
 8. The kit has no general level-of-detail subsystem; only the deferred-texture pattern is shared.
 9. In C04, timetable compatibility is a gate, never evidence on its own.
 10. Alibi tests ignore realised delays, which a hunter cannot know.
+
+## Addendum, 3 Oct 2026 11:08 UTC: status and the D0 run-book
+
+**Done since approval (all committed locally):**
+- M0, M1 and M2.
+- D1, with calibration: round 2 resolved value error 0.00% over 677 cells.
+- The debug inspector, golden runs, playtest analysis, and the Node/Chromium determinism lab.
+- Rules specifications and data needs for all three games.
+
+**Access check after the owner opened the domains.** archive.org, gallica.bnf.fr, catalog.hathitrust.org and babel.hathitrust.org still get "403 to CONNECT" from the environment proxy. This holds in the running container and in a fresh session started in the same environment at 11:05 UTC, so the change has not reached the environment's policy. The environment is listed as "Default - trusted network access". The likely causes are an unsaved edit, the edit made on another environment, or the access level left at Trusted. The owner should check Network access (environment menu, Edit): it must be **Custom** with the four domains under Allowed domains and the package-manager defaults kept, or a broader level.
+
+**D0 run-book, the moment the hosts answer** (tools are in `prototype/tools/discover/`; usage is in `prototype/data/sources/README.md`):
+1. `node tools/discover/run.ts --dry-run`, then `node tools/discover/run.ts`. This searches archive.org, Gallica SRU and the HathiTrust Bib API for the 22 search-plan entries, paced at about one request per second per host, and writes `data/sources/catalogue.csv`.
+2. HathiTrust has no title-search API. Open the catalogue-search URLs the dry run prints and paste the OCLC numbers or htids into `tools/discover/search-plan.json`, then re-run. Record `pd` versus US-only `pdus`.
+3. `run.ts grep <source_id> --stations …` over OCR text, to find the timetable pages for each tier-A corridor in each candidate edition. OCR is used to locate pages only, never for values.
+4. `node tools/discover/coverage.ts` writes `data/sources/coverage.csv` and `COVERAGE.md`: edition × corridor with pages and table references. Log the result in `DECISIONS.md`.
+5. Gate G1 with the owner, which also covers:
+   - the anchor edition;
+   - the C04 wartime sub-gate;
+   - the scope additions under P-004 (Brussels–Rotterdam, the winter 1913–14 Hook issue, the Flushing route);
+   - the 15 provisional spec defaults.
+6. After G1, the D2 pilot (Berlin–St Petersburg both ways in the anchor):
+   - `tools/fetch` downloads the pages at the highest resolution offered (calibration showed resolution sets the abstention rate);
+   - crops;
+   - two blind keyers, the resolver, the merge, normalise, validate;
+   - historian sample, then report to G2.
+
+**If access cannot be opened:** take G1 option (a). The owner uploads scans of the facsimile pages; they enter at step 6 by `tools/fetch/manifest.ts` with local files.
