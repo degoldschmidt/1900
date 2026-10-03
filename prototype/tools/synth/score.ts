@@ -13,8 +13,8 @@
  * cell error rate = (wrong + missing + spurious) / required.
  * value error rate counts only wrong cells whose difference changes what the data means: the
  *   separator printed between figures (space, point, raised point, colon, comma) and the italic and
- *   small-capital marks are typography; bold (p.m. in many guides), underlining and footnote marks are
- *   not. The targets (PLAN.md, Data workstream 5: single keyer ≤ 1.0%, resolved ≤ 0.1%) apply to the
+ *   small-capital marks are typography, as is bold outside body cells (emphasis on station names and
+ *   train numbers); bold on a body time (p.m. in many guides), underlining and footnote marks are not. The targets (PLAN.md, Data workstream 5: single keyer ≤ 1.0%, resolved ≤ 0.1%) apply to the
  *   value error rate (decision P-003); the exact rate is reported beside it.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
@@ -45,10 +45,14 @@ export const valuePermille = (t: Tally): number => (t.required ? ((t.valueWrong 
 
 const TYPOGRAPHIC_MARKS = new Set(['i', 'sc']);
 
-/** A reading with typography removed: separators between figures become one space; italic and small capitals dropped. */
-export function valueOf(c: Pick<KeyedCell, 'text' | 'marks'>): string {
+/**
+ * A reading with typography removed: separators between figures become one space; italic and small
+ * capitals dropped; bold dropped except on body cells, where it marks p.m. times.
+ */
+export function valueOf(c: Pick<KeyedCell, 'text' | 'marks'>, kind: Kind = 'cell'): string {
   const text = c.text.replace(/(?<=\d)[\s.·:,]+(?=\d)/g, ' ');
-  return `${text}\u0000${marksString(c.marks.filter((m) => !TYPOGRAPHIC_MARKS.has(m)))}`;
+  const keep = c.marks.filter((m) => !TYPOGRAPHIC_MARKS.has(m) && (m !== 'b' || kind === 'cell'));
+  return `${text}\u0000${marksString(keep)}`;
 }
 
 const show = (c: Pick<KeyedCell, 'text' | 'marks'>) => `${c.text}${c.marks.length ? ` [${marksString(c.marks)}]` : ''}`;
@@ -84,7 +88,7 @@ export function scoreCells(truth: readonly KeyedCell[], keyed: readonly KeyedCel
     const tt = t?.text ?? ''; const tm = t ? marksString(t.marks) : '';
     if (c.text === tt && marksString(c.marks) === tm) continue;
     bump(k.kind, 'wrong');
-    if (valueOf(c) !== valueOf(t ?? { text: '', marks: [] })) bump(k.kind, 'valueWrong');
+    if (valueOf(c, k.kind) !== valueOf(t ?? { text: '', marks: [] }, k.kind)) bump(k.kind, 'valueWrong');
     errors.push({ key, truth: truthText, keyed: show(c), why: 'wrong' });
     if (c.text !== tt) for (const w of confusionsOf(tt, c.text)) confuse(w);
     const km = new Set(c.marks); const tms = new Set(t?.marks ?? []);

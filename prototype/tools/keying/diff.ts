@@ -38,7 +38,7 @@ export interface DiffResult {
   agreed: number;
   /** Cells both read the same way but at least one marked sure=n; they go to the resolver. */
   doubtful: number;
-  /** Keyer concordance: (agreed + doubtful) per mille of all cells. */
+  /** Keyer concordance: (agreed + doubtful + identical abstentions) per mille of all cells. */
   permille: number;
   disagreements: Disagreement[];
   agreedKeys: string[];
@@ -55,12 +55,17 @@ export function diffReadings(a: readonly KeyedCell[], b: readonly KeyedCell[], e
   const dis: Disagreement[] = [];
   const agreedKeys: string[] = [];
   let doubtful = 0;
+  let bothIllegible = 0;
   for (const [k, ck] of keys) {
     const ca = A.get(k) ?? null; const cb = B.get(k) ?? null;
     let reason: Reason | null = null;
     if (!ca) reason = 'missing-A';
     else if (!cb) reason = 'missing-B';
-    else if (ca.sure === 'x' || cb.sure === 'x') reason = 'illegible';
+    else if (ca.sure === 'x' || cb.sure === 'x') {
+      reason = 'illegible';
+      // Both keyers abstaining on the same reading is concordance, not divergence.
+      if (ca.sure === 'x' && cb.sure === 'x' && sameReading(ca, cb)) bothIllegible++;
+    }
     else if (!sameReading(ca, cb)) {
       const t = ca.text !== cb.text; const m = marksString(ca.marks) !== marksString(cb.marks);
       reason = t && m ? 'text+marks' : t ? 'text' : 'marks';
@@ -74,8 +79,9 @@ export function diffReadings(a: readonly KeyedCell[], b: readonly KeyedCell[], e
     else agreedKeys.push(k);
   }
   const total = keys.size;
-  // Agreement measures concordance between keyers: a doubted but identical reading counts as agreed.
-  const concordant = agreedKeys.length + doubtful;
+  // Agreement measures concordance between keyers: a doubted but identical reading counts as agreed,
+  // and so does the same abstention by both.
+  const concordant = agreedKeys.length + doubtful + bothIllegible;
   return { total, agreed: agreedKeys.length, doubtful, permille: total ? Math.floor((concordant * 1000) / total) : 0, disagreements: sortCells(dis), agreedKeys };
 }
 

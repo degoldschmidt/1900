@@ -232,7 +232,8 @@ describe('briefs', () => {
     const exp = expectedKeys(lay, crop);
     expect(exp).toHaveLength(20);
     expect(a.cells).toHaveLength(20);
-    expect(diffReadings(a.cells, a.cells, exp).permille).toBe(950); // the example's one sure=x cell never counts as agreed
+    expect(diffReadings(a.cells, a.cells, exp).permille).toBe(1000); // the same abstention by both keyers is concordance
+    expect(diffReadings(a.cells, a.cells, exp).disagreements.map((x) => x.reason).sort()).toEqual(['doubtful', 'illegible']); // the doubted bold cell and the abstention still go to the resolver
     expect(parseLong(fn!, { cropId: 'T57-fn-p1' }).errors).toEqual([]);
 
     const resolved = blocks('RESOLVER_BRIEF.md', 'crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note\n').find((b) => b.includes('T57-'));

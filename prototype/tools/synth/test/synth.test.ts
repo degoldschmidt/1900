@@ -90,6 +90,9 @@ describe('score', () => {
     expect(valuePermille(s.total)).toBe(400);
     expect(valueOf(t('cell', 0, 0, '12 . 45', ['sc', 'b']))).toBe(valueOf(t('cell', 0, 0, '12:45', ['b'])));
     expect(valueOf(t('cell', 0, 0, '12 45'))).not.toBe(valueOf(t('cell', 0, 0, '12 45', ['b'])));
+    // Bold is p.m. only on body times; on labels and headers it is emphasis.
+    expect(valueOf(t('label', 0, 3, '〃', ['b']), 'label')).toBe(valueOf(t('label', 0, 3, '〃'), 'label'));
+    expect(valueOf(t('header', 2, 0, '156', ['b']), 'header')).toBe(valueOf(t('header', 2, 0, '156'), 'header'));
   });
 });
 
