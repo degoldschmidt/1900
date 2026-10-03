@@ -1,11 +1,42 @@
-// Builds index.html (the published page) from game.html and land.json.
-//   node build.mjs
-import { readFileSync, writeFileSync } from 'node:fs';
-const dir = new URL('.', import.meta.url).pathname;
-const page = readFileSync(dir + 'game.html', 'utf8');
-const land = readFileSync(dir + 'land.json', 'utf8');
-if (!page.includes('/*LAND*/null')) throw new Error('game.html has no /*LAND*/null placeholder');
-const lo = readFileSync(dir + 'land-lo.json', 'utf8');
-const out = page.replace('/*LAND*/null', land).replace('/*LANDLO*/null', lo);
-writeFileSync(dir + 'index.html', out);
-console.log(`index.html: ${(out.length / 1024).toFixed(0)} KB`);
+// Builds the single-page game: bundles src/ui/main.js (and everything it imports, data and art included) with esbuild,
+// splices the bundle and src/ui/style.css into template.html.
+//   node build.mjs            → build/dev.html (for testing)
+//   node build.mjs --release  → index.html (the published page)
+// Guards: no '</script' or '<!--' in the bundle, no hosts outside the allowlist, page ≤ 1.5 MB.
+import fs from 'node:fs';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import { writeIndexes } from './tools/indexes.mjs';
+
+const ROOT = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(path.join(ROOT, '../prototype/package.json'));
+const esbuild = require('esbuild');
+const release = process.argv.includes('--release');
+const ALLOWED = ['cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com', 'www.w3.org'];
+const LIMIT = 1.5 * 1024 * 1024;
+
+writeIndexes();
+const res = await esbuild.build({
+  entryPoints: [path.join(ROOT, 'src/ui/main.js')], bundle: true, format: 'iife', target: 'es2020',
+  minify: release, legalComments: 'none', write: false, logLevel: 'error', loader: { '.json': 'json' },
+  define: { 'process.env.NODE_ENV': '"production"' },
+});
+const js = res.outputFiles[0].text;
+const css = fs.readFileSync(path.join(ROOT, 'src/ui/style.css'), 'utf8');
+const fail = (m) => { console.error(`build failed: ${m}`); process.exit(1); };
+if (/<\/script/i.test(js)) fail('the bundle contains "</script"');
+if (js.includes('<!--')) fail('the bundle contains "<!--"');
+if (/<\/style/i.test(css)) fail('the stylesheet contains "</style"');
+const tpl = fs.readFileSync(path.join(ROOT, 'template.html'), 'utf8');
+for (const m of ['/*STYLE*/', '/*SCRIPT*/']) if (!tpl.includes(m)) fail(`template.html has no ${m}`);
+// replacer functions, never strings: '$&' and '$$' in a minified bundle would be read as patterns
+const page = tpl.replace('/*STYLE*/', () => css).replace('/*SCRIPT*/', () => js);
+const hosts = new Set([...page.matchAll(/https?:\/\/([a-z0-9.-]+)/gi)].map((m) => m[1].toLowerCase()));
+const bad = [...hosts].filter((h) => !ALLOWED.includes(h));
+if (bad.length) fail(`hosts outside the allowlist: ${bad.join(', ')}`);
+if (page.length > LIMIT) fail(`page is ${(page.length / 1024).toFixed(0)} KB, over ${LIMIT / 1024} KB`);
+const out = release ? path.join(ROOT, 'index.html') : path.join(ROOT, 'build/dev.html');
+fs.mkdirSync(path.dirname(out), { recursive: true });
+fs.writeFileSync(out, page);
+console.log(`${path.relative(ROOT, out)}: ${(page.length / 1024).toFixed(0)} KB (script ${(js.length / 1024).toFixed(0)} KB, style ${(css.length / 1024).toFixed(0)} KB)`);

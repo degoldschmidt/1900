@@ -1,0 +1,7 @@
+/* Shadow Express v2 — placeholder stylesheet until the UI lands (phase 3). */
+:root { color-scheme: light; --paper: #efe2c4; --ink: #2b1d12; --sepia: #9c7b52; --wash: #2f3a5c; --blood: #8c1d12;
+  --font-display: "IM Fell English SC", "IM Fell English", Georgia, serif; --font-body: "Old Standard TT", Georgia, serif; --font-type: "Special Elite", "Courier New", monospace; }
+html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-body); }
+#app { max-width: 720px; margin: 0 auto; padding: 16px; }
+#app img { width: 100%; height: auto; display: block; }
+h1 { font-family: var(--font-display); font-weight: 400; }
