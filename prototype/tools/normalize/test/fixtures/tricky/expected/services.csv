@@ -1,0 +1,5 @@
+service_id,edition_id,table_ref,train_key,train_no_as_printed,name,operator,mode,classes,sleeper,running_as_printed,running_rule,segment_ids,src
+SYN_E9.SYN_T9.c0,SYN_E9,SYN_T9,SYN-RLY-101,101,,SYN-RLY,rail,1;2;3,n,,daily,SYN_S9,SYN_SRC_9:p5:SYN_T9:SYN_K1:h0c0
+SYN_E9.SYN_T9.c1,SYN_E9,SYN_T9,SYN-RLY-103,103,SYN Express,SYN-RLY,rail,1;2,y,a,"dow:Mo,We,Fr",SYN_S9,SYN_SRC_9:p5:SYN_T9:SYN_K1:h0c1
+SYN_E9.SYN_T9.c2,SYN_E9,SYN_T9,SYN-RLY-105,105,,SYN-RLY,rail,1;2,y,,daily,SYN_S9,SYN_SRC_9:p6:SYN_T9:SYN_K2:h0c2
+SYN_E9.SYN_T9.c3,SYN_E9,SYN_T9,SYN-RLY-107,107,,SYN-RLY,rail,3,n,,daily,SYN_S9,SYN_SRC_9:p6:SYN_T9:SYN_K2:h0c3

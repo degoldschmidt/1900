@@ -1,0 +1,3 @@
+service_id,seq,station_id,arr_local,dep_local,arr_dayoff,dep_dayoff,raw_arr,raw_dep,flags,status,src
+SYN_E1.SYN_T1.c0,1,SYN_LON,,09:00,,0,,"a.m. 9 0,,agree,SYN_SRC_S:p10:SYN_T1:SYN_CR1:c0r0
+SYN_E1.SYN_T1.c0,2,SYN_DOV,10:45,,0,,10 45,,,agree,SYN_SRC_S:p10:SYN_T1:SYN_CR1:c0r1

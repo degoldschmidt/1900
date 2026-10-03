@@ -1,0 +1,2 @@
+crop_id,page_seq,table_ref,x,y,w,h,header_bbox,label_bbox,col_range,row_range
+SYN_CR6,15,SYN_T3U,0,0,1000,800,,,c0-c1,r0-r5

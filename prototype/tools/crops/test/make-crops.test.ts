@@ -1,0 +1,199 @@
+import { beforeAll, describe, expect, it } from 'vitest';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import sharp from 'sharp';
+import { expectedKeys, keyBox, keyInCrop, parseCropsCsv, parseLayout, validateLayout, type Layout } from '../layout.ts';
+import { loadPage, makeCrops, planCrops, RULER, splitEven, zoomKey } from '../make-crops.ts';
+import { roots, type Roots } from '../../keying/paths.ts';
+
+const COL_X = Array.from({ length: 13 }, (_, i) => 230 + 60 * i);
+const ROW_Y = Array.from({ length: 21 }, (_, j) => 100 + 25 * j);
+
+const LAYOUT: Layout = {
+  layout_version: 1,
+  source_id: 'ia-testbook',
+  table_ref: 'T57',
+  table_kind: 'timetable',
+  panels: [{
+    panel: 'p1', page_seq: 3,
+    table_bbox: [20, 40, 930, 560],
+    label_bbox: [20, 100, 200, 500],
+    header_bbox: [230, 40, 720, 55],
+    col_x: COL_X, row_y: ROW_Y,
+    first_col: 0, first_row: 0,
+    header_y: [40, 58, 76, 95],
+    label_x: [20, 160, 220],
+    footnote_bbox: [20, 610, 930, 40],
+  }],
+};
+
+/** A 1000×700 page: grid lines, and a black block filling cell c7 r12 (with a 6 px inset). */
+async function pageImage(): Promise<Buffer> {
+  const lines = [
+    ...COL_X.map((x) => `<line x1="${x}" y1="40" x2="${x}" y2="600" stroke="#888" stroke-width="1"/>`),
+    ...ROW_Y.map((y) => `<line x1="20" y1="${y}" x2="950" y2="${y}" stroke="#ccc" stroke-width="1"/>`),
+  ].join('');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="700"><rect width="1000" height="700" fill="#fff"/>${lines}
+    <rect x="${COL_X[7]! + 6}" y="${ROW_Y[12]! + 6}" width="48" height="13" fill="#000"/></svg>`;
+  return sharp(Buffer.from(svg)).png().toBuffer();
+}
+
+function grey(data: Buffer, width: number, channels: number, x: number, y: number): number {
+  return data[(Math.round(y) * width + Math.round(x)) * channels]!;
+}
+
+let r: Roots;
+
+beforeAll(async () => {
+  r = roots({ root: mkdtempSync(join(tmpdir(), 'p1900-crops-')) });
+  mkdirSync(join(r.scans, 'ia-testbook'), { recursive: true });
+  writeFileSync(join(r.scans, 'ia-testbook', 'p3.png'), await pageImage());
+  mkdirSync(join(r.data, 'raw', 'ia-testbook', 'T57'), { recursive: true });
+  writeFileSync(join(r.data, 'raw', 'ia-testbook', 'T57', 'layout.json'), JSON.stringify(LAYOUT, null, 2));
+});
+
+describe('layout', () => {
+  it('accepts the test layout and rejects broken ones', () => {
+    expect(validateLayout(LAYOUT, new Map([[3, { width: 1000, height: 700 }]]))).toEqual([]);
+    const bad = structuredClone(LAYOUT) as unknown as { panels: Array<Record<string, unknown>> };
+    bad.panels[0]!.col_x = [300, 290];
+    bad.panels[0]!.header_bbox = [230, 40, 720, 90];
+    const errs = validateLayout(bad);
+    expect(errs.some((e) => e.includes('col_x'))).toBe(true);
+    expect(validateLayout({ ...LAYOUT, panels: [LAYOUT.panels[0]!, { ...LAYOUT.panels[0]!, panel: 'p2' }] })).toEqual(['panels p1 and p2 cover the same absolute cells']);
+    expect(validateLayout(LAYOUT, new Map([[3, { width: 900, height: 700 }]])).length).toBeGreaterThan(0);
+    expect(() => parseLayout('{"layout_version":2}')).toThrow(/invalid layout/);
+  });
+
+  it('splits blocks evenly', () => {
+    expect(splitEven(12, 8)).toEqual([[0, 5], [6, 11]]);
+    expect(splitEven(20, 18)).toEqual([[0, 9], [10, 19]]);
+    expect(splitEven(17, 6)).toEqual([[0, 5], [6, 11], [12, 16]]);
+    expect(splitEven(5, 8)).toEqual([[0, 4]]);
+  });
+});
+
+describe('planCrops', () => {
+  it('cuts 6–8 columns × 12–18 rows where the grid allows, magnified 2–3× within 1500 px', () => {
+    const all = planCrops(LAYOUT);
+    expect(all.map((c) => c.crop_id)).toEqual(['T57-c0-5-r0-9', 'T57-c6-11-r0-9', 'T57-c0-5-r10-19', 'T57-c6-11-r10-19', 'T57-fn-p1']);
+    const crops = all.filter((c) => !c.footnotes);
+    for (const c of crops) {
+      expect(c.geometry.scale).toBeGreaterThanOrEqual(2);
+      expect(c.geometry.scale).toBeLessThanOrEqual(3);
+      expect(Math.max(c.geometry.width, c.geometry.height)).toBeLessThanOrEqual(1500);
+      expect(c.warnings).toEqual([]);
+    }
+    const c = crops[1]!;
+    expect(c.body).toEqual([590, 100, 360, 250]);
+    expect(c.header).toEqual([590, 40, 360, 55]);
+    expect(c.label).toEqual([20, 100, 200, 250]);
+  });
+
+  it('shrinks blocks when a wide scan would fall below 2×', () => {
+    const wide = structuredClone(LAYOUT);
+    const p = wide.panels[0]!;
+    p.col_x = Array.from({ length: 9 }, (_, i) => 230 + 160 * i);
+    p.header_bbox = [230, 40, 1280, 55];
+    p.table_bbox = [20, 40, 1500, 560];
+    const crops = planCrops(wide).filter((c) => !c.footnotes);
+    // 8 columns of 160 px plus a 200 px label column cannot reach 2× in 1500 px, nor can two blocks of 4;
+    // the blocks with the highest magnification are chosen and the shortfall is reported.
+    expect(crops.map((c) => c.cols)).toEqual([[0, 3], [4, 7], [0, 3], [4, 7]]);
+    expect(crops[0]!.geometry.scale).toBe(1.71);
+    expect(crops[0]!.warnings[0]).toMatch(/below 2×/);
+  });
+
+  it('enumerates the keys a keyer must produce', () => {
+    const crop = planCrops(LAYOUT)[0]!;
+    const keys = expectedKeys(LAYOUT, crop);
+    // 3 header lines × 6 columns + 10 rows × (2 label sub-columns + 6 cells)
+    expect(keys).toHaveLength(18 + 80);
+    expect(keyInCrop(LAYOUT, crop, { kind: 'cell', col: 6, row: 0 })).toBe(false);
+    expect(keyInCrop(LAYOUT, crop, { kind: 'header', col: 2, row: 2 })).toBe(true);
+    expect(keyInCrop(LAYOUT, crop, { kind: 'header', col: 2, row: 3 })).toBe(false);
+    expect(keyBox(LAYOUT, crop, { kind: 'header', col: 1, row: 1 })).toEqual([290, 58, 60, 18]);
+    expect(keyBox(LAYOUT, crop, { kind: 'label', col: 1, row: 4 })).toEqual([160, 200, 60, 25]);
+    expect(keyInCrop(LAYOUT, crop, { kind: 'footnote', col: 0, row: 0 })).toBe(false);
+  });
+
+  it('gives the footnote box a crop of its own, keyed only as footnote lines', () => {
+    const fn = planCrops(LAYOUT).find((c) => c.footnotes)!;
+    expect(fn.crop_id).toBe('T57-fn-p1');
+    expect(fn.body).toEqual([20, 610, 930, 40]);
+    expect(expectedKeys(LAYOUT, fn)).toEqual([]);
+    expect(keyInCrop(LAYOUT, fn, { kind: 'footnote', col: 0, row: 3 })).toBe(true);
+    expect(keyInCrop(LAYOUT, fn, { kind: 'cell', col: 0, row: 0 })).toBe(false);
+    expect(Math.max(fn.geometry.width, fn.geometry.height)).toBeLessThanOrEqual(1500);
+  });
+});
+
+describe('makeCrops', () => {
+  it('writes crop PNGs and crops.csv, with every cell where the geometry says', async () => {
+    const res = await makeCrops(r, 'ia-testbook', 'T57');
+    expect(res.crops).toHaveLength(5);
+    const index = readFileSync(join(r.data, 'raw', 'ia-testbook', 'T57', 'crops.csv'), 'utf8');
+    expect(index.split('\n')[0]).toBe('crop_id,page_seq,table_ref,x,y,w,h,header_bbox,label_bbox,col_range,row_range');
+    expect(index.split('\n')[4]).toBe('T57-c6-11-r10-19,3,T57,590,350,360,250,"590,40,360,55","20,350,200,250",c6-c11,r10-r19');
+    expect(index.split('\n')[5]).toBe('T57-fn-p1,3,T57,20,610,930,40,,,,');
+    const parsed = parseCropsCsv(index);
+    expect(parsed.map((c) => c.crop_id)).toEqual(res.crops.map((c) => c.crop_id));
+    expect(parsed[4]!.footnotes).toBe(true);
+    expect(existsSync(join(r.scans, 'ia-testbook', 'crops', 'T57', 'T57-fn-p1.png'))).toBe(true);
+
+    const crop = res.crops[3]!;
+    const file = join(r.scans, 'ia-testbook', 'crops', 'T57', `${crop.crop_id}.png`);
+    const { data, info } = await sharp(file).raw().toBuffer({ resolveWithObject: true });
+    const g = crop.geometry;
+    expect([info.width, info.height]).toEqual([g.width, g.height]);
+    const at = (px: number, py: number) => grey(data, info.width, info.channels, g.out.body.x + (px - g.page.body[0]) * g.scale, g.out.body.y + (py - g.page.body[1]) * g.scale);
+    expect(at(COL_X[7]! + 30, ROW_Y[12]! + 12)).toBeLessThan(60); // the black block in c7 r12
+    expect(at(COL_X[8]! + 30, ROW_Y[12]! + 12)).toBeGreaterThan(200); // c8 r12 is empty
+    // The ruler area is white apart from red text: a pixel in the top-left corner is untouched.
+    expect(grey(data, info.width, info.channels, 2, 2)).toBe(255);
+    expect(RULER.left).toBeGreaterThan(0);
+  });
+
+  it('refuses a re-plan that would orphan existing keyings unless forced', async () => {
+    const other = roots({ root: mkdtempSync(join(tmpdir(), 'p1900-crops2-')) });
+    mkdirSync(join(other.scans, 'ia-testbook'), { recursive: true });
+    writeFileSync(join(other.scans, 'ia-testbook', 'p3.png'), await pageImage());
+    const dir = join(other.data, 'raw', 'ia-testbook', 'T57');
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, 'layout.json'), JSON.stringify(LAYOUT));
+    await makeCrops(other, 'ia-testbook', 'T57');
+    writeFileSync(join(dir, 'T57-c0-5-r0-9.A.csv'), 'crop_id,kind,col,row,text_as_printed,marks,sure\n');
+    const changed = structuredClone(LAYOUT);
+    changed.panels[0]!.cols_per_crop = 4;
+    writeFileSync(join(dir, 'layout.json'), JSON.stringify(changed));
+    await expect(makeCrops(other, 'ia-testbook', 'T57')).rejects.toThrow(/drops crops that already have keyings \(T57-c0-5-r0-9\)/);
+    const forced = await makeCrops(other, 'ia-testbook', 'T57', { force: true });
+    expect(forced.crops[0]!.crop_id).toBe('T57-c0-3-r0-9');
+    expect(existsSync(join(other.scans, 'ia-testbook', 'crops', 'T57', 'T57-c0-3-r0-9.png'))).toBe(true);
+  });
+});
+
+describe('zoomKey', () => {
+  it('cuts one cell with a margin, magnified 4×, centred on the cell', async () => {
+    const page = await loadPage(join(r.scans, 'ia-testbook', 'p3.png'));
+    const crop = planCrops(LAYOUT)[3]!;
+    const png = await zoomKey(page, LAYOUT, crop, { kind: 'cell', col: 7, row: 12 });
+    const { data, info } = await sharp(png).raw().toBuffer({ resolveWithObject: true });
+    // 60×25 cell, margins max(8, 35%) = 21 px and 9 px → 102×43 page px → 408×172 at 4×.
+    expect([info.width, info.height]).toEqual([408, 172]);
+    expect(grey(data, info.width, info.channels, info.width / 2, info.height / 2)).toBeLessThan(60);
+    const foot = await zoomKey(page, LAYOUT, crop, { kind: 'footnote', col: 0, row: 0 });
+    expect((await sharp(foot).metadata()).width).toBeLessThanOrEqual(1500);
+  });
+});
+
+describe('deskew', () => {
+  it('rotates the page before cutting when a panel gives deskew_deg', async () => {
+    const straight = await loadPage(join(r.scans, 'ia-testbook', 'p3.png'));
+    const turned = await loadPage(join(r.scans, 'ia-testbook', 'p3.png'), 1.5);
+    expect(turned.width).toBeGreaterThan(straight.width);
+    expect(turned.height).toBeGreaterThan(straight.height);
+    expect(validateLayout({ ...LAYOUT, panels: [{ ...LAYOUT.panels[0]!, deskew_deg: 12 }] })).toEqual(['panel 0 (p1): deskew_deg must be a number within ±10']);
+  });
+});

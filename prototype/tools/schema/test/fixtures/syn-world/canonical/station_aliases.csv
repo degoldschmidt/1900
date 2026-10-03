@@ -1,0 +1,8 @@
+alias_as_printed,family,station_id,src
+London (Victoria),SYN_F1,SYN_LON,SYN_SRC_S:p10:SYN_T1:-:-
+Dover Pier,SYN_F1,SYN_DOV,SYN_SRC_S:p10:SYN_T1:-:-
+Ostend Quay,SYN_F1,SYN_OST,SYN_SRC_S:p10:SYN_T1:-:-
+Berlin (Friedrichstr.),SYN_F1,SYN_BER,SYN_SRC_S:p11:SYN_T2:-:-
+Eydtkuhnen,SYN_F1,SYN_EYD,SYN_SRC_S:p11:SYN_T2:-:-
+Wirballen,SYN_F1,SYN_WIR,SYN_SRC_S:p11:SYN_T2:-:-
+St Petersburg (Warsaw Stn.),SYN_F1,SYN_SPB,SYN_SRC_S:p12:SYN_T3:-:-

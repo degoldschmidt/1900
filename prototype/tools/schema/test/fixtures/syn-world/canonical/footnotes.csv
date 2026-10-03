@@ -1,0 +1,4 @@
+edition_id,table_ref,mark,text_as_printed,src
+SYN_E1,SYN_T2,a,a Mondays and Thursdays only. Sleeping cars Ostend to St Petersburg.,SYN_SRC_S:p11:SYN_T2:SYN_CR3:f0
+SYN_E1,SYN_T3,b,b Tuesdays and Fridays only.,SYN_SRC_S:p12:SYN_T3:SYN_CR5:f0
+SYN_E2,SYN_T1,x,x Daily except Sundays.,SYN_SRC_W:p20:SYN_T1:SYN_CW1:f0

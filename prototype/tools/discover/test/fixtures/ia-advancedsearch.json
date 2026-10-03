@@ -1,0 +1,48 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 41,
+    "params": {
+      "query": "(title:(bradshaw* AND continental)) AND mediatype:texts",
+      "qin": "(title:(bradshaw* AND continental)) AND mediatype:texts",
+      "fields": "identifier,title,year,date,creator,language,publisher",
+      "wt": "json",
+      "sort": "identifier asc",
+      "rows": "100",
+      "start": 0
+    }
+  },
+  "response": {
+    "numFound": 4,
+    "start": 0,
+    "docs": [
+      {
+        "creator": ["Bradshaw, George, 1801-1853"],
+        "date": "1914-01-01T00:00:00Z",
+        "identifier": "bradshawscontine1914brad",
+        "language": ["English"],
+        "publisher": "London : Henry Blacklock & Co.",
+        "title": "Bradshaw's continental railway, steam transit, and general guide, for travellers through Europe",
+        "year": 1914
+      },
+      {
+        "date": "1913-06-01T00:00:00Z",
+        "identifier": "bradshawscontine1913june",
+        "language": "English",
+        "title": "Bradshaw's Continental Railway Guide (June 1913)",
+        "year": "1913"
+      },
+      {
+        "date": "1898-01-01T00:00:00Z",
+        "identifier": "bradshawscontine1898brad",
+        "title": "Bradshaw's continental railway guide",
+        "year": 1898
+      },
+      {
+        "identifier": "bradshawsdictionaryofbathing00brad",
+        "title": "Bradshaw's dictionary of bathing places",
+        "year": 1913
+      }
+    ]
+  }
+}

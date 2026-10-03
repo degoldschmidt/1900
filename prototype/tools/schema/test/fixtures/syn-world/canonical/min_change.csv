@@ -1,0 +1,4 @@
+station_id,min_minutes,basis,src_or_dv
+SYN_DOV,20,design,DV-001
+SYN_BER,15,design,DV-003
+SYN_WIR,30,historical,SYN_SRC_S:p12:SYN_T3:-:-

@@ -1,0 +1,4 @@
+zone_id,name,offset_seconds,applies_to,from,to,src
+SYN_Z0,SYN west time,0,railway,1900-01-01,,SYN_SRC_9:p2:-:-:-
+SYN_Z1,SYN middle time,3600,railway,1900-01-01,,SYN_SRC_9:p2:-:-:-
+SYN_Z2,SYN east time,7278,railway,1900-01-01,,SYN_SRC_9:p2:-:-:-

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<livre>
+  <structure>
+    <hasToc>false</hasToc>
+    <hasContent>true</hasContent>
+    <idUnite>5800152</idUnite>
+    <nbVueImages>4</nbVueImages>
+    <firstDisplayedPage>3</firstDisplayedPage>
+  </structure>
+  <pages>
+    <page><numero>[I]</numero><ordre>1</ordre><pagination_type>R</pagination_type><image_width>2480</image_width><image_height>3720</image_height></page>
+    <page><numero>[II]</numero><ordre>2</ordre><pagination_type>R</pagination_type><image_width>2480</image_width><image_height>3720</image_height></page>
+    <page><numero>1</numero><ordre>3</ordre><pagination_type>A</pagination_type><image_width>2475</image_width><image_height>3712</image_height></page>
+    <page><numero>2</numero><ordre>4</ordre><pagination_type>A</pagination_type><image_width>2476</image_width><image_height>3711</image_height></page>
+  </pages>
+</livre>

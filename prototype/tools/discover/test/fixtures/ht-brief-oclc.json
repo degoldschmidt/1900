@@ -1,0 +1,55 @@
+{
+  "records": {
+    "000549684": {
+      "recordURL": "https://catalog.hathitrust.org/Record/000549684",
+      "titles": ["Bradshaw's continental railway guide and general handbook."],
+      "isbns": [],
+      "issns": [],
+      "oclcs": ["1536542"],
+      "lccns": [],
+      "publishDates": ["1853-1939"]
+    }
+  },
+  "items": [
+    {
+      "orig": "University of Michigan",
+      "fromRecord": "000549684",
+      "htid": "mdp.39015011223344",
+      "itemURL": "https://hdl.handle.net/2027/mdp.39015011223344",
+      "rightsCode": "pd",
+      "lastUpdate": "20140512",
+      "enumcron": "1914:June",
+      "usRightsString": "Full view"
+    },
+    {
+      "orig": "Harvard University",
+      "fromRecord": "000549684",
+      "htid": "hvd.32044099887766",
+      "itemURL": "https://hdl.handle.net/2027/hvd.32044099887766",
+      "rightsCode": "pdus",
+      "lastUpdate": "20160101",
+      "enumcron": "1913:Apr.",
+      "usRightsString": "Full view"
+    },
+    {
+      "orig": "University of California",
+      "fromRecord": "000549684",
+      "htid": "uc1.$b551234",
+      "itemURL": "https://hdl.handle.net/2027/uc1.$b551234",
+      "rightsCode": "ic",
+      "lastUpdate": "20150202",
+      "enumcron": "1921:Jan.",
+      "usRightsString": "Limited (search-only)"
+    },
+    {
+      "orig": "New York Public Library",
+      "fromRecord": "000549684",
+      "htid": "nyp.33433000111222",
+      "itemURL": "https://hdl.handle.net/2027/nyp.33433000111222",
+      "rightsCode": "und",
+      "lastUpdate": "20150202",
+      "enumcron": false,
+      "usRightsString": "Limited (search-only)"
+    }
+  ]
+}

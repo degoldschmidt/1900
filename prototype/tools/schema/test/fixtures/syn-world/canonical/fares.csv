@@ -1,0 +1,12 @@
+edition_id,from_station_id,to_station_id,scope,class,single_return,currency,amount_minor,validity_days,raw,src
+SYN_E1,SYN_LON,SYN_DOV,table,1,s,GBP,672,,14s. 0d.,SYN_SRC_S:p10:SYN_T1:-:-
+SYN_E1,SYN_LON,SYN_DOV,table,2,s,GBP,480,,10s. 0d.,SYN_SRC_S:p10:SYN_T1:-:-
+SYN_E1,SYN_LON,SYN_DOV,table,3,s,GBP,288,,6s. 0d.,SYN_SRC_S:p10:SYN_T1:-:-
+SYN_E1,SYN_LON,SYN_DOV,table,1,r,GBP,1152,30,24s. 0d.,SYN_SRC_S:p10:SYN_T1:-:-
+SYN_E1,SYN_DOV,SYN_OST,table,boat,s,GBP,384,,8s. 0d.,SYN_SRC_S:p10:SYN_T1:-:-
+SYN_E1,SYN_OST,SYN_BER,table,1,s,BEF,9850,,98 fr. 50 c.,SYN_SRC_S:p11:SYN_T2:-:-
+SYN_E1,SYN_OST,SYN_BER,table,2,s,BEF,6420,,64 fr. 20 c.,SYN_SRC_S:p11:SYN_T2:-:-
+SYN_E1,SYN_BER,SYN_EYD,table,1,s,DEM,5260,,52 M. 60 Pf.,SYN_SRC_S:p11:SYN_T2:-:-
+SYN_E1,SYN_BER,SYN_EYD,table,2,s,DEM,3420,,34 M. 20 Pf.,SYN_SRC_S:p11:SYN_T2:-:-
+SYN_E1,SYN_LON,SYN_SPB,through,1,s,GBP,7680,,£8 0s. 0d.,SYN_SRC_S:p11:SYN_T2:-:-
+SYN_E2,SYN_LON,SYN_DOV,table,1,s,GBP,672,,14s. 0d.,SYN_SRC_W:p20:SYN_T1:-:-

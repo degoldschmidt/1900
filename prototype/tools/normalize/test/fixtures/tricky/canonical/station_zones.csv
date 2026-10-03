@@ -1,0 +1,6 @@
+station_id,zone_id,from,to,src
+SYN_A,SYN_Z0,1900-01-01,,SYN_SRC_9:p2:-:-:-
+SYN_B,SYN_Z0,1900-01-01,,SYN_SRC_9:p2:-:-:-
+SYN_C,SYN_Z1,1900-01-01,,SYN_SRC_9:p2:-:-:-
+SYN_D,SYN_Z1,1900-01-01,,SYN_SRC_9:p2:-:-:-
+SYN_E,SYN_Z2,1900-01-01,,SYN_SRC_9:p2:-:-:-

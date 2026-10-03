@@ -1,0 +1,17 @@
+service_id,seq,station_id,arr_local,dep_local,arr_dayoff,dep_dayoff,raw_arr,raw_dep,flags,status,src
+SYN_E9.SYN_T9.c0,1,SYN_A,,08:00,,0,,a.m. 8 0,,agree,SYN_SRC_9:p5:SYN_T9:SYN_K1:c0r0
+SYN_E9.SYN_T9.c0,2,SYN_B,10:30,10:45,0,0,10 30,10 45,,resolved,SYN_SRC_9:p5:SYN_T9:SYN_K1:c0r1-2
+SYN_E9.SYN_T9.c0,3,SYN_C,,13:15,,0,,p.m. 1 15,customs,agree,SYN_SRC_9:p5:SYN_T9:SYN_K1:c0r3
+SYN_E9.SYN_T9.c0,4,SYN_D,15:40,16:00,0,0,3 40,4 0,,agree,SYN_SRC_9:p5:SYN_T9:SYN_K1:c0r4-5
+SYN_E9.SYN_T9.c1,1,SYN_A,,21:30,,0,,p.m. 9 30,,agree,SYN_SRC_9:p5:SYN_T9:SYN_K1:c1r0
+SYN_E9.SYN_T9.c1,2,SYN_B,23:50,00:05,0,1,11 50,a.m. 12 5,,agree,SYN_SRC_9:p5:SYN_T9:SYN_K1:c1r1-2
+SYN_E9.SYN_T9.c1,3,SYN_D,04:10,04:10,1,1,4 10,〃,,agree,SYN_SRC_9:p5:SYN_T9:SYN_K1:c1r4-5
+SYN_E9.SYN_T9.c1,4,SYN_E,14:20,,1,,p.m. 2 20,,,agree,SYN_SRC_9:p5:SYN_T9:SYN_K1:c1r6
+SYN_E9.SYN_T9.c2,1,SYN_A,,12:00,,0,,noon,,agree,SYN_SRC_9:p6:SYN_T9:SYN_K2:c2r0
+SYN_E9.SYN_T9.c2,2,SYN_B,14:00,14:10,0,0,p.m. 2 0,2 10,,agree,SYN_SRC_9:p6:SYN_T9:SYN_K2:c2r1-2
+SYN_E9.SYN_T9.c2,3,SYN_C,,16:55,,0,,‡ 4 55,customs;request,agree,SYN_SRC_9:p6:SYN_T9:SYN_K2:c2r3
+SYN_E9.SYN_T9.c2,4,SYN_D,18:30,18:40,0,0,6 30,6 40,,agree,SYN_SRC_9:p6:SYN_T9:SYN_K2:c2r4-5
+SYN_E9.SYN_T9.c3,1,SYN_A,,06:00,,0,,a.m. 6 0,,agree,SYN_SRC_9:p6:SYN_T9:SYN_K2:c3r0
+SYN_E9.SYN_T9.c3,2,SYN_B,08:15,,0,,8 15,,,waived,SYN_SRC_9:p6:SYN_T9:SYN_K2:c3r1-2
+SYN_E9.SYN_T9.c3,3,SYN_D,13:05,13:20,0,0,p.m. 1 5,1 20,,agree,SYN_SRC_9:p6:SYN_T9:SYN_K2:c3r4-5
+SYN_E9.SYN_T9.c3,4,SYN_E,23:40,,0,,11 40,,,agree,SYN_SRC_9:p6:SYN_T9:SYN_K2:c3r6

@@ -1,0 +1,7 @@
+zone_id,name,offset_seconds,applies_to,from,to,src
+SYN_Z_GMT,SYN Greenwich railway time,0,railway,1880-08-02,,SYN_SRC_H:p5:-:-:-
+SYN_Z_GMT_CIV,SYN Greenwich civil time,0,civil,1880-08-02,,SYN_SRC_H:p5:-:-:-
+SYN_Z_MEZ,SYN Central European railway time,3600,railway,1893-04-01,,SYN_SRC_H:p5:-:-:-
+SYN_Z_MEZ_CIV,SYN Central European civil time,3600,civil,1893-04-01,,SYN_SRC_H:p5:-:-:-
+SYN_Z_SPB,SYN Petersburg railway time,7278,railway,1880-01-01,,SYN_SRC_H:p5:-:-:-
+SYN_Z_SPB_CIV,SYN Petersburg civil time,7278,civil,1880-01-01,,SYN_SRC_H:p5:-:-:-

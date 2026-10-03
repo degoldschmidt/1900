@@ -1,0 +1,6 @@
+row_id,param,key_kind,key,from,to,tier,value_json,date_basis,value_basis,public,src,dv_id
+SYN_P001,passport_required,edge,SYN_EYD>SYN_WIR,1913-01-01,,1,true,historical,historical,y,SYN_SRC_H:p7:-:-:-,
+SYN_P002,frontier_closed,edge,SYN_EYD>SYN_WIR,1914-08-01,,0,true,historical,historical,y,SYN_SRC_H:p8:-:-:-,
+SYN_P003,watch_list_active,institution,SYN_I_POL,1914-07-29,,0,true,historical,historical,n,SYN_SRC_H:p8:-:-:-,
+SYN_P004,registration_lag_hours,jurisdiction,SYN_J_PRU,1913-01-01,,2,24,historical,design,n,SYN_SRC_H:p9:-:-:-,DV-002
+SYN_P005,bank_hours,institution,SYN_I_BANK,1913-01-01,1914-12-31,1,"{""open"":""09:00"",""close"":""15:00""}",historical,historical,y,SYN_SRC_H:p9:-:-:-,

@@ -1,0 +1,1 @@
+service_id,seq,station_id,arr_local,dep_local,arr_dayoff,dep_dayoff,raw_arr,raw_dep,flags,status,src

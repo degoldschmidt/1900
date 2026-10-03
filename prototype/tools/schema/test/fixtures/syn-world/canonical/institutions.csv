@@ -1,0 +1,3 @@
+inst_id,name,name_as_period,kind,jur_id,city_id,parent_id,from,to,reads_kinds,office_hours_param,basis,src_or_dv
+SYN_I_POL,SYN Political Police,SYN Politische Polizei,police,SYN_J_PRU,SYN_C_BER,,1900-01-01,,registration.slip;frontier.record,,historical,SYN_SRC_H:p6:-:-:-
+SYN_I_BANK,SYN Commercial Bank,SYN Commercial Bank Ltd,bank,SYN_J_GB,SYN_C_LON,,1900-01-01,,,bank_hours,historical,SYN_SRC_H:p9:-:-:-

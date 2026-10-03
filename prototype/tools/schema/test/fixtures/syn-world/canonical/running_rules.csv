@@ -1,0 +1,4 @@
+edition_id,table_ref,mark,rule_dsl,interpreted_by,reviewed_by
+SYN_E1,SYN_T2,a,"dow:Mo,Th",SYN keyer,SYN historian
+SYN_E1,SYN_T3,b,"dow:Tu,Fr",SYN keyer,SYN historian
+SYN_E2,SYN_T1,x,except-dow:Su,SYN keyer,SYN historian

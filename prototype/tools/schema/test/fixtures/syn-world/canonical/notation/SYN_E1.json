@@ -1,0 +1,30 @@
+{
+  "edition_id": "SYN_E1",
+  "src": "SYN_SRC_S:p3:-:-:-",
+  "clock": "12h",
+  "timeSeparators": [" ", "."],
+  "meridian": { "mode": "markers", "marks": [], "amMarkers": ["a.m."], "pmMarkers": ["p.m."], "initial": null },
+  "literals": { "noon": "12:00" },
+  "ditto": ["〃"],
+  "dittoInTimes": false,
+  "passThrough": ["|"],
+  "notServed": ["—", "…"],
+  "arrMarkers": ["arr.", "arr"],
+  "depMarkers": ["dep.", "dep"],
+  "singleTime": "dep",
+  "unmarkedRunning": "daily",
+  "symbolFlags": { "§": "customs", "¶": "passport" },
+  "sleeperMarkers": ["Sl."],
+  "maxLegHours": 20,
+  "headerLines": ["train_no", "classes", "marks"],
+  "tables": {
+    "SYN_T1": {
+      "operator": "SYN-SECR",
+      "mode": "rail",
+      "segments": ["SYN_S_LD"],
+      "columnOperators": { "1": "SYN-BSM" },
+      "columnModes": { "1": "steamer" },
+      "columnSegments": { "1": ["SYN_S_DO"] }
+    }
+  }
+}

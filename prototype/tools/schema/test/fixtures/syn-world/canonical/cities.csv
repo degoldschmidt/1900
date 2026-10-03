@@ -1,0 +1,8 @@
+city_id,name,country,jur_id,civil_zone_id,geo_src
+SYN_C_LON,SYN London,GB,SYN_J_GB,SYN_Z_GMT_CIV,synthetic
+SYN_C_DOV,SYN Dover,GB,SYN_J_GB,SYN_Z_GMT_CIV,synthetic
+SYN_C_OST,SYN Ostend,BE,SYN_J_BE,SYN_Z_GMT_CIV,synthetic
+SYN_C_BER,SYN Berlin,DE,SYN_J_PRU,SYN_Z_MEZ_CIV,synthetic
+SYN_C_EYD,SYN Eydtkuhnen,DE,SYN_J_PRU,SYN_Z_MEZ_CIV,synthetic
+SYN_C_WIR,SYN Wirballen,RU,SYN_J_RU,SYN_Z_SPB_CIV,synthetic
+SYN_C_SPB,SYN St Petersburg,RU,SYN_J_RU,SYN_Z_SPB_CIV,synthetic
