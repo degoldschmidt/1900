@@ -1,0 +1,24 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+12-c18-23-r48-88,header,18,0,marks,832,b,y,832,,n
+12-c18-23-r48-88,header,19,0,marks,290,b,y,290,,n
+12-c18-23-r48-88,header,20,0,marks,D 52,b,y,D 52,,y
+12-c18-23-r48-88,header,21,0,marks,286,b,n,286,,n
+12-c18-23-r48-88,header,22,0,marks,D 54,b,n,D 54,,n
+12-c18-23-r48-88,header,18,1,marks,I-IV.,b,y,I-IV.,,y
+12-c18-23-r48-88,header,19,1,marks,II-IV,b,y,II-IV,,y
+12-c18-23-r48-88,header,20,1,marks,I.-III,b,y,I.-III,,y
+12-c18-23-r48-88,header,21,1,marks,I-IV,b,y,I-IV,,y
+12-c18-23-r48-88,header,22,1,marks,I.-III,b,y,I.-III,,y
+12-c18-23-r48-88,label,0,85,doubtful,189 in Dresden-Neustadt,,n,189 in Dresden-Neustadt,,n
+12-c18-23-r48-88,label,0,86,text,aus Dresden-Neustadt .,,y,aus Dresden-Neustadt …,,n
+12-c18-23-r48-88,label,0,87,doubtful,191 i. Dresden Wettinerstr.,,y,191 i. Dresden Wettinerstr.,,n
+12-c18-23-r48-88,label,0,88,doubtful,198 〃 Dresden Hbf.,,n,198 〃 Dresden Hbf.,,n
+12-c18-23-r48-88,cell,20,48,doubtful,6 43,u;i,y,6 43,u;i,n
+12-c18-23-r48-88,cell,21,48,doubtful,7 25,u,y,7 25,u,n
+12-c18-23-r48-88,cell,22,48,doubtful,11 13,u;i,y,11 13,u;i,n
+12-c18-23-r48-88,cell,20,85,doubtful,9 40,u;i,y,9 40,u;i,n
+12-c18-23-r48-88,cell,22,85,doubtful,2 09,u;i,y,2 09,u;i,n
+12-c18-23-r48-88,cell,20,86,doubtful,9 42,u;i,y,9 42,u;i,n
+12-c18-23-r48-88,cell,22,86,doubtful,2 10,u;i,y,2 10,u;i,n
+12-c18-23-r48-88,cell,20,88,doubtful,9 48,u;i,y,9 48,u;i,n
+12-c18-23-r48-88,cell,22,88,doubtful,2 16,u;i,y,2 16,u;i,n

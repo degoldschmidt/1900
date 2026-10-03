@@ -1,0 +1,32 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+13-c14-20-r44-80,header,15,0,marks,312,b,y,312,,n
+13-c14-20-r44-80,header,16,0,marks,D 62,b,y,D 62,,y
+13-c14-20-r44-80,header,17,0,marks,D 66,b,y,D 66,,n
+13-c14-20-r44-80,header,18,0,marks,326,b,y,326,,n
+13-c14-20-r44-80,header,19,0,marks,E 64,b,y,E 64,,y
+13-c14-20-r44-80,header,20,0,marks,314,b,y,314,,y
+13-c14-20-r44-80,header,15,1,marks,I-IV,b,n,I-IV,,n
+13-c14-20-r44-80,header,16,1,marks,I-III,b,y,I-III,,y
+13-c14-20-r44-80,header,17,1,marks,I-III,b,y,I-III,,y
+13-c14-20-r44-80,header,18,1,marks,I.-IV,b,y,I.-IV,,y
+13-c14-20-r44-80,header,19,1,marks,I-III,b,y,I-III,,y
+13-c14-20-r44-80,header,20,1,marks,I-IV,b,y,I-IV,,y
+13-c14-20-r44-80,label,0,44,text+marks,a. Berlin Anh. Bf. ● 315,,y,a. Berlin Anh. Bf. 315,fn:●,n
+13-c14-20-r44-80,label,0,77,text,176 i. Dresden-Neustadt .,,n,176 i. Dresden-Neustadt …,,n
+13-c14-20-r44-80,label,0,78,text,a. Dresden-Neustadt . .,,y,a. Dresden-Neustadt …,,n
+13-c14-20-r44-80,label,0,79,doubtful,178 i. Dr. Wettinerstr,,y,178 i. Dr. Wettinerstr,,n
+13-c14-20-r44-80,label,0,80,doubtful,180 i Dresden Hbf,,n,180 i Dresden Hbf,,n
+13-c14-20-r44-80,cell,14,44,doubtful,,,y,,,n
+13-c14-20-r44-80,cell,16,44,doubtful,8 03,i,y,8 03,i,n
+13-c14-20-r44-80,cell,17,44,doubtful,9 20,i,y,9 20,i,n
+13-c14-20-r44-80,cell,18,44,doubtful,10 15,,y,10 15,,n
+13-c14-20-r44-80,cell,19,44,doubtful,1 20,i,y,1 20,i,n
+13-c14-20-r44-80,cell,16,77,doubtful,10 58,i,y,10 58,i,n
+13-c14-20-r44-80,cell,17,77,doubtful,11 57,i,y,11 57,i,n
+13-c14-20-r44-80,cell,19,77,doubtful,4 07,i,y,4 07,i,n
+13-c14-20-r44-80,cell,16,78,doubtful,11 00,i,y,11 00,i,n
+13-c14-20-r44-80,cell,17,78,doubtful,11 58,i,y,11 58,i,n
+13-c14-20-r44-80,cell,19,78,doubtful,4 09,i,y,4 09,i,n
+13-c14-20-r44-80,cell,16,80,doubtful,11 06,i,y,11 06,i,n
+13-c14-20-r44-80,cell,17,80,doubtful,12 04,i,y,12 04,i,n
+13-c14-20-r44-80,cell,19,80,doubtful,4 15,i,y,4 15,i,n

@@ -1,0 +1,4 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+12-cn-p2-c12-17,footnote,0,0,doubtful,■ Ab 16./9.: 4 20,c:12;fn:■,n,■ Ab 16./9.: 4 20,c:12;fn:■,n
+12-cn-p2-c12-17,footnote,0,2,doubtful,"◗ Vom 15. Juni bis 15. September ab Sassnitz 9 46, ab Bergen 10 21",c:17;fn:◗,n,"◗ Vom 15. Juni bis 15. September ab Sassnitz 9 46, ab Bergen 10 21",c:17;fn:◗,n
+12-cn-p2-c12-17,footnote,0,3,doubtful,Speisewagen Berlin-Prag.,c:17,y,Speisewagen Berlin-Prag.,c:17,n

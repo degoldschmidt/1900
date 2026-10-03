@@ -1,0 +1,22 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+12-c6-11-r0-40,header,6,0,marks,283,b,n,283,,n
+12-c6-11-r0-40,header,7,0,marks,D 55,b,n,D 55,,n
+12-c6-11-r0-40,header,9,0,marks,D 53,b,n,D 53,,n
+12-c6-11-r0-40,header,11,0,marks,285,b,n,285,,n
+12-c6-11-r0-40,header,6,1,marks,I-IV,b,y,I-IV,,y
+12-c6-11-r0-40,header,7,1,marks,I.-III,b,y,I.-III,,y
+12-c6-11-r0-40,header,9,1,marks,I-III,b,y,I-III,,y
+12-c6-11-r0-40,header,11,1,marks,I-IV,b,y,I-IV,,y
+12-c6-11-r0-40,label,0,1,text,3 Dresd. Wettinerstr.,,n,Dresd. Wettinerstr.,,n
+12-c6-11-r0-40,label,0,2,text,4 i. Dresden-Neustadt,,n,i. Dresden-Neustadt,,n
+12-c6-11-r0-40,label,0,40,doubtful,198 i.Berlin Anh.Bf.312,,n,198 i.Berlin Anh.Bf.312,,n
+12-c6-11-r0-40,cell,7,0,doubtful,4 20,i,y,4 20,i,n
+12-c6-11-r0-40,cell,9,0,doubtful,7 15,u,n,7 15,u,n
+12-c6-11-r0-40,cell,11,0,doubtful,9 54,u,y,9 54,u,n
+12-c6-11-r0-40,cell,9,1,doubtful,|,,y,|,,n
+12-c6-11-r0-40,cell,7,2,doubtful,4 26,i,y,4 26,i,n
+12-c6-11-r0-40,cell,7,3,doubtful,4 27,i,y,4 27,i,n
+12-c6-11-r0-40,cell,6,40,doubtful,7 52,u,y,7 52,u,n
+12-c6-11-r0-40,cell,7,40,doubtful,6 51,u;i,y,6 51,u;i,n
+12-c6-11-r0-40,cell,8,40,doubtful,10 21,u,n,10 21,u,n
+12-c6-11-r0-40,cell,9,40,doubtful,10 27,u;i,y,10 27,u;i,n

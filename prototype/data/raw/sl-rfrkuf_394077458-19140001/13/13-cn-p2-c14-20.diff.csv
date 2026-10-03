@@ -1,0 +1,7 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+13-cn-p2-c14-20,footnote,0,0,doubtful,! Vom 1. Juli bis 31. August.,c:14;fn:!,n,! Vom 1. Juli bis 31. August.,c:14;fn:!,n
+13-cn-p2-c14-20,footnote,0,1,doubtful,"* ab Zossen bis Elsterwerda Berl.-Dresdn. Bf. E.-Dir. Halle, ab Elsterwerda Berl.-Dresdn. Bf. Sächs. Staatsb.",c:14;fn:*,n,"* ab Zossen bis Elsterwerda Berl.-Dresdn. Bf. E.-Dir. Halle, ab Elsterwerda Berl.-Dresdn. Bf. Sächs. Staatsb.",c:14;fn:*,n
+13-cn-p2-c14-20,footnote,0,2,doubtful,Speisewagen Berlin-Wien.,c:16,n,Speisewagen Berlin-Wien.,c:16,y
+13-cn-p2-c14-20,footnote,0,3,text,Speisewagen Berlin - Karlsbad.,c:17,y,Speisewagen Berlin-Karlsbad.,c:17,y
+13-cn-p2-c14-20,footnote,0,5,doubtful,üb. Cosseb.- Dresd. Frdr.,c:18,n,üb. Cosseb.- Dresd. Frdr.,c:18,n
+13-cn-p2-c14-20,footnote,0,6,doubtful,† ab Wittenberg,c:15;fn:†,n,† ab Wittenberg,c:15;fn:†,n

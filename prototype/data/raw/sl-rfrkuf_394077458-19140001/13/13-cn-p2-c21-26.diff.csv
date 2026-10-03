@@ -1,0 +1,11 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+13-cn-p2-c21-26,footnote,0,0,text+marks,□ ab 16. September 1 20.,c:26;fn:□,n,: ab 16. September 1 20.,c:26;fn::,n
+13-cn-p2-c21-26,footnote,0,1,text+marks,° Nur am 29. und 30. Mai und vom 15. Juni bis 15. September.,c:26;fn:°,n,○ Nur am 29. und 30. Mai und vom 15. Juni bis 15. September.,c:26;fn:○,n
+13-cn-p2-c21-26,footnote,0,2,doubtful,● Vorortzüge Berlin-Wünsdorf siehe Nr. 15.,c:25;fn:●,n,● Vorortzüge Berlin-Wünsdorf siehe Nr. 15.,c:25;fn:●,n
+13-cn-p2-c21-26,footnote,0,3,doubtful,"† Vom 15. Juni bis 15. Sept. ab Sassnitz 9 46, ab Bergen 10 21",c:22;fn:†,n,"† Vom 15. Juni bis 15. Sept. ab Sassnitz 9 46, ab Bergen 10 21",c:22;fn:†,n
+13-cn-p2-c21-26,footnote,0,4,doubtful,◗ Über Schreckenstein.,c:25;fn:◗,n,◗ Über Schreckenstein.,c:25;fn:◗,n
+13-cn-p2-c21-26,footnote,0,5,doubtful,Schlafwagen Berlin-Wien.,c:21,y,Schlafwagen Berlin-Wien.,c:21,n
+13-cn-p2-c21-26,footnote,0,6,doubtful,□ ab 16. September 1 49,c:26;fn:□,n,□ ab 16. September 1 49,c:26;fn:□,n
+13-cn-p2-c21-26,footnote,0,9,text,Nur a Werkt. nach Sonn- und Fest.,c:24,n,Nur a. Werkt. nach Sonn- und Fest.,c:24,n
+13-cn-p2-c21-26,footnote,0,10,doubtful,üb. Cosseb.- Dresd. Frdr.,c:25,n,üb. Cosseb.- Dresd. Frdr.,c:25,n
+13-cn-p2-c21-26,footnote,0,11,doubtful,üb. Cosseb.- Dresd. Frdr.,c:26,n,üb. Cosseb.- Dresd. Frdr.,c:26,n

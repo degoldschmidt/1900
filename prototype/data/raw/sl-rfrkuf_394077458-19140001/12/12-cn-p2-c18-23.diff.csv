@@ -1,0 +1,7 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+12-cn-p2-c18-23,footnote,0,0,doubtful,: ab 16./9. 1 49,c:18;fn::,n,: ab 16./9. 1 49,c:18;fn::,n
+12-cn-p2-c18-23,footnote,0,1,doubtful,° Verkehrt erst vom 31. Mai ab.,c:23;fn:°,n,° Verkehrt erst vom 31. Mai ab.,c:23;fn:°,y
+12-cn-p2-c18-23,footnote,0,5,doubtful,□ In der Nacht nach Sonn- u. Festtagen: 12 02.,c:18;fn:□,n,□ In der Nacht nach Sonn- u. Festtagen: 12 02.,c:18;fn:□,n
+12-cn-p2-c18-23,footnote,0,6,doubtful,† Ab Jüterbog Zug 294.,c:18;fn:†,n,† Ab Jüterbog Zug 294.,c:18;fn:†,n
+12-cn-p2-c18-23,footnote,0,7,text,"* Eisenb.-Dir. Berlin, ▾ Gr. Lichterfelde bis Röderau Eisenb.-Dir. Halle, ab Röderau Sächs. Staatsb.",c:23;fn:*,n,"* Eisenb.-Dir. Berlin, v Gr. Lichterfelde bis Röderan Eisenb.-Dir. Halle, ab Röderan Sächs. Staatsb.",c:23;fn:*,n
+12-cn-p2-c18-23,footnote,0,9,doubtful,! Über Tetschen-Schreckenstein,c:18;fn:!,n,! Über Tetschen-Schreckenstein,c:18;fn:!,n
