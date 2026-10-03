@@ -1,63 +1,17 @@
 /**
- * Arrival (RULES.md 9: the ride's end, the delay, made or missed, what happened since boarding and
- * the news revealed on arrival), and at the end of a scenario the questionnaire (q1–q5, RULES.md
- * 5.11) followed by the autopsy: the hunting service's file, its fixes, every cordon and how it was
- * placed, so each one can be traced back to records of your own trail.
+ * The end of a scenario: the questionnaire (q1–q5, RULES.md 5.11), then the autopsy as a map
+ * replay: your route drawn, numbered points where your records were made (filled when the hunting
+ * service received one), and where its watchers could have stood.
  */
 import { useMemo, useState } from 'preact/hooks';
-import { arrivalView, questionnaireView, commissionsView, type AutopsyViewModel, type QuestionView } from '../views/index.ts';
-import type { Ctl, Inputs } from './types.ts';
-import { ScreenHead, Section, Empty, Cite, T, dur } from './common.tsx';
+import { questionnaireView, mapView, type QuestionView, type ReplayViewModel, type MapViewModel } from '../views/index.ts';
+import type { Inputs } from './types.ts';
+import { Section, T } from './common.tsx';
 import { CopyCode } from './Save.tsx';
-
-export function Arrival({ inp, ctl }: { inp: Inputs; ctl: Ctl }) {
-  const av = useMemo(() => arrivalView(inp.p, inp.d), [inp.v]);
-  const due = useMemo(() => commissionsView(inp.p, inp.d).held.flatMap((o) => o.stages.filter((st) => st.done === null && st.city === av.city).slice(0, 1)), [inp.v]);
-  if (!av.kind) return <div class="arrival"><ScreenHead title="Arrival" /><Empty>No journey has ended yet.</Empty></div>;
-  const bad = av.kind !== 'arrival';
-  return (
-    <div class={`arrival${bad ? ' arrival-bad' : ''}`}>
-      <header class="arr-head">
-        <p class="arr-kind">{av.label}</p>
-        <h2 class="arr-place">{av.stationName ?? ''}</h2>
-        <p class="arr-at"><T c={av.at} date /></p>
-      </header>
-      <p class="arr-text">{av.text}</p>
-      <dl class="arr-facts">
-        {av.delaySec !== null ? <><dt>Delay</dt><dd>{av.delaySec > 0 ? dur(av.delaySec) : 'none'}</dd></> : null}
-        {av.slackSec !== null ? <><dt>Your slack</dt><dd>{dur(av.slackSec)}</dd></> : null}
-        {av.made === false ? <><dt>Connection</dt><dd>missed</dd></> : null}
-      </dl>
-      {due.length && !av.ended ? (
-        <Section title="Due here" id="due-here">
-          {due.map((st) => <p key={st.index} class="due">Your meeting in {st.cityName}: <T c={st.open} date />–<T c={st.close} />. Enter it in the diary from the town page.</p>)}
-          <button type="button" class="btn" id="arr-town" onClick={() => ctl.go('town')}>To the town</button>
-        </Section>
-      ) : null}
-      {av.since.length ? (
-        <Section title="Since you boarded" id="since">
-          <ol class="notes-list">{av.since.map((x, i) => <li key={i}><T c={x.at} /> {x.text}</li>)}</ol>
-        </Section>
-      ) : null}
-      {av.news.length ? (
-        <Section title={`In the ${av.cityName ?? ''} papers`} id="arr-news">
-          <ol class="items">{av.news.map((n) => <li key={n.id} class="item"><p class="item-t">{n.title} <Cite c={n.citation} /></p></li>)}</ol>
-        </Section>
-      ) : null}
-      <div class="arr-btns">
-        {av.ended
-          ? <button type="button" class="btn btn-advance" id="arr-questions" onClick={() => ctl.go('questions')}>The scenario is over: a few questions</button>
-          : <>
-              <button type="button" class="btn btn-advance" id="arr-plan" onClick={() => ctl.go('plan')}>Plan the next departure</button>
-              <button type="button" class="btn btn-quiet" id="arr-diary" onClick={() => ctl.go('diary')}>Open the diary</button>
-            </>}
-      </div>
-    </div>
-  );
-}
+import { MapCanvas } from './MapCanvas.tsx';
 
 const ENDING_WORD: Record<string, string> = {
-  delivered: 'Delivered', partial: 'Partly done', captured: 'Arrested', ruined: 'Ruined', stranded: 'Stranded',
+  delivered: 'Delivered', partial: 'Out of time', captured: 'Arrested', ruined: 'Ruined', stranded: 'Stranded',
 };
 
 function Question({ q, value, set }: { q: QuestionView; value: string | number | undefined; set: (v: string | number) => void }) {
@@ -99,48 +53,75 @@ export function Questionnaire({ inp, initial, onDone, ending }: { inp: Inputs; i
   const qs = useMemo(() => questionnaireView(inp.p, inp.d), [inp.v]);
   const [a, setA] = useState<Record<string, string | number>>(initial);
   return (
-    <div class="quiz">
-      <ScreenHead title={ending ? ENDING_WORD[ending] ?? ending : 'The end'} sub="Before the autopsy, a few questions about how it felt. Answers go into the save code; skip any you like." />
+    <main class="page quiz" aria-labelledby="quiz-h">
+      <p class="page-kicker">The end of the journey</p>
+      <h2 id="quiz-h" class="page-h">{ending ? ENDING_WORD[ending] ?? ending : 'The end'}</h2>
+      <p class="page-sub">Before the replay, a few questions about how it felt. Answers go into the save code; skip any you like.</p>
       <form class="qform" onSubmit={(e) => { e.preventDefault(); const clean: Record<string, string | number> = {}; for (const [k, v] of Object.entries(a)) if (v !== '') clean[k] = v; onDone(clean); }}>
         {qs.map((q) => <Question key={q.id} q={q} value={a[q.id]} set={(v) => setA({ ...a, [q.id]: v })} />)}
-        <button type="submit" class="btn btn-advance" id="q-submit">Hand in, and open the autopsy</button>
+        <button type="submit" class="btn btn-go" id="q-submit">Hand in, and replay the journey</button>
       </form>
-    </div>
+    </main>
   );
 }
 
-export function Autopsy({ av, code, onAgain }: { av: AutopsyViewModel; code: string; onAgain: () => void }) {
+export function Replay({ rv, inp, code, onAgain }: { rv: ReplayViewModel; inp: Inputs; code: string; onAgain: () => void }) {
+  const mv: MapViewModel = useMemo(() => {
+    const base = mapView(inp.p, inp.d);
+    return { ...base, route: null, goal: null, night: false, cities: base.cities.map((c) => ({ ...c, here: false, goal: false, direct: false, attention: 0 as const })) };
+  }, [inp.v]);
+  const box = useMemo((): [number, number, number, number] => {
+    const xs = [...rv.records.map((r) => r.x), ...rv.watchers.map((w) => w.x)]; const ys = [...rv.records.map((r) => r.y), ...rv.watchers.map((w) => w.y)];
+    if (xs.length < 2) return mv.geo.bounds;
+    return [Math.min(...xs) - 40, Math.min(...ys) - 50, Math.max(...xs) + 60, Math.max(...ys) + 40];
+  }, [rv]);
+  const layer = (k: number) => (
+    <g class="replay-layer">
+      {rv.route.map((r, i) => <path key={i} class={`replay-route${r.mode === 'steamer' ? ' by-water' : ''}`} d={r.d} stroke-width={4 * k} stroke-dasharray={r.mode === 'steamer' ? `${6 * k} ${4 * k}` : undefined} />)}
+    </g>
+  );
+  const marks = (k: number) => (
+    <g class="replay-marks">
+      {rv.watchers.map((w) => (
+        <g key={w.id} class={`watch${w.sighted ? ' watch-saw' : ''}`}>
+          {w.base ? <path class="watch-trip" d={`M${w.base.x} ${w.base.y}L${w.x} ${w.y}`} stroke-width={1.5 * k} stroke-dasharray={`${4 * k} ${3 * k}`} /> : null}
+          <circle class="watch-ring" cx={w.x} cy={w.y} r={26 * k} stroke-width={1.5 * k} />
+        </g>
+      ))}
+      {rv.records.map((r) => (
+        <g key={r.n} class={`rec${r.filed ? ' rec-filed' : ''}${r.named ? ' rec-named' : ''}`}>
+          <circle cx={r.x} cy={r.y} r={7.5 * k} stroke-width={1.5 * k} />
+          <text x={r.x} y={r.y + 3.4 * k} font-size={9.5 * k} text-anchor="middle">{r.n}</text>
+        </g>
+      ))}
+    </g>
+  );
   return (
-    <div class="autopsy">
-      <ScreenHead title="Autopsy" sub={<>{ENDING_WORD[av.ending.kind] ?? av.ending.kind} at <T c={av.ending.at} date />. What the {av.serviceName} knew, and when.</>} />
-      {av.ending.causes.length ? <p class="arr-text">The ending came from: {av.ending.causes.map((c) => c.label).join(', ')}.</p> : null}
-      <Section title="The file" id="file" note="Records of yours that reached the service, and when each arrived.">
-        {av.file.length ? (
-          <ol class="file">{av.file.map((f, i) => (
-            <li key={i}><span class="file-l">{f.label}</span>{f.written ? <> written <T c={f.written} date /></> : null}, arrived <T c={f.arrived} date />{f.ownTrail ? '' : ' (not on your own trail)'}</li>
-          ))}</ol>
-        ) : <Empty>Nothing of yours reached them.</Empty>}
-      </Section>
-      <Section title="Fixes" id="fixes" note="Where the service placed you, from which record.">
-        {av.fixes.length ? <ol class="file">{av.fixes.map((f, i) => <li key={i}>{f.cityName}: record of <T c={f.recordTime} date />, known <T c={f.at} date /></li>)}</ol> : <Empty>They never fixed your position.</Empty>}
-      </Section>
-      <Section title="Cordons" id="cordons">
-        {av.cordons.length ? (
-          <ol class="file">{av.cordons.map((c) => (
-            <li key={c.id}>
-              <b>{c.cityName}</b>, <T c={c.from} date />–<T c={c.to} date />: {c.via === 'train' ? `watchers sent by train${c.baseName ? ` from ${c.baseName}` : ''}` : 'the local office'}{c.sighted ? ', and they saw you' : ''}
-              {c.causes.length ? <span class="muted"> (from records {c.causes.join(', ')})</span> : null}
+    <main class="page replay" aria-labelledby="replay-h">
+      <p class="page-kicker">The replay</p>
+      <h2 id="replay-h" class="page-h">{rv.ending.word}</h2>
+      <p class="page-sub">{rv.ending.text} <T c={rv.ending.at} date />. What the {rv.serviceName} could have followed, on the map.</p>
+      <div class="replay-map">
+        <MapCanvas mv={mv} token={{ x: 0, y: 0 }} showToken={false} label="Your journey replayed" extra={layer} over={marks} fitBox={box} />
+        <p class="replay-key" aria-hidden="true"><span class="k-route" /> your route <span class="k-rec" /> a record <span class="k-filed" /> it reached them <span class="k-watch" /> a watch</p>
+      </div>
+      <ul class="plain replay-sum">{rv.summary.map((s) => <li key={s}>{s}</li>)}</ul>
+      <Section title="Where you left paper behind" id="rp-records">
+        <ol class="rp-list">
+          {rv.records.map((r) => (
+            <li key={r.n} value={r.n} class={r.filed ? 'filed' : ''}>
+              <T c={r.at} date /> · {r.place}: {r.label}{r.named ? ', in your name' : ''}.{r.filed ? <> Reached them <T c={r.filed} date />.</> : null}
             </li>
-          ))}</ol>
-        ) : <Empty>No cordon was placed.</Empty>}
+          ))}
+        </ol>
       </Section>
-      <Section title="Detections" id="detections">
-        {av.detections.length ? <ol class="file">{av.detections.map((x, i) => <li key={i}><T c={x.at} date /> by cordon {x.cordon}{x.noticed ? ', and you noticed' : ''}</li>)}</ol> : <Empty>You were never detected.</Empty>}
+      <Section title="Where a watcher could have stood" id="rp-watch">
+        {rv.watchers.length ? <ul class="plain">{rv.watchers.map((w) => <li key={w.id}>{w.text}</li>)}</ul> : <p class="sheet-note">Nobody was sent to watch for you.</p>}
       </Section>
       <Section title="Save code with your answers" id="final-code" note="If you are playtesting, send this line back.">
         <CopyCode code={code} id="final-code-field" />
       </Section>
       <p><button type="button" class="btn" id="play-again" onClick={onAgain}>Back to the start</button></p>
-    </div>
+    </main>
   );
 }

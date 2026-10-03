@@ -40,7 +40,8 @@ describe('the invented world', () => {
   it('is exactly what the generator makes (keyed, deterministic) and fits the page budget', () => {
     const made = buildWorld();
     expect(JSON.parse(JSON.stringify(made))).toEqual(b);
-    const { meta, ...body } = made;
+    const { meta, map, ...body } = made;
+    expect(map.segments.length).toBeGreaterThan(0); // the map is presentation only and stays out of the data hash
     expect(meta.dataHash).toBe(hash64(canonicalJson(body)));
     expect(readFileSync(WORLD_FILE, 'utf8').length).toBeLessThan(400_000);
   });

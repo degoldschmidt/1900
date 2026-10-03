@@ -393,3 +393,14 @@ The historian's blind sample then measures whether resolution alone reaches the 
 - **At most three screens**, numbers shown as words and icons, and a guided tutorial.
 
 The rules engine, data model, save codes and metrics stay. H07-1 is restated for the map: "players use time in town for optional acts before departures". The metric remains verbs per stay and the waiting share.
+
+## 2026-10-03 18:00 — C07 preview rebuilt map-first (Event P-E017)
+
+The preview now plays on a map, following P-012.
+- **Map (home):** a full-screen atlas of the invented countries, with sea, borders, railways and the steamer route. Your token and the goal flag with its deadline sit on it, towns one train away are emphasised, known police attention shows as a shaded ring, and night dims the map.
+- **Top bar:** the date with a running clock, cash with its £ value in words, and one goal line with meeting pips and time left.
+- **City sheet:** departures in plain words with Book; the best journeys to a distant town, with changes spelled out; and once booked, a countdown to the train with two to four things to do in town.
+- **Journey:** the token runs along the line while the clock moves. Event cards cover the frontier register, delays, changes with an overnight room, missed connections, a ghost train (with "Buy the new guide"), arrival and delivery.
+- **Pocket** is a sheet. The tutorial opens with three coach marks, and the autopsy is a map replay.
+
+Eight old screens are removed. **The rules are unchanged.** The map layer is a `map` key in the world bundle, kept out of the data hash, so golden runs and save codes still match. Tests: 404 unit tests (14 new) and 28/28 E2E, including full playthroughs on phone and desktop under the artifact CSP. The page is 402 KB, and it is republished to the same private link.

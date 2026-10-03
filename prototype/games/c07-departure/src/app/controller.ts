@@ -1,6 +1,6 @@
 /**
  * The app shell's hold on one game: it owns the simulation, sends the screens' commands through
- * `sim.command`, lets time pass through `session.advance`, keeps the save code (seed + scenario +
+ * `sim.command`, lets time pass in runs stepped event by event (`stepTo`), keeps the save code (seed + scenario +
  * log + questionnaire answers) in browser storage after every change, and stamps `book` commands
  * with the UI metrics RULES.md section 1 asks for (`ui.sinceArrivalMs`, `ui.source`). The screens
  * never see this object: they get view models and callbacks.
@@ -14,21 +14,35 @@ import type { C07Command, UiStamp } from '../commands.ts';
 import { module, GAME_ID } from '../game.ts';
 import { PREVIEW_SCENARIOS, SCENARIO_IDS } from '../scenarios.ts';
 import { viewInputs, advance, type C07Sim } from '../session.ts';
-import { autopsyView, type AutopsyViewModel, type PublicState, type ViewData } from '../views/index.ts';
+import { replayView, type ReplayViewModel, type PublicState, type ViewData } from '../views/index.ts';
 
 export const SAVE_KEY = `${GAME_ID}${__PREVIEW__ ? '.preview' : ''}.save`;
 
 export type Answers = Record<string, string | number>;
 
+/**
+ * A run of the clock (Decision P-012): `go` lets time pass until the booked journey is over (the
+ * player stands in a town with nothing booked) or the game ends; `act` until one act in town has
+ * finished. Runs are stepped event by event so the map can animate them and stop for cards.
+ */
+export type RunMode = { kind: 'go' } | { kind: 'act'; slot: number };
+export type StepResult = 'event' | 'reached' | 'done';
+
 export interface ScenarioInfo { id: string; title: string; note: string; seed: number; recommended: boolean }
 
 const cap = (x: string): string => x.charAt(0).toUpperCase() + x.slice(1);
+
+/** What each journey is, in the map's words (the scenario files' notes describe the rules). */
+const BLURB: Record<string, string> = {
+  'preview-tutorial': 'Two and a half days in Corvenia: carry a letter to Corlaine, then on to Port-Ancel. Learn the map, the trains and the hours in town.',
+  'preview-changeover': 'Twelve days across the summer timetable change of 1 May: four meetings from Aubrevaux to Tolvenberg, with only the winter guide in your pocket and the police reading the hotel slips.',
+};
 
 /** Scenario menu, tutorial first (RULES.md 7 and the preview's two scenarios). */
 export function scenarioMenu(): ScenarioInfo[] {
   return SCENARIO_IDS.map((id, i) => {
     const f = PREVIEW_SCENARIOS[id]!;
-    return { id, title: cap(f.title.replace(/^Preview:\s*/, '')), note: f.note.replace(/^Mechanics preview on an invented railway, not history\.\s*/, ''), seed: f.seed, recommended: i === 0 };
+    return { id, title: cap(f.title.replace(/^Preview:\s*/, '')), note: BLURB[id] ?? f.note.replace(/^Mechanics preview on an invented railway, not history\.\s*/, ''), seed: f.seed, recommended: i === 0 };
   });
 }
 
@@ -92,6 +106,50 @@ export class Game {
     this.persist();
   }
 
+  /** Whether a run of the clock has finished. */
+  runDone(mode: RunMode): boolean {
+    const s = this.sim.state;
+    if (s.ending) return true;
+    if (mode.kind === 'go') return s.me.where.k === 'city' && s.diary.booking === null;
+    const slot = s.diary.slots.find((x) => x.id === mode.slot);
+    return !slot || (slot.state !== 'planned' && slot.state !== 'running');
+  }
+
+  /** When the current stretch of a run should end, for pacing the animation (null: unknown). */
+  paceEnd(mode: RunMode): number | null {
+    const s = this.sim.state;
+    if (mode.kind === 'act') return s.diary.slots.find((x) => x.id === mode.slot)?.end ?? null;
+    if (s.me.where.k === 'aboard') return s.me.where.ride.schedArr + s.me.where.ride.shownDelay;
+    const bk = s.diary.booking;
+    return bk && bk.next < bk.legs.length ? bk.legs[bk.next]!.dep : null;
+  }
+
+  /** What a card could be made of: compared before and after each event. */
+  private signature(): string {
+    const s = this.sim.state;
+    const w = s.me.where;
+    const stages = s.commissions.offers.reduce((n, o) => n + o.stages.filter((x) => x.done !== null).length, 0);
+    return `${s.diary.interrupts.length}|${this.sim.records.size}|${stages}|${w.k === 'aboard' ? `${w.ride.booking}:${w.ride.leg}:${w.ride.shownDelay}` : `${w.city}:${s.diary.booking?.next ?? '-'}`}`;
+  }
+
+  /**
+   * Processes the events at or before display time `t` while the run lasts. Stops right after an
+   * event that may make a card ('event'), when the run is over or nothing is left to happen
+   * ('done'), or when the next event lies after `t` ('reached').
+   */
+  stepTo(t: number, mode: RunMode): StepResult {
+    for (let i = 0; i < 100_000; i++) {
+      if (this.runDone(mode)) return 'done';
+      const next = this.sim.nextAt();
+      if (next === undefined || next > this.sim.scenario.end) return 'done';
+      if (next > t) return 'reached';
+      const before = this.signature();
+      if (!this.sim.step()) return 'done';
+      if (this.signature() !== before) return this.runDone(mode) ? 'done' : 'event';
+    }
+    return 'done';
+  }
+
   /** Interrupts the screens have not shown yet; marks them read. */
   takeFresh(): Interrupt[] {
     const list = this.sim.state.diary.interrupts;
@@ -124,9 +182,10 @@ export class Game {
     return this.stored;
   }
 
-  autopsy(): AutopsyViewModel | null {
+  /** The autopsy as a map replay; null before the ending. */
+  replay(): ReplayViewModel | null {
     if (!this.ended) return null;
-    return autopsyView(this.sim.state, viewInputs(this.sim).d);
+    return replayView(this.sim.state, viewInputs(this.sim).d);
   }
 }
 

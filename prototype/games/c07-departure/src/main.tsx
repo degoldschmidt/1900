@@ -17,8 +17,8 @@ import { App, type Holder } from './app/App.tsx';
 import { Game } from './app/controller.ts';
 
 const TITLE = 'The Departure';
-const HOOK = 'A spy’s life played as an itinerary: every action has to fit into the slack before a train that leaves without you.';
-const QUESTIONS: string[] = 'Do players use the slack before a departure instead of simply waiting?;Do missed connections feel like the player’s own planning mistakes?;Does an out-of-date timetable feel fair when a train turns out not to run?;Do sessions end aboard a night train, wanting the next leg?;Can players explain why the police closed a city when they did?'.split(';');
+const HOOK = 'A courier’s journey across a railway map: pick your trains, use the hours in town before them, and mind the paper you leave behind.';
+const QUESTIONS: string[] = 'Do players use their time in town for optional acts before departures?;Do missed connections feel like the player’s own planning mistakes?;Does an out-of-date timetable feel fair when a train turns out not to run?;Do sessions end aboard a night train, wanting the next leg?;Can players explain why the police closed a city when they did?'.split(';');
 
 function Placeholder({ bundle }: { bundle: GameBundle }) {
   const waiting = bundle.meta.status === 'awaiting-data';

@@ -18,8 +18,29 @@ export interface Rows {
   rowsFor(param: string): readonly ParamRow[];
 }
 
+/**
+ * The preview world's map (Decision P-012): an invented geography in a fixed coordinate space
+ * (x right, y down), drawn to agree with the timetable. Presentation only: the rules never read it.
+ */
+export interface MapLayer {
+  width: number; height: number;
+  /** The land outline; everything outside it is sea. */
+  land: Array<[number, number]>;
+  /** Inland water drawn over the land. */
+  water: Array<{ id: string; name: string; poly: Array<[number, number]> }>;
+  countries: Array<{ id: string; name: string; label: [number, number]; poly: Array<[number, number]> }>;
+  borders: Array<{ a: string; b: string; line: Array<[number, number]> }>;
+  labels: Array<{ text: string; at: [number, number]; rotate: number; kind: 'sea' | 'lake' }>;
+  cities: Array<{ id: string; x: number; y: number; label: 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw' }>;
+  stations: Array<{ id: string; x: number; y: number }>;
+  /** One polyline per pair of consecutive stops in the timetable (rail, or a steamer's water route). */
+  segments: Array<{ a: string; b: string; mode: 'rail' | 'steamer'; line: Array<[number, number]> }>;
+}
+
 export interface C07Bundle {
   raw: ReadyBundle;
+  /** The map layer, when the data carries one (the preview world does). */
+  map: MapLayer | null;
   tt: Timetable;
   dv: ReadonlyMap<string, unknown>;
   city: ReadonlyMap<string, CityRow>;
@@ -46,7 +67,7 @@ export function makeBundle(raw: GameBundle): C07Bundle {
   const game = r.cities.filter((c) => r.institutions.some((i) => i.city === c.id && i.kind === 'post')).map((c) => c.id).sort();
   const units = (dv.get('DV-SYN-008') as Record<string, string> | undefined) ?? {};
   return {
-    raw: r, tt, dv,
+    raw: r, tt, dv, map: ((raw as { map?: MapLayer }).map ?? null),
     city: new Map(r.cities.map((c) => [c.id, c] as const)),
     station: new Map(r.stations.map((s) => [s.id, s] as const)),
     edition: new Map(r.editions.map((e) => [e.id, e] as const)),

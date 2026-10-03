@@ -23,6 +23,9 @@ function allViews(sim: C07Sim): string {
     city: V.cityView(p, d), shelf: V.shelfView(p, d), purse: V.purseView(p, d), commissions: V.commissionsView(p, d), trail: V.trailView(p, d),
     news: V.newsView(p, d, here), arrival: V.arrivalView(p, d), actions: V.actionsView(p, d), questions: V.questionnaireView(p, d),
     about: V.aboutView(d, 'test', (day) => fmtDate(day)),
+    // The map-first screens (Decision P-012).
+    map: V.mapView(p, d), goal: V.goalView(p, d), sheetHere: V.citySheetView(p, d, here), sheetTol: V.citySheetView(p, d, 'SYN_C_TOL'),
+    journey: V.journeyView(p, d, d.now + 1800), cards: V.cardsSince(p, d, { interrupts: 0, records: 0, stages: 0, delay: 0, at: '' }), pocket: V.pocketView(p, d),
   });
 }
 

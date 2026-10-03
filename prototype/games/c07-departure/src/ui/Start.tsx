@@ -20,15 +20,15 @@ export function Start({ scenarios, stored, onStart, onResume, onRestore }: {
   return (
     <main class="start" aria-labelledby="start-h">
       <header class="start-head">
-        <p class="start-kicker">A travelling agent’s pocket diary, spring 1914</p>
+        <p class="start-kicker">Spring 1914 · an invented railway</p>
         <h1 id="start-h">The Departure</h1>
-        <p class="start-hook">Every act takes time, keeps hours, costs money and health, and leaves paper behind. The train you booked leaves without you. Fill the slack before it, or don’t.</p>
+        <p class="start-hook">Carry letters across three invented countries by train. Pick your trains on the map, use the hours before them, and mind the paper you leave behind: the police read it.</p>
       </header>
 
       {stored ? (
         <section class="resume" aria-label="Resume">
           <p>This browser kept a game: <b>{stored.title}</b>, {stored.entries} {stored.entries === 1 ? 'entry' : 'entries'}.</p>
-          <button type="button" class="btn btn-advance" id="resume" onClick={() => setResumeErr(onResume())}>Resume</button>
+          <button type="button" class="btn btn-go" id="resume" onClick={() => setResumeErr(onResume())}>Resume</button>
           <Refusal text={resumeErr} />
         </section>
       ) : null}
@@ -42,7 +42,7 @@ export function Start({ scenarios, stored, onStart, onResume, onRestore }: {
               <h3 class="sc-t">{s.title}</h3>
               <p class="sc-n">{s.note}</p>
               <p class="sc-seed">Seed <span class="t">{seedNum ?? s.seed}</span></p>
-              <button type="button" class={`btn${s.recommended ? ' btn-advance' : ''}`} id={`start-${s.id}`} onClick={() => onStart(s.id, seedNum)}>Begin “{s.title}”</button>
+              <button type="button" class={`btn${s.recommended ? ' btn-go' : ''}`} id={`start-${s.id}`} onClick={() => onStart(s.id, seedNum)}>Begin “{s.title}”</button>
             </li>
           ))}
         </ol>

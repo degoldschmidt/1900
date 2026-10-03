@@ -1,7 +1,8 @@
 /**
  * Plays the C07 preview tutorial in Node and prints save codes with their state hashes, for the
  * browser half of RULES.md T7 (a save code made in Node replays in Chromium to the same hash) and
- * for the screenshot states. Run: node e2e/c07/node-save.ts
+ * for the screenshot states. Bookings come from the city sheet rows, as the map screens make them.
+ * Run: node e2e/c07/node-save.ts
  *
  * Output (JSON): { dataHash, codes: { [name]: { code, hash, processed } } }
  */
@@ -25,13 +26,6 @@ const bundle = module.bundleFrom(raw);
 const sim = new Sim(module.game, bundle, module.scenario(bundle, 'preview-tutorial'));
 
 const ok = (c: C07Command): void => { const r = sim.command(c); if (!r.ok) throw new Error(`${c.type}: ${r.error}`); };
-const bookDefault = (to: string, sinceArrivalMs: number): void => {
-  const { p, d } = viewInputs(sim);
-  const pl = V.plannerView(p, d, to);
-  const o = pl.options[pl.defaultIndex!]!;
-  const c = o.classes.find((x) => x.legal)!.cmd;
-  ok({ ...c, ui: { sinceArrivalMs, source: 'default' } } as C07Command);
-};
 const act = (re: RegExp): void => {
   const { p, d } = viewInputs(sim);
   const a = V.actionsView(p, d).find((x) => re.test(x.label) && x.legal);
@@ -44,19 +38,24 @@ const keep = (name: string): void => {
   codes[name] = { code, hash: sim.hash(), processed: sim.processed };
 };
 
-// Booked: a draw planned, the D 15 to Corlaine booked; nothing has happened yet.
-act(/^Draw £2/);
-bookDefault('SYN_C_COR', 41000);
+// Booked: the Corvenian Mail to Corlaine booked from the city sheet; nothing has happened yet.
+const sheetBook = (to: string, sinceArrivalMs: number, source: 'default' | 'board'): void => {
+  const { p, d } = viewInputs(sim);
+  const here = p.me.where.k === 'city' ? p.me.where.city : '';
+  const rows = here === to ? [] : V.citySheetView(p, d, to).departures;
+  const row = source === 'default' ? rows.find((r) => r.source === 'default') ?? rows[0]! : V.citySheetView(p, d, here).departures.find((r) => r.toCity === to)!;
+  ok({ ...row.cmd, ui: { sinceArrivalMs, source: row.source } } as C07Command);
+};
+sheetBook('SYN_C_COR', 41000, 'board');
 keep('booked');
-// Arrived in Corlaine, the meeting planned, the night journey to Port-Ancel booked.
+// In Corlaine: the meeting kept (the act runs to its end), the onward journey to Port-Ancel booked.
 advance(sim);
 act(/^Meeting/);
-bookDefault('SYN_C_PAN', 73000);
-ok({ type: 'endSession' });
+sim.advanceUntil((s) => s.diary.slots.every((x) => x.state !== 'planned' && x.state !== 'running'));
+sheetBook('SYN_C_PAN', 73000, 'default');
 keep('corlaine');
-// In Port-Ancel with the last meeting planned: one Advance ends the scenario.
+// Arrived in Port-Ancel with the last meeting still to keep.
 for (let i = 0; i < 10 && !(sim.state.me.where.k === 'city' && sim.state.me.where.city === 'SYN_C_PAN'); i++) advance(sim);
-act(/^Meeting/);
 keep('portAncel');
 
 console.log(JSON.stringify({ dataHash: raw.meta.dataHash, codes }));

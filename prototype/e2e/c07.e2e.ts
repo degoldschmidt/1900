@@ -1,13 +1,16 @@
 /**
- * C07 mechanics preview (dist/c07-departure.preview.html), on the invented world:
- *  - a whole tutorial from file:// on a phone and as a published fragment under the artifact page
- *    rules on a desktop: start, plan and book, advance, arrive, take an act, reach the end, answer
- *    the questionnaire, read the autopsy; no console errors, no policy violations;
+ * C07 mechanics preview (dist/c07-departure.preview.html), map first (Decision P-012), on the
+ * invented world:
+ *  - the whole tutorial through the map, from file:// on a phone and as a published fragment under
+ *    the artifact page rules on a desktop: coach marks, tap a city, book, set off, the journey and
+ *    its cards, arrival, a choice in town, the second journey with its change, delivered; the
+ *    questionnaire and the map replay; no console errors, no policy violations;
  *  - Copy save code and Paste a save code restore the same state hash (?test=1 hooks);
  *  - a save code made in Node replays in Chromium to the same hash (RULES.md T7, browser half);
  *  - a browser that refuses storage still plays; a kept game resumes;
- *  - screenshots of every main screen at 1280×800 and 390×844, light and dark, into
- *    test-results/c07-screens/ (git-ignored), each checked for horizontal page scroll.
+ *  - screenshots of the map, the city sheet, a journey with an event card, the pocket and the
+ *    replay at 1280×800 and 390×844, light and dark, into test-results/c07-screens/ (git-ignored),
+ *    each checked for horizontal page scroll.
  */
 import { test, expect, type Page, type BrowserContext } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
@@ -59,87 +62,104 @@ async function open(page: Page, mode: 'file' | 'artifact', query = '?test=1'): P
   return { errors, hosts, violations: () => page.evaluate(() => (window as unknown as { __violations: string[] }).__violations) };
 }
 
-const isWide = (page: Page): boolean => (page.viewportSize()?.width ?? 0) >= 960;
-async function toDiary(page: Page): Promise<void> { if (!isWide(page)) await page.click('#tab-diary'); }
-async function advance(page: Page, expectStop?: RegExp): Promise<void> {
-  await toDiary(page);
-  await page.click('#advance');
-  const sheet = page.getByRole('dialog', { name: 'Before the next stop' });
-  await expect(sheet).toBeVisible();
-  if (expectStop) await expect(sheet.locator('li.stop')).toContainText(expectStop);
-  await page.click('#advance-go');
-  await expect(sheet).toBeHidden();
-}
-async function bookSuggested(page: Page, to: RegExp): Promise<void> {
-  await page.click('#tab-plan');
-  await expect(page.locator('#plan-to option:checked')).toHaveText(to);
-  const opt = page.locator('.opt-default');
-  await expect(opt).toHaveCount(1);
-  await opt.locator('.btn-fare:not([disabled])').first().click();
-}
-async function addAct(page: Page, label: RegExp): Promise<void> {
-  await page.click('#tab-town');
-  const act = page.locator('li.act', { has: page.locator('.act-label', { hasText: label }) }).first();
-  await act.getByRole('button', { name: 'Add' }).click();
-  await expect(page.locator('.flash')).toContainText('Entered in the diary');
+const card = (page: Page) => page.locator('.card');
+
+/** Answers the cards as they come (the primary button, or one named) until one of `until` is met. */
+async function cards(page: Page, until: RegExp, pick: Record<string, RegExp> = {}): Promise<string[]> {
+  const seen: string[] = [];
+  for (let i = 0; i < 12; i++) {
+    await expect(card(page)).toBeVisible({ timeout: 30_000 });
+    const title = (await card(page).locator('.card-h').innerText()).trim();
+    seen.push(title);
+    const want = Object.entries(pick).find(([t]) => title.startsWith(t))?.[1];
+    if (want) await card(page).getByRole('button', { name: want }).click();
+    else await page.click('#card-primary');
+    if (until.test(title)) return seen;
+  }
+  throw new Error(`no card ${until} among ${seen.join(', ')}`);
 }
 
-async function playTutorial(page: Page): Promise<void> {
+/** Taps a town on the map. */
+const tapCity = (page: Page, id: string) => page.locator(`#city-${id}`).click();
+
+async function playTutorial(page: Page, animated: boolean): Promise<void> {
   await page.click('#start-preview-tutorial');
-  await expect(page.locator('.ticket-none')).toBeVisible();
-  // Plan and book: the planner suggests the next meeting's town and the earliest safe train.
-  await bookSuggested(page, /Corlaine/);
-  await toDiary(page);
-  const ticket = page.getByRole('region', { name: 'Booked departure' });
-  await expect(ticket).toContainText('Corlaine');
-  await expect(ticket.locator('#slack')).not.toHaveText('—');
-  // Advance lists what will pass first, then arrives.
-  await advance(page, /Arrival at Corlaine/);
-  await expect(page.locator('.arr-place')).toHaveText('Corlaine');
-  // An act: the first meeting, entered from the town page.
-  await addAct(page, /^Meeting for the commission \(stage 1/);
-  await toDiary(page);
-  await expect(page.locator('.entry', { hasText: 'Meeting' })).toBeVisible();
-  // On to Port-Ancel overnight, the second meeting, the end.
-  await bookSuggested(page, /Port-Ancel/);
-  await advance(page, /Arrival at Port-Ancel/);
-  await expect(page.locator('.arr-place')).toContainText('Port-Ancel');
-  await addAct(page, /^Meeting for the commission \(stage 2/);
-  for (let i = 0; i < 6 && (await page.locator('#q-submit').count()) === 0; i++) {
-    if (await page.locator('#to-questions').count()) { await page.click('#to-questions'); break; }
-    await advance(page);
-  }
-  // Questionnaire, then the autopsy.
-  await expect(page.locator('.quiz h2')).toHaveText('Delivered');
+  // Three coach marks: you, your goal, your city.
+  await expect(page.locator('.coach')).toContainText('This is you');
+  await page.click('#coach-next');
+  await expect(page.locator('.coach')).toContainText('This is your goal');
+  await page.click('#coach-next');
+  await expect(page.locator('.coach')).toContainText('Tap your city');
+  await page.click('#coach-next');
+  // The city sheet: departures in plain words.
+  await expect(page.locator('#sheet-h')).toHaveText('Aubrevaux');
+  await expect(page.locator('.dep').first()).toContainText('12.20 to Corlaine');
+  await expect(page.locator('#sheet')).not.toContainText('‰');
+  await page.click('#sheet-close');
+  await expect(page.locator('#goal-line')).toHaveText('Take the letter to Corlaine by Tuesday 19.00 — pays £5');
+  // Tap the goal on the map, book the first journey, set off.
+  await tapCity(page, 'SYN_C_COR');
+  await expect(page.locator('#sheet-h')).toHaveText('Corlaine');
+  await page.click('#book-0');
+  await expect(page.locator('.ticket')).toContainText('12.20 to Corlaine');
+  await expect(page.locator('#countdown')).toContainText('Your train leaves in');
+  await page.click('#set-off');
+  // Animated, the token runs along the line with the clock under a strip; reduced, it jumps.
+  if (animated) await expect(page.locator('.strip')).toContainText('Corlaine');
+  // The journey ends in an arrival card; step out into Corlaine.
+  expect(await cards(page, /^Arrived in Corlaine/)).toContain('Arrived in Corlaine');
+  await expect(page.locator('#sheet-h')).toHaveText('Corlaine');
+  // In town: meet the contact.
+  await page.click('#do-meet');
+  await cards(page, /^Letter handed over/);
+  await expect(page.locator('.pip-done')).toHaveCount(1);
+  // On to Port-Ancel: the goal line opens its sheet; the journey changes at Aubrevaux overnight.
+  await page.click('#goal-line');
+  await expect(page.locator('#sheet-h')).toHaveText('Port-Ancel');
+  await expect(page.locator('.dep').first().locator('.dep-meta')).toContainText('Aubrevaux, across town');
+  await page.click('#book-0');
+  await page.click('#set-off');
+  const seen = await cards(page, /^Arrived in Port-Ancel/, { 'Change at': /Wait at the station|Carry on/ });
+  expect(seen.some((t) => t.startsWith('Change at Aubrevaux'))).toBe(true);
+  await page.click('#do-meet');
+  await cards(page, /^Delivered/);
+  // Questionnaire, then the replay.
+  await expect(page.locator('#quiz-h')).toHaveText('Delivered');
   await page.check('#q4-5');
   await page.fill('#q5-text', 'The night train was the right call.');
   await page.click('#q-submit');
-  await expect(page.locator('.autopsy h2')).toHaveText('Autopsy');
+  await expect(page.locator('#replay-h')).toHaveText('Delivered');
+  await expect(page.locator('.replay .rec').first()).toBeVisible();
+  await expect(page.locator('.replay-route').first()).toBeVisible();
   await expect(page.locator('#final-code-field')).not.toBeEmpty();
 }
 
-test.describe('c07 preview: a whole tutorial', () => {
-  test('from file:// on a phone', async ({ page }) => {
+test.describe('c07 preview: the tutorial through the map', () => {
+  test('from file:// on a phone, with the journey animated', async ({ page }) => {
+    test.setTimeout(120_000);
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
     const { errors, hosts, violations } = await open(page, 'file');
-    await playTutorial(page);
+    await playTutorial(page, true);
     for (const h of hosts) expect(['fonts.googleapis.com', 'fonts.gstatic.com']).toContain(h);
-    // The questionnaire answers travel in the save code.
+    // The questionnaire answers travel in the save code; bookings carry where they were chosen.
     const code = await page.locator('#final-code-field').inputValue();
     const save = JSON.parse(Buffer.from(code, 'base64url').toString('utf8')) as { answers?: Record<string, unknown>; log: Array<{ cmd: { type: string; ui?: { source?: string; sinceArrivalMs?: number } } }> };
     expect(save.answers).toEqual({ q4: 5, q5: 'The night train was the right call.' });
     const books = save.log.filter((e) => e.cmd.type === 'book');
-    expect(books.length).toBe(2);
-    for (const b of books) { expect(b.cmd.ui?.source).toBe('default'); expect(typeof b.cmd.ui?.sinceArrivalMs).toBe('number'); }
+    expect(books.map((b) => b.cmd.ui?.source)).toEqual(['default', 'default']);
+    for (const b of books) expect(typeof b.cmd.ui?.sinceArrivalMs).toBe('number');
     expect(errors).toEqual([]);
     expect(await violations()).toEqual([]);
   });
 
   test('as a published fragment under the artifact page rules, on a desktop', async ({ page }) => {
+    test.setTimeout(120_000);
     await page.setViewportSize({ width: 1280, height: 800 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     const { errors, violations } = await open(page, 'artifact');
     await expect(page.locator('.banner')).toHaveText('Mechanics preview: an invented railway, not history');
-    await playTutorial(page);
+    await playTutorial(page, false);
     expect(errors).toEqual([]);
     expect(await violations()).toEqual([]);
   });
@@ -149,14 +169,18 @@ test.describe('c07 preview: save codes', () => {
   test('copy and paste a save code restores the same state hash', async ({ page, context }) => {
     await grantClipboard(context);
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     const { errors } = await open(page, 'file');
     await page.click('#start-preview-tutorial');
-    await bookSuggested(page, /Corlaine/);
-    await advance(page);
-    await addAct(page, /^Meeting/);
+    await page.click('#coach-skip');
+    await tapCity(page, 'SYN_C_COR');
+    await page.click('#book-0');
+    await page.click('#set-off');
+    await cards(page, /^Arrived/);
+    await page.click('#do-meet');
+    await cards(page, /^Letter handed over/);
     const before = await hashIn(page);
-    await page.click('#tab-pocket');
-    await page.click('#pocket-save');
+    await page.click('#open-pocket');
     await page.click('#save-code-copy');
     await expect(page.locator('.copy-msg')).not.toBeEmpty();
     const code = await page.locator('#save-code').inputValue();
@@ -165,7 +189,7 @@ test.describe('c07 preview: save codes', () => {
     await page.click('#to-start');
     await page.fill('#paste-code', code);
     await page.click('#paste-restore');
-    await expect(page.locator('.diary')).toBeVisible();
+    await expect(page.locator('#goal-line')).toContainText('Port-Ancel');
     expect(await hashIn(page)).toBe(before);
     // The browser kept it too: a reload offers Resume, which restores the same game.
     await page.reload();
@@ -175,17 +199,19 @@ test.describe('c07 preview: save codes', () => {
   });
 
   test('a save code made in Node replays in the browser to the same hash (T7)', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     const { errors } = await open(page, 'file');
     for (const name of ['booked', 'corlaine', 'portAncel'] as const) {
       const n = node.codes[name];
       expect(await replayIn(page, n.code)).toEqual({ hash: n.hash, processed: n.processed });
     }
-    // And through the page itself: paste the Node code, play on, and Node agrees with the result.
+    // And through the page itself: paste the Node code, play on along the map, and Node agrees.
     const n = node.codes.corlaine;
     await page.fill('#paste-code', n.code);
     await page.click('#paste-restore');
     expect(await hashIn(page)).toBe(n.hash);
-    await advance(page);
+    await page.click('#set-off');
+    await cards(page, /^Arrived in Port-Ancel/, { 'Change at': /Take a room/ });
     const browserCode = await saveIn(page);
     const replay = execFileSync(process.execPath, ['--input-type=module', '-e', REPLAY_IN_NODE, browserCode], { cwd: ROOT }).toString().trim();
     expect(replay).toBe(await hashIn(page));
@@ -204,15 +230,17 @@ test.describe('c07 preview: save codes', () => {
       Object.defineProperty(window, 'localStorage', { get() { throw new Error('storage denied'); } });
     });
     await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     const { errors } = await open(page, 'file');
     await expect(page.locator('#resume')).toHaveCount(0);
     await page.click('#start-preview-tutorial');
-    await bookSuggested(page, /Corlaine/);
-    await advance(page);
-    await expect(page.locator('.arr-place')).toHaveText('Corlaine');
-    await page.click('#tab-pocket');
-    await page.click('#pocket-save');
-    await expect(page.locator('.save .sec-note').first()).toContainText('would not keep it');
+    await page.click('#coach-skip');
+    await page.click('#open-here');
+    await page.click('#book-0');
+    await page.click('#set-off');
+    await cards(page, /^Arrived in Corlaine/);
+    await page.click('#open-pocket');
+    await expect(page.locator('#pk-save-h + .sec-note')).toContainText('would not keep it');
     await expect(page.locator('#save-code')).not.toBeEmpty();
     expect(errors).toEqual([]);
   });
@@ -250,64 +278,53 @@ const VIEWPORTS = [
 
 for (const vp of VIEWPORTS) {
   for (const scheme of ['light', 'dark'] as const) {
-    test(`screenshots of every main screen at ${vp.w}×${vp.h}, ${scheme}`, async ({ page }) => {
+    test(`screenshots of the map screens at ${vp.w}×${vp.h}, ${scheme}`, async ({ page }) => {
       test.setTimeout(120_000);
       mkdirSync(SHOTS, { recursive: true });
       await page.setViewportSize({ width: vp.w, height: vp.h });
       await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
       const { errors } = await open(page, 'file');
-      const wide = vp.w >= 960;
       const shot = async (name: string): Promise<void> => {
         await page.screenshot({ path: join(SHOTS, `${name}-${vp.w}x${vp.h}-${scheme}.png`) });
         const sw = await page.evaluate(() => document.documentElement.scrollWidth);
         expect(sw, `${name}: no horizontal page scroll`).toBeLessThanOrEqual(vp.w);
       };
       await shot('start');
-      // The booked state: the ticket pinned, slack showing.
-      await page.fill('#paste-code', node.codes.booked.code);
-      await page.click('#paste-restore');
-      await expect(page.locator('#slack')).toBeVisible();
-      if (!wide) await shot('diary');
-      for (const [tab, name] of [['plan', 'planner'], ['board', 'board'], ['town', 'town']] as const) {
-        await page.click(`#tab-${tab}`);
-        await shot(name);
-      }
-      await page.click('#tab-town');
-      // A citation opens on tap.
-      const dagger = page.locator('.venues .dagger').first();
-      await dagger.click();
-      await expect(page.locator('.venues .cite.open .cite-pop').first()).toBeVisible();
-      await shot('citation');
-      await dagger.click();
-      for (const s of ['pocket', 'letters', 'purse', 'shelf', 'trail', 'news', 'save', 'about'] as const) {
-        await page.click('#tab-pocket');
-        if (s !== 'pocket') await page.click(`#pocket-${s}`);
-        await shot(s);
-      }
-      if (wide) await shot('diary');
-      await toDiary(page);
-      await page.click('#advance');
-      await shot('advance');
-      await page.click('#advance-go');
-      await expect(page.locator('.arr-place')).toBeVisible();
-      await shot('arrival');
-      // The night journey booked from Corlaine: the ticket, then aboard.
-      await page.click('#tab-pocket'); await page.click('#pocket-save'); await page.click('#to-start');
+      await page.click('#start-preview-tutorial');
+      await shot('coach');
+      await page.click('#coach-skip');
+      await shot('map');
+      await page.click('#open-here');
+      await expect(page.locator('#sheet-h')).toHaveText('Aubrevaux');
+      await shot('city-sheet');
+      await tapCity(page, 'SYN_C_PAN');
+      await expect(page.locator('#sheet-h')).toHaveText('Port-Ancel');
+      await shot('journeys-to');
+      await page.click('#sheet-close');
+      await page.click('#open-pocket');
+      await expect(page.locator('#pocket-h')).toBeVisible();
+      await shot('pocket');
+      await page.click('#close-pocket');
+      // A booked state from Node; set off, and the change at Aubrevaux stops the clock with a card.
+      await page.click('#open-pocket'); await page.click('#to-start');
       await page.fill('#paste-code', node.codes.corlaine.code);
       await page.click('#paste-restore');
-      await toDiary(page);
-      await shot('diary-evening');
-      // The end: questionnaire and autopsy.
-      await page.click('#tab-pocket'); await page.click('#pocket-save'); await page.click('#to-start');
-      await page.fill('#paste-code', node.codes.portAncel.code);
-      await page.click('#paste-restore');
-      await advance(page);
+      await page.click('#open-here');
+      await expect(page.locator('.ticket')).toBeVisible();
+      await shot('booked');
+      await page.click('#set-off');
+      await expect(card(page)).toBeVisible();
+      await expect(card(page).locator('.card-h')).toHaveText('Change at Aubrevaux');
+      await shot('journey-card');
+      await cards(page, /^Arrived in Port-Ancel/);
+      await page.click('#do-meet');
+      await cards(page, /^Delivered/);
       await expect(page.locator('#q-submit')).toBeVisible();
       await shot('questions');
       await page.check('#q4-4');
       await page.click('#q-submit');
-      await expect(page.locator('.autopsy')).toBeVisible();
-      await shot('autopsy');
+      await expect(page.locator('.replay')).toBeVisible();
+      await shot('replay');
       expect(errors).toEqual([]);
     });
   }

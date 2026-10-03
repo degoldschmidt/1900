@@ -19,6 +19,7 @@ import { dayFromGregorian } from '../../../kit/src/time/calendar.ts';
 import { belowN } from '../../../kit/src/rng/draw.ts';
 import { canonicalJson } from '../../../kit/src/sim/canonical.ts';
 import { hash64 } from '../../../kit/src/sim/hash.ts';
+import type { MapLayer } from '../src/rules/data.ts';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const WORLD_FILE = join(HERE, 'world.bundle.json');
@@ -541,7 +542,69 @@ const worldDv: DesignValueRow[] = [
 ];
 const designValues: DesignValueRow[] = [...dvFile.values, ...worldDv];
 
-export function buildWorld(): ReadyBundle {
+// ---------------------------------------------------------------- the map (Decision P-012)
+// An invented geography in a fixed portrait coordinate space (640 × 900, y down), drawn by hand so
+// that positions agree with the timetable: about one unit per minute of express running on the
+// railways (slower lines a little shorter for their time), the two steamer crossings in proportion
+// to each other, the frontier pairs either side of their border, the ports on the water. The rules
+// never read it; it is a presentation layer, so it stays out of the data hash (save codes and the
+// golden runs are unaffected by redrawing the map).
+type P = [number, number];
+const MAP_CITY: Record<string, { x: number; y: number; label: MapLayer['cities'][number]['label'] }> = {
+  SYN_C_AUB: { x: 330, y: 800, label: 'se' }, SYN_C_PAN: { x: 178, y: 758, label: 'e' }, SYN_C_COR: { x: 390, y: 690, label: 'e' },
+  SYN_C_VEL: { x: 424, y: 613, label: 'w' }, SYN_C_STH: { x: 432, y: 593, label: 'e' }, SYN_C_QUE: { x: 400, y: 482, label: 'e' },
+  SYN_C_TOL: { x: 520, y: 395, label: 'e' }, SYN_C_EBB: { x: 304, y: 436, label: 'w' }, SYN_C_KES: { x: 545, y: 230, label: 'w' },
+  SYN_C_VBY: { x: 549, y: 210, label: 'e' }, SYN_C_HOL: { x: 452, y: 90, label: 'e' }, SYN_C_SKA: { x: 358, y: 134, label: 'ne' },
+};
+const MAP_STATION: Record<string, P> = { AUBN: [336, 794], AUBO: [322, 806], TOLW: [512, 400], TOLN: [527, 388] };
+const stationPoint = (k: string): P => MAP_STATION[k] ?? [MAP_CITY[cityOf(S(k)).id]!.x, MAP_CITY[cityOf(S(k)).id]!.y];
+const seg = (a: string, b: string, mode: 'rail' | 'steamer', via: P[]): MapLayer['segments'][number] =>
+  ({ a: S(a), b: S(b), mode, line: [stationPoint(a), ...via, stationPoint(b)] });
+const BORDER_CV_AR: P[] = [[-200, 642], [180, 632], [260, 622], [340, 611], [400, 606], [428, 603], [470, 598], [540, 590], [640, 585], [1600, 580]];
+const BORDER_AR_VH: P[] = [[-200, 302], [200, 290], [260, 281], [300, 273], [360, 263], [420, 251], [490, 236], [547, 220], [600, 205], [640, 200], [1600, 190]];
+const LAND: P[] = [
+  [150, 1600], [150, 900], [158, 860], [170, 822], [166, 792], [172, 768], [166, 748], [150, 706], [140, 652], [146, 600], [160, 560], [172, 520],
+  [168, 480], [180, 440], [196, 400], [190, 360], [200, 322], [214, 282], [222, 242], [236, 204], [262, 172], [296, 150], [334, 128], [346, 126],
+  [372, 112], [392, 92], [418, 70], [468, 56], [540, 60], [600, 42], [700, 30], [1600, 30], [1600, 1600],
+];
+const MAP: MapLayer = {
+  width: 640, height: 900, land: LAND,
+  water: [
+    { id: 'SYN_W_LAKE', name: 'Lake Ebben', poly: [[334, 150], [318, 190], [306, 240], [298, 290], [292, 340], [290, 385], [296, 420], [303, 428], [312, 422], [322, 390], [340, 340], [356, 290], [364, 240], [360, 190], [350, 152], [348, 120], [334, 120]] },
+  ],
+  countries: [
+    { id: 'SYN_CV', name: 'Corvenia', label: [250, 862], poly: [[-200, 1600], ...BORDER_CV_AR, [1600, 1600]] },
+    { id: 'SYN_AR', name: 'Ardesia', label: [470, 540], poly: [...BORDER_AR_VH, ...[...BORDER_CV_AR].reverse()] },
+    { id: 'SYN_VH', name: 'Varnholm', label: [500, 150], poly: [[-200, -200], [1600, -200], ...[...BORDER_AR_VH].reverse()] },
+  ],
+  borders: [
+    { a: 'SYN_CV', b: 'SYN_AR', line: BORDER_CV_AR },
+    { a: 'SYN_AR', b: 'SYN_VH', line: BORDER_AR_VH },
+  ],
+  labels: [
+    { text: 'The Western Sea', at: [84, 520], rotate: -84, kind: 'sea' },
+    { text: 'Lake Ebben', at: [328, 330], rotate: -78, kind: 'lake' },
+  ],
+  cities: CITY_DEFS.map((c) => ({ id: c.id, ...MAP_CITY[c.id]! })),
+  stations: STATION_DEFS.map((s) => { const k = s.id.slice(6); const [x, y] = stationPoint(k); return { id: s.id, x, y }; }),
+  segments: [
+    seg('AUBN', 'COR', 'rail', [[352, 760], [372, 722]]),
+    seg('COR', 'VEL', 'rail', [[404, 654]]),
+    seg('VEL', 'STH', 'rail', []),
+    seg('STH', 'QUE', 'rail', [[424, 550], [408, 512]]),
+    seg('QUE', 'TOLW', 'rail', [[440, 450], [480, 418]]),
+    seg('TOLN', 'KES', 'rail', [[540, 330], [548, 280]]),
+    seg('KES', 'VBY', 'rail', []),
+    seg('VBY', 'HOL', 'rail', [[520, 160], [486, 118]]),
+    seg('AUBO', 'PAN', 'rail', [[280, 790], [230, 775]]),
+    seg('QUE', 'EBB', 'rail', [[360, 470], [330, 452]]),
+    seg('SKA', 'HOL', 'rail', [[390, 120], [420, 102]]),
+    seg('PAN', 'SKA', 'steamer', [[150, 745], [126, 700], [118, 640], [128, 560], [146, 480], [160, 400], [176, 320], [196, 250], [226, 190], [262, 150], [300, 120], [338, 108], [352, 120]]),
+    seg('EBB', 'SKA', 'steamer', [[304, 400], [318, 340], [330, 280], [334, 220], [342, 170], [348, 140]]),
+  ],
+};
+
+export function buildWorld(): ReadyBundle & { map: MapLayer } {
   const body = {
     stations, cities, zones, stationZones, editions, trips, stops, transfers, minChange, throughLinks, fares,
     citations, params, calendar, institutions, designValues,
@@ -550,7 +613,7 @@ export function buildWorld(): ReadyBundle {
     game: 'c07-departure', status: 'ready' as const, synthetic: true, schema: 1 as const, freezeTag: 'preview-1',
     window: WINDOW, dataHash: hash64(canonicalJson(body)),
   };
-  return { meta, ...body };
+  return { meta, ...body, map: MAP };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

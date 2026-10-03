@@ -124,3 +124,54 @@ export function interruptText(b: C07Bundle, kind: string, ref: unknown, city: st
     default: return interruptLabel(kind);
   }
 }
+
+// ---------------------------------------------------------------- plain words (Decision P-012)
+
+const pad2 = (n: number): string => String(n).padStart(2, '0');
+
+/** A span of time in words for the map screens: "45 min", "3 h 45", "1 day 4 h". */
+export function span(sec: number): string {
+  const m = Math.max(0, Math.round(sec / 60));
+  // Non-breaking spaces keep "3 h 45" on one line.
+  if (m < 60) return `${m}\u00a0min`;
+  const h = Math.floor(m / 60); const r = m % 60;
+  if (h < 24) return r ? `${h}\u00a0h\u00a0${pad2(r)}` : `${h}\u00a0h`;
+  const d = Math.floor(h / 24); const hr = h % 24;
+  return `${d}\u00a0${d === 1 ? 'day' : 'days'}${hr ? ` ${hr}\u00a0h` : ''}`;
+}
+
+const SMALL = ['nothing', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+/** 0–999 in words. */
+export function numberWords(n: number): string {
+  if (n < 20) return SMALL[n]!;
+  if (n < 100) return `${TENS[Math.floor(n / 10)]}${n % 10 ? `-${SMALL[n % 10]}` : ''}`;
+  const h = Math.floor(n / 100); const r = n % 100;
+  return `${SMALL[h]} hundred${r ? ` and ${numberWords(r)}` : ''}`;
+}
+
+/** Sterling (in farthings) in words, to the nearest shilling: "about two pounds eight", "about fifteen shillings". */
+export function poundsWords(farthings: number): string {
+  const shillings = Math.max(0, Math.round(farthings / 48));
+  const l = Math.floor(shillings / 20); const s = shillings % 20;
+  if (l === 0) return s === 0 ? 'less than a shilling' : `about ${numberWords(s)} shilling${s === 1 ? '' : 's'}`;
+  if (l >= 20 || s === 0) return `about ${numberWords(l)} pound${l === 1 ? '' : 's'}`;
+  return `about ${numberWords(l)} pound${l === 1 ? '' : 's'} ${numberWords(s)}`;
+}
+
+/** How a kind of train keeps time, in words (from its delay category, never odds). */
+export function reliabilityWord(category: 'express' | 'ordinary' | 'boat'): string {
+  return category === 'express' ? 'usually on time' : category === 'ordinary' ? 'sometimes late' : 'late in rough weather';
+}
+
+/** A change, in words, from the planner's miss odds (‰) and its scheduled slack. */
+export function changeWord(odds: number, slackSec: number): string {
+  if (slackSec >= 6 * 3600) return 'a long wait';
+  if (odds === 0 && slackSec >= 3600) return 'easy change';
+  if (odds <= 50) return 'comfortable change';
+  if (odds <= 150) return 'tight change';
+  return 'very tight change';
+}
+
+const CLASS_WORD: Record<number, string> = { 1: '1st class', 2: '2nd class', 3: '3rd class' };
+export const classWord = (cls: number): string => CLASS_WORD[cls] ?? `class ${cls}`;
