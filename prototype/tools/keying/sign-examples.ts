@@ -12,8 +12,8 @@
  * brief says "if present".
  *
  * Keyers and historians read this folder, so it must not reveal a sampled cell (decision P-E021): the
- * index gives no readings, and a cell drawn for any historian sample (data/review/sample-*.csv) is never
- * an example. A sample drawn after the examples were cut may still coincide with one; sample.ts draw
+ * index gives no readings, and a cell waiting for a reader in any historian sample (data/review/
+ * sample-*.csv, reread_sure blank) is never an example. A sample drawn after the examples were cut may still coincide with one; sample.ts draw
  * warns, and tools/review/contact-sheet.ts refuses to make that sample's sheets until this tool is run
  * again (exampleOverlap below).
  *
@@ -97,13 +97,19 @@ export function historianReadings(r: Roots, source: string): Map<string, { text:
 /** Where a cell sits in its table, whichever crop keyed it: "<table>/<kind>:<col>:<row>". */
 export const tableCellKey = (table: string, c: { kind: string; col: number | string; row: number | string }): string => `${table}/${c.kind}:${c.col}:${c.row}`;
 
-/** The cells of a source drawn for any historian sample (data/review/sample-*.csv), filled in or not. */
+/**
+ * The cells of a source still waiting for a reader in some historian sample (data/review/sample-*.csv):
+ * rows whose reread_sure is blank. A cell already read (in every sample that holds it) may be an
+ * example again, so that even a census leaves examples to show.
+ */
 export function sampledCells(r: Roots, source: string): Set<string> {
   const out = new Set<string>();
   const dir = join(r.data, 'review');
   if (!existsSync(dir)) return out;
   for (const f of readdirSync(dir).filter((x) => /^sample-.*\.csv$/.test(x)).sort(cmpStr)) {
-    for (const row of readCsvFile(join(dir, f)).rows) if (row.source_id === source) out.add(tableCellKey(row.table_ref ?? '', { kind: row.kind ?? '', col: row.col ?? '', row: row.row ?? '' }));
+    for (const row of readCsvFile(join(dir, f)).rows) {
+      if (row.source_id === source && !(row.reread_sure ?? '').trim()) out.add(tableCellKey(row.table_ref ?? '', { kind: row.kind ?? '', col: row.col ?? '', row: row.row ?? '' }));
+    }
   }
   return out;
 }

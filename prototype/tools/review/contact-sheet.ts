@@ -1,6 +1,6 @@
 /**
  * Contact sheets: many sampled cells on one image, for a blind re-reading with few image requests
- * (PLAN.md addendum of 3 Oct 2026, 22:40; tools/keying/HISTORIAN_BRIEF.md, "Contact sheets").
+ * (PLAN.md addendum of 3 Oct 2026, 18:01 UTC; tools/keying/HISTORIAN_BRIEF.md, "Contact sheets").
  *
  *   node tools/review/contact-sheet.ts --sample <label> [--per-sheet 16] [--filter-tables 12,13,23] [--out <dir>] [--plain] [--context 1]
  *

@@ -52,6 +52,14 @@ node tools/keying/sample.ts score --label <label> [--apply]
 
 compares your reading with the resolved cells **by value**, with the guide's notation rules (P-005, P-010, P-013): a difference in typography alone (a separator, bold where the guide gives it no meaning, italic on a body cell) is listed but is not an error. Unread and illegible rows are listed apart, without their stored values. For each source the score gives the exact one-sided 95% upper bound on the value error rate, with the finite-population (hypergeometric) correction over the source's sampleable cells, and the verdict: **PASS when the bound is at most 0.5%**, FAIL otherwise, with the number of cells that would have to be read at the current error count. In a failing source the tables with errors are re-keyed (`--apply` marks their crops `rekey` in `data/raw/status.csv`). Before you accept a mismatch as a keying error, look again: if your own reading was wrong, say so in the note and correct the sample row; the score is re-run on the corrected file.
 
+#### Adjudication and the targeted re-reads (P-E021)
+
+A blind reader misreads too: in the G2 sample, 5 of the 7 mismatches were the reader's (four bars on row lines read as dashes, one italic `00` read as `22`). So every mismatch the score lists is **adjudicated** before it counts: a fresh agent who has seen neither reading before looks at the cell on a plain contact sheet (`contact-sheet.ts --plain --context 2.5`, nothing washed or drawn on the print) and is given the two readings unlabelled, in a seeded random order, with the key kept apart (`data/review/ADJUDICATION_BRIEF-g2final.md` is the model). Only a confirmed keying error counts against the bound; a reader's misreading is corrected in the sample row with a note, and the score is re-run.
+
+Two kinds of cell are re-read blind in full, not sampled, before a source is accepted:
+- every cell the resolver read differently from both keyers (resolution `other`): 2 of the 3 such cells in the G2 sample were wrong;
+- the cells of every leg or dwell V03 warns about (`node tools/review/physics-queue.ts --label <label>`): a lost or extra underline shifts a time by 12 hours, and V03 had flagged the G2 sample's one time error at 3 km/h before anyone re-read it.
+
 ### 4. Waivers
 Every cell left `illegible` (or disputed) that the game needs must be either re-read from a better scan or waived. A waiver is a row in `data/canonical/waivers.csv`: `waiver_id, src, note, historian, reviewed_on`, where `src` cites the single cell and `note` gives your reasoning (what the context shows, e.g. the same train in the return table or in another guide). Review every existing waiver as well; a waiver must never invent a time the page does not support.
 

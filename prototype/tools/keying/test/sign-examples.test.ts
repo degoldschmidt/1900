@@ -55,6 +55,13 @@ describe('sign examples', () => {
     expect(examples().filter((e) => e.table_ref === 'T9')).toEqual([]);
     expect(exampleOverlap(r, parseCsv(readFileSync(path, 'utf8')).rows)).toEqual([]);
     expect((await runContactSheets(r, 'late')).rows).toHaveLength(11);
+
+    // Once its rows are read, a sampled cell may be an example again.
+    // (The examples use a historian's reading where there is one, so the dagger cell is read as printed.)
+    const read = (x: Record<string, string>) => (x.col === '2' && x.row === '1' ? { reread_text: '10 12', reread_marks: 'fn:†' } : { reread_text: '1 00', reread_marks: '' });
+    writeFileSync(path, writeCsv(SAMPLE_COLUMNS, parseCsv(readFileSync(path, 'utf8')).rows.map((x) => ({ ...x, ...read(x), reread_sure: 'y' }))));
+    await makeSignExamples(r, SOURCE, { per: 2 });
+    expect(dagger()).toEqual(['T10 c2r1 dagger-1.png', 'T9 c2r1 dagger-2.png']);
   });
 
   it('finds the panel of a key by its absolute position', () => {

@@ -62,6 +62,7 @@ Quote a field with double quotes if it contains a comma (`"Köln (Cologne), Hbf.
 - `do.`, `id.` or `dito` written in letters → as printed (letters are text, not a ditto mark).
 - A vertical bar or rule, meaning the train passes without stopping → `|` (one vertical-bar character, however long the printed rule).
 - A horizontal dash or rule inside a cell, any length → `—` (one em dash, U+2014).
+- A bar or line running across the whole column on the line between two rows (closing a boxed note, a frame round a group of times, or one train before the next one starts, often with `ab` below it) is the table's structure, not part of either cell: do not key it. A dash in a cell is short and stands mid-row, level with the figures.
 - A row of dots or dot leaders → `…` (U+2026).
 - Nothing printed → empty text, `sure=y`.
 - A word or abbreviation (`arr.`, `dep.`, `aft`, `mrn`, `Lux.`, `Sleeping Car`) → as printed, keeping the full stop.

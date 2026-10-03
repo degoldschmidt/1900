@@ -396,7 +396,7 @@ Common to all three:
 
 **If access cannot be opened:** take G1 option (a). The owner uploads scans of the facsimile pages; they enter at step 6 by `tools/fetch/manifest.ts` with local files.
 
-## Addendum, 3 Oct 2026 22:40 UTC: closing gate G2 with contact sheets and a large blind sample
+## Addendum, 3 Oct 2026 18:01 UTC: closing gate G2 with contact sheets and a large blind sample
 
 ### Context
 
