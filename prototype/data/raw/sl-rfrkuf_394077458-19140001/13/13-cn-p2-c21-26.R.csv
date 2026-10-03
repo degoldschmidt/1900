@@ -1,0 +1,14 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+13-cn-p2-c21-26,footnote,0,0,? ab 16. September 1 20.,c:26;fn:?,x,illegible,sign is two small boxes stacked (as at the column head); not identifiable as □ or :
+13-cn-p2-c21-26,footnote,0,1,° Nur am 29. und 30. Mai und vom 15. Juni bis 15. September.,c:26;fn:°,n,A,small ring sign the size of the ° before c24 times; convention ° vs ○ unsettled
+13-cn-p2-c21-26,footnote,0,2,● Vorortzüge Berlin-Wünsdorf siehe Nr. 15.,c:25;fn:●,n,A,large disc sign; note runs into the lower half (Nr. 15.)
+13-cn-p2-c21-26,footnote,0,3,"† Vom 15. Juni bis 15. Sept. ab Sassnitz 9 46, ab Bergen 10 21",c:22;fn:†,n,A,dagger sign; note continues as ab Bergen 10 21 in the lower half
+13-cn-p2-c21-26,footnote,0,4,◗ Über Schreckenstein.,c:25;fn:◗,n,A,large half-disc sign before Über
+13-cn-p2-c21-26,footnote,0,5,Schlafwagen Berlin-Wien.,c:21,y,A,sideways note in c21 runs on as Berlin-Wien. in the lower half
+13-cn-p2-c21-26,footnote,0,6,□ ab 16. September 1 49,c:26;fn:□,n,A,hollow square sign; 1 49 at the top of the lower half
+13-cn-p2-c21-26,footnote,0,7,324 II.-IV,c:26,y,agree,
+13-cn-p2-c21-26,footnote,0,8,318 II.-IV,c:25,y,agree,
+13-cn-p2-c21-26,footnote,0,9,Nur a Werkt. nach Sonn- und Fest.,c:24,n,A,no stop visible after the a in the boxed note
+13-cn-p2-c21-26,footnote,0,10,üb. Cosseb.- Dresd. Frdr.,c:25,n,A,space after hyphen of Cosseb.- as printed
+13-cn-p2-c21-26,footnote,0,11,üb. Cosseb.- Dresd. Frdr.,c:26,n,A,space after hyphen of Cosseb.- as printed
+13-cn-p2-c21-26,footnote,0,12,D 11 I.-III,c:22,y,agree,

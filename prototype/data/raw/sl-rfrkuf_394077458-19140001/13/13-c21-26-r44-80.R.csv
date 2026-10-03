@@ -1,0 +1,48 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+13-c21-26-r44-80,header,21,0,D196,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c21-26-r44-80,header,22,0,,,y,agree,
+13-c21-26-r44-80,header,23,0,316,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c21-26-r44-80,header,24,0,318,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c21-26-r44-80,header,25,0,,,y,agree,
+13-c21-26-r44-80,header,26,0,,,y,agree,
+13-c21-26-r44-80,header,21,1,I.-III.,,n,B,class line partly worn; no distinct bold
+13-c21-26-r44-80,header,22,1,,,y,agree,
+13-c21-26-r44-80,header,23,1,I-IV,,y,B,class line in the page's uniform face; no distinct bold
+13-c21-26-r44-80,header,24,1,II-IV,,y,B,class line in the page's uniform face; no distinct bold
+13-c21-26-r44-80,header,25,1,,,y,agree,
+13-c21-26-r44-80,header,26,1,,,y,agree,
+13-c21-26-r44-80,label,0,44,a. Berlin Anh. Bf. 315,fn:●,n,B,disc sign after the name goes to marks; 315 table number kept in text
+13-c21-26-r44-80,label,0,77,176 i. Dresden-Neustadt …,,n,B,leader dot written as one … per convention
+13-c21-26-r44-80,label,0,78,a. Dresden-Neustadt …,,n,B,leader dots written as one … per convention
+13-c21-26-r44-80,label,0,79,178 i. Dr. Wettinerstr,,y,A,waist of 8 in 178 visible; no stop after Wettinerstr
+13-c21-26-r44-80,label,0,80,1?0 i Dresden Hbf,,x,illegible,middle figure of the table number squashed; 8 vs 0 waist not visible; context suggests 180
+13-c21-26-r44-80,cell,21,44,8 ?8,u;i,x,illegible,first minute figure broken (open top); context suggests 8 48
+13-c21-26-r44-80,cell,22,44,,,n,A,only a sideways dagger sign at the head of a column note; no time
+13-c21-26-r44-80,cell,23,44,7 10,u,n,A,faint small 1 then 0; minutes underlined
+13-c21-26-r44-80,cell,24,44,12 05,u,y,agree,
+13-c21-26-r44-80,cell,25,44,,,y,agree,
+13-c21-26-r44-80,cell,26,44,,,y,agree,
+13-c21-26-r44-80,cell,21,77,10 39,u;i,y,A,italic; open tail of 9; minutes underlined
+13-c21-26-r44-80,cell,22,77,,,y,A,only the class line I.-III of a train starting below (column note)
+13-c21-26-r44-80,cell,23,77,11 ??,u,x,illegible,only the tops of the minute figures printed; context suggests 11 3?
+13-c21-26-r44-80,cell,24,77,,,y,agree,
+13-c21-26-r44-80,cell,25,77,,,y,agree,
+13-c21-26-r44-80,cell,26,77,,,y,agree,
+13-c21-26-r44-80,cell,21,78,10 40,u;i,y,A,italic 10 40; minutes underlined
+13-c21-26-r44-80,cell,22,78,11 46,u;i,y,A,italic; closed bowl of 6; minutes underlined
+13-c21-26-r44-80,cell,23,78,11 4?,u,x,illegible,last minute figure cut off at the column rule
+13-c21-26-r44-80,cell,24,78,,,y,agree,
+13-c21-26-r44-80,cell,25,78,,,y,agree,
+13-c21-26-r44-80,cell,26,78,,,y,agree,
+13-c21-26-r44-80,cell,21,79,|,,y,agree,
+13-c21-26-r44-80,cell,22,79,|,,y,agree,
+13-c21-26-r44-80,cell,23,79,11 52,u,n,A,flat top of 5 visible; minutes underlined
+13-c21-26-r44-80,cell,24,79,,,y,agree,
+13-c21-26-r44-80,cell,25,79,,,y,agree,
+13-c21-26-r44-80,cell,26,79,,,y,agree,
+13-c21-26-r44-80,cell,21,80,10 46,u;i,y,A,italic; closed bowl of 6; minutes underlined
+13-c21-26-r44-80,cell,22,80,11 52,u;i,y,A,italic 11 52; minutes underlined
+13-c21-26-r44-80,cell,23,80,11 57,u,n,A,flat top of 5; 7 partly cut at the rule; minutes underlined
+13-c21-26-r44-80,cell,24,80,,,y,agree,
+13-c21-26-r44-80,cell,25,80,5 20,u,y,agree,
+13-c21-26-r44-80,cell,26,80,6 30,,y,A,upright 6 30; closed bowl of 6

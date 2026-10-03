@@ -1,0 +1,48 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+12-c18-23-r48-88,header,18,0,832,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c18-23-r48-88,header,19,0,290,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c18-23-r48-88,header,20,0,D 52,,y,B,train number in the page's uniform heavy face; no distinct bold
+12-c18-23-r48-88,header,21,0,286,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c18-23-r48-88,header,22,0,D 54,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c18-23-r48-88,header,23,0,,,y,agree,
+12-c18-23-r48-88,header,18,1,I-IV.,,y,B,class line in the page's uniform face; no distinct bold
+12-c18-23-r48-88,header,19,1,II-IV,,y,B,class line in the page's uniform face; no distinct bold
+12-c18-23-r48-88,header,20,1,I.-III,,y,B,class line in the page's uniform face; no distinct bold
+12-c18-23-r48-88,header,21,1,I-IV,,y,B,class line in the page's uniform face; no distinct bold
+12-c18-23-r48-88,header,22,1,I.-III,,y,B,class line in the page's uniform face; no distinct bold
+12-c18-23-r48-88,header,23,1,,,y,agree,
+12-c18-23-r48-88,label,0,48,a. Berlin Anh. Bf. 315,,y,agree,
+12-c18-23-r48-88,label,0,85,189 in Dresden-Neustadt,,n,A,small figures read 189; last digit has a tail
+12-c18-23-r48-88,label,0,86,aus Dresden-Neustadt …,,n,B,leader dot written as one … per convention
+12-c18-23-r48-88,label,0,87,191 i. Dresden Wettinerstr.,,n,A,191 and i. as printed (i has a flag in this face)
+12-c18-23-r48-88,label,0,88,198 〃 Dresden Hbf.,,n,A,198 with printed ditto mark before Dresden
+12-c18-23-r48-88,cell,18,48,4 55,,y,agree,
+12-c18-23-r48-88,cell,19,48,—,,y,agree,
+12-c18-23-r48-88,cell,20,48,6 43,u;i,y,A,italic; open left of 3; minutes underlined
+12-c18-23-r48-88,cell,21,48,7 25,u,y,A,upright; minutes underlined; flat top of 5
+12-c18-23-r48-88,cell,22,48,11 13,u;i,y,A,italic; minutes underlined
+12-c18-23-r48-88,cell,23,48,,,y,agree,
+12-c18-23-r48-88,cell,18,85,,,y,agree,
+12-c18-23-r48-88,cell,19,85,—,,y,agree,
+12-c18-23-r48-88,cell,20,85,9 40,u;i,y,A,italic; minutes underlined
+12-c18-23-r48-88,cell,21,85,12 06,u,y,agree,
+12-c18-23-r48-88,cell,22,85,2 09,u;i,y,A,italic; open tail of 9; minutes underlined
+12-c18-23-r48-88,cell,23,85,,,y,agree,
+12-c18-23-r48-88,cell,18,86,,,y,agree,
+12-c18-23-r48-88,cell,19,86,—,,y,agree,
+12-c18-23-r48-88,cell,20,86,9 42,u;i,n,A,minute 2 partly blotted by the underline
+12-c18-23-r48-88,cell,21,86,12 08,u,y,agree,
+12-c18-23-r48-88,cell,22,86,2 10,u;i,y,A,italic; minutes underlined
+12-c18-23-r48-88,cell,23,86,,,y,agree,
+12-c18-23-r48-88,cell,18,87,,,y,agree,
+12-c18-23-r48-88,cell,19,87,—,,y,agree,
+12-c18-23-r48-88,cell,20,87,|,,y,agree,
+12-c18-23-r48-88,cell,21,87,12 11,u,y,agree,
+12-c18-23-r48-88,cell,22,87,|,,y,agree,
+12-c18-23-r48-88,cell,23,87,,,y,agree,
+12-c18-23-r48-88,cell,18,88,,,y,agree,
+12-c18-23-r48-88,cell,19,88,—,,y,agree,
+12-c18-23-r48-88,cell,20,88,9 48,u;i,y,A,italic; waist of 8 visible; minutes underlined
+12-c18-23-r48-88,cell,21,88,12 16,u,y,agree,
+12-c18-23-r48-88,cell,22,88,2 16,u;i,y,A,italic; closed lower bowl of 6; minutes underlined
+12-c18-23-r48-88,cell,23,88,,,y,agree,

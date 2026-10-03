@@ -1,0 +1,48 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+12-c6-11-r0-40,header,6,0,283,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c6-11-r0-40,header,7,0,D 55,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c6-11-r0-40,header,8,0,,,y,agree,
+12-c6-11-r0-40,header,9,0,D 53,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c6-11-r0-40,header,10,0,,,y,agree,
+12-c6-11-r0-40,header,11,0,285,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c6-11-r0-40,header,6,1,I-IV,,y,B,class line in the page's uniform face; no distinct bold
+12-c6-11-r0-40,header,7,1,I.-III,,y,B,class line in the page's uniform face; no distinct bold
+12-c6-11-r0-40,header,8,1,,,y,agree,
+12-c6-11-r0-40,header,9,1,I-III,,y,B,class line in the page's uniform face; no distinct bold
+12-c6-11-r0-40,header,10,1,,,y,agree,
+12-c6-11-r0-40,header,11,1,I-IV,,y,B,class line in the page's uniform face; no distinct bold
+12-c6-11-r0-40,label,0,0,a. Dresden Hbf.,,y,agree,
+12-c6-11-r0-40,label,0,1,? Dresd. Wettinerstr.,,x,illegible,a small figure is printed before the name but its shape cannot be told; A read 3
+12-c6-11-r0-40,label,0,2,4 i. Dresden-Neustadt,,n,A,small figure 4 printed before i. Dresden-Neustadt; B dropped it
+12-c6-11-r0-40,label,0,3,a. Dresden-Neustadt,,y,agree,
+12-c6-11-r0-40,label,0,40,198 i.Berlin Anh.Bf.312,,n,A,198: last digit reads with a closed upper bowl; small type
+12-c6-11-r0-40,cell,6,0,2 18,,y,agree,
+12-c6-11-r0-40,cell,7,0,4 20,i,y,A,italic 4 20 clear
+12-c6-11-r0-40,cell,8,0,,,y,agree,
+12-c6-11-r0-40,cell,9,0,7 1?,u;i,x,illegible,last minute figure blotted: 3 or 5 cannot be told; context suggests 7 15; figures slanted italic as D 53 and underlined
+12-c6-11-r0-40,cell,10,0,,,y,agree,
+12-c6-11-r0-40,cell,11,0,? 54,u,x,illegible,hour figure blotted in its lower half: 9 vs 8 not provable; context suggests 9 54
+12-c6-11-r0-40,cell,6,1,2 23,,y,agree,
+12-c6-11-r0-40,cell,7,1,|,,y,agree,
+12-c6-11-r0-40,cell,8,1,,,y,agree,
+12-c6-11-r0-40,cell,9,1,|,,y,A,vertical rule printed
+12-c6-11-r0-40,cell,10,1,,,y,agree,
+12-c6-11-r0-40,cell,11,1,9 59,u,y,agree,
+12-c6-11-r0-40,cell,6,2,2 26,,y,agree,
+12-c6-11-r0-40,cell,7,2,4 26,i,y,A,italic; closed lower bowl of 6
+12-c6-11-r0-40,cell,8,2,,,y,agree,
+12-c6-11-r0-40,cell,9,2,7 21,u,y,agree,
+12-c6-11-r0-40,cell,10,2,,,y,agree,
+12-c6-11-r0-40,cell,11,2,10 02,u,y,agree,
+12-c6-11-r0-40,cell,6,3,2 30,,y,agree,
+12-c6-11-r0-40,cell,7,3,4 27,i,y,A,italic 4 27 clear
+12-c6-11-r0-40,cell,8,3,,,y,agree,
+12-c6-11-r0-40,cell,9,3,7 23,u,y,agree,
+12-c6-11-r0-40,cell,10,3,,,y,agree,
+12-c6-11-r0-40,cell,11,3,10 04,u,y,agree,
+12-c6-11-r0-40,cell,6,40,7 52,u,y,A,flat top of 5; minutes underlined
+12-c6-11-r0-40,cell,7,40,6 51,u;i,y,A,italic; minutes underlined
+12-c6-11-r0-40,cell,8,40,10 21,u,n,A,upright; minutes underlined
+12-c6-11-r0-40,cell,9,40,10 27,u;i,y,A,italic; minutes underlined
+12-c6-11-r0-40,cell,10,40,,,y,agree,
+12-c6-11-r0-40,cell,11,40,2 09,u,y,agree,

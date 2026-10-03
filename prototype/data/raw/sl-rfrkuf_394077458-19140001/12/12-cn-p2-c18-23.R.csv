@@ -1,0 +1,11 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+12-cn-p2-c18-23,footnote,0,0,: ab 16./9. 1 49,c:18;fn::,n,A,two solid dots as the colon sign before c21 1 06; 1 49 readable
+12-cn-p2-c18-23,footnote,0,1,° Verkehrt erst vom 31. Mai ab.,c:23;fn:°,n,A,small ring sign before Verkehrt
+12-cn-p2-c18-23,footnote,0,2,Schlafwagen Berlin-Karlsbad,c:22,y,agree,
+12-cn-p2-c18-23,footnote,0,3,Speisewagen Berlin-Tetschen.,c:20,y,agree,
+12-cn-p2-c18-23,footnote,0,4,292 II-IV,c:23,y,agree,
+12-cn-p2-c18-23,footnote,0,5,□ In der Nacht nach Sonn- u. Festtagen: 12 02.,c:18;fn:□,n,A,hollow box sign as before c21 1 02; trailing stop printed
+12-cn-p2-c18-23,footnote,0,6,† Ab Jüterbog Zug 294.,c:18;fn:†,n,A,dagger sign before Ab; 294 readable
+12-cn-p2-c18-23,footnote,0,7,"* Eisenb.-Dir. Berlin, ▾ Gr. Lichterfelde bis Röderau Eisenb.-Dir. Halle, ab Röderau Sächs. Staatsb.",c:23;fn:*,n,A,filled down-pointing triangle set upright like the other signs (not a rotated letter v); final letter of Röderau read as u (as in the page title) but small
+12-cn-p2-c18-23,footnote,0,8,Schlafwagen Berlin-Karlsb.,c:22,y,agree,
+12-cn-p2-c18-23,footnote,0,9,! Über Tetschen-Schreckenstein,c:18;fn:!,n,A,! sign before Über; note runs to the crop foot

@@ -1,0 +1,10 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+13-cn-p1-c0-6,footnote,0,0,■ ab Elsterw. E.-D Halle. ab Zossen E.-D Berlin.,c:0;fn:■,n,A,small filled square sign; E.-D without stop as printed
+13-cn-p1-c0-6,footnote,0,1,● Vorortszüge Wünsdorf-Berlin siehe Nr. 15.,c:0;fn:●,n,A,large disc sign; Nr. 15. clear
+13-cn-p1-c0-6,footnote,0,2,üb. Dresd. F. Cossebaude,c:3,n,A,a point (no hyphen visible) between Dresd. and F; right line read first
+13-cn-p1-c0-6,footnote,0,3,Schlafwagen Wien - Berlin.,c:1,n,A,dash printed with a space each side: Wien - Berlin.
+13-cn-p1-c0-6,footnote,0,4,323 I.-IV,c:5,y,agree,
+13-cn-p1-c0-6,footnote,0,5,317 II-IV,c:0,n,A,317 over class line II-IV low in c0
+13-cn-p1-c0-6,footnote,0,6,● Nur am 29. u. 30. Mai u. vom 15. Juni bis 15. Septbr.,c:3;fn:●,y,A,large disc sign before Nur
+13-cn-p1-c0-6,footnote,0,7,■ Nur am 30. Mai u. 1. Juni u. v. 15. Juni bis 15. Sept.,c:3;fn:■,y,A,small filled square sign before Nur
+13-cn-p1-c0-6,footnote,0,8,Speisewagen Prag-Berlin.,c:4,y,agree,

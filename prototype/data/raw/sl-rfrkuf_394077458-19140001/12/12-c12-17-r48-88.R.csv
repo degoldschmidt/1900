@@ -1,0 +1,48 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+12-c12-17-r48-88,header,12,0,,,y,agree,
+12-c12-17-r48-88,header,13,0,804,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c12-17-r48-88,header,14,0,D 68,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c12-17-r48-88,header,15,0,282,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c12-17-r48-88,header,16,0,284,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c12-17-r48-88,header,17,0,D 56,,n,B,train number in the page's uniform heavy face; no distinct bold
+12-c12-17-r48-88,header,12,1,,,y,agree,
+12-c12-17-r48-88,header,13,1,II-IV,,y,B,class line in the page's uniform face; no distinct bold
+12-c12-17-r48-88,header,14,1,I-III.,,y,B,class line in the page's uniform face; no distinct bold
+12-c12-17-r48-88,header,15,1,I-IV.,,y,B,class line in the page's uniform face; no distinct bold
+12-c12-17-r48-88,header,16,1,I-IV.,,y,B,class line in the page's uniform face; no distinct bold
+12-c12-17-r48-88,header,17,1,I.-III.,,y,B,class line in the page's uniform face; no distinct bold
+12-c12-17-r48-88,label,0,48,a. Berlin Anh. Bf. 315,,y,agree,
+12-c12-17-r48-88,label,0,85,189 in Dresden-Neustadt,,n,A,small figures read 189; last digit has a tail
+12-c12-17-r48-88,label,0,86,aus Dresden-Neustadt …,,n,B,leader dot written as one … per convention
+12-c12-17-r48-88,label,0,87,191 i. Dresden Wettinerstr.,,n,A,191 and i. as printed (i has a flag in this face)
+12-c12-17-r48-88,label,0,88,198 〃 Dresden Hbf.,,n,A,198 with printed ditto mark before Dresden
+12-c12-17-r48-88,cell,12,48,,,y,A,nothing printed in the cell
+12-c12-17-r48-88,cell,13,48,5 35,u,y,agree,
+12-c12-17-r48-88,cell,14,48,6 53,i,y,A,open left side of 3 visible; italic
+12-c12-17-r48-88,cell,15,48,6 15,,y,agree,
+12-c12-17-r48-88,cell,16,48,12 10,,y,agree,
+12-c12-17-r48-88,cell,17,48,4 28,i,y,A,italic 4 28 clear
+12-c12-17-r48-88,cell,12,85,7 58,,y,agree,
+12-c12-17-r48-88,cell,13,85,10 48,,y,agree,
+12-c12-17-r48-88,cell,14,85,9 40,i,y,A,italic 9 40 clear
+12-c12-17-r48-88,cell,15,85,12 15,,y,agree,
+12-c12-17-r48-88,cell,16,85,4 38,,y,agree,
+12-c12-17-r48-88,cell,17,85,6 49,u;i,y,A,italic with minutes underlined
+12-c12-17-r48-88,cell,12,86,8 01,,y,agree,
+12-c12-17-r48-88,cell,13,86,10 50,,y,agree,
+12-c12-17-r48-88,cell,14,86,9 41,i,y,A,italic 9 41 clear
+12-c12-17-r48-88,cell,15,86,12 18,,n,A,first minute figure a broken 1
+12-c12-17-r48-88,cell,16,86,4 41,,y,agree,
+12-c12-17-r48-88,cell,17,86,6 50,u;i,y,A,italic with minutes underlined
+12-c12-17-r48-88,cell,12,87,8 04,,y,agree,
+12-c12-17-r48-88,cell,13,87,10 53,,y,agree,
+12-c12-17-r48-88,cell,14,87,|,,y,agree,
+12-c12-17-r48-88,cell,15,87,12 21,,y,agree,
+12-c12-17-r48-88,cell,16,87,4 44,,y,agree,
+12-c12-17-r48-88,cell,17,87,|,,y,agree,
+12-c12-17-r48-88,cell,12,88,8 09,,y,agree,
+12-c12-17-r48-88,cell,13,88,10 58,,y,agree,
+12-c12-17-r48-88,cell,14,88,9 47,i,y,A,italic 9 47 clear
+12-c12-17-r48-88,cell,15,88,12 26,,y,agree,
+12-c12-17-r48-88,cell,16,88,4 49,,y,agree,
+12-c12-17-r48-88,cell,17,88,6 56,u;i,y,A,italic; closed lower bowl of last 6; minutes underlined

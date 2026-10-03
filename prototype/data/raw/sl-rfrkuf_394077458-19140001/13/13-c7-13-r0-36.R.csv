@@ -1,0 +1,55 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+13-c7-13-r0-36,header,7,0,313,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c7-13-r0-36,header,8,0,325,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c7-13-r0-36,header,9,0,D 65,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c7-13-r0-36,header,10,0,315,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c7-13-r0-36,header,11,0,D195,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c7-13-r0-36,header,12,0,361,,y,B,train number in the page's uniform heavy face; no distinct bold
+13-c7-13-r0-36,header,13,0,,,y,agree,
+13-c7-13-r0-36,header,7,1,I.-IV,,y,B,class line in the page's uniform face; no distinct bold
+13-c7-13-r0-36,header,8,1,II-IV,,y,B,class line in the page's uniform face; no distinct bold
+13-c7-13-r0-36,header,9,1,I-III,,y,B,class line in the page's uniform face; no distinct bold
+13-c7-13-r0-36,header,10,1,I-IV,,n,B,class line in the page's uniform face; no distinct bold
+13-c7-13-r0-36,header,11,1,I.-III,,y,B,class line in the page's uniform face; no distinct bold
+13-c7-13-r0-36,header,12,1,II-IV,,y,B,class line in the page's uniform face; no distinct bold
+13-c7-13-r0-36,header,13,1,,,y,agree,
+13-c7-13-r0-36,label,0,0,a. Dresden Hbf.,,y,agree,
+13-c7-13-r0-36,label,0,1,? Dresd. Wettinerstr. …,,x,illegible,leading figure looks closed on the left: 3 or 8 cannot be told; context (both keyers) suggests 3; leader dot as …
+13-c7-13-r0-36,label,0,2,4 i.Dresden-Neustadt,,n,other,no space printed between i. and Dresden
+13-c7-13-r0-36,label,0,3,a. Dresden-Neustadt …,,n,B,leader dot written as one … per convention
+13-c7-13-r0-36,label,0,36,180 i.BerlinAnh-Bf.312,fn:●,n,other,printed without spaces and no stop after Anh; raised 312 table number; large disc after the name is a sign in marks
+13-c7-13-r0-36,cell,7,0,2 42,,y,agree,
+13-c7-13-r0-36,cell,8,0,5 04,,y,agree,
+13-c7-13-r0-36,cell,9,0,5 14,i,y,A,italic 5 14 clear
+13-c7-13-r0-36,cell,10,0,7 26,u,y,agree,
+13-c7-13-r0-36,cell,11,0,10 23,u;i,y,A,italic; open left of 3; minutes underlined
+13-c7-13-r0-36,cell,12,0,11 45,u,y,agree,
+13-c7-13-r0-36,cell,13,0,,,y,agree,
+13-c7-13-r0-36,cell,7,1,2 47,,y,agree,
+13-c7-13-r0-36,cell,8,1,,,y,agree,
+13-c7-13-r0-36,cell,9,1,|,,y,agree,
+13-c7-13-r0-36,cell,10,1,7 3?,u,x,illegible,second minute figure missing from the print; only 7 3 and underline visible
+13-c7-13-r0-36,cell,11,1,|,,y,agree,
+13-c7-13-r0-36,cell,12,1,,,y,agree,
+13-c7-13-r0-36,cell,13,1,,,y,agree,
+13-c7-13-r0-36,cell,7,2,2 50,,y,agree,
+13-c7-13-r0-36,cell,8,2,,,y,agree,
+13-c7-13-r0-36,cell,9,2,5 19,i,y,A,italic 5 19; open tail of 9
+13-c7-13-r0-36,cell,10,2,7 34,u,y,agree,
+13-c7-13-r0-36,cell,11,2,10 29,u;i,y,A,italic; open tail of 9; minutes underlined
+13-c7-13-r0-36,cell,12,2,,,y,agree,
+13-c7-13-r0-36,cell,13,2,,,y,agree,
+13-c7-13-r0-36,cell,7,3,2 56,,y,agree,
+13-c7-13-r0-36,cell,8,3,,,y,agree,
+13-c7-13-r0-36,cell,9,3,5 20,i,y,A,italic 5 20 clear
+13-c7-13-r0-36,cell,10,3,7 39,u,y,agree,
+13-c7-13-r0-36,cell,11,3,10 11,u;i,n,A,both minute figures are italic 1 strokes in the zoom; minutes underlined
+13-c7-13-r0-36,cell,12,3,,,y,agree,
+13-c7-13-r0-36,cell,13,3,,,y,agree,
+13-c7-13-r0-36,cell,7,36,7 2?,u,x,illegible,last minute figure faint and broken; context suggests 7 22
+13-c7-13-r0-36,cell,8,36,,,y,agree,
+13-c7-13-r0-36,cell,9,36,7 5?,u;i,x,illegible,last minute figure faint (a hook only); 3 not provable; context suggests 7 53
+13-c7-13-r0-36,cell,10,36,12 02,u,y,agree,
+13-c7-13-r0-36,cell,11,36,12 50,u;i,y,A,italic 12 50; minutes underlined
+13-c7-13-r0-36,cell,12,36,,,y,agree,
+13-c7-13-r0-36,cell,13,36,,,n,A,only a sideways note's figures touch the cell edge

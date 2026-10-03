@@ -1,0 +1,55 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+13-c14-20-r44-80,header,14,0,,,y,agree,
+13-c14-20-r44-80,header,15,0,312,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c14-20-r44-80,header,16,0,D 62,,y,B,train number in the page's uniform heavy face; no distinct bold
+13-c14-20-r44-80,header,17,0,D 66,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c14-20-r44-80,header,18,0,326,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c14-20-r44-80,header,19,0,E 64,,y,B,train number in the page's uniform heavy face; no distinct bold
+13-c14-20-r44-80,header,20,0,314,,y,B,train number in the page's uniform heavy face; no distinct bold
+13-c14-20-r44-80,header,14,1,,,y,agree,
+13-c14-20-r44-80,header,15,1,I-IV,,n,B,class line faint; no distinct bold
+13-c14-20-r44-80,header,16,1,I-III,,y,B,class line in the page's uniform face; no distinct bold
+13-c14-20-r44-80,header,17,1,I-III,,y,B,class line in the page's uniform face; no distinct bold
+13-c14-20-r44-80,header,18,1,I.-IV,,y,B,class line in the page's uniform face; no distinct bold
+13-c14-20-r44-80,header,19,1,I-III,,y,B,class line in the page's uniform face; no distinct bold
+13-c14-20-r44-80,header,20,1,I-IV,,y,B,class line in the page's uniform face; no distinct bold
+13-c14-20-r44-80,label,0,44,a. Berlin Anh. Bf. 315,fn:●,n,B,disc sign after the name goes to marks; 315 table number kept in text
+13-c14-20-r44-80,label,0,77,176 i. Dresden-Neustadt …,,n,B,leader dot written as one … per convention
+13-c14-20-r44-80,label,0,78,a. Dresden-Neustadt …,,n,B,leader dots written as one … per convention
+13-c14-20-r44-80,label,0,79,178 i. Dr. Wettinerstr,,y,A,waist of 8 in 178 visible; no stop after Wettinerstr
+13-c14-20-r44-80,label,0,80,1?0 i Dresden Hbf,,x,illegible,middle figure of the table number squashed; 8 vs 0 waist not visible; context suggests 180
+13-c14-20-r44-80,cell,14,44,,,y,A,only sideways note text in the cell
+13-c14-20-r44-80,cell,15,44,6 00,,y,agree,
+13-c14-20-r44-80,cell,16,44,8 03,i,y,A,italic; open left of 3
+13-c14-20-r44-80,cell,17,44,9 20,i,y,A,italic 9 20 clear
+13-c14-20-r44-80,cell,18,44,10 15,,y,A,upright 10 15; flat top of 5
+13-c14-20-r44-80,cell,19,44,1 20,i,y,A,italic 1 20 clear
+13-c14-20-r44-80,cell,20,44,2 25,,y,agree,
+13-c14-20-r44-80,cell,14,77,8 28,,y,agree,
+13-c14-20-r44-80,cell,15,77,10 25,,y,agree,
+13-c14-20-r44-80,cell,16,77,10 58,i,y,A,italic; flat top of 5 and waist of 8
+13-c14-20-r44-80,cell,17,77,11 57,i,y,A,italic 11 57 clear
+13-c14-20-r44-80,cell,18,77,,,y,agree,
+13-c14-20-r44-80,cell,19,77,4 07,i,y,A,italic 4 07 clear
+13-c14-20-r44-80,cell,20,77,6 59,u,y,agree,
+13-c14-20-r44-80,cell,14,78,8 30,,y,agree,
+13-c14-20-r44-80,cell,15,78,10 32,,y,agree,
+13-c14-20-r44-80,cell,16,78,11 00,i,y,A,italic 11 00 clear
+13-c14-20-r44-80,cell,17,78,11 58,i,y,A,italic; waist of 8 visible
+13-c14-20-r44-80,cell,18,78,,,y,agree,
+13-c14-20-r44-80,cell,19,78,4 09,i,y,A,italic; open tail of 9
+13-c14-20-r44-80,cell,20,78,7 01,u,y,agree,
+13-c14-20-r44-80,cell,14,79,8 33,,y,agree,
+13-c14-20-r44-80,cell,15,79,10 35,,y,agree,
+13-c14-20-r44-80,cell,16,79,|,,y,agree,
+13-c14-20-r44-80,cell,17,79,|,,y,agree,
+13-c14-20-r44-80,cell,18,79,,,y,agree,
+13-c14-20-r44-80,cell,19,79,|,,y,agree,
+13-c14-20-r44-80,cell,20,79,7 04,u,y,agree,
+13-c14-20-r44-80,cell,14,80,8 38,,y,agree,
+13-c14-20-r44-80,cell,15,80,10 40,,y,agree,
+13-c14-20-r44-80,cell,16,80,11 06,i,y,A,italic; closed lower bowl of 6
+13-c14-20-r44-80,cell,17,80,12 04,i,y,A,italic 12 04 clear
+13-c14-20-r44-80,cell,18,80,2 54,,y,agree,
+13-c14-20-r44-80,cell,19,80,4 15,i,n,A,italic; last figure heavy but square top-left of 5 visible
+13-c14-20-r44-80,cell,20,80,7 09,u,y,agree,

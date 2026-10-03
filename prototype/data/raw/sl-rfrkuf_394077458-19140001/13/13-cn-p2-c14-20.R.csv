@@ -1,0 +1,8 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+13-cn-p2-c14-20,footnote,0,0,! Vom 1. Juli bis 31. August.,c:14;fn:!,n,A,! sign before Vom at head of c14
+13-cn-p2-c14-20,footnote,0,1,"* ab Zossen bis Elsterwerda Berl.-Dresdn. Bf. E.-Dir. Halle, ab Elsterwerda Berl.-Dresdn. Bf. Sächs. Staatsb.",c:14;fn:*,n,A,star sign; note continues into the lower half (E.-Dir. ... Staatsb.); stop after Sächs faint
+13-cn-p2-c14-20,footnote,0,2,Speisewagen Berlin-Wien.,c:16,n,A,short hyphen between Berlin and Wien
+13-cn-p2-c14-20,footnote,0,3,Speisewagen Berlin - Karlsbad.,c:17,y,A,dash with a space each side: Berlin - Karlsbad.
+13-cn-p2-c14-20,footnote,0,4,328 II.-IV,c:14,y,agree,
+13-cn-p2-c14-20,footnote,0,5,üb. Cosseb.- Dresd. Frdr.,c:18,n,A,space printed after the hyphen of Cosseb.-
+13-cn-p2-c14-20,footnote,0,6,† ab Wittenberg,c:15;fn:†,n,A,dagger sign before ab Wittenberg

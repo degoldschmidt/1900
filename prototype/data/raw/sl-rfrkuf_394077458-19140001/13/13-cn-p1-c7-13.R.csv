@@ -1,0 +1,14 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+13-cn-p1-c7-13,footnote,0,0,• Über Schreckenstein- Tetschen.,c:13;fn:•,n,A,small solid dot sign before Über; line-break hyphen kept
+13-cn-p1-c7-13,footnote,0,1,üb. Dresd. F. Cossebaude,c:8,n,A,points after Dresd and F; no hyphen printed
+13-cn-p1-c7-13,footnote,0,2,üb. Dresd. F. Cossebaude,c:12,n,A,points after Dresd and F; no hyphen printed
+13-cn-p1-c7-13,footnote,0,3,361 II-IV,c:13,y,agree,
+13-cn-p1-c7-13,footnote,0,4,Nur i. d. Nacht nach Sonn- u. Festtagen,c:13,n,A,boxed note in c13 read whole
+13-cn-p1-c7-13,footnote,0,5,Speisewagen Karlsbad-Berlin.,c:9,n,A,Speisewagen and Karlsbad-Berlin. one note in c9
+13-cn-p1-c7-13,footnote,0,6,□ Zug 314 nimmt an Werkt. in Dresden-N. Reisende nach ?ade- beul nicht auf. Solchen steht Zug 1668 (s. Nr. 5) zur Verfüg.,c:12;fn:□,x,illegible,first letter of the place name blurred: B or R cannot be told (leg of R not visible)
+13-cn-p1-c7-13,footnote,0,7,: Mit Umsteigen in Neustrelitz.,c:8;fn::,n,A,two solid dots as the colon sign
+13-cn-p1-c7-13,footnote,0,8,! Berl. Anh. Bf.- Berl. Stett. Bf. m. Automobil.,c:13;fn:!,n,A,a space printed after the hyphen of Bf.-
+13-cn-p1-c7-13,footnote,0,9,"□ Vom 15. Juni bis 15. Septbr. in Bergen 1 40, in Sassnitz 2 23",c:13;fn:□,n,A,hollow box sign before Vom; times readable
+13-cn-p1-c7-13,footnote,0,10,? ab 16. Septbr.: 4 27,c:12;fn:?,x,illegible,sign printed as a doubled small figure; not identifiable as □
+13-cn-p1-c7-13,footnote,0,11,? Nur v. 4./7. bis 31./8.,c:12;fn:?,x,illegible,sign printed as a doubled small ring; not identifiable; first date figure reads 4 with crossbar
+13-cn-p1-c7-13,footnote,0,12,° Verk. v. 29. Mai ab.,c:13;fn:°,n,A,small ring sign the size of the other ° notes; much smaller than a ○

@@ -1,0 +1,55 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+13-c0-6-r0-36,header,0,0,,,y,agree,
+13-c0-6-r0-36,header,1,0,D 67,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c0-6-r0-36,header,2,0,311,fn:□,n,B,no distinct bold; small box sign before 311
+13-c0-6-r0-36,header,3,0,323,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c0-6-r0-36,header,4,0,D 61,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c0-6-r0-36,header,5,0,329,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c0-6-r0-36,header,6,0,E 63,,n,B,train number in the page's uniform heavy face; no distinct bold
+13-c0-6-r0-36,header,0,1,,,y,agree,
+13-c0-6-r0-36,header,1,1,I.-III,,y,B,class line in the page's uniform face; no distinct bold
+13-c0-6-r0-36,header,2,1,I-IV,,y,B,class line in the page's uniform face; no distinct bold
+13-c0-6-r0-36,header,3,1,I-IV,,y,B,class line in the page's uniform face; no distinct bold
+13-c0-6-r0-36,header,4,1,I-III.,,n,B,class line in the page's uniform face; no distinct bold
+13-c0-6-r0-36,header,5,1,II-IV,,y,B,class line in the page's uniform face; no distinct bold
+13-c0-6-r0-36,header,6,1,I.-III,,y,B,class line in the page's uniform face; no distinct bold
+13-c0-6-r0-36,label,0,0,a. Dresden Hbf.,,y,agree,
+13-c0-6-r0-36,label,0,1,? Dresd. Wettinerstr. …,,x,illegible,leading figure looks closed on the left: 3 or 8 cannot be told; context (both keyers) suggests 3; leader dot as …
+13-c0-6-r0-36,label,0,2,4 i.Dresden-Neustadt,,n,other,no space printed between i. and Dresden
+13-c0-6-r0-36,label,0,3,a. Dresden-Neustadt …,,n,B,leader dot written as one … per convention
+13-c0-6-r0-36,label,0,36,180 i.BerlinAnh-Bf.312,fn:●,n,other,printed without spaces and no stop after Anh; raised 312 table number; large disc after the name is a sign in marks
+13-c0-6-r0-36,cell,0,0,,,y,agree,
+13-c0-6-r0-36,cell,1,0,5 36,u;i,y,A,italic; open left of 3 and closed bowl of 6; minutes underlined
+13-c0-6-r0-36,cell,2,0,6 20,,y,agree,
+13-c0-6-r0-36,cell,3,0,8 05,,y,agree,
+13-c0-6-r0-36,cell,4,0,10 00,i,y,A,italic 10 00 clear
+13-c0-6-r0-36,cell,5,0,12 05,,y,agree,
+13-c0-6-r0-36,cell,6,0,2 12,i,y,A,italic 2 12 clear
+13-c0-6-r0-36,cell,0,1,,,y,agree,
+13-c0-6-r0-36,cell,1,1,|,,y,agree,
+13-c0-6-r0-36,cell,2,1,6 25,,y,agree,
+13-c0-6-r0-36,cell,3,1,,,y,agree,
+13-c0-6-r0-36,cell,4,1,|,,y,agree,
+13-c0-6-r0-36,cell,5,1,12 10,,y,agree,
+13-c0-6-r0-36,cell,6,1,|,,y,agree,
+13-c0-6-r0-36,cell,0,2,,,y,agree,
+13-c0-6-r0-36,cell,1,2,5 42,u;i,y,A,italic; minutes underlined
+13-c0-6-r0-36,cell,2,2,6 28,,y,agree,
+13-c0-6-r0-36,cell,3,2,,,y,agree,
+13-c0-6-r0-36,cell,4,2,10 06,i,y,A,italic; closed lower bowl of 6
+13-c0-6-r0-36,cell,5,2,12 13,,y,agree,
+13-c0-6-r0-36,cell,6,2,2 18,i,y,A,italic; waist of 8 visible
+13-c0-6-r0-36,cell,0,3,,,y,agree,
+13-c0-6-r0-36,cell,1,3,5 43,u;i,y,A,italic; minutes underlined; dot between 4 and 3 is a speck
+13-c0-6-r0-36,cell,2,3,6 33,fn:□,n,A,small hollow square sign before 6 33
+13-c0-6-r0-36,cell,3,3,,,y,agree,
+13-c0-6-r0-36,cell,4,3,10 08,i,n,A,italic; small minute 8 shows a waist
+13-c0-6-r0-36,cell,5,3,12 15,,y,agree,
+13-c0-6-r0-36,cell,6,3,2 20,i,y,A,italic 2 20 clear
+13-c0-6-r0-36,cell,0,36,7 42,,y,agree,
+13-c0-6-r0-36,cell,1,36,8 06,i,y,A,italic 8 06; closed bowl of 6
+13-c0-6-r0-36,cell,2,36,10 48,,y,agree,
+13-c0-6-r0-36,cell,3,36,,,n,A,only the end of the sideways note above reaches the cell
+13-c0-6-r0-36,cell,4,36,12 48,i,y,A,italic 12 48; waist of 8
+13-c0-6-r0-36,cell,5,36,2 02,,y,agree,
+13-c0-6-r0-36,cell,6,36,5 03,i,y,A,italic 5 03; open left of 3
