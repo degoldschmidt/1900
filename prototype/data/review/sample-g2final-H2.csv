@@ -1,175 +1,175 @@
 sample_id,source_id,table_ref,page_seq,crop_id,kind,col,row,page_region,rate_permille,reread_text,reread_marks,reread_sure,note
-Sg2final-0001,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,0,0,"389,193,51,28",553,,,,
-Sg2final-0002,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,5,0,"651,193,61,28",553,,,,
-Sg2final-0003,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,7,0,"774,193,53,28",553,,,,
-Sg2final-0004,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,8,0,"827,193,60,28",553,,,,
-Sg2final-0005,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,0,"887,193,64,28",553,,,,
-Sg2final-0006,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,11,0,"1007,193,45,28",553,,,,
-Sg2final-0007,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,12,0,"1052,193,50,28",553,,,,
-Sg2final-0008,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,13,0,"1102,193,56,28",553,,,,
-Sg2final-0009,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,0,"1158,193,67,28",553,,,,
-Sg2final-0010,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,0,47,"389,1482,51,32",553,,,,
-Sg2final-0011,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,1,47,"440,1482,52,32",553,,,,
-Sg2final-0012,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,3,47,"545,1482,46,32",553,,,,
-Sg2final-0013,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,5,47,"651,1482,61,32",553,,,,
-Sg2final-0014,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,47,"887,1482,64,32",553,,,,
-Sg2final-0015,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,10,47,"951,1482,56,32",553,,,,
-Sg2final-0016,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,12,47,"1052,1482,50,32",553,,,,
-Sg2final-0017,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,4,53,"591,1650,60,27",553,,,,
-Sg2final-0018,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,53,"887,1650,64,27",553,,,,
-Sg2final-0019,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,11,53,"1007,1650,45,27",553,,,,
-Sg2final-0020,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,13,53,"1102,1650,56,27",553,,,,
-Sg2final-0021,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,53,"1158,1650,67,27",553,,,,
-Sg2final-0022,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,0,54,"389,1677,51,27",553,,,,
-Sg2final-0023,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,2,54,"492,1677,53,27",553,,,,
-Sg2final-0024,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,4,54,"591,1677,60,27",553,,,,
-Sg2final-0025,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,7,54,"774,1677,53,27",553,,,,
-Sg2final-0026,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,8,54,"827,1677,60,27",553,,,,
-Sg2final-0027,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,54,"887,1677,64,27",553,,,,
-Sg2final-0028,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,10,54,"951,1677,56,27",553,,,,
-Sg2final-0029,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,13,54,"1102,1677,56,27",553,,,,
-Sg2final-0030,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,54,"1158,1677,67,27",553,,,,
-Sg2final-0031,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,16,55,"349,143,54,27",553,,,,
-Sg2final-0032,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,17,55,"403,143,55,27",553,,,,
-Sg2final-0033,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,20,55,"565,143,63,27",553,,,,
-Sg2final-0034,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,21,55,"628,143,57,27",553,,,,
-Sg2final-0035,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,55,"685,143,62,27",553,,,,
-Sg2final-0036,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,23,55,"747,143,53,27",553,,,,
-Sg2final-0037,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,24,55,"800,143,54,27",553,,,,
-Sg2final-0038,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,25,55,"854,143,54,27",553,,,,
-Sg2final-0039,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,26,55,"908,143,54,27",553,,,,
-Sg2final-0040,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,29,55,"1083,143,61,27",553,,,,
-Sg2final-0041,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,16,56,"349,170,54,28",553,,,,
-Sg2final-0042,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,18,56,"458,170,54,28",553,,,,
-Sg2final-0043,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,56,"685,170,62,28",553,,,,
-Sg2final-0044,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,23,56,"747,170,53,28",553,,,,
-Sg2final-0045,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,24,56,"800,170,54,28",553,,,,
-Sg2final-0046,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,27,56,"962,170,63,28",553,,,,
-Sg2final-0047,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,17,58,"403,337,55,41",553,,,,
-Sg2final-0048,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,18,58,"458,337,54,41",553,,,,
-Sg2final-0049,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,19,58,"512,337,53,41",553,,,,
-Sg2final-0050,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,58,"685,337,62,41",553,,,,
-Sg2final-0051,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,26,58,"908,337,54,41",553,,,,
-Sg2final-0052,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,27,58,"962,337,63,41",553,,,,
-Sg2final-0053,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,29,58,"1083,337,61,41",553,,,,
-Sg2final-0054,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,15,60,"295,1625,54,32",553,,,,
-Sg2final-0055,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,19,60,"512,1625,53,32",553,,,,
-Sg2final-0056,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,60,"685,1625,62,32",553,,,,
-Sg2final-0057,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,23,60,"747,1625,53,32",553,,,,
-Sg2final-0058,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,16,61,"349,1657,54,35",553,,,,
-Sg2final-0059,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,17,61,"403,1657,55,35",553,,,,
-Sg2final-0060,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,21,61,"628,1657,57,35",553,,,,
-Sg2final-0061,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,61,"685,1657,62,35",553,,,,
-Sg2final-0062,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,26,61,"908,1657,54,35",553,,,,
-Sg2final-0063,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,27,61,"962,1657,63,35",553,,,,
-Sg2final-0114,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,0,0,"298,94,61,34",548,,,,
-Sg2final-0115,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,2,0,"413,94,53,34",548,,,,
-Sg2final-0116,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,4,0,"528,94,52,34",548,,,,
-Sg2final-0117,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,6,0,"634,94,49,34",548,,,,
-Sg2final-0118,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,12,0,"1209,94,51,34",548,,,,
-Sg2final-0119,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,13,0,"1260,94,61,34",548,,,,
-Sg2final-0120,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,14,0,"1321,94,59,34",548,,,,
-Sg2final-0121,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,17,0,"1494,94,57,34",548,,,,
-Sg2final-0122,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,18,0,"1551,94,49,34",548,,,,
-Sg2final-0123,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,19,0,"1600,94,56,34",548,,,,
-Sg2final-0124,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,2,1,"413,128,53,28",548,,,,
-Sg2final-0125,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,3,1,"466,128,62,28",548,,,,
-Sg2final-0126,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,4,1,"528,128,52,28",548,,,,
-Sg2final-0127,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,5,1,"580,128,54,28",548,,,,
-Sg2final-0128,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,6,1,"634,128,49,28",548,,,,
-Sg2final-0129,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,7,1,"683,128,64,28",548,,,,
-Sg2final-0130,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,12,1,"1209,128,51,28",548,,,,
-Sg2final-0131,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,14,1,"1321,128,59,28",548,,,,
-Sg2final-0132,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,18,1,"1551,128,49,28",548,,,,
-Sg2final-0133,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,19,1,"1600,128,56,28",548,,,,
-Sg2final-0134,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,3,3,"466,188,62,30",548,,,,
-Sg2final-0135,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,5,3,"580,188,54,30",548,,,,
-Sg2final-0136,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,6,3,"634,188,49,30",548,,,,
-Sg2final-0137,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,9,3,"796,188,54,30",548,,,,
-Sg2final-0138,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,15,3,"1380,188,59,30",548,,,,
-Sg2final-0139,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,16,3,"1439,188,55,30",548,,,,
-Sg2final-0140,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,17,3,"1494,188,57,30",548,,,,
-Sg2final-0141,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,19,3,"1600,188,56,30",548,,,,
-Sg2final-0142,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,1,5,"359,638,54,32",548,,,,
-Sg2final-0143,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,2,5,"413,638,53,32",548,,,,
-Sg2final-0144,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,3,5,"466,638,62,32",548,,,,
-Sg2final-0145,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,5,5,"580,638,54,32",548,,,,
-Sg2final-0146,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,6,5,"634,638,49,32",548,,,,
-Sg2final-0147,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,8,5,"747,638,49,32",548,,,,
-Sg2final-0148,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,9,5,"796,638,54,32",548,,,,
-Sg2final-0149,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,10,5,"1092,638,64,32",548,,,,
-Sg2final-0150,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,11,5,"1156,638,53,32",548,,,,
-Sg2final-0151,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,14,5,"1321,638,59,32",548,,,,
-Sg2final-0152,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,18,5,"1551,638,49,32",548,,,,
-Sg2final-0153,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,19,5,"1600,638,56,32",548,,,,
-Sg2final-0154,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,3,1,"485,159,50,31",555,,,,
-Sg2final-0155,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,8,1,"761,159,59,31",555,,,,
-Sg2final-0156,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,9,1,"820,159,59,31",555,,,,
-Sg2final-0157,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,11,1,"941,159,63,31",555,,,,
-Sg2final-0158,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,12,1,"1004,159,58,31",555,,,,
-Sg2final-0159,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,15,1,"1176,159,59,31",555,,,,
-Sg2final-0160,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,3,2,"485,190,50,34",555,,,,
-Sg2final-0161,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,7,2,"702,190,59,34",555,,,,
-Sg2final-0162,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,8,2,"761,190,59,34",555,,,,
-Sg2final-0163,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,11,2,"941,190,63,34",555,,,,
-Sg2final-0164,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,12,2,"1004,190,58,34",555,,,,
-Sg2final-0165,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,13,2,"1062,190,55,34",555,,,,
-Sg2final-0166,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,14,2,"1117,190,59,34",555,,,,
-Sg2final-0167,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,15,2,"1176,190,59,34",555,,,,
-Sg2final-0168,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,3,29,"485,935,50,36",555,,,,
-Sg2final-0169,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,7,29,"702,935,59,36",555,,,,
-Sg2final-0170,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,8,29,"761,935,59,36",555,,,,
-Sg2final-0171,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,10,29,"879,935,62,36",555,,,,
-Sg2final-0172,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,11,29,"941,935,63,36",555,,,,
-Sg2final-0173,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,12,29,"1004,935,58,36",555,,,,
-Sg2final-0174,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,15,29,"1176,935,59,36",555,,,,
-Sg2final-0175,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,0,31,"330,990,55,34",555,,,,
-Sg2final-0176,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,1,31,"385,990,50,34",555,,,,
-Sg2final-0177,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,3,31,"485,990,50,34",555,,,,
-Sg2final-0178,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,4,31,"535,990,59,34",555,,,,
-Sg2final-0179,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,5,31,"594,990,59,34",555,,,,
-Sg2final-0180,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,8,31,"761,990,59,34",555,,,,
-Sg2final-0181,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,10,31,"879,990,62,34",555,,,,
-Sg2final-0182,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,11,31,"941,990,63,34",555,,,,
-Sg2final-0183,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,3,43,"485,1334,50,31",555,,,,
-Sg2final-0184,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,4,43,"535,1334,59,31",555,,,,
-Sg2final-0185,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,6,43,"653,1334,49,31",555,,,,
-Sg2final-0186,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,8,43,"761,1334,59,31",555,,,,
-Sg2final-0187,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,10,43,"879,1334,62,31",555,,,,
-Sg2final-0188,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,12,43,"1004,1334,58,31",555,,,,
-Sg2final-0189,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,14,43,"1117,1334,59,31",555,,,,
-Sg2final-0190,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,15,43,"1176,1334,59,31",555,,,,
-Sg2final-0191,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,50,"338,177,63,27",555,,,,
-Sg2final-0192,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,25,50,"582,177,54,27",555,,,,
-Sg2final-0193,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,26,50,"636,177,54,27",555,,,,
-Sg2final-0194,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,50,"744,177,54,27",555,,,,
-Sg2final-0195,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,29,50,"798,177,63,27",555,,,,
-Sg2final-0196,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,50,"922,177,50,27",555,,,,
-Sg2final-0197,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,32,50,"972,177,52,27",555,,,,
-Sg2final-0198,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,33,50,"1024,177,63,27",555,,,,
-Sg2final-0199,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,20,62,"275,517,63,28",555,,,,
-Sg2final-0200,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,62,"338,517,63,28",555,,,,
-Sg2final-0201,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,62,"401,517,63,28",555,,,,
-Sg2final-0202,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,62,"519,517,63,28",555,,,,
-Sg2final-0203,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,25,62,"582,517,54,28",555,,,,
-Sg2final-0204,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,26,62,"636,517,54,28",555,,,,
-Sg2final-0205,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,62,"744,517,54,28",555,,,,
-Sg2final-0206,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,62,"922,517,50,28",555,,,,
-Sg2final-0207,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,32,62,"972,517,52,28",555,,,,
-Sg2final-0208,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,33,62,"1024,517,63,28",555,,,,
-Sg2final-0209,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,20,64,"275,570,63,30",555,,,,
-Sg2final-0210,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,64,"519,570,63,30",555,,,,
-Sg2final-0211,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,26,64,"636,570,54,30",555,,,,
-Sg2final-0212,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,27,64,"690,570,54,30",555,,,,
-Sg2final-0213,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,64,"744,570,54,30",555,,,,
-Sg2final-0214,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,33,64,"1024,570,63,30",555,,,,
-Sg2final-0215,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,20,91,"275,1308,63,32",555,,,,
-Sg2final-0216,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,91,"338,1308,63,32",555,,,,
-Sg2final-0217,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,91,"401,1308,63,32",555,,,,
-Sg2final-0218,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,91,"519,1308,63,32",555,,,,
-Sg2final-0219,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,91,"744,1308,54,32",555,,,,
-Sg2final-0220,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,92,"338,1340,63,30",555,,,,
-Sg2final-0221,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,23,92,"464,1340,55,30",555,,,,
-Sg2final-0222,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,92,"744,1340,54,30",555,,,,
-Sg2final-0223,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,92,"922,1340,50,30",555,,,,
-Sg2final-0224,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,32,92,"972,1340,52,30",555,,,,
+Sg2final-0001,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,0,0,"389,193,51,28",553,2 30,u,y,sheet01 t1. Blindness caveat: build/brief/signs/index.md (opened per the brief) lists a pilot-resolved value for this cell (underlined-1); reading made from the tile; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0002,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,5,0,"651,193,61,28",553,8 47,i,y,sheet01 t2; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0003,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,7,0,"774,193,53,28",553,10 20,,y,sheet01 t3; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0004,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,8,0,"827,193,60,28",553,1 02,i,y,sheet01 t4; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0005,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,0,"887,193,64,28",553,1 23,i,y,sheet01 t5; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0006,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,11,0,"1007,193,45,28",553,—,,y,sheet01 t6
+Sg2final-0007,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,12,0,"1052,193,50,28",553,6 33,u,y,"sheet01 t7; corrected on the verification crop (3.2x, no wash): a clear underline under 33 only, just below the box, washed out on the sheet tile; neighbouring r0 cells c5-c9 have none, so not a row rule"
+Sg2final-0008,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,13,0,"1102,193,56,28",553,8 28,u;i,y,"sheet01 t8; corrected on the verification crop: underline under 28 only, just below the box (washed out on the sheet tile)"
+Sg2final-0009,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,0,"1158,193,67,28",553,10 45,u,y,"sheet01 t9; corrected on the verification crop: underline under 45 only, just below the box (washed out on the sheet tile)"
+Sg2final-0010,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,0,47,"389,1482,51,32",553,5 50,u,y,sheet01 t10; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0011,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,1,47,"440,1482,52,32",553,6 22,i,y,sheet01 t11; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0012,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,3,47,"545,1482,46,32",553,8 55,,y,sheet01 t12; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0013,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,5,47,"651,1482,61,32",553,11 05,i,y,"sheet01 t13 + zoom: the line below the cell runs on under the neighbouring column (a rule), not a minutes underline"
+Sg2final-0014,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,47,"887,1482,64,32",553,5 29,i;fn:•,y,"sheet01 t14 + zoom: small filled dot (full-stop size) before the hour; line below is the cross-column rule, not an underline; ""ab"" above belongs to the row above"
+Sg2final-0015,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,10,47,"951,1482,56,32",553,6 50,u,y,sheet01 t15; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0016,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,12,47,"1052,1482,50,32",553,10 30,u,y,sheet01 t16; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0017,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,4,53,"591,1650,60,27",553,6 28,u;i,n,"sheet02 t17 + zoom + wider crop of p182 scan: below the r47 rule the table is printed on wider columns than the grid; this time is centred across grid c4/c5 (hour 6 in c4, underlined minutes 28 in c5, no rule between) - keyed in c4 as leftmost column covered; sure=n for the span only"
+Sg2final-0018,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,53,"887,1650,64,27",553,4 45,u,y,"sheet02 t18 + zoom + wider crop: thick underline under the minutes, sitting low (top edge of r54 box); the bar at the top of this box is the underline of r52 ""10 39"""
+Sg2final-0019,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,11,53,"1007,1650,45,27",553,9 55,i,n,"sheet02 t19 + zoom + wider crop of p182 scan: time centred in a wider printed column across grid c11/c12 (hour in c11, minutes over the c11/c12 edge); keyed in c11 as leftmost column covered; sure=n for the span only"
+Sg2final-0020,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,13,53,"1102,1650,56,27",553,7 48,,y,"sheet02 t20: bar at top of box is the underline of r52 ""3 45"" above, not this cell's; re-checked on a no-wash crop (3.2x): no underline"
+Sg2final-0021,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,53,"1158,1650,67,27",553,—,,y,sheet02 t21
+Sg2final-0022,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,0,54,"389,1677,51,27",553,6 48,u,y,sheet02 t22; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0023,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,2,54,"492,1677,53,27",553,6 48,u,y,sheet02 t23; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0024,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,4,54,"591,1677,60,27",553,10 00,u,n,"sheet02 t24 + zoom + wider crop of p182 scan: time centred across grid c4/c5 (hour 10 in c4, underlined minutes 00 in c5, no rule between); keyed in c4 as leftmost column covered; sure=n for the span only"
+Sg2final-0025,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,7,54,"774,1677,53,27",553,6 35,,y,"sheet02 t25; wider crop of p182 confirms an open-top 6, no underline"
+Sg2final-0026,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,8,54,"827,1677,60,27",553,—,,y,"sheet02 t26: dash mid-cell; the bar at the top of the box sits under r53 ""10 28"" above"
+Sg2final-0027,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,54,"887,1677,64,27",553,6 35,,y,"sheet02 t27; wider crop of p182 confirms an open-top 6, no underline; the bar at the top of the box is the underline of r53 ""4 45"" above"
+Sg2final-0028,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,10,54,"951,1677,56,27",553,8 35,,n,"sheet02 t28 + zoom + wider crop: heavy inking; hour has a closed upper loop (8), unlike the open-top 6 of c7/c9/c13 r54; 6/8 confusable"
+Sg2final-0029,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,13,54,"1102,1677,56,27",553,6 55,i,y,"sheet02 t29 + wider crop: clear open-top 6, its left edge just over the c12/c13 grid line (time mostly in c13)"
+Sg2final-0030,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,54,"1158,1677,67,27",553,—,,y,sheet02 t30
+Sg2final-0031,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,16,55,"349,143,54,27",553,10 22,u;i,y,sheet02 t31; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0032,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,17,55,"403,143,55,27",553,6 30,u,y,sheet02 t32; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0033,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,20,55,"565,143,63,27",553,—,,y,sheet03 t33
+Sg2final-0034,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,21,55,"628,143,57,27",553,2 25,fn:•,y,sheet03 t34: small filled dot before the hour. Blindness caveat: build/brief/signs/index.md lists a pilot-resolved value for this cell (dot-1); reading made from the tile; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0035,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,55,"685,143,62,27",553,—,,y,sheet03 t35
+Sg2final-0036,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,23,55,"747,143,53,27",553,5 52,u,y,sheet03 t36; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0037,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,24,55,"800,143,54,27",553,—,,y,sheet03 t37
+Sg2final-0038,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,25,55,"854,143,54,27",553,11 35,,y,sheet03 t38; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0039,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,26,55,"908,143,54,27",553,—,,y,sheet03 t39
+Sg2final-0040,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,29,55,"1083,143,61,27",553,7 50,,y,sheet03 t40; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0041,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,16,56,"349,170,54,28",553,9 35,u;i,y,sheet03 t41; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0042,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,18,56,"458,170,54,28",553,10 40,u,y,sheet03 t42; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0043,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,56,"685,170,62,28",553,—,,y,sheet03 t43
+Sg2final-0044,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,23,56,"747,170,53,28",553,7 49,i,y,sheet03 t44; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0045,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,24,56,"800,170,54,28",553,—,,y,sheet03 t45
+Sg2final-0046,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,27,56,"962,170,63,28",553,—,,y,sheet03 t46
+Sg2final-0047,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,17,58,"403,337,55,41",553,7 31,,y,"sheet03 t47: the full-width line along the top edge of the box lies above the time (row above / rule), not under its minutes; re-checked on a no-wash crop (3.2x): no underline"
+Sg2final-0048,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,18,58,"458,337,54,41",553,—,,y,sheet03 t48
+Sg2final-0049,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,19,58,"512,337,53,41",553,10 15,,y,sheet04 t49; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0050,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,58,"685,337,62,41",553,2 15,,y,"sheet04 t50 + wider crop: an arrow (pointing down-left) is printed above the box's top-left corner, from r57 to the c21/c22 rule; not part of this time"
+Sg2final-0051,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,26,58,"908,337,54,41",553,6 55,u,y,sheet04 t51; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0052,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,27,58,"962,337,63,41",553,8 10,u,y,sheet04 t52; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0053,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,29,58,"1083,337,61,41",553,11 47,u,y,sheet04 t53 + wider crop: thick underline under 47 at the bottom edge of the box
+Sg2final-0054,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,15,60,"295,1625,54,32",553,7 28,,y,"sheet04 t54 + wider crop: the line under the time runs across all columns (rule between r60 and r61), not an underline"
+Sg2final-0055,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,19,60,"512,1625,53,32",553,—,,y,sheet04 t55
+Sg2final-0056,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,60,"685,1625,62,32",553,3 49,i,y,sheet04 t56; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0057,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,23,60,"747,1625,53,32",553,5 20,i,y,"sheet04 t57 + wider crop: the vertical line ending on the 5 is the pass-through rule of r59 above, not a sign; line below is the cross-column rule"
+Sg2final-0058,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,16,61,"349,1657,54,35",553,9 39,i,y,"sheet04 t58 + 7x crop: the small dot at the baseline left of the hour is the ball terminal of the italic 9's tail (same as the 9 of c15 r61 beside it), not a sign; line above is the cross-column rule"
+Sg2final-0059,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,17,61,"403,1657,55,35",553,1 10,i,y,"sheet04 t59: brace printed over the top of the box, not part of the time; re-checked on a no-wash crop (3.2x): no underline"
+Sg2final-0060,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,21,61,"628,1657,57,35",553,6 23,u,y,sheet04 t60; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0061,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,61,"685,1657,62,35",553,5 00,i,y,sheet04 t61; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0062,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,26,61,"908,1657,54,35",553,12 09,u,y,sheet04 t62; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0063,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,27,61,"962,1657,63,35",553,2 25,u,y,sheet04 t63 + wider crop: thick underline under 25
+Sg2final-0114,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,0,0,"298,94,61,34",548,9 55,u;i;fn:!,y,"sheet04 t64 + wider crop (page deskewed 91.3 deg as the layout): ! before the hour, partly over the box's left edge; thick underline under 55. Blindness caveat: build/brief/signs/index.md lists a pilot-resolved value for this cell (excl-1)"
+Sg2final-0115,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,2,0,"413,94,53,34",548,—,,y,sheet05 t65
+Sg2final-0116,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,4,0,"528,94,52,34",548,2 30,u;i,y,sheet05 t66; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0117,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,6,0,"634,94,49,34",548,7 10,i,y,sheet05 t67 + wider crop
+Sg2final-0118,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,12,0,"1209,94,51,34",548,6 23,u,y,sheet05 t68; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0119,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,13,0,"1260,94,61,34",548,3 52,i,y,sheet05 t69 + wider crop: last minute digit heavily inked but a 2
+Sg2final-0120,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,14,0,"1321,94,59,34",548,6 53,u;i,y,sheet05 t70; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0121,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,17,0,"1494,94,57,34",548,2 25,u,y,sheet05 t71 + wider crop: the minutes run past the grid edge of the box but stop before the printed column rule (so the time is c17's); underline under 25
+Sg2final-0122,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,18,0,"1551,94,49,34",548,—,,y,"sheet05 t72: the figures in the left part of the box, before the printed column rule, are the end of the c17 time running over; this cell holds only the dash"
+Sg2final-0123,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,19,0,"1600,94,56,34",548,9 39,i,y,sheet05 t73 + wider crop: the bar at the left of the hour is the column rule
+Sg2final-0124,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,2,1,"413,128,53,28",548,—,,y,sheet05 t74
+Sg2final-0125,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,3,1,"466,128,62,28",548,4 05,u;i,y,sheet05 t75; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0126,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,4,1,"528,128,52,28",548,4 05,u;i,y,sheet05 t76; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0127,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,5,1,"580,128,54,28",548,8 47,i,y,sheet05 t77; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0128,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,6,1,"634,128,49,28",548,8 47,i,y,sheet05 t78; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0129,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,7,1,"683,128,64,28",548,1 02,i,y,sheet05 t79; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0130,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,12,1,"1209,128,51,28",548,4 21,,y,sheet05 t80; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0131,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,14,1,"1321,128,59,28",548,5 20,i,y,sheet06 t81; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0132,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,18,1,"1551,128,49,28",548,—,,y,"sheet06 t82: the figures and underline at the left of the box, before the printed rule, are the end of the c17 time running over"
+Sg2final-0133,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,19,1,"1600,128,56,28",548,8 15,i,y,sheet06 t83; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0134,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,3,3,"466,188,62,30",548,6 50,i,y,sheet06 t84; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0135,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,5,3,"580,188,54,30",548,1 36,i,y,"sheet06 t85 + wider crop: hour is an italic 1 (no crossbar), not 4"
+Sg2final-0136,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,6,3,"634,188,49,30",548,2 03,,y,sheet06 t86; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0137,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,9,3,"796,188,54,30",548,9 25,u,y,sheet06 t87; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0138,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,15,3,"1380,188,59,30",548,5 22,,y,"sheet06 t88 + wider crop: the thin stroke left of the hour is a faint column rule running from the header through the row below, not a sign"
+Sg2final-0139,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,16,3,"1439,188,55,30",548,8 00,u,y,sheet06 t89; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0140,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,17,3,"1494,188,57,30",548,10 18,u;i,y,sheet06 t90 + wider crop: minutes run past the grid edge but stop before the printed rule; underline under 18
+Sg2final-0141,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,19,3,"1600,188,56,30",548,4 16,u,y,sheet06 t91; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0142,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,1,5,"359,638,54,32",548,12 40,,y,sheet06 t92 + wider crop: no underline under 40; the heavy line below is the table's bottom rule
+Sg2final-0143,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,2,5,"413,638,53,32",548,—,,y,sheet06 t93
+Sg2final-0144,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,3,5,"466,638,62,32",548,12 50,i,y,sheet06 t94 + wider crop: no underline under 50; the heavy line below is the table's bottom rule
+Sg2final-0145,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,5,5,"580,638,54,32",548,7 45,u,y,"sheet06 t95 + wider crop: thick underline directly under 45 (as under 9 10 and 3 30 beside it), separate from the bottom rule"
+Sg2final-0146,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,6,5,"634,638,49,32",548,3 30,u,y,sheet06 t96; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0147,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,8,5,"747,638,49,32",548,6 52,i,y,sheet07 t97 + wider crop: no underline under 52 (neighbours 9 45 and r4 3 51 are underlined); heavy line below is the bottom rule
+Sg2final-0148,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,9,5,"796,638,54,32",548,8 44,,n,"sheet07 t98 + wider crop: a large heavy down-arrow is printed just right of the minutes, straddling the right edge of the box, at the left end of the middle label ""… Wien F.J.B. 150 a."" (an up-arrow mirrors it at the label's right end, before c10): read as the label column's reading-direction arrow, not a footnote sign of this time; sure=n only for that convention"
+Sg2final-0149,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,10,5,"1092,638,64,32",548,—,,n,"sheet07 t99 + wider crop: the dark shape at the left edge of the box is a large up-arrow at the right end of the middle label ""… Wien F.J.B. 150 a."" (mirroring a down-arrow after c9 8 44): read as the label column's reading-direction arrow, not part of this cell; sure=n only for that convention"
+Sg2final-0150,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,11,5,"1156,638,53,32",548,8 30,u,y,sheet07 t100; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0151,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,14,5,"1321,638,59,32",548,8 25,i,y,sheet07 t101; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0152,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,18,5,"1551,638,49,32",548,12 06,,y,sheet07 t102; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0153,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,19,5,"1600,638,56,32",548,—,,y,sheet07 t103: bars at both sides of the box are column rules
+Sg2final-0154,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,3,1,"485,159,50,31",555,2 30,u;i,y,sheet07 t104 + wider crop: minutes run past the grid edge but stop before the printed rule; underline under 30
+Sg2final-0155,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,8,1,"761,159,59,31",555,10 06,,y,sheet07 t105; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0156,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,9,1,"820,159,59,31",555,11 30,i,y,"sheet07 t106 + wider crop: last digit a thin italic 0; the line below runs across columns (rule), not an underline"
+Sg2final-0157,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,11,1,"941,159,63,31",555,2 22,,y,sheet07 t107; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0158,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,12,1,"1004,159,58,31",555,2 22,,y,sheet07 t108; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0159,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,15,1,"1176,159,59,31",555,10 53,u;i,y,sheet07 t109 + wider crop: thick underline under 53 (not visible on the sheet tile)
+Sg2final-0160,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,3,2,"485,190,50,34",555,3 48,u,y,sheet07 t110; re-checked on a no-wash crop (3.2x and 6x): underline directly under the minutes
+Sg2final-0161,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,7,2,"702,190,59,34",555,11 06,i,y,"sheet07 t111: the line along the top of the box is a rule above the time, not part of it; re-checked on a no-wash crop (3.2x): no underline"
+Sg2final-0162,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,8,2,"761,190,59,34",555,2 22,,y,sheet07 t112: the line along the top of the box is a rule above the time; re-checked on a no-wash crop (3.2x): no underline
+Sg2final-0163,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,11,2,"941,190,63,34",555,4 52,,y,sheet08 t113 + wider crop: line at the top is the table rule between r1 and r2; no underline
+Sg2final-0164,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,12,2,"1004,190,58,34",555,5 05,,y,sheet08 t114 + wider crop: no underline
+Sg2final-0165,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,13,2,"1062,190,55,34",555,9 20,u,y,sheet08 t115 + wider crop: underline under 20 just below the box (washed pale on the sheet)
+Sg2final-0166,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,14,2,"1117,190,59,34",555,11 16,u;i,y,sheet08 t116 + wider crop: underline under 16 just below the box (washed pale on the sheet)
+Sg2final-0167,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,15,2,"1176,190,59,34",555,12 09,u;i,y,sheet08 t117 + wider crop: hour is italic 12; underline under 09 at the bottom edge
+Sg2final-0168,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,3,29,"485,935,50,36",555,—,,y,sheet08 t118
+Sg2final-0169,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,7,29,"702,935,59,36",555,— ab,,n,"sheet08 t119 + wider crop: a heavy bar across this column only, inside the top of the r29 box, above the word ab; keyed as a rule inside the cell (— then ab, top to bottom); sure=n only for whether the transcription counts the bar as cell content"
+Sg2final-0170,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,8,29,"761,935,59,36",555,4 40,,y,sheet08 t120 + wider crop: no underline
+Sg2final-0171,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,10,29,"879,935,62,36",555,— ab,,n,"sheet08 t121 + wider crop: heavy bar across this column only, inside the top of the box, above a faint ab; keyed as rule + word; sure=n only for whether the bar counts as cell content"
+Sg2final-0172,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,11,29,"941,935,63,36",555,— ab,,n,"sheet08 t122 + crops of c10/c12: a thin line across this column only (not the neighbours), inside the upper third of the box, above ab; keyed as rule + word; sure=n only for whether the line counts as cell content"
+Sg2final-0173,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,12,29,"1004,935,58,36",555,9 05,u,y,"sheet08 t123 + wider crop: underline under 05; the dark block at the right edge is a heavy corner rule in c13, not part of this cell"
+Sg2final-0174,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,15,29,"1176,935,59,36",555,2 40,u;i,y,sheet08 t124 + wider crop: underline under 40 at the bottom edge; the underline at the top belongs to r28 1 47
+Sg2final-0175,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,0,31,"330,990,55,34",555,ab,,n,"sheet08 t125 + wider crop: two stacked dots (colon-like) stand directly above the a, the lower at the top edge of the box, the upper in the row above; read as not belonging to this ab (nothing before/after the word); if counted it would be fn::"
+Sg2final-0176,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,1,31,"385,990,50,34",555,ab,,y,"sheet08 t126: the colon-like sign at upper right belongs to the neighbouring column above, outside the box"
+Sg2final-0177,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,3,31,"485,990,50,34",555,8 32,i,y,sheet08 t127 + wider crop: no underline
+Sg2final-0178,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,4,31,"535,990,59,34",555,— ab,,n,"sheet08 t128 + wider crop: a thin line across this column only (not c3 or c5), inside the box below r30 9 35 and above ab (too low and too wide to be that time's underline); keyed as rule + word; sure=n only for whether the line counts as cell content"
+Sg2final-0179,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,5,31,"594,990,59,34",555,—,,y,sheet09 t129
+Sg2final-0180,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,8,31,"761,990,59,34",555,6 15,u,y,sheet09 t130 + wider crop
+Sg2final-0181,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,10,31,"879,990,62,34",555,—,,y,sheet09 t131: figures and underline at the top of the box belong to the time above
+Sg2final-0182,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,11,31,"941,990,63,34",555,—,,y,sheet09 t132: figures and underline at the top of the box belong to the time above
+Sg2final-0183,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,3,43,"485,1334,50,31",555,8 24,,y,"sheet09 t133 + wider crop: no underline; the heavy line below is the table rule under r43, well clear of the figures"
+Sg2final-0184,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,4,43,"535,1334,59,31",555,3 00,i,y,sheet09 t134 + wider crop: no underline; heavy line below is the table rule
+Sg2final-0185,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,6,43,"653,1334,49,31",555,10 30,u,y,sheet09 t135 + wider crop: the 1 of the hour starts just left of the grid box but inside the printed column; underline under 30; the small ring further right belongs to the c7 time
+Sg2final-0186,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,8,43,"761,1334,59,31",555,9 16,u,y,"sheet09 t136 + wider crop: underline under 16, separate from the thick table rule below; heavy bar at the right edge is a column rule"
+Sg2final-0187,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,10,43,"879,1334,62,31",555,—,,y,sheet09 t137 + wider crop: heavy bar at the right edge is a column rule
+Sg2final-0188,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,12,43,"1004,1334,58,31",555,6 17,,y,sheet09 t138 + wider crop: underline at the top of the box belongs to r42 4 05; none under 17
+Sg2final-0189,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,14,43,"1117,1334,59,31",555,7 22,,y,sheet09 t139 + wider crop: minutes 22 (heavy); underline at the top belongs to r42 5 44; none under 22
+Sg2final-0190,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,15,43,"1176,1334,59,31",555,8 00,i,y,sheet09 t140 + wider crop: no underline
+Sg2final-0191,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,50,"338,177,63,27",555,9 40,u,y,sheet09 t141: the colon sign just right of the box belongs to the c22 time; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0192,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,25,50,"582,177,54,27",555,—,,y,sheet09 t142: heavy bar at the right edge is a column rule running through the rows above and below
+Sg2final-0193,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,26,50,"636,177,54,27",555,6 24,,y,sheet09 t143 + wider crop: heavy bars at both sides are column rules; no underline
+Sg2final-0194,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,50,"744,177,54,27",555,—,,y,sheet09 t144
+Sg2final-0195,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,29,50,"798,177,63,27",555,1 47,,y,sheet10 t145 + wider crop: no underline
+Sg2final-0196,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,50,"922,177,50,27",555,4 55,,y,sheet10 t146 + wider crop: no underline
+Sg2final-0197,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,32,50,"972,177,52,27",555,7 10,,y,sheet10 t147 + wider crop: no underline
+Sg2final-0198,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,33,50,"1024,177,63,27",555,6 44,u,y,sheet10 t148; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0199,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,20,62,"275,517,63,28",555,|,,y,"sheet10 t149: vertical rule through the middle of the cell, continuing through the rows above and below (pass-through)"
+Sg2final-0200,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,62,"338,517,63,28",555,11 30,u,y,sheet10 t150; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0201,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,62,"401,517,63,28",555,11 30,u,y,"sheet10 t151: the line along the top of the box lies above the time (row above), not part of it; re-checked on a no-wash crop (3.2x): underline directly under the minutes"
+Sg2final-0202,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,62,"519,517,63,28",555,6 17,,y,sheet10 t152 + wider crop: no underline (the one above belongs to r61 5 23)
+Sg2final-0203,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,25,62,"582,517,54,28",555,Ank.,,y,sheet10 t153
+Sg2final-0204,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,26,62,"636,517,54,28",555,—,,y,sheet10 t154
+Sg2final-0205,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,62,"744,517,54,28",555,10 48,,y,sheet10 t155 + wider crop: no underline
+Sg2final-0206,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,62,"922,517,50,28",555,6 19,u;i,y,"sheet10 t156 + wider crop: minutes 19 (closed-loop 9), underlined"
+Sg2final-0207,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,32,62,"972,517,52,28",555,4 40,,y,sheet10 t157 + wider crop: no underline
+Sg2final-0208,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,33,62,"1024,517,63,28",555,—,,y,sheet10 t158: the arrow in the row below belongs to that row
+Sg2final-0209,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,20,64,"275,570,63,30",555,1 35,u;i,y,sheet10 t159; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0210,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,64,"519,570,63,30",555,7 50,,y,sheet10 t160 + wider crop: no underline
+Sg2final-0211,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,26,64,"636,570,54,30",555,Ank.,,y,sheet11 t161 + wider crop: the mark over the A on the sheet is the A's own apex
+Sg2final-0212,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,27,64,"690,570,54,30",555,Ank.,,y,sheet11 t162 + wider crop: the ring below belongs to the next row
+Sg2final-0213,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,64,"744,570,54,30",555,11 30,,y,sheet11 t163 + wider crop: no underline
+Sg2final-0214,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,33,64,"1024,570,63,30",555,Ank.,,y,sheet11 t164: the arrow above belongs to r63
+Sg2final-0215,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,20,91,"275,1308,63,32",555,4 08,u;i,y,sheet11 t165; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0216,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,91,"338,1308,63,32",555,5 50,u;i,y,sheet11 t166; re-checked on a no-wash crop (3.2x): underline directly under the minutes
+Sg2final-0217,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,91,"401,1308,63,32",555,7 39,,y,sheet11 t167 + wider crop: no underline; line below is the table rule
+Sg2final-0218,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,91,"519,1308,63,32",555,11 40,,y,"sheet11 t168 + wider crop: the tick at the top is the end of the pass-through rule of r90; line below is the table rule, not an underline"
+Sg2final-0219,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,91,"744,1308,54,32",555,4 14,,y,sheet11 t169 + wider crop: no sign; line below is the table rule running across columns
+Sg2final-0220,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,92,"338,1340,63,30",555,7 08,i,n,"sheet11 t170 + strip of r90-r93: below the heavy rule after r91 this section is printed on six narrower columns where the grid has five (5 26 | 7 08 | ! 9 39 | 10 48 | — | 1 48, rules confirmed in r93); the c21 box holds most of 7 08 plus the ""! 9"" that begins the next time; read as 7 08 by position; sure=n for the column assignment only"
+Sg2final-0221,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,23,92,"464,1340,55,30",555,—,,n,"sheet11 t171 + strip of r90-r93: section below r91 printed on narrower columns than the grid (see Sg2final-0220); the c23 box holds the dash (its own printed column) plus the 48 ending the ""10 48"" printed column; read as the dash by position; if the section's columns were keyed in order (5 26→c20 … 10 48→c23) this cell would be 10 48; sure=n for that"
+Sg2final-0222,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,92,"744,1340,54,30",555,6 23,u,y,sheet11 t172 + wider crop: underline under 23 at the bottom edge (faint on the sheet); line at the top is the rule above r92
+Sg2final-0223,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,92,"922,1340,50,30",555,—,,y,sheet11 t173: the line along the top of the box is the rule above r92 running across the columns
+Sg2final-0224,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,32,92,"972,1340,52,30",555,12 09,u,n,"sheet11 t174 + 6x crop: a thin underline under 09, fainter than the one under 10 04 above; line at the top is the rule above r92; sure=n for the faint underline"
