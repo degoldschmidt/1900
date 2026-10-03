@@ -511,3 +511,22 @@ All six agree with the stored values (two differ in bold only). That completes t
 The 112 c14 leg (Bodenbach 22.45 → Prag 18.10 the next day, 4 km/h) is therefore not a reading error. The column holds only those two times and a class line printed part-way down (`II.III`, from the column-notes crop), so it probably carries two trains that the normaliser joined. It is left for the historian's check of the page, with the other structural items. (The score's FAIL line for this file is no verdict: six chosen cells are not a sample.)
 
 **For the owner (G2).** The source fails the rule as set. The errors are few, of one kind, and fixed at the cause. Options are put to the owner with this entry.
+
+## 2026-10-03 20:10 — Gate G2: read the rest of the source (Decision P-014)
+
+**Owner's choice:** "Read the rest". Every sampleable cell of Fritzsche Summer 1914 that no reader has checked yet is read blind. That is 288 of 652 (one cell became empty with the 0343 correction).
+
+**Readers.** Two fresh historians (H5: tables 12, 13 and 23, 150 cells, 10 sheets; H6: tables 112, 123 and 126, 138 cells, 9 sheets). They read plain contact sheets, with nothing washed or drawn on the print. Each has a reading file of their own: `data/review/sample-g2census-H5.csv` and `-H6.csv`, merged into `sample-g2census.csv`.
+
+**Briefs.** The briefs carry what earlier readers got wrong: underlines below a cell's edge, bars on row lines, table 126's grid offset, italic 0/2/7, and signs across a column rule.
+
+**Adjudication.** Every mismatch is adjudicated blind, as in P-E021.
+
+**Closing rule, set now.** The verdict is computed over the original population (N = 653) with all three readings together:
+- g2final: 359 read, 2 keying errors;
+- g2fix: 6 read, 0 errors;
+- the census.
+
+G2 passes when the exact one-sided 95% upper bound is at most 0.5%. With no further keying error, that holds from 589 cells read. A further confirmed error is corrected, and the source is then judged on the complete count (a census has no sampling error: its rate is the number found).
+
+**In parallel.** Fritzsche Winter 1913/14 (`sl-rfrkuf_394077458-19130002`) is fetched and laid out for C07's changeover. Keying waits for G2.
