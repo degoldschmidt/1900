@@ -10,8 +10,12 @@
  *   missing   the keyer gave no line for a required cell
  *   spurious  a line for a cell the crop does not have
  *   abstained sure=x (counted apart: an honest "cannot read" is not an error, but is reported)
- * cell error rate = (wrong + missing + spurious) / required. Targets (PLAN.md, Data workstream 5):
- * single keyer ≤ 1.0% (10‰), resolved ≤ 0.1% (1‰).
+ * cell error rate = (wrong + missing + spurious) / required.
+ * value error rate counts only wrong cells whose difference changes what the data means: the
+ *   separator printed between figures (space, point, raised point, colon, comma) and the italic and
+ *   small-capital marks are typography; bold (p.m. in many guides), underlining and footnote marks are
+ *   not. The targets (PLAN.md, Data workstream 5: single keyer ≤ 1.0%, resolved ≤ 0.1%) apply to the
+ *   value error rate (decision P-003); the exact rate is reported beside it.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -24,7 +28,7 @@ import { expectedKeys, type CellKey } from '../crops/layout.ts';
 export const TARGET_SINGLE_PERMILLE = 10;
 export const TARGET_RESOLVED_PERMILLE = 1;
 
-export interface Tally { required: number; wrong: number; missing: number; spurious: number; abstained: number }
+export interface Tally { required: number; wrong: number; missing: number; spurious: number; abstained: number; valueWrong: number }
 
 export interface Score {
   total: Tally;
@@ -34,9 +38,18 @@ export interface Score {
   errors: Array<{ key: string; truth: string; keyed: string; why: 'wrong' | 'missing' | 'spurious' }>;
 }
 
-const zero = (): Tally => ({ required: 0, wrong: 0, missing: 0, spurious: 0, abstained: 0 });
+const zero = (): Tally => ({ required: 0, wrong: 0, missing: 0, spurious: 0, abstained: 0, valueWrong: 0 });
 
 export const errorPermille = (t: Tally): number => (t.required ? ((t.wrong + t.missing + t.spurious) * 1000) / t.required : 0);
+export const valuePermille = (t: Tally): number => (t.required ? ((t.valueWrong + t.missing + t.spurious) * 1000) / t.required : 0);
+
+const TYPOGRAPHIC_MARKS = new Set(['i', 'sc']);
+
+/** A reading with typography removed: separators between figures become one space; italic and small capitals dropped. */
+export function valueOf(c: Pick<KeyedCell, 'text' | 'marks'>): string {
+  const text = c.text.replace(/(?<=\d)[\s.·:,]+(?=\d)/g, ' ');
+  return `${text}\u0000${marksString(c.marks.filter((m) => !TYPOGRAPHIC_MARKS.has(m)))}`;
+}
 
 const show = (c: Pick<KeyedCell, 'text' | 'marks'>) => `${c.text}${c.marks.length ? ` [${marksString(c.marks)}]` : ''}`;
 
@@ -71,6 +84,7 @@ export function scoreCells(truth: readonly KeyedCell[], keyed: readonly KeyedCel
     const tt = t?.text ?? ''; const tm = t ? marksString(t.marks) : '';
     if (c.text === tt && marksString(c.marks) === tm) continue;
     bump(k.kind, 'wrong');
+    if (valueOf(c) !== valueOf(t ?? { text: '', marks: [] })) bump(k.kind, 'valueWrong');
     errors.push({ key, truth: truthText, keyed: show(c), why: 'wrong' });
     if (c.text !== tt) for (const w of confusionsOf(tt, c.text)) confuse(w);
     const km = new Set(c.marks); const tms = new Set(t?.marks ?? []);
@@ -87,7 +101,7 @@ export function scoreCells(truth: readonly KeyedCell[], keyed: readonly KeyedCel
 }
 
 export function addTally(a: Tally, b: Tally): Tally {
-  return { required: a.required + b.required, wrong: a.wrong + b.wrong, missing: a.missing + b.missing, spurious: a.spurious + b.spurious, abstained: a.abstained + b.abstained };
+  return { required: a.required + b.required, wrong: a.wrong + b.wrong, missing: a.missing + b.missing, spurious: a.spurious + b.spurious, abstained: a.abstained + b.abstained, valueWrong: a.valueWrong + b.valueWrong };
 }
 
 export interface TableScore {
@@ -125,24 +139,25 @@ export function scoreTable(r: Roots, source: string, table: string): TableScore 
   }
   return {
     files, single, resolved,
-    singleMet: single.required ? errorPermille(single) <= TARGET_SINGLE_PERMILLE : null,
-    resolvedMet: resolved.required ? errorPermille(resolved) <= TARGET_RESOLVED_PERMILLE : null,
+    singleMet: single.required ? valuePermille(single) <= TARGET_SINGLE_PERMILLE : null,
+    resolvedMet: resolved.required ? valuePermille(resolved) <= TARGET_RESOLVED_PERMILLE : null,
     confusions: [...conf.entries()].map(([what, n]) => ({ what, n })).sort((a, b) => b.n - a.n || cmpStr(a.what, b.what)),
   };
 }
 
 const pct = (t: Tally) => `${(errorPermille(t) / 10).toFixed(2)}%`;
+const vpct = (t: Tally) => `${(valuePermille(t) / 10).toFixed(2)}%`;
 
 export function reportText(s: TableScore): string {
   const L: string[] = [];
   for (const f of s.files) {
     const k = f.score.byKind;
-    L.push(`${f.file.padEnd(34)} error ${pct(f.score.total).padStart(7)}  (wrong ${f.score.total.wrong}, missing ${f.score.total.missing}, spurious ${f.score.total.spurious}, abstained ${f.score.total.abstained} of ${f.score.total.required})  ` +
+    L.push(`${f.file.padEnd(34)} value ${vpct(f.score.total).padStart(7)}  exact ${pct(f.score.total).padStart(7)}  (wrong ${f.score.total.wrong}, of which value ${f.score.total.valueWrong}; missing ${f.score.total.missing}, spurious ${f.score.total.spurious}, abstained ${f.score.total.abstained} of ${f.score.total.required})  ` +
       KINDS.filter((x) => k[x].required).map((x) => `${x} ${pct(k[x])}`).join(', '));
   }
   L.push('');
-  if (s.singleMet !== null) L.push(`single keyer: ${pct(s.single)} over ${s.single.required} cells — target ≤ 1.0%: ${s.singleMet ? 'MET' : 'NOT MET'}`);
-  if (s.resolvedMet !== null) L.push(`resolved:     ${pct(s.resolved)} over ${s.resolved.required} cells — target ≤ 0.1%: ${s.resolvedMet ? 'MET' : 'NOT MET'}`);
+  if (s.singleMet !== null) L.push(`single keyer: value ${vpct(s.single)} (exact ${pct(s.single)}) over ${s.single.required} cells, ${s.single.abstained} abstained — target ≤ 1.0%: ${s.singleMet ? 'MET' : 'NOT MET'}`);
+  if (s.resolvedMet !== null) L.push(`resolved:     value ${vpct(s.resolved)} (exact ${pct(s.resolved)}) over ${s.resolved.required} cells, ${s.resolved.abstained} illegible — target ≤ 0.1%: ${s.resolvedMet ? 'MET' : 'NOT MET'}`);
   if (s.confusions.length) L.push(`confusions (single keyers): ${s.confusions.slice(0, 15).map((c) => `${c.what} ×${c.n}`).join(', ')}`);
   return L.join('\n') + '\n';
 }

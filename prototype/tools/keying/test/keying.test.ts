@@ -71,6 +71,24 @@ describe('diff', () => {
     ]);
   });
 
+  it('sends identical but doubted readings to the resolver without lowering agreement', () => {
+    const a = edit(truthGrid(), { 'cell:1:0': { sure: 'n' } });
+    const b = truthGrid();
+    const exp = expectedKeys(layout(), planCrops(layout())[0]!);
+    const d = diffReadings(a, b, exp);
+    expect(d.doubtful).toBe(1);
+    expect(d.agreed).toBe(d.total - 1);
+    expect(d.permille).toBe(1000);
+    expect(d.disagreements.map((x) => `${x.kind}:${x.col}:${x.row}:${x.reason}`)).toEqual(['cell:1:0:doubtful']);
+    // The merge then needs a decision for it; choosing the shared reading is allowed.
+    const shared = a.find((c) => c.kind === 'cell' && c.col === 1 && c.row === 0)!;
+    const missing = mergeResolved(a, b, [], exp, 'X');
+    expect(missing.errors.join('\n')).toMatch(/disputed \(doubtful\) but no resolution/);
+    const ok = mergeResolved(a, b, [{ ...shared, crop_id: 'X', sure: 'y', resolution: 'A', note: 'zoom shows it' }], exp, 'X');
+    expect(ok.errors).toEqual([]);
+    expect(ok.counts.A).toBe(1);
+  });
+
   it('writes the diff list and status, marking crops under 950‰ for re-keying', async () => {
     const { r, dir } = await setupTable();
     writeKeyer(dir, GRID, 'A', truthGrid());

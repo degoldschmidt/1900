@@ -106,7 +106,7 @@ export function generateTable(o: SynthOptions): SynthTable {
     const first = d.st === 0; const last = d.st === nSt - 1;
     const name: Printed = d.line === 'dep' && k > 0 ? { text: '〃', marks: [] } : { text: names[d.st]!, marks: major[d.st] || first || last ? ['b'] : [] };
     const ad = d.line === 'arr' || last ? 'arr.' : d.line === 'dep' || first ? 'dep.' : '';
-    return [name, { text: ad, marks: [] }];
+    return [name, { text: ad, marks: ad ? ['i'] : [] }]; // the page prints arr./dep. in italic
   };
   const rows = defs.map((d, k) => ({ label: label(d, k), cells: [] as Printed[] }));
   const header: Printed[][] = [[], [], []];

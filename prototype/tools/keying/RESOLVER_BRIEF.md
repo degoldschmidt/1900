@@ -6,7 +6,7 @@ Two keyers transcribed the same crop independently (`tools/keying/KEYER_BRIEF.md
 
 `node tools/keying/resolve-support.ts <source_id> <table_ref> <crop_id>` writes `build/resolve/<source_id>/<table_ref>/<crop_id>/`:
 
-- `packet.md`: the crop image's path, then one section per disputed cell: its key (kind, col, row), the reason (`text`, `marks`, `text+marks`, `missing-A`, `missing-B`, `illegible`), keyer A's and keyer B's readings, and its zoom;
+- `packet.md`: the crop image's path, then one section per disputed cell: its key (kind, col, row), the reason (`text`, `marks`, `text+marks`, `missing-A`, `missing-B`, `illegible`, `doubtful`), keyer A's and keyer B's readings, and its zoom;
 - `zoom-<kind>-c<col>-r<row>.png`: the cell cut from the page scan with a margin, magnified 4×, the cell's box outlined in translucent red (the outline sits on the cell boundary; it is not a printed rule);
 - `R.template.csv`: one line per disputed cell, for you to fill.
 
@@ -31,7 +31,8 @@ Rules:
 2. **Marks count.** A reading with the right digits but missing bold (`b`) or a footnote mark is not right: use `other` with the full reading.
 3. **A missing reading** (`missing-A` / `missing-B`): if the one reading given is right, choose that keyer; if the cell is blank on the page, choose `other` with empty text and `sure=y` (or the keyer who wrote it blank).
 4. **Both keyers wrote `sure=x`** (`illegible` reason): try the zoom. If you can read it, `other`; if not, `illegible`.
-5. Do not change, add or remove lines for cells that are not disputed.
+5. **`doubtful`**: both keyers gave the same reading but at least one marked it `sure=n`. Do not assume agreement makes it right: two keyers can share a misreading of a blurred digit, separator or footnote symbol. Read the zoom afresh; choose `A` (the shared reading) only if the print shows it, otherwise `other` or `illegible`.
+6. Do not change, add or remove lines for cells that are not disputed.
 
 An `illegible` cell blocks compilation of the table until the historian waives it (`data/canonical/waivers.csv`) or the page is re-read from a better scan.
 

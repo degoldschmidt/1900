@@ -11,7 +11,7 @@ describe('side-by-side review page', () => {
     writeKeyer(dir, GRID, 'A', edit(truthGrid(), { 'label:0:1': { sure: 'n' }, 'cell:3:0': { text: '11 0<5' } }));
     writeKeyer(dir, GRID, 'B', edit(truthGrid(), { 'cell:3:0': { text: '11 06' } }));
     runDiff(r, SOURCE, TABLE, { crops: [GRID] });
-    writeKeyer(dir, GRID, 'R', `crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note\n${GRID},cell,3,0,11 05,,y,other,both misread the 5\n`);
+    writeKeyer(dir, GRID, 'R', `crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note\n${GRID},cell,3,0,11 05,,y,other,both misread the 5\n${GRID},label,0,1,,,n,A,shared reading kept; still doubtful\n`);
     expect(mergeCrop(r, SOURCE, TABLE, GRID).errors).toEqual([]);
     writeKeyer(dir, FN, 'A', `crop_id,kind,col,row,text_as_printed,marks,sure\n${FN},footnote,0,0,† Runs on S?? weekdays only.,fn:†,x\n`);
 
@@ -21,7 +21,7 @@ describe('side-by-side review page', () => {
     expect(html.startsWith('<!doctype html>')).toBe(true);
     expect(html.match(/data:image\/png;base64,/g)).toHaveLength(2);
     expect(html).toMatch(/<td class="resolved" title="A: 11 0&lt;5\nB: 11 06\nresolution: other\nnote: both misread the 5">11 05<\/td>/);
-    expect(html).toMatch(/<td class="doubt"[^>]*>SYN_Neubrück<\/td>/);
+    expect(html).toMatch(/<td class="resolved doubt"[^>]*>SYN_Neubrück<\/td>/);
     expect(html).toMatch(/<td class="illegible"[^>]*>† Runs on S\?\? weekdays only.<sup>†<\/sup><\/td>/);
     expect(html).toContain('<b>D 40</b>');
     expect(html).toContain('cells from keyer A only (not resolved)');

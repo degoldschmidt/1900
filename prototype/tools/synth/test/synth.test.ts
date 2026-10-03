@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 import { formatTime, generateTable, truthCells } from '../table.ts';
 import { degrade, renderPage, synthRoots } from '../render-page.ts';
-import { confusionsOf, errorPermille, scoreCells, scoreTable } from '../score.ts';
+import { confusionsOf, errorPermille, scoreCells, scoreTable, valuePermille, valueOf } from '../score.ts';
 import { roots } from '../../keying/paths.ts';
 import { parseLong, writeLong, type KeyedCell } from '../../keying/longcsv.ts';
 import { validateLayout, expectedKeys, loadCropsCsv } from '../../crops/layout.ts';
@@ -72,13 +72,24 @@ describe('score', () => {
     const truth = [t('cell', 0, 0, '3 15'), t('cell', 1, 0, '8 40', ['b']), t('cell', 2, 0, '|'), t('cell', 3, 0, '10 05'), t('label', 0, 0, 'SYN_Au')];
     const keyed = [t('cell', 0, 0, '8 15'), t('cell', 1, 0, '8 40'), t('cell', 3, 0, '10 0?', [], 'x'), t('label', 0, 0, 'SYN_Au'), t('cell', 9, 0, '1 00')];
     const s = scoreCells(truth, keyed, truth);
-    expect(s.total).toEqual({ required: 5, wrong: 2, missing: 1, spurious: 1, abstained: 1 });
+    expect(s.total).toEqual({ required: 5, wrong: 2, missing: 1, spurious: 1, abstained: 1, valueWrong: 2 });
     expect(errorPermille(s.total)).toBe(800);
-    expect(s.byKind.label).toEqual({ required: 1, wrong: 0, missing: 0, spurious: 0, abstained: 0 });
+    expect(s.byKind.label).toEqual({ required: 1, wrong: 0, missing: 0, spurious: 0, abstained: 0, valueWrong: 0 });
     expect(s.confusions).toEqual([{ what: '-b', n: 1 }, { what: '3→8', n: 1 }]);
     expect(confusionsOf('1 05', '10 5')).toEqual([' →0', '0→ ']);
     expect(confusionsOf('12 30', '12 38')).toEqual(['0→8']);
     expect(confusionsOf('1 5', '1 05')).toEqual(['"1 5"→"1 05"']);
+  });
+
+  it('separates typographic slips from errors that change the value', () => {
+    const truth = [t('cell', 0, 0, '2 30', ['b']), t('cell', 1, 0, '5·55'), t('label', 1, 0, 'dep.', ['i']), t('cell', 2, 0, '9.03', ['fn:‡']), t('header', 0, 0, '108')];
+    const keyed = [t('cell', 0, 0, '2·30', ['b']), t('cell', 1, 0, '5.55'), t('label', 1, 0, 'dep.'), t('cell', 2, 0, '9.03', ['fn:§']), t('header', 0, 0, '106')];
+    const s = scoreCells(truth, keyed, truth);
+    expect(s.total.wrong).toBe(5);
+    expect(s.total.valueWrong).toBe(2); // the footnote symbol and the train number
+    expect(valuePermille(s.total)).toBe(400);
+    expect(valueOf(t('cell', 0, 0, '12 . 45', ['sc', 'b']))).toBe(valueOf(t('cell', 0, 0, '12:45', ['b'])));
+    expect(valueOf(t('cell', 0, 0, '12 45'))).not.toBe(valueOf(t('cell', 0, 0, '12 45', ['b'])));
   });
 });
 

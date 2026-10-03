@@ -21,7 +21,7 @@ import { findStatus, readStatus, REKEY_BELOW_PERMILLE, updateStatusFile, type St
 import { cropOf, loadTable, outsideCrop, readKeyer } from './crop-files.ts';
 import { expectedKeys, type CellKey } from '../crops/layout.ts';
 
-export type Reason = 'text' | 'marks' | 'text+marks' | 'missing-A' | 'missing-B' | 'illegible';
+export type Reason = 'text' | 'marks' | 'text+marks' | 'missing-A' | 'missing-B' | 'illegible' | 'doubtful';
 
 export interface Disagreement {
   kind: Kind;
@@ -34,7 +34,11 @@ export interface Disagreement {
 
 export interface DiffResult {
   total: number;
+  /** Cells both keyers read the same way with no doubt. */
   agreed: number;
+  /** Cells both read the same way but at least one marked sure=n; they go to the resolver. */
+  doubtful: number;
+  /** Keyer concordance: (agreed + doubtful) per mille of all cells. */
   permille: number;
   disagreements: Disagreement[];
   agreedKeys: string[];
@@ -50,6 +54,7 @@ export function diffReadings(a: readonly KeyedCell[], b: readonly KeyedCell[], e
   for (const k of [...expected, ...a, ...b]) keys.set(cellKey(k), { kind: k.kind, col: k.col, row: k.row });
   const dis: Disagreement[] = [];
   const agreedKeys: string[] = [];
+  let doubtful = 0;
   for (const [k, ck] of keys) {
     const ca = A.get(k) ?? null; const cb = B.get(k) ?? null;
     let reason: Reason | null = null;
@@ -59,12 +64,19 @@ export function diffReadings(a: readonly KeyedCell[], b: readonly KeyedCell[], e
     else if (!sameReading(ca, cb)) {
       const t = ca.text !== cb.text; const m = marksString(ca.marks) !== marksString(cb.marks);
       reason = t && m ? 'text+marks' : t ? 'text' : 'marks';
+    } else if (ca.sure === 'n' || cb.sure === 'n') {
+      // Same reading, but a keyer doubted it. Two keyers can share a misreading (calibration round 1
+      // found every residual error was shared), so doubted cells go to the resolver's zoom too.
+      reason = 'doubtful';
+      doubtful++;
     }
     if (reason) dis.push({ ...ck, reason, a: ca, b: cb });
     else agreedKeys.push(k);
   }
   const total = keys.size;
-  return { total, agreed: agreedKeys.length, permille: total ? Math.floor((agreedKeys.length * 1000) / total) : 0, disagreements: sortCells(dis), agreedKeys };
+  // Agreement measures concordance between keyers: a doubted but identical reading counts as agreed.
+  const concordant = agreedKeys.length + doubtful;
+  return { total, agreed: agreedKeys.length, doubtful, permille: total ? Math.floor((concordant * 1000) / total) : 0, disagreements: sortCells(dis), agreedKeys };
 }
 
 export function writeDiff(cropId: string, d: DiffResult): string {
@@ -99,7 +111,7 @@ export function diffCrop(r: Roots, source: string, table: string, cropId: string
   const d = diffReadings(A.cells, B.cells, expectedKeys(t.layout, crop));
   writeTextFile(diffCsv(r, source, table, cropId), writeDiff(cropId, d));
   const rekey = d.permille < REKEY_BELOW_PERMILLE;
-  const note = `${d.disagreements.length} of ${d.total} cells disagree${rekey ? ` (below ${REKEY_BELOW_PERMILLE}‰: re-key)` : ''}`;
+  const note = `${d.disagreements.length - d.doubtful} of ${d.total} cells disagree, ${d.doubtful} doubted${rekey ? ` (below ${REKEY_BELOW_PERMILLE}‰: re-key)` : ''}`;
   return { crop_id: cropId, diff: d, problems, status: { ...base, status: rekey ? 'rekey' : 'diffed', agreement_permille: String(d.permille), note } };
 }
 
