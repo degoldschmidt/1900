@@ -20,7 +20,7 @@ export function randomNetwork(seed: number, opts: NetOptions = {}): TimetableDat
   ];
   const stationZones = stations.map((s, i) => ({ station: s.id, zone: i % 3 === 2 ? 'SYN_Z1' : 'SYN_Z0', from: 0, to: null }));
   const nEd = opts.editions ?? 2;
-  const editions = Array.from({ length: nEd }, (_, e) => ({ id: `SYN_E${e}`, source: 'SYN_src', family: 'SYN', label: `Edition ${e}`, issueDay: BASE_DAY + e * 3, validFrom: BASE_DAY + e * 3, validTo: e === nEd - 1 ? null : BASE_DAY + (e + 1) * 3 }));
+  const editions = Array.from({ length: nEd }, (_, e) => ({ id: `SYN_E${e}`, source: 'SYN_src', family: 'SYN', label: `Edition ${e}`, issueDay: BASE_DAY + e * 3, validFrom: BASE_DAY + e * 3, validTo: e === nEd - 1 ? null : BASE_DAY + (e + 1) * 3 - 1 }));
   const nt = opts.trips ?? 6 + r(20, 'nt');
   const trips: TripRow[] = [];
   const st = { station: [] as number[], arr: [] as number[], dep: [] as number[], arrDay: [] as number[], depDay: [] as number[], flags: [] as number[], cite: [] as number[] };
@@ -43,7 +43,7 @@ export function randomNetwork(seed: number, opts: NetOptions = {}): TimetableDat
     const run: RunRule = { ranges: [[BASE_DAY - 10, BASE_DAY + 20, mask]], also: ch(200, 'also', t) ? [BASE_DAY + r(10, 'alsod', t)] : [], except: ch(200, 'exc', t) ? [BASE_DAY + r(10, 'excd', t)] : [] };
     const ed = r(nEd, 'ed', t);
     const ev = editions[ed]!;
-    trips.push({ id: `SYN_T${t}`, trainKey: `SYN_K${r(Math.max(2, Math.floor(nt / 2)), 'key', t)}`, edition: ev.id, trainNo: `${t}`, name: null, operator: 'SYN', mode: 'rail', classMask: 7, sleeper: false, run, truth: [[ev.validFrom, ev.validTo === null ? BASE_DAY + 30 : ev.validTo - 1]], firstStop, nStops: path.length, cite: 0 });
+    trips.push({ id: `SYN_T${t}`, trainKey: `SYN_K${r(Math.max(2, Math.floor(nt / 2)), 'key', t)}`, edition: ev.id, trainNo: `${t}`, name: null, operator: 'SYN', mode: 'rail', classMask: 7, sleeper: false, run, truth: [[ev.validFrom, ev.validTo === null ? BASE_DAY + 30 : ev.validTo]], firstStop, nStops: path.length, cite: 0 });
   }
   const transfers = [];
   for (let i = 0; i + 1 < ns; i += 2) transfers.push({ from: `SYN_S${i}`, to: `SYN_S${i + 1}`, minSec: 600 + r(1800, 'walk', i), kind: 'cross-city' as const, basis: 'design' as const }, { from: `SYN_S${i + 1}`, to: `SYN_S${i}`, minSec: 600 + r(1800, 'walk2', i), kind: 'cross-city' as const, basis: 'design' as const });

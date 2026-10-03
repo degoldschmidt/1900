@@ -1,0 +1,2 @@
+edition_id,source_id,family,label,issue_date,valid_from,valid_to,notation_file,gap_flag,notes
+SYN_E9,SYN_SRC_9,SYN_F9,SYN tricky guide,1914-05-01,1914-05-01,1914-09-30,notation/SYN_E9.json,n,synthetic

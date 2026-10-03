@@ -1,0 +1,3 @@
+event_id,date_greg,date_jul,time_local,zone_id,jur_id,kind,title,effects,src,notes
+SYN_EV1,1914-08-01,J1914-07-19,19:00,SYN_Z_SPB_CIV,SYN_J_RU,decree,SYN frontier closed,SYN_P002,SYN_SRC_H:p8:-:-:-,synthetic
+SYN_EV2,1914-07-29,J1914-07-16,,,SYN_J_PRU,secret-order,SYN watch list activated,SYN_P003,SYN_SRC_H:p8:-:-:-,synthetic

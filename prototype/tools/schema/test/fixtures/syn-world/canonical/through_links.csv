@@ -1,0 +1,2 @@
+edition_id,from_service_id,to_service_id,station_id,classes,src
+SYN_E1,SYN_E1.SYN_T2.c1,SYN_E1.SYN_T3.c1,SYN_WIR,1,SYN_SRC_S:p11:SYN_T2:SYN_CR3:f0

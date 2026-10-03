@@ -59,7 +59,9 @@ export interface EditionRow {
   family: string;
   label: string;
   issueDay: number;
+  /** First day the edition states it is valid (Gregorian day number). */
   validFrom: number;
+  /** Last day of stated validity, inclusive; null when open-ended (held until the next transcribed issue). */
   validTo: number | null;
 }
 

@@ -1,0 +1,23 @@
+{
+  "edition_id": "SYN_E9",
+  "src": "SYN_SRC_9:p2:-:-:-",
+  "clock": "12h",
+  "timeSeparators": [" ", "."],
+  "meridian": { "mode": "markers", "marks": [], "amMarkers": ["a.m."], "pmMarkers": ["p.m."], "initial": null },
+  "literals": { "noon": "12:00", "mdnt": "00:00" },
+  "ditto": ["〃"],
+  "dittoInTimes": true,
+  "passThrough": ["|"],
+  "notServed": ["—", "…"],
+  "arrMarkers": ["arr."],
+  "depMarkers": ["dep."],
+  "singleTime": "dep",
+  "unmarkedRunning": "daily",
+  "symbolFlags": { "§": "customs", "‡": "request" },
+  "sleeperMarkers": ["Sl."],
+  "maxLegHours": 20,
+  "headerLines": ["train_no", "classes", "name", "marks"],
+  "tables": {
+    "SYN_T9": { "operator": "SYN-RLY", "mode": "rail", "segments": ["SYN_S9"] }
+  }
+}

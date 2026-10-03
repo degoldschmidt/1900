@@ -1,0 +1,5 @@
+jur_id,name,country,kind,from,to,src
+SYN_J_GB,SYN United Kingdom,GB,kingdom,,,SYN_SRC_H:p4:-:-:-
+SYN_J_BE,SYN Belgium,BE,kingdom,,,SYN_SRC_H:p4:-:-:-
+SYN_J_PRU,SYN Prussia,DE,state,,,SYN_SRC_H:p4:-:-:-
+SYN_J_RU,SYN Russian Empire,RU,empire,,,SYN_SRC_H:p4:-:-:-

@@ -1,0 +1,8 @@
+station_id,name,city_id,country,railway_admin,is_frontier,frontier_pair_id,lat,lon,geo_src,src
+SYN_LON,SYN London Victoria,SYN_C_LON,GB,SYN-SECR,n,,51.4952,-0.1441,synthetic,SYN_SRC_H:p6:-:-:-
+SYN_DOV,SYN Dover Pier,SYN_C_DOV,GB,SYN-SECR,n,,51.1146,1.3149,synthetic,SYN_SRC_H:p6:-:-:-
+SYN_OST,SYN Ostend Quay,SYN_C_OST,BE,SYN-EB,n,,51.2289,2.9254,synthetic,SYN_SRC_H:p6:-:-:-
+SYN_BER,SYN Berlin Friedrichstrasse,SYN_C_BER,DE,SYN-KPEV,n,,52.5203,13.3869,synthetic,SYN_SRC_H:p6:-:-:-
+SYN_EYD,SYN Eydtkuhnen,SYN_C_EYD,DE,SYN-KPEV,y,SYN_WIR,54.6299,22.8803,synthetic,SYN_SRC_H:p6:-:-:-
+SYN_WIR,SYN Wirballen,SYN_C_WIR,RU,SYN-RUS,y,SYN_EYD,54.6386,22.9180,synthetic,SYN_SRC_H:p6:-:-:-
+SYN_SPB,SYN St Petersburg Warsaw Station,SYN_C_SPB,RU,SYN-RUS,n,,59.9076,30.2995,synthetic,SYN_SRC_H:p6:-:-:-

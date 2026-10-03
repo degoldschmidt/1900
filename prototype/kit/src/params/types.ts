@@ -49,6 +49,7 @@ export interface InstitutionRow {
   jurisdiction: string;
   city: string | null;
   parent: string | null;
+  /** Days [from, to) the institution exists: `to` is exclusive (as in param rows), null open-ended. */
   from: number;
   to: number | null;
   /** Record kinds this institution reads at source, e.g. ["registration.slip"]. */

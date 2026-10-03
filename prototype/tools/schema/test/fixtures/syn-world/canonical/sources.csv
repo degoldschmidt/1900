@@ -1,0 +1,5 @@
+source_id,library,library_id,title,publisher,edition_label,issue_date,validity_stated,access,pages,language,url,terms_note,found_by,notes
+SYN_SRC_S,SYN Library,SYN-1,"SYN Continental Guide, June 1914",SYN Publishers,June 1914,1914-05-01,May to September 1914,full,40,en,,synthetic test fixture,SYN,synthetic
+SYN_SRC_W,SYN Library,SYN-2,"SYN Continental Guide, December 1913",SYN Publishers,December 1913,1913-10-01,October 1913 to April 1914,full,40,en,,synthetic test fixture,SYN,synthetic
+SYN_SRC_K,SYN Library,SYN-3,SYN Kursbuch Summer 1914,SYN Verlag,Sommer 1914,1914-05-01,from 1 May 1914,full,60,de,,synthetic test fixture,SYN,synthetic cross-check guide
+SYN_SRC_H,SYN Library,SYN-4,SYN Handbook for Travellers,SYN Publishers,1913,1913-01-01,,full,400,en,,synthetic test fixture,SYN,synthetic handbook

@@ -1,0 +1,3 @@
+from_station_id,to_station_id,min_minutes,kind,basis,src_or_dv
+SYN_EYD,SYN_WIR,60,frontier-change,historical,SYN_SRC_S:p11:SYN_T2:-:-
+SYN_WIR,SYN_EYD,60,frontier-change,historical,SYN_SRC_S:p14:SYN_T2U:-:-

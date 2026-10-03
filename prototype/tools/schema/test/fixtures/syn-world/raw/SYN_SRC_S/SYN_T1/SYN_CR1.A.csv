@@ -1,0 +1,21 @@
+crop_id,kind,col,row,text_as_printed,marks,sure
+SYN_CR1,header,0,0,11,,y
+SYN_CR1,header,1,0,21,,y
+SYN_CR1,header,0,1,1.2.3,,y
+SYN_CR1,header,1,1,1.2,,y
+SYN_CR1,label,0,0,London (Victoria),,y
+SYN_CR1,label,1,0,dep.,,y
+SYN_CR1,label,0,1,Dover Pier,,y
+SYN_CR1,label,1,1,arr.,,y
+SYN_CR1,label,0,2,〃,,y
+SYN_CR1,label,1,2,dep.,,y
+SYN_CR1,label,0,3,Ostend Quay,,y
+SYN_CR1,label,1,3,arr.,,y
+SYN_CR1,cell,0,0,a.m. 9 0,,y
+SYN_CR1,cell,1,0,—,,y
+SYN_CR1,cell,0,1,10 45,,y
+SYN_CR1,cell,1,1,—,,y
+SYN_CR1,cell,0,2,—,,y
+SYN_CR1,cell,1,2,a.m. 11 15,,y
+SYN_CR1,cell,0,3,—,,y
+SYN_CR1,cell,1,3,p.m. 3 3,,n

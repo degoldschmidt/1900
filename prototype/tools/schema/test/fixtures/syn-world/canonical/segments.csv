@@ -1,0 +1,7 @@
+segment_id,from_station,to_station,via,tier,games,notes
+SYN_S_LD,SYN_LON,SYN_DOV,,A,c07;c01;c04,
+SYN_S_DO,SYN_DOV,SYN_OST,sea,A,c07;c01;c04,steamer
+SYN_S_OB,SYN_OST,SYN_BER,,A,c07;c01,
+SYN_S_BE,SYN_BER,SYN_EYD,,A,c07,
+SYN_S_EW,SYN_EYD,SYN_WIR,,A,c07,frontier
+SYN_S_WP,SYN_WIR,SYN_SPB,,A,c07,

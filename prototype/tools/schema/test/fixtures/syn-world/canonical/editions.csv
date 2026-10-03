@@ -1,0 +1,4 @@
+edition_id,source_id,family,label,issue_date,valid_from,valid_to,notation_file,gap_flag,notes
+SYN_E2,SYN_SRC_W,SYN_F1,SYN Continental Guide December 1913,1913-10-01,1913-10-01,1914-04-30,,n,winter service
+SYN_E1,SYN_SRC_S,SYN_F1,SYN Continental Guide June 1914,1914-05-01,1914-05-01,1914-09-30,notation/SYN_E1.json,n,summer service (anchor)
+SYN_E3,SYN_SRC_K,SYN_F2,SYN Kursbuch Summer 1914,1914-05-01,1914-05-01,1914-09-30,,n,cross-check only

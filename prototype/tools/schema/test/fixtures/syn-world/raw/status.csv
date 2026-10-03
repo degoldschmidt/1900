@@ -1,0 +1,10 @@
+source_id,table_ref,crop_id,status,agreement_permille,note
+SYN_SRC_S,SYN_T1,SYN_CR1,resolved,972,
+SYN_SRC_S,SYN_T1U,SYN_CR2,resolved,1000,
+SYN_SRC_S,SYN_T2,SYN_CR3,resolved,1000,
+SYN_SRC_S,SYN_T2U,SYN_CR4,resolved,1000,
+SYN_SRC_S,SYN_T3,SYN_CR5,resolved,1000,
+SYN_SRC_S,SYN_T3U,SYN_CR6,resolved,1000,
+SYN_SRC_W,SYN_T1,SYN_CW1,resolved,1000,
+SYN_SRC_W,SYN_T1U,SYN_CW2,resolved,1000,
+SYN_SRC_K,SYN_K7,*,skip,,SYN cross-check guide: rows entered from a single reading for the test

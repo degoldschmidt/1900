@@ -1,0 +1,10 @@
+{
+  "game": "syn-c07",
+  "status": "frozen",
+  "freezeTag": "syn-data-v1",
+  "segments": ["SYN_S_LD", "SYN_S_DO", "SYN_S_OB", "SYN_S_BE", "SYN_S_EW", "SYN_S_WP"],
+  "editions": ["SYN_E2", "SYN_E1"],
+  "params": ["frontier_closed", "SYN_P004", "bank_hours"],
+  "calendarWindow": ["1914-07-01", "1914-08-31"],
+  "window": ["1914-04-20", "1914-08-31"]
+}
