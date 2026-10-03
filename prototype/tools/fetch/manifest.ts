@@ -47,7 +47,7 @@ export function parseManifestRows(rows: readonly CsvRow[], file = 'manifest'): {
     if (seen.has(seq)) { errors.push(`${where}: duplicate page_seq ${seq}`); return; }
     seen.add(seq);
     if (!(CONTENT as readonly string[]).includes(content)) { errors.push(`${where}: content "${content}" is not one of ${CONTENT.join('|')}`); return; }
-    if (!/^https?:\/\//.test((r.url ?? '').trim())) { errors.push(`${where}: url must be http(s)`); return; }
+    if (!/^(https?:\/\/|owner:)/.test((r.url ?? '').trim())) { errors.push(`${where}: url must be http(s), or owner:<file> for an owner scan`); return; }
     if (sha && !/^[0-9a-f]{64}$/.test(sha)) { errors.push(`${where}: sha256 is not 64 hex digits`); return; }
     out.push({
       page_seq: seq, printed_page: (r.printed_page ?? '').trim(), content: content as Content, table_refs: (r.table_refs ?? '').trim(),
@@ -73,6 +73,7 @@ export function pageUrlFor(sourceId: string, seq: number): string {
   const { library, libraryId } = parseSourceId(sourceId);
   if (library === 'archive.org') return ia.pageImageUrl(libraryId, seq);
   if (library === 'hathitrust') return ht.pageImageUrl(libraryId, seq);
+  if (library === 'owner-scan') throw new Error(`${sourceId} is an owner scan: add its pages with tools/fetch/import-scans.ts, not manifest init`);
   return ga.iiifImageUrl(libraryId, seq);
 }
 

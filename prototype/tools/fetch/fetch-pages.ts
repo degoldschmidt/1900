@@ -108,6 +108,7 @@ export async function fetchPages(r: Roots, sourceId: string, o: FetchOptions = {
       } else rep.verified.push(row.page_seq);
       continue;
     }
+    if (row.url.startsWith('owner:')) { rep.errors.push(`p${row.page_seq}: owner scan ${row.url.slice(6)} is missing from ${dir}; import it again with tools/fetch/import-scans.ts`); continue; }
     let res;
     try {
       res = await http.get(row.url, { accept: 'image/jpeg,image/png,image/*;q=0.8', cache: 'off' });

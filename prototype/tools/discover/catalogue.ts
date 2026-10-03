@@ -21,12 +21,13 @@ export const CATALOGUE_COLUMNS = [
   'access', 'pages', 'language', 'url', 'terms_note', 'found_by', 'notes',
 ] as const;
 
-export type Library = 'archive.org' | 'hathitrust' | 'gallica';
+/** owner-scan: pages photographed by the owner from a printed copy (imported by tools/fetch/import-scans.ts). */
+export type Library = 'archive.org' | 'hathitrust' | 'gallica' | 'owner-scan';
 export type Access = 'full' | 'pdus' | 'none' | '';
 
 export type CatalogueRow = Record<(typeof CATALOGUE_COLUMNS)[number], string>;
 
-const PREFIX: Record<Library, string> = { 'archive.org': 'ia', hathitrust: 'ht', gallica: 'ga' };
+const PREFIX: Record<Library, string> = { 'archive.org': 'ia', hathitrust: 'ht', gallica: 'ga', 'owner-scan': 'os' };
 
 export function encodeIdPart(s: string): string {
   let out = '';
@@ -59,8 +60,8 @@ export function sourceIdFor(library: Library, libraryId: string): string {
 }
 
 export function parseSourceId(sourceId: string): { library: Library; libraryId: string } {
-  const m = /^(ia|ht|ga)-(.+)$/.exec(sourceId);
-  if (!m) throw new Error(`source_id "${sourceId}" does not start with ia-, ht- or ga-`);
+  const m = /^(ia|ht|ga|os)-(.+)$/.exec(sourceId);
+  if (!m) throw new Error(`source_id "${sourceId}" does not start with ia-, ht-, ga- or os-`);
   const library = (Object.keys(PREFIX) as Library[]).find((l) => PREFIX[l] === m[1])!;
   return { library, libraryId: decodeIdPart(m[2]!) };
 }

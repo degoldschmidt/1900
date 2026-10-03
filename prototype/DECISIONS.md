@@ -220,3 +220,31 @@ Gate G1's pass condition (a full-view guide valid June–July 1914 covering at l
 **Tool fix from live data.** Current archive.org djvu.txt has no page breaks, so the page grep put every hit on page 1. The grep now uses the item's `_hocr_searchtext.txt.gz` with `_hocr_pageindex.json.gz` (page_seq = leaf + 1) and reports printed page numbers from `_page_numbers.json`. Tests were added.
 
 **Next: gate G1 (owner).** The plan's options are (a) the owner scans facsimile pages, (b) national guides per segment from further libraries, (c) dropping tier B, (d) shifting dates.
+
+## 2026-10-03 12:20 — Gate G1: facsimile scans plus more libraries (Decision P-007)
+
+**Owner decision.** Both of these at once:
+
+**(a) Facsimile scans.** The owner photographs a printed facsimile of *Bradshaw's Continental Railway Guide* (1913) following `data/sources/FACSIMILE_SCAN_GUIDE.md`:
+- the identification pages, the explanation of signs, the ten tier-A routes in both directions, the sea crossings, the express and sleeping-car pages, and fares;
+- about 40–80 pages.
+
+The photos enter as source `os-bradshaw-continental-1913` through the new `tools/fetch/import-scans.ts`: copied into the git-ignored `scans/`, with a sha256 and dimensions per page, and a manifest row with url `owner:<file>`. Photos are never committed.
+
+**Consequences, under the approved scope choices:**
+- The anchor becomes the 1913 issue.
+- By choice 3, it holds until the next transcribed issue, and every game's About screen shows that gap.
+- C07's spring-1914 changeover test (S1) needs a second issue on either side of the changeover. That is open until a 1914 source is found, and the changeover is not invented.
+- C04's wartime sub-gate stays open.
+
+**(b) More libraries for national guides.** The owner will add further domains to the environment's Allowed domains:
+- `europeana.eu`, `api.europeana.eu` (Europe-wide aggregator, for discovery);
+- `deutsche-digitale-bibliothek.de`, `api.deutsche-digitale-bibliothek.de` (German aggregator);
+- `digital.slub-dresden.de` (Dresden);
+- `digitale-sammlungen.de`, `api.digitale-sammlungen.de` (Munich);
+- `digital.staatsbibliothek-berlin.de`, `content.staatsbibliothek-berlin.de` (Berlin State Library);
+- `delpher.nl`, `resolver.kb.nl` (Dutch);
+- `anno.onb.ac.at`, `digital.onb.ac.at` (Austrian);
+- `polona.pl` (Polish).
+
+If the field accepts wildcards: `*.europeana.eu`, `*.deutsche-digitale-bibliothek.de`, `*.slub-dresden.de`, `*.digitale-sammlungen.de`, `*.staatsbibliothek-berlin.de`, `*.kb.nl`, `*.onb.ac.at`. The search targets are a Reichs-Kursbuch or a regional Prussian Kursbuch for spring and summer 1914, the Dutch Officieele Reisgids, Austrian Kursbücher, and Russian timetable pages.
