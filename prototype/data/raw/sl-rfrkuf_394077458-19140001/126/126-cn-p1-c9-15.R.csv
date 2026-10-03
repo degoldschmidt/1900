@@ -1,0 +1,10 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-cn-p1-c9-15,footnote,0,0,"Ausser- dem: ab Lissa III. Kl. 6 10, 5 16 ■, in Nimburg III. Kl. 6 35, 5 38 ■, 〃 〃 7 24, 11 55, 5 47, in Gr.-Wosek 8 19, 12 48, 6 39.",c:10,n,A,inner line ends 6 39. with a stop and no square; the squares follow 5 16 and 5 38 on the outer line
+126-cn-p1-c9-15,footnote,0,1,Speisewagen Tetschen-Wien.,c:9,y,agree,
+126-cn-p1-c9-15,footnote,0,2,Schlafwagen Berlin-Wien u. Leipz.-Wien,c:15,n,A,Schlafwagen / Berlin - Wien u. / Leipz.-Wien in c15
+126-cn-p1-c9-15,footnote,0,3,✤,c:14,n,A,quatrefoil standing alone in c14
+126-cn-p1-c9-15,footnote,0,4,✤,c:15,n,A,quatrefoil standing alone in c15
+126-cn-p1-c9-15,footnote,0,5,□ An Sonn- u. F. T. 17./5. b. m. 13./9.,c:10;fn:□,n,A,hollow rectangle before An Sonn- visible in the crop
+126-cn-p1-c9-15,footnote,0,6,● an Leitmeritz 11 03,c:11;c:12;c:13;fn:●,n,B,large tall filled dot (same sign as before 10 59 in c13) - larger than a bullet
+126-cn-p1-c9-15,footnote,0,7,? an Sonn- und Festtagen vom 14./6. b. m. 13./9.,c:11;c:12;c:13;fn:?,x,illegible,sign is two small stacked rings; hollow or filled not certain; not a symbol I can name
+126-cn-p1-c9-15,footnote,0,8,° ? Znaim bis Wien nur II. III. Kl.,c:13;fn:°,x,illegible,letter before Znaim could be V or Y at this resolution; context suggests V. (von)

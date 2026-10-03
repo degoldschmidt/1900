@@ -1,0 +1,11 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-cn-p1-c1-8,footnote,0,0,✤ Zollrevision des nach Wien N. W. Bf. bezw. Triest aufgegebenen Gepäcks kann auf Wunsch der Reisenden in Wien bezw. Triest erfolgen.,c:1;fn:✤,n,A,quatrefoil sign at the head of c1; text as keyed with spaced N. W. Bf.
+126-cn-p1-c1-8,footnote,0,1,D-Zug Reichenberg-Wien N.W.B. über Nimburg und Brüx-Aussig- Teplitzer Bhf.-Wien N.W.B. über Prag K.F.J.B.-Kolin.,c:2,n,A,N.W.B. and K.F.J.B. set tight in the print
+126-cn-p1-c1-8,footnote,0,2,"Ausserd.: ab Nimb. 5 10, i. Gr.-Wosek 5 38, i. Kolin 5 53 u. III. Kl.",c:5,n,A,after 5 53 the print shows a rounded u. (not the two stems of II.) before III. Kl
+126-cn-p1-c1-8,footnote,0,3,"* Nur werktags vor Sonn- u. Festtagen, II. u. III. Kl.",c:5;fn:*,y,A,star then Nur werktags ... II. u. III. Kl.
+126-cn-p1-c1-8,footnote,0,4,Spw. Dresd.-Wien F.J.Bf. D Zug Berl.-Wien F.J.Bf.,c:7,n,A,F.J.Bf. set tight in both lines
+126-cn-p1-c1-8,footnote,0,5,über Wschetat. Pr. Prag F. J. Bhf.,c:7,n,A,über Wschetat. Pr. is the first (right) line; Prag F. J. Bhf. the second
+126-cn-p1-c1-8,footnote,0,6,: D-Zug Stuttgart- Furth i. W.-König- grätz über Prag F.J.B.-Wysocan.,c:3;c:4;c:5;fn::,n,A,boxed note: Stuttgart- ends line 1 (joined by a space); F.J.B. set tight
+126-cn-p1-c1-8,footnote,0,7,! über Döbeln.,c:7;fn:!,n,B,stop after Döbeln visible at the end of the sideways line
+126-cn-p1-c1-8,footnote,0,8,■ Am Werktage vor Sonn- u. Festtagen.,c:2;fn:■,n,A,small filled square before Am Werktage
+126-cn-p1-c1-8,footnote,0,9,Nur Sonn- u. Festt.,c:8,y,agree,

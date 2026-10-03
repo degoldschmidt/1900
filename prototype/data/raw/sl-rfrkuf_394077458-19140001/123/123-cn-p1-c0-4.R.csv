@@ -1,0 +1,7 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+123-cn-p1-c0-4,footnote,0,0,? An d. Beneschauer u. Woticer Jahrmarktst.,c:1;fn:?,x,illegible,leading sign a small blot (dot or star) not identifiable; text reads Woticer
+123-cn-p1-c0-4,footnote,0,1,D-Zug Berl.- Prag-Triest,c:0,y,agree,
+123-cn-p1-c0-4,footnote,0,2,Speisewag. Prag-Wien.,c:3,y,agree,
+123-cn-p1-c0-4,footnote,0,3,I.-III,c:1,y,agree,
+123-cn-p1-c0-4,footnote,0,4,§ ab 1. Jun,c:0;fn:§,n,other,§ ab / 1.Jun in c0 of the lower part; note runs off the crop bottom after Jun
+123-cn-p1-c0-4,footnote,0,5,,,y,other,B's piece § ab is wholly in line 4 (it stands in c0 not c1)

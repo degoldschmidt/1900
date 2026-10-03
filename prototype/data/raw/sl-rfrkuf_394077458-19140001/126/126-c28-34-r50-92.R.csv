@@ -1,0 +1,48 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c28-34-r50-92,header,28,0,I-III,,y,agree,
+126-c28-34-r50-92,header,29,0,I-III,,y,agree,
+126-c28-34-r50-92,header,30,0,I.-III,,y,agree,
+126-c28-34-r50-92,header,31,0,I-III,,y,agree,
+126-c28-34-r50-92,header,32,0,I-III,,y,agree,
+126-c28-34-r50-92,header,33,0,I.-III,,y,agree,
+126-c28-34-r50-92,header,34,0,I-III,,y,agree,
+126-c28-34-r50-92,label,0,50,aus Wien N. W. Bf.,b,n,other,zoom shows aus left of the cell outline; heavy display face; spacing after the stops slight
+126-c28-34-r50-92,label,0,62,a. Prag Ö. N. W. B.,b,n,A,heavy display face
+126-c28-34-r50-92,label,0,64,a. Prag F. J. B. 122,b,y,A,heavy display face
+126-c28-34-r50-92,label,0,91,4?7 i.Tetsch. N.W.B. 121 147,b,x,illegible,zoom shows a small km figure before i.Tetsch. (left of the cell outline) omitted by both keyers; middle digit 5 or 6 not decidable - context 457
+126-c28-34-r50-92,label,0,92,in Dresd. Hbf. 23,b,y,other,zoom shows in clearly left of the cell outline; heavy display face
+126-c28-34-r50-92,cell,28,50,—,,y,agree,
+126-c28-34-r50-92,cell,29,50,1 47,,y,agree,
+126-c28-34-r50-92,cell,30,50,8 50,i,y,agree,
+126-c28-34-r50-92,cell,31,50,4 55,,y,agree,
+126-c28-34-r50-92,cell,32,50,7 10,,n,A,clear 7 10
+126-c28-34-r50-92,cell,33,50,6 44,u,y,agree,
+126-c28-34-r50-92,cell,34,50,11 15,,n,B,ordinary roman upright figures; same weight as 7 10 beside it
+126-c28-34-r50-92,cell,28,62,10 48,,n,B,ordinary roman upright figures
+126-c28-34-r50-92,cell,29,62,—,,y,agree,
+126-c28-34-r50-92,cell,30,62,2 01,i,y,agree,
+126-c28-34-r50-92,cell,31,62,6 19,u;i,y,agree,
+126-c28-34-r50-92,cell,32,62,4 40,,n,B,ordinary roman upright figures
+126-c28-34-r50-92,cell,33,62,—,,y,agree,
+126-c28-34-r50-92,cell,34,62,—,,y,agree,
+126-c28-34-r50-92,cell,28,64,11 30,,n,B,ordinary roman upright figures
+126-c28-34-r50-92,cell,29,64,Ank.,,y,agree,
+126-c28-34-r50-92,cell,30,64,2 50,i,y,agree,
+126-c28-34-r50-92,cell,31,64,5 55,,n,B,ordinary roman upright figures
+126-c28-34-r50-92,cell,32,64,6 28,u;i,y,agree,
+126-c28-34-r50-92,cell,33,64,Ank.,,y,agree,
+126-c28-34-r50-92,cell,34,64,Ank.,,y,agree,
+126-c28-34-r50-92,cell,28,91,4 14,,n,B,ordinary roman upright figures
+126-c28-34-r50-92,cell,29,91,,,y,agree,
+126-c28-34-r50-92,cell,30,91,5 25,i,y,agree,
+126-c28-34-r50-92,cell,31,91,8 20,u,n,B,ordinary roman upright figures; underlined
+126-c28-34-r50-92,cell,32,91,10 04,u,n,B,ordinary roman upright figures; underlined
+126-c28-34-r50-92,cell,33,91,,,y,agree,
+126-c28-34-r50-92,cell,34,91,,,y,agree,
+126-c28-34-r50-92,cell,28,92,6 23,u,n,B,ordinary roman upright figures; underlined
+126-c28-34-r50-92,cell,29,92,,,y,agree,
+126-c28-34-r50-92,cell,30,92,6 53,u;i,y,agree,
+126-c28-34-r50-92,cell,31,92,—,,y,agree,
+126-c28-34-r50-92,cell,32,92,12 09,u,n,B,ordinary roman upright figures; underlined
+126-c28-34-r50-92,cell,33,92,,,y,agree,
+126-c28-34-r50-92,cell,34,92,,,y,agree,

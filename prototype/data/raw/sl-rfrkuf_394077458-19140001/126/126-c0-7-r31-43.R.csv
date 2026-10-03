@@ -1,0 +1,27 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c0-7-r31-43,header,0,0,,,y,agree,
+126-c0-7-r31-43,header,1,0,,,y,agree,
+126-c0-7-r31-43,header,2,0,,,y,agree,
+126-c0-7-r31-43,header,3,0,,,y,agree,
+126-c0-7-r31-43,header,4,0,,,y,agree,
+126-c0-7-r31-43,header,5,0,,,y,agree,
+126-c0-7-r31-43,header,6,0,,,y,agree,
+126-c0-7-r31-43,header,7,0,,,y,agree,
+126-c0-7-r31-43,label,0,31,in Prag Ö. N. W. B.,b,n,A,heavy display face
+126-c0-7-r31-43,label,0,43,4?? i. Wien N W. Bf,b,x,illegible,last two digits of the km figure are blots (closed bowls not separable: 8/3/6/0); no stop visible after N or Bf; context 488
+126-c0-7-r31-43,cell,0,31,ab,,y,agree,
+126-c0-7-r31-43,cell,1,31,ab,,y,agree,
+126-c0-7-r31-43,cell,2,31,|,,y,agree,
+126-c0-7-r31-43,cell,3,31,8 32,i,y,agree,
+126-c0-7-r31-43,cell,4,31,ab,,y,agree,
+126-c0-7-r31-43,cell,5,31,—,,y,agree,
+126-c0-7-r31-43,cell,6,31,1 57,,n,B,ordinary roman upright figures
+126-c0-7-r31-43,cell,7,31,—,,y,agree,
+126-c0-7-r31-43,cell,0,43,2 13,,n,B,same roman weight as 10 02 beside it
+126-c0-7-r31-43,cell,1,43,10 02,,y,agree,
+126-c0-7-r31-43,cell,2,43,,,y,agree,
+126-c0-7-r31-43,cell,3,43,8 24,,n,B,ordinary roman upright figures
+126-c0-7-r31-43,cell,4,43,3 00,i,y,agree,
+126-c0-7-r31-43,cell,5,43,7 19,u,n,B,ordinary roman upright figures; underlined
+126-c0-7-r31-43,cell,6,43,10 30,u,n,B,ordinary roman upright figures; underlined
+126-c0-7-r31-43,cell,7,43,4 06,u;fn:°,n,A,small open circle before 4 06 clear in zoom; underlined

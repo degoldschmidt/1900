@@ -1,0 +1,48 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+112-c23-29-r55-61,header,23,0,I.-III,,y,agree,
+112-c23-29-r55-61,header,24,0,II. III,,y,agree,
+112-c23-29-r55-61,header,25,0,I-III,,y,agree,
+112-c23-29-r55-61,header,26,0,II. III,,y,agree,
+112-c23-29-r55-61,header,27,0,I.-III,,y,agree,
+112-c23-29-r55-61,header,28,0,I.-III,,y,agree,
+112-c23-29-r55-61,header,29,0,II.III.,,n,B,II.III. set tight
+112-c23-29-r55-61,label,0,55,a. Wien Staatsb. …,b,y,A,heavy display type
+112-c23-29-r55-61,label,0,56,Wien Nordb. …,b,y,A,heavy display type
+112-c23-29-r55-61,label,0,58,410 a. Prag Stbf. 122.123.126,b,n,A,condensed heavy as i.Prag on the other page
+112-c23-29-r55-61,label,0,60,540 i.Bodenb. 121.145.147,b,n,A,heavy display type
+112-c23-29-r55-61,label,0,61,i. Dresd. Hbf. 23,b,y,A,heavy display type
+112-c23-29-r55-61,cell,23,55,5 52,u,y,agree,
+112-c23-29-r55-61,cell,24,55,—,,y,agree,
+112-c23-29-r55-61,cell,25,55,11 35,b,y,A,heavy strokes; contrast with light 1 55 and 7 50 in this crop
+112-c23-29-r55-61,cell,26,55,—,,y,agree,
+112-c23-29-r55-61,cell,27,55,7 50,,y,agree,
+112-c23-29-r55-61,cell,28,55,11 35,b,n,A,thick 11 in the same face as 11 35 in c25; heavier than 7 50 beside it
+112-c23-29-r55-61,cell,29,55,7 50,,y,agree,
+112-c23-29-r55-61,cell,23,56,7 49,i,y,agree,
+112-c23-29-r55-61,cell,24,56,—,,y,agree,
+112-c23-29-r55-61,cell,25,56,2 25,b,n,A,curly heavy 2 as in 2 25 of r61 (c27-c28)
+112-c23-29-r55-61,cell,26,56,—,,y,agree,
+112-c23-29-r55-61,cell,27,56,—,,y,agree,
+112-c23-29-r55-61,cell,28,56,2 25,b,n,A,heavy curly 2 as the heavy face
+112-c23-29-r55-61,cell,29,56,—,,y,agree,
+112-c23-29-r55-61,cell,23,58,2 56,i,y,agree,
+112-c23-29-r55-61,cell,24,58,1 55,,y,agree,
+112-c23-29-r55-61,cell,25,58,6 18,b;u,y,A,heavy; underlined
+112-c23-29-r55-61,cell,26,58,6 55,b;u,y,A,heavy; underlined
+112-c23-29-r55-61,cell,27,58,8 10,b;u,y,A,heavy; underlined
+112-c23-29-r55-61,cell,28,58,10 35,u;i,y,agree,
+112-c23-29-r55-61,cell,29,58,11 47,b;u,n,A,heavy; underlined
+112-c23-29-r55-61,cell,23,60,5 20,i,y,agree,
+112-c23-29-r55-61,cell,24,60,7 55,b;u,n,A,heavier than light 1 55 above; underlined
+112-c23-29-r55-61,cell,25,60,,,y,A,blank between rules
+112-c23-29-r55-61,cell,26,60,10 10,b;u,y,A,heavy; underlined
+112-c23-29-r55-61,cell,27,60,12 06,b;u,y,A,heavy; underlined
+112-c23-29-r55-61,cell,28,60,12 58,u;i,y,A,italic; waist of 8 visible; underlined
+112-c23-29-r55-61,cell,29,60,,,y,agree,
+112-c23-29-r55-61,cell,23,61,6 53,u;i,y,agree,
+112-c23-29-r55-61,cell,24,61,9 47,u;i,n,A,italic; underlined
+112-c23-29-r55-61,cell,25,61,—,,y,agree,
+112-c23-29-r55-61,cell,26,61,12 09,b;u,y,other,heavy figures and a clear underline under 09
+112-c23-29-r55-61,cell,27,61,2 25,b;u,n,A,heavy; underlined
+112-c23-29-r55-61,cell,28,61,2 25,b;u,n,A,heavy; underlined
+112-c23-29-r55-61,cell,29,61,,,y,agree,

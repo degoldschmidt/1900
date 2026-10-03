@@ -1,0 +1,27 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c8-15-r31-43,header,8,0,,,y,agree,
+126-c8-15-r31-43,header,9,0,,,n,A,only the table rule; nothing printed
+126-c8-15-r31-43,header,10,0,,,y,agree,
+126-c8-15-r31-43,header,11,0,,,y,agree,
+126-c8-15-r31-43,header,12,0,,,y,agree,
+126-c8-15-r31-43,header,13,0,,,y,agree,
+126-c8-15-r31-43,header,14,0,,,n,A,only the table rule; (Auszugsw. title text sits above
+126-c8-15-r31-43,header,15,0,,,n,A,only the table rule; (Auszugsw. title text sits above
+126-c8-15-r31-43,label,0,31,in Prag Ö. N. W. B.,b,n,A,heavy display face
+126-c8-15-r31-43,label,0,43,4?? i. Wien N W. Bf,b,x,illegible,last two digits of the km figure are blots (closed bowls not separable: 8/3/6/0); no stop visible after N or Bf; context 488
+126-c8-15-r31-43,cell,8,31,6 15,u,n,B,ordinary roman upright figures; underlined
+126-c8-15-r31-43,cell,9,31,3 45,i,y,agree,
+126-c8-15-r31-43,cell,10,31,—,,y,agree,
+126-c8-15-r31-43,cell,11,31,—,,y,agree,
+126-c8-15-r31-43,cell,12,31,10 41,u,n,B,ordinary roman upright figures; underlined
+126-c8-15-r31-43,cell,13,31,—,,n,B,dash sits on the r31 baseline level with 10 41 and 6 15; 12 28 stands half a line higher (row above) - check span
+126-c8-15-r31-43,cell,14,31,|,,n,A,vertical rule mid-cell apart from the column rules: pass sign
+126-c8-15-r31-43,cell,15,31,|,,n,A,vertical rule mid-cell apart from the column rules: pass sign
+126-c8-15-r31-43,cell,8,43,9 16,u,n,B,ordinary roman upright figures; underlined
+126-c8-15-r31-43,cell,9,43,9 36,u;i,y,agree,
+126-c8-15-r31-43,cell,10,43,—,,y,agree,
+126-c8-15-r31-43,cell,11,43,9 21,u;i,y,agree,
+126-c8-15-r31-43,cell,12,43,6 17,,n,B,ordinary roman upright figures
+126-c8-15-r31-43,cell,13,43,,,y,agree,
+126-c8-15-r31-43,cell,14,43,7 22,i,y,A,italic 7 22
+126-c8-15-r31-43,cell,15,43,8 00,i,y,agree,

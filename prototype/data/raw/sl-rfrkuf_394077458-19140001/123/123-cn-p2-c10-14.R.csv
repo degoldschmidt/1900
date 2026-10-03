@@ -1,0 +1,5 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+123-cn-p2-c10-14,footnote,0,0,D-Zug Triest. Prag-Berlin,c:10,n,other,line ends Triest. with a dot (compare the clear hyphen of Wien- in c13)
+123-cn-p2-c10-14,footnote,0,1,D-Zug Wien- Prag-Berlin,c:13,y,agree,
+123-cn-p2-c10-14,footnote,0,2,Speisewag. Wien-Prag,c:14,y,agree,
+123-cn-p2-c10-14,footnote,0,3,◗,c:14,n,A,filled half-disc standing alone in c14

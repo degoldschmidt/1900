@@ -1,0 +1,54 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+112-c15-22-r55-61,header,15,0,,,y,agree,
+112-c15-22-r55-61,header,16,0,I-III,,y,agree,
+112-c15-22-r55-61,header,17,0,I-III,,n,A,faint first I but I-III readable
+112-c15-22-r55-61,header,18,0,II. III,,y,agree,
+112-c15-22-r55-61,header,19,0,,,y,agree,
+112-c15-22-r55-61,header,20,0,I.-III,,y,agree,
+112-c15-22-r55-61,header,21,0,II. III,,n,A,blurred but II. III
+112-c15-22-r55-61,header,22,0,I.-III,,y,agree,
+112-c15-22-r55-61,label,0,55,a. Wien Staatsb. …,b,y,A,heavy display type
+112-c15-22-r55-61,label,0,56,Wien Nordb. …,b,y,A,heavy display type
+112-c15-22-r55-61,label,0,58,410 a. Prag Stbf. 122.123.126,b,n,A,condensed heavy as i.Prag on the other page
+112-c15-22-r55-61,label,0,60,540 i.Bodenb. 121.145.147,b,n,A,heavy display type
+112-c15-22-r55-61,label,0,61,i. Dresd. Hbf. 23,b,y,A,heavy display type
+112-c15-22-r55-61,cell,15,55,,,y,agree,
+112-c15-22-r55-61,cell,16,55,10 00,u;i,y,agree,
+112-c15-22-r55-61,cell,17,55,6 30,b;u,n,A,thick strokes; heavy face
+112-c15-22-r55-61,cell,18,55,—,,y,agree,
+112-c15-22-r55-61,cell,19,55,,,y,agree,
+112-c15-22-r55-61,cell,20,55,—,,y,agree,
+112-c15-22-r55-61,cell,21,55,2 25,b;fn:•,n,A,heavy 2 after the bullet
+112-c15-22-r55-61,cell,22,55,—,,y,agree,
+112-c15-22-r55-61,cell,15,56,,,y,agree,
+112-c15-22-r55-61,cell,16,56,9 35,u;i,y,agree,
+112-c15-22-r55-61,cell,17,56,7 ?8,b;u,x,illegible,first minute digit a thin slanted stroke with no bowls: 1 or broken 3; context unknown
+112-c15-22-r55-61,cell,18,56,10 40,b;u,y,A,heavy; underlined
+112-c15-22-r55-61,cell,19,56,,,y,agree,
+112-c15-22-r55-61,cell,20,56,10 40,b;u,n,A,heavy; underlined
+112-c15-22-r55-61,cell,21,56,—,,y,agree,
+112-c15-22-r55-61,cell,22,56,—,,y,agree,
+112-c15-22-r55-61,cell,15,58,6 37,,y,agree,
+112-c15-22-r55-61,cell,16,58,5 55,u;i,y,agree,
+112-c15-22-r55-61,cell,17,58,7 31,b,y,A,thick strokes; heavy
+112-c15-22-r55-61,cell,18,58,—,,y,agree,
+112-c15-22-r55-61,cell,19,58,10 15,,y,agree,
+112-c15-22-r55-61,cell,20,58,12 35,i,y,agree,
+112-c15-22-r55-61,cell,21,58,12 03,,n,B,thin strokes; light face
+112-c15-22-r55-61,cell,22,58,2 15,b,y,A,thick strokes; heavy
+112-c15-22-r55-61,cell,15,60,7 28,,y,A,closed waist on 8; clear 2
+112-c15-22-r55-61,cell,16,60,8 15,i,y,agree,
+112-c15-22-r55-61,cell,17,60,11 37,b,n,A,thick 11; heavy as 11 35 on the facing crop
+112-c15-22-r55-61,cell,18,60,,,y,A,blank
+112-c15-22-r55-61,cell,19,60,—,,y,agree,
+112-c15-22-r55-61,cell,20,60,2 40,i,y,agree,
+112-c15-22-r55-61,cell,21,60,4 21,,n,B,thin strokes as 12 03 above; light
+112-c15-22-r55-61,cell,22,60,3 49,i,y,agree,
+112-c15-22-r55-61,cell,15,61,9 39,i,y,agree,
+112-c15-22-r55-61,cell,16,61,9 39,i,y,agree,
+112-c15-22-r55-61,cell,17,61,1 10,i,n,A,italic 1 10
+112-c15-22-r55-61,cell,18,61,48,,n,B,48 clear between two rules
+112-c15-22-r55-61,cell,19,61,—,,y,agree,
+112-c15-22-r55-61,cell,20,61,3 ?2,i,x,illegible,first minute digit a small damaged raised mark: 4 or 5 not decidable; italic face
+112-c15-22-r55-61,cell,21,61,6 23,b;u,n,A,heavy; underlined
+112-c15-22-r55-61,cell,22,61,5 00,i,y,agree,

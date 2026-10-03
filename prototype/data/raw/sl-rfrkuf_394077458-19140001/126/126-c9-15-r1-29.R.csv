@@ -1,0 +1,32 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c9-15-r1-29,header,9,0,,,y,agree,
+126-c9-15-r1-29,header,10,0,,,y,agree,
+126-c9-15-r1-29,header,11,0,,,y,agree,
+126-c9-15-r1-29,header,12,0,,,y,agree,
+126-c9-15-r1-29,header,13,0,,,y,agree,
+126-c9-15-r1-29,header,14,0,,,n,A,nothing printed in the header cell
+126-c9-15-r1-29,header,15,0,,,n,A,nothing printed in the header cell; (Auszugsw. is the title line above
+126-c9-15-r1-29,label,0,1,〃 Dresden Hbf. 23,b,n,A,heavy display face
+126-c9-15-r1-29,label,0,2,a. Tetschen N.W.B. 121 147,b,n,A,N.W.B. set with stops and no word spaces; heavy face; figures 121 and 147 blurred (second and last digits)
+126-c9-15-r1-29,label,0,29,in Prag F. J. B. 122,b,n,A,heavy display face
+126-c9-15-r1-29,cell,9,1,11 30,i,y,agree,
+126-c9-15-r1-29,cell,10,1,,,y,agree,
+126-c9-15-r1-29,cell,11,1,2 22,,n,B,ordinary roman upright figures
+126-c9-15-r1-29,cell,12,1,2 22,,n,B,ordinary roman upright figures
+126-c9-15-r1-29,cell,13,1,6 30,u,n,B,ordinary roman upright figures; underlined
+126-c9-15-r1-29,cell,14,1,9 55,u;i,y,agree,
+126-c9-15-r1-29,cell,15,1,10 53,u;i,y,agree,
+126-c9-15-r1-29,cell,9,2,12 59,i,y,agree,
+126-c9-15-r1-29,cell,10,2,,,y,agree,
+126-c9-15-r1-29,cell,11,2,4 52,,n,B,ordinary roman upright figures
+126-c9-15-r1-29,cell,12,2,5 05,,n,other,upright roman as 4 52 beside it; no underline inside the cell (the 5 descends onto the rule below)
+126-c9-15-r1-29,cell,13,2,9 20,u,n,B,ordinary roman upright figures; underlined
+126-c9-15-r1-29,cell,14,2,11 16,u;i,y,agree,
+126-c9-15-r1-29,cell,15,2,12 09,u;i,y,agree,
+126-c9-15-r1-29,cell,9,29,3 54,i,y,agree,
+126-c9-15-r1-29,cell,10,29,ab,,y,agree,
+126-c9-15-r1-29,cell,11,29,ab,,y,agree,
+126-c9-15-r1-29,cell,12,29,9 05,u,n,B,ordinary roman upright figures; underlined
+126-c9-15-r1-29,cell,13,29,ab,,n,A,ab below the boxed 12 23; lower part of the letters cut at crop edge
+126-c9-15-r1-29,cell,14,29,,,y,agree,
+126-c9-15-r1-29,cell,15,29,2 40,u,n,B,ordinary roman upright figures; underlined

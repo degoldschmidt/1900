@@ -1,0 +1,54 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+126-c20-27-r50-92,header,20,0,I.-III,,y,agree,
+126-c20-27-r50-92,header,21,0,I.-III,,y,agree,
+126-c20-27-r50-92,header,22,0,I.-III,,y,agree,
+126-c20-27-r50-92,header,23,0,,,y,agree,
+126-c20-27-r50-92,header,24,0,I.-III,,y,agree,
+126-c20-27-r50-92,header,25,0,I-III,,y,agree,
+126-c20-27-r50-92,header,26,0,I-III,,y,agree,
+126-c20-27-r50-92,header,27,0,I-III,,y,agree,
+126-c20-27-r50-92,label,0,50,aus Wien N. W. Bf.,b,n,other,zoom shows aus left of the cell outline; heavy display face; spacing after the stops slight
+126-c20-27-r50-92,label,0,62,a. Prag Ö. N. W. B.,b,n,A,heavy display face
+126-c20-27-r50-92,label,0,64,a. Prag F. J. B. 122,b,y,A,heavy display face
+126-c20-27-r50-92,label,0,91,4?7 i.Tetsch. N.W.B. 121 147,b,x,illegible,zoom shows a small km figure before i.Tetsch. (left of the cell outline) omitted by both keyers; middle digit 5 or 6 not decidable - context 457
+126-c20-27-r50-92,label,0,92,in Dresd. Hbf. 23,b,y,other,zoom shows in clearly left of the cell outline; heavy display face
+126-c20-27-r50-92,cell,20,50,8 20,u;i,y,agree,
+126-c20-27-r50-92,cell,21,50,9 40,u;i,y,agree,
+126-c20-27-r50-92,cell,22,50,1 25,i;fn::,n,A,two stacked dots (colon sign) before italic 1 25
+126-c20-27-r50-92,cell,23,50,,,y,agree,
+126-c20-27-r50-92,cell,24,50,8 48,u,n,B,ordinary roman upright figures; no heavier face than its neighbours
+126-c20-27-r50-92,cell,25,50,—,,y,agree,
+126-c20-27-r50-92,cell,26,50,6 24,,n,B,ordinary roman upright figures; no heavier face than its neighbours
+126-c20-27-r50-92,cell,27,50,—,,y,agree,
+126-c20-27-r50-92,cell,20,62,|,,y,agree,
+126-c20-27-r50-92,cell,21,62,11 30,u,n,B,ordinary roman upright figures; underlined
+126-c20-27-r50-92,cell,22,62,11 30,u,n,B,ordinary roman upright figures; underlined
+126-c20-27-r50-92,cell,23,62,—,,n,A,thick dash
+126-c20-27-r50-92,cell,24,62,6 17,,n,B,ordinary roman upright figures
+126-c20-27-r50-92,cell,25,62,Ank.,,y,agree,
+126-c20-27-r50-92,cell,26,62,—,,y,agree,
+126-c20-27-r50-92,cell,27,62,—,,y,agree,
+126-c20-27-r50-92,cell,20,64,1 35,u;i,y,agree,
+126-c20-27-r50-92,cell,21,64,|,,y,agree,
+126-c20-27-r50-92,cell,22,64,1 35,u;i,y,agree,
+126-c20-27-r50-92,cell,23,64,|,,y,agree,
+126-c20-27-r50-92,cell,24,64,7 50,,n,B,ordinary roman upright figures
+126-c20-27-r50-92,cell,25,64,,,y,agree,
+126-c20-27-r50-92,cell,26,64,Ank.,,y,agree,
+126-c20-27-r50-92,cell,27,64,Ank.,,y,agree,
+126-c20-27-r50-92,cell,20,91,4 08,u;i,y,agree,
+126-c20-27-r50-92,cell,21,91,5 50,u;i,y,agree,
+126-c20-27-r50-92,cell,22,91,7 39,,n,B,ordinary roman upright figures
+126-c20-27-r50-92,cell,23,91,9 00,,n,B,ordinary roman upright figures
+126-c20-27-r50-92,cell,24,91,11 40,,n,B,ordinary roman upright figures
+126-c20-27-r50-92,cell,25,91,,,y,agree,
+126-c20-27-r50-92,cell,26,91,,,y,agree,
+126-c20-27-r50-92,cell,27,91,,,y,agree,
+126-c20-27-r50-92,cell,20,92,5 26,u;i,y,agree,
+126-c20-27-r50-92,cell,21,92,7 08,i,y,agree,
+126-c20-27-r50-92,cell,22,92,9 39,i;fn:!,n,other,! then slanted 9 39 in c22; 10 48 stands mainly in c23 (only its 1 crosses the c22-c23 line)
+126-c20-27-r50-92,cell,23,92,10 48 —,,n,other,c23 holds upright 10 48 then a short vertical rule then a dash: looks like two sub-columns (cf. two bars in c23 r64)
+126-c20-27-r50-92,cell,24,92,1 48,,n,B,only upright 1 48 inside the c24 box; the dash lies left of it in c23
+126-c20-27-r50-92,cell,25,92,,,y,agree,
+126-c20-27-r50-92,cell,26,92,,,y,agree,
+126-c20-27-r50-92,cell,27,92,,,y,agree,

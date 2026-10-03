@@ -1,0 +1,12 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+112-cn-p1-c0-7,footnote,0,0,An Sonn- und Festtagen vom 31. Mai bis mit 30. August sowie am 2. Juni.,c:3;fn:?,x,illegible,leading sign shows as two small squares stacked; not identifiable as one sign
+112-cn-p1-c0-7,footnote,0,1,"Ausserdem mit I.-III. Kl. bez. II. III. Kl. ab Prag Stbhf. 5 25, 6 42, 12 00, in Kolin 7 19, 8 45, 1 55",c:2,n,A,text as keyed; only commas between the Kolin times uncertain
+112-cn-p1-c0-7,footnote,0,2,Ausserdem: ab Chotzen 6 41 in Böhmisch-Trübau 7 37 I.-III. Kl.,c:6,y,A,note reads as keyed; brace then I.-III. Kl.
+112-cn-p1-c0-7,footnote,0,3,Schlafw. Berl.-Karlsb.,c:1,y,agree,
+112-cn-p1-c0-7,footnote,0,4,Ausserdem: ab Rostok * 6 42 8 20 in Prag * 7 14 8 50,c:6,n,A,stars before 6 42 and 7 14 printed as text
+112-cn-p1-c0-7,footnote,0,5,? Verkehrt an den Jahrmarkttagen in Raudnitz.,c:3;fn:?,x,illegible,leading sign shows a small dot then a heavy dot; not a clear single bullet
+112-cn-p1-c0-7,footnote,0,6,II. III,c:2,y,agree,
+112-cn-p1-c0-7,footnote,0,7,II.III,c:6,n,B,II.III set tight in c6 (c2 and c3 show a space; c6 does not)
+112-cn-p1-c0-7,footnote,0,8,II. III,c:3,y,agree,
+112-cn-p1-c0-7,footnote,0,9,* Nur Sonn- u. Festtags.,c:6;fn:*,y,agree,
+112-cn-p1-c0-7,footnote,0,10,• Abfahrt Prag Franz Josef Bf.,c:3;fn:•,y,A,single heavy bullet before Abfahrt

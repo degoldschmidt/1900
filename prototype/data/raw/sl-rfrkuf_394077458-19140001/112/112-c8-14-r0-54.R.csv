@@ -1,0 +1,40 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+112-c8-14-r0-54,header,8,0,I III,,n,A,I and III with a gap; nothing between
+112-c8-14-r0-54,header,9,0,I III,,n,A,I and III with a gap; nothing between
+112-c8-14-r0-54,header,10,0,I III,,n,A,I and III with a gap; nothing between
+112-c8-14-r0-54,header,11,0,,,y,agree,
+112-c8-14-r0-54,header,12,0,I-III.,,y,agree,
+112-c8-14-r0-54,header,13,0,I-III,,y,agree,
+112-c8-14-r0-54,header,14,0,II. III,,y,agree,
+112-c8-14-r0-54,label,0,0,a. Bodenbach K.K.St.B.,b,n,other,zoom shows St.B. after K.K. before the column rule (cut off by the crop); heavy face
+112-c8-14-r0-54,label,0,47,"180 i.Prag Stbhf. 122,123",b,n,A,closed waist on middle digit: 180; comma-like separator descends below 122; i.Prag heavy
+112-c8-14-r0-54,label,0,53,528 Wien Nordb. …,b,n,other,heavy face; a leader dot follows Nordb. just past the cell outline
+112-c8-14-r0-54,label,0,54,540 Wien Staatsb,b,n,other,heavy face; no stop visible after Staatsb
+112-c8-14-r0-54,cell,8,0,1 02,i,y,A,slanted figures: italic
+112-c8-14-r0-54,cell,9,0,1 23,i,y,agree,
+112-c8-14-r0-54,cell,10,0,3 12,b,n,A,thick 3 and 12; heavier than the italic 1 02 and 1 23
+112-c8-14-r0-54,cell,11,0,—,,y,agree,
+112-c8-14-r0-54,cell,12,0,6 33,b;u,y,A,thick strokes; minutes underlined
+112-c8-14-r0-54,cell,13,0,8 28,u;i,y,A,italic 8 28 with underline under 28
+112-c8-14-r0-54,cell,14,0,10 45,b;u,n,A,underline under 45 clear; thick 10 as 6 33
+112-c8-14-r0-54,cell,8,47,3 21,i,y,agree,
+112-c8-14-r0-54,cell,9,47,5 29,i;fn:•,n,A,small filled dot before italic 5 29
+112-c8-14-r0-54,cell,10,47,6 50,u,n,B,same weight as the 6 10 in c14 of this row; underlined
+112-c8-14-r0-54,cell,11,47,7 25,u,n,B,same weight as the 6 10 in c14 of this row; underlined
+112-c8-14-r0-54,cell,12,47,10 30,b;u,y,A,thick 10 heavier than its neighbours; underlined
+112-c8-14-r0-54,cell,13,47,10 57,u;i,y,agree,
+112-c8-14-r0-54,cell,14,47,6 10,u,y,agree,
+112-c8-14-r0-54,cell,8,53,10 28,u;i,y,agree,
+112-c8-14-r0-54,cell,9,53,4 45,u,n,B,same weight as 6 35 below it; underlined
+112-c8-14-r0-54,cell,10,53,7 48,,n,B,same weight as 6 35 in c9r54
+112-c8-14-r0-54,cell,11,53,9 55,i,n,A,italic 9 55; open-left 5s
+112-c8-14-r0-54,cell,12,53,,,n,B,zoom box of c12 holds only the overhang of 9 55; 7 48 sits in the c13 box
+112-c8-14-r0-54,cell,13,53,7 48,,y,B,7 48 inside the c13 box
+112-c8-14-r0-54,cell,14,53,—,,y,agree,
+112-c8-14-r0-54,cell,8,54,—,,y,agree,
+112-c8-14-r0-54,cell,9,54,6 35,,y,agree,
+112-c8-14-r0-54,cell,10,54,8 35,,n,B,same weight as 6 35 in c9
+112-c8-14-r0-54,cell,11,54,11 15,,n,B,thin strokes as 6 35 in c9
+112-c8-14-r0-54,cell,12,54,,,n,B,c12 box holds only the overhang of 11 15; 6 55 is in the c13 box
+112-c8-14-r0-54,cell,13,54,6 55,i,y,B,italic 6 55 inside the c13 box
+112-c8-14-r0-54,cell,14,54,—,,y,A,dash

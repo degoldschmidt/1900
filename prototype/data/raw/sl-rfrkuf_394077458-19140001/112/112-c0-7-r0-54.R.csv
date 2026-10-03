@@ -1,0 +1,45 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+112-c0-7-r0-54,header,0,0,I,,n,A,single I; faint speck to its right is not a printed stop
+112-c0-7-r0-54,header,1,0,I. II.,,y,agree,
+112-c0-7-r0-54,header,2,0,,,y,agree,
+112-c0-7-r0-54,header,3,0,,,y,agree,
+112-c0-7-r0-54,header,4,0,(I. II),,y,A,(I. II) clear in crop
+112-c0-7-r0-54,header,5,0,I-III,,y,agree,
+112-c0-7-r0-54,header,6,0,,,y,agree,
+112-c0-7-r0-54,header,7,0,(I. III,,n,A,(I. III readable though blurred
+112-c0-7-r0-54,label,0,0,a. Bodenbach K.K.St.B.,b,n,other,zoom shows St.B. after K.K. before the column rule (cut off by the crop); heavy face
+112-c0-7-r0-54,label,0,47,"180 i.Prag Stbhf. 122,123",b,n,A,closed waist on middle digit: 180; comma-like separator descends below 122; i.Prag heavy
+112-c0-7-r0-54,label,0,53,528 Wien Nordb. …,b,n,other,heavy face; a leader dot follows Nordb. just past the cell outline
+112-c0-7-r0-54,label,0,54,540 Wien Staatsb,b,n,other,heavy face; no stop visible after Staatsb
+112-c0-7-r0-54,cell,0,0,2 30,u,y,agree,
+112-c0-7-r0-54,cell,1,0,4 05,u;i,y,agree,
+112-c0-7-r0-54,cell,2,0,,,y,agree,
+112-c0-7-r0-54,cell,3,0,,,y,agree,
+112-c0-7-r0-54,cell,4,0,5 45,b;u,y,A,thick heavy strokes; minutes underlined
+112-c0-7-r0-54,cell,5,0,8 47,i,y,agree,
+112-c0-7-r0-54,cell,6,0,,,y,agree,
+112-c0-7-r0-54,cell,7,0,10 20,,y,B,thin ordinary figures; not heavy
+112-c0-7-r0-54,cell,0,47,5 50,u,y,agree,
+112-c0-7-r0-54,cell,1,47,6 22,i,y,agree,
+112-c0-7-r0-54,cell,2,47,7 28,,y,agree,
+112-c0-7-r0-54,cell,3,47,8 55,,y,B,ordinary weight; thinner than 10 19 beside it
+112-c0-7-r0-54,cell,4,47,10 19,b,y,A,clearly heavier strokes than 8 55 beside it
+112-c0-7-r0-54,cell,5,47,11 05,i,y,agree,
+112-c0-7-r0-54,cell,6,47,1 46,,y,B,thin ordinary figures
+112-c0-7-r0-54,cell,7,47,4 02,,y,B,thin ordinary minutes; not heavy
+112-c0-7-r0-54,cell,0,53,—,,y,agree,
+112-c0-7-r0-54,cell,1,53,2 05,i,y,agree,
+112-c0-7-r0-54,cell,2,53,—,,y,agree,
+112-c0-7-r0-54,cell,3,53,,,y,agree,
+112-c0-7-r0-54,cell,4,53,6 28,u;i,n,A,slanted 6 and italic 28 underlined; centred across c4-c5 so keyed in c4
+112-c0-7-r0-54,cell,5,53,,,n,A,c5 holds only the right half of 6 28 keyed in c4
+112-c0-7-r0-54,cell,6,53,,,y,agree,
+112-c0-7-r0-54,cell,7,53,7 48,,y,B,thin ordinary figures
+112-c0-7-r0-54,cell,0,54,6 48,u,y,agree,
+112-c0-7-r0-54,cell,1,54,5 15,,y,agree,
+112-c0-7-r0-54,cell,2,54,6 48,u,y,agree,
+112-c0-7-r0-54,cell,3,54,,,y,agree,
+112-c0-7-r0-54,cell,4,54,10 00,u,n,A,upright 10 00 with underlined minutes; centred across c4-c5 so keyed in c4
+112-c0-7-r0-54,cell,5,54,,,n,A,c5 holds only the right half of 10 00 keyed in c4
+112-c0-7-r0-54,cell,6,54,,,y,agree,
+112-c0-7-r0-54,cell,7,54,6 35,,y,B,thin ordinary figures

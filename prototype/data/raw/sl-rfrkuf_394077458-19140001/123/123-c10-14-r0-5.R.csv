@@ -1,0 +1,30 @@
+crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
+123-c10-14-r0-5,header,10,0,I.-III,,y,agree,
+123-c10-14-r0-5,header,11,0,I.-III,,y,agree,
+123-c10-14-r0-5,header,12,0,II.III,,n,B,II.III set tight
+123-c10-14-r0-5,header,13,0,?.-III,,x,illegible,first glyph a faint curved stroke - not a clear I; context I.-III as c14
+123-c10-14-r0-5,header,14,0,I.-III,,n,A,I.-III clear
+123-c10-14-r0-5,label,0,0,a. Dresd. Hbf. 23 i.,b,n,A,station name in the heavy serif face
+123-c10-14-r0-5,label,0,1,〃 Bodenb. 118 〃,b,n,A,heavy serif face as Dresd. above; printed ditto marks
+123-c10-14-r0-5,label,0,3,a. Prag (F.J.B.) 1 718,b,n,A,figure after (F.J.B.) has a flag and no dot: 1; F.J.B. set without spaces; heavy
+123-c10-14-r0-5,label,0,5,850 i. Wien F.J.B. 150 a.,b,n,A,F.J.B. set without spaces; heavy
+123-c10-14-r0-5,cell,10,0,5 26,u;i;fn:?,x,illegible,slanted 5 and minutes (italic); sign before the time a narrow hollow D-shape; not identifiable as □ (same sign heads the c16 column note)
+123-c10-14-r0-5,cell,11,0,1 10,i,y,agree,
+123-c10-14-r0-5,cell,12,0,6 23,u,n,B,ordinary roman upright figures as the other roman times on this page; underlined
+123-c10-14-r0-5,cell,13,0,3 52,i,y,agree,
+123-c10-14-r0-5,cell,14,0,6 53,u;i,y,agree,
+123-c10-14-r0-5,cell,10,1,4 10,u;i;fn:?,x,illegible,italic 4 10 underlined; sign before the time a narrow hollow D-shape; not identifiable as □ (same sign heads the c16 column note)
+123-c10-14-r0-5,cell,11,1,11 37,,n,B,ordinary roman upright figures
+123-c10-14-r0-5,cell,12,1,4 21,,n,B,ordinary roman upright figures
+123-c10-14-r0-5,cell,13,1,2 40,i,y,agree,
+123-c10-14-r0-5,cell,14,1,5 20,i,y,agree,
+123-c10-14-r0-5,cell,10,3,1 23,u;i,y,agree,
+123-c10-14-r0-5,cell,11,3,6 45,,n,B,ordinary roman upright figures
+123-c10-14-r0-5,cell,12,3,10 40,,n,B,ordinary roman upright figures
+123-c10-14-r0-5,cell,13,3,12 17,i,y,agree,
+123-c10-14-r0-5,cell,14,3,2 36,i,n,A,italic 2 36
+123-c10-14-r0-5,cell,10,5,—,,y,agree,
+123-c10-14-r0-5,cell,11,5,8 30,u,n,B,ordinary roman upright figures; underlined
+123-c10-14-r0-5,cell,12,5,9 05,u,n,B,ordinary roman upright figures; underlined
+123-c10-14-r0-5,cell,13,5,7 00,i,y,agree,
+123-c10-14-r0-5,cell,14,5,8 25,i,y,A,slanted 8 and 25: italic
