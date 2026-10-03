@@ -395,3 +395,53 @@ Common to all three:
    - historian sample, then report to G2.
 
 **If access cannot be opened:** take G1 option (a). The owner uploads scans of the facsimile pages; they enter at step 6 by `tools/fetch/manifest.ts` with local files.
+
+## Addendum, 3 Oct 2026 22:40 UTC: closing gate G2 with contact sheets and a large blind sample
+
+### Context
+
+The transcription pilot (D2) on Fritzsches Kursbuch, Summer 1914, Berlin–Vienna (six tables, 653 sampleable cells) has been through two checks.
+
+- **Pilot check.** It failed the 0.5% target on marks: 5 errors in 132, all missing italic or "!".
+- **The G2 fixes** (P-013), then a re-keying of tables 12, 123 and 126.
+- **The re-check sample** (P-E020) found 0 value errors, but only 56 of its 133 cells could be read blind.
+
+Image reads keep failing with "media removed: request limit". One resolver and one historian made decisions before seeing the print and then had to redo them. Showing ≤ 0.5% with zero errors needs about 344 of the 653 cells.
+
+The owner chose: build contact sheets, then a large sample.
+
+**Intended outcome:** a blind re-read of about 350 cells using about 15× fewer image requests, giving a decisive G2 verdict. If it passes, transcription of Fritzsche Winter 1913/14 starts.
+
+### Steps
+
+1. **Contact sheets** (`tools/review/contact-sheet.ts`, new). Input: a sample CSV (`data/review/sample-<label>.csv`), or, later, a resolver packet.
+   - Each sheet is one PNG of up to 16 tiles (4×4). A tile is the cell's zoom with context margin, cut from the scan by `page_region`, using the same code as the existing zooms in `tools/keying/sample.ts` and `resolve-support.ts` (reuse `zoomKey`/`loadPage`). Each tile carries a large printed tile number and the cell's key (table, column, row), and **never the transcription**.
+   - Sheets stay at or under 1500 px on the long side. Tiles stay legible at 2× or more; if a tile would fall below that, use fewer tiles per sheet.
+   - Outputs go to `build/review/sample-<label>/sheet-NN.png`, plus `sheets.csv` mapping (sheet, tile) to `sample_id`.
+   - Tests: tile count, mapping, the size cap, no text from `.R.csv` in any output.
+2. **Sample size and bound** (`tools/keying/sample.ts`).
+   - Add `--n <count>` alongside `--stop-permille`.
+   - `score` reports the exact one-sided 95% upper bound of the value error rate with the finite-population (hypergeometric) correction.
+   - G2 passes when that bound is ≤ 0.5% (with 0 errors in 653 that needs about 344 cells read).
+   - The score uses the value rules (P-005, P-010, P-013: italic judged on the column header) and lists unread rows apart from read ones.
+   - Tests.
+3. **Draw.** A new seed and `--n 360`, about 5% headroom over 344 for unreadable cells. Draw only from resolved crops; the superseded crops of 12, 123 and 126 are skipped.
+4. **Two fresh historian agents,** blind, split by table (H1: 12, 13, 23; H2: 112, 123, 126). They are new agent instances, so neither has seen any stored value.
+   - Each reads only its contact sheets, one sheet per request. On an image failure: wait, retry once, then report. Never fill an unseen cell.
+   - They fill `reread_*` in their half of the sample CSV. Then one scoring run, classification of any mismatches (value error, typography, own misreading, ambiguous), and a section "3c" in `HISTORIAN_REVIEW.md`.
+5. **Verdict.**
+   - If it passes, log G2 closed and start Winter 1913/14 (`sl-rfrkuf_394077458-19130002`). Fetch the same six tables, then layouts, crops, two keyers, diff, resolution, normalise, validate and a 10% contact-sheet sample, with contact sheets also used for resolver packets.
+   - If it fails, classify the errors, fix the cause, re-key the affected tables and re-sample.
+6. **Log** P-E021 and the G2 verdict in `DECISIONS.md`; commit and push at each step.
+
+### Files
+
+- New: `tools/review/contact-sheet.ts` with tests.
+- Changed: `tools/keying/sample.ts` (`--n`, the bound, the unread count), `tools/keying/HISTORIAN_BRIEF.md` (contact-sheet procedure), `data/review/HISTORIAN_REVIEW.md` (section 3c).
+- Reused: the zoom helpers in `tools/keying/resolve-support.ts` and `tools/keying/sample.ts`, `loadPage` in `tools/crops/make-crops.ts`, and `valueOf`/`rulesFromNotation` in `tools/keying/value.ts`.
+
+### Verification
+
+- Unit tests for the contact-sheet builder and the bound calculation, with `npx vitest run`, `npx tsc` and `node tools/check/run-all.ts` green.
+- A dry run of the sheets on the existing `sample-recheck.csv`: view one sheet to confirm the tiles are legible and carry no transcription.
+- The historian runs report how many sheets loaded and how many cells were read. The verdict cites the bound as computed by the tool.
