@@ -1,0 +1,134 @@
+sample_id,source_id,table_ref,page_seq,crop_id,kind,col,row,page_region,rate_permille,reread_text,reread_marks,reread_sure,note
+Srecheck-0001,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,4,0,"591,193,60,28",200,,,,image not loaded
+Srecheck-0002,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,0,"887,193,64,28",200,,,,image not loaded
+Srecheck-0003,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,0,47,"389,1482,51,32",200,,,,image not loaded
+Srecheck-0004,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,3,47,"545,1482,46,32",200,,,,image not loaded
+Srecheck-0005,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,11,47,"1007,1482,45,32",200,,,,image not loaded
+Srecheck-0006,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,47,"1158,1482,67,32",200,,,,image not loaded
+Srecheck-0007,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,10,53,"951,1650,56,27",200,,,,image not loaded
+Srecheck-0008,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,53,"1158,1650,67,27",200,,,,image not loaded
+Srecheck-0009,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,54,"887,1677,64,27",200,,,,image not loaded
+Srecheck-0010,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,17,55,"403,143,55,27",200,,,,image not loaded
+Srecheck-0011,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,20,55,"565,143,63,27",200,,,,image not loaded
+Srecheck-0012,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,55,"685,143,62,27",200,,,,image not loaded
+Srecheck-0013,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,23,55,"747,143,53,27",200,,,,image not loaded
+Srecheck-0014,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,28,56,"1025,170,58,28",200,,,,image not loaded
+Srecheck-0015,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,29,56,"1083,170,61,28",200,,,,image not loaded
+Srecheck-0016,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,17,58,"403,337,55,41",200,,,,image not loaded
+Srecheck-0017,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,25,58,"854,337,54,41",200,,,,image not loaded
+Srecheck-0018,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,27,58,"962,337,63,41",200,,,,image not loaded
+Srecheck-0019,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,28,58,"1025,337,58,41",200,,,,image not loaded
+Srecheck-0020,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,19,60,"512,1625,53,32",200,,,,image not loaded
+Srecheck-0021,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,16,61,"349,1657,54,35",200,,,,image not loaded
+Srecheck-0022,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,61,"685,1657,62,35",200,,,,image not loaded
+Srecheck-0023,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,23,61,"747,1657,53,35",200,,,,image not loaded
+Srecheck-0024,sl-rfrkuf_394077458-19140001,12,58,12-c0-3-r0-40-v2,cell,0,0,"412,370,125,23",200,,,,image not loaded
+Srecheck-0025,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,9,0,"1043,370,63,23",200,,,,image not loaded
+Srecheck-0026,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,6,1,"853,393,64,26",200,,,,image not loaded
+Srecheck-0027,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,9,1,"1043,393,63,26",200,,,,image not loaded
+Srecheck-0028,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,11,1,"1168,393,52,26",200,,,,image not loaded
+Srecheck-0029,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,7,2,"917,419,63,26",200,,,,image not loaded
+Srecheck-0030,sl-rfrkuf_394077458-19140001,12,58,12-c4-7-r0-40-v2,cell,6,3,"853,445,64,27",200,,,,image not loaded
+Srecheck-0031,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,15,48,"477,392,62,28",200,,,,image not loaded
+Srecheck-0032,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,14,85,"412,1414,65,26",200,,,,image not loaded
+Srecheck-0033,sl-rfrkuf_394077458-19140001,12,59,12-c16-19-r48-88-v2,cell,16,85,"539,1414,64,26",200,,,,image not loaded
+Srecheck-0034,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,14,86,"412,1440,65,27",200,,,,image not loaded
+Srecheck-0035,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,15,86,"477,1440,62,27",200,,,,image not loaded
+Srecheck-0036,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,13,87,"349,1467,63,27",200,,,,image not loaded
+Srecheck-0037,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,15,87,"477,1467,62,27",200,,,,image not loaded
+Srecheck-0038,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,14,88,"412,1494,65,33",200,,,,image not loaded
+Srecheck-0039,sl-rfrkuf_394077458-19140001,12,59,12-c16-19-r48-88-v2,cell,16,88,"539,1494,64,33",200,,,,image not loaded
+Srecheck-0040,sl-rfrkuf_394077458-19140001,12,59,12-c16-19-r48-88-v2,cell,17,88,"603,1494,125,33",200,,,,image not loaded
+Srecheck-0041,sl-rfrkuf_394077458-19140001,12,59,12-c20-23-r48-88-v2,cell,20,88,"844,1494,64,33",200,,,,image not loaded
+Srecheck-0042,sl-rfrkuf_394077458-19140001,12,59,12-c20-23-r48-88-v2,cell,21,88,"908,1494,62,33",200,,,,image not loaded
+Srecheck-0043,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,0,0,"298,94,61,34",200,,,,image not loaded
+Srecheck-0044,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,4,0,"528,94,52,34",200,,,,image not loaded
+Srecheck-0045,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,9,0,"796,94,54,34",200,,,,image not loaded
+Srecheck-0046,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,11,0,"1156,94,53,34",200,,,,image not loaded
+Srecheck-0047,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,0,1,"298,128,61,28",200,,,,image not loaded
+Srecheck-0048,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,12,1,"1209,128,51,28",200,,,,image not loaded
+Srecheck-0049,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,13,1,"1260,128,61,28",200,2 40,,y,
+Srecheck-0050,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,14,1,"1321,128,59,28",200,5 20,,y,
+Srecheck-0051,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,5,3,"580,188,54,30",200,1 36,,y,
+Srecheck-0052,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,7,3,"683,188,64,30",200,4 20,,y,
+Srecheck-0053,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,12,3,"1209,188,51,30",200,10 40,,y,
+Srecheck-0054,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,18,3,"1551,188,49,30",200,,,,image not loaded
+Srecheck-0055,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,7,5,"683,638,64,32",200,9 45,u,y,
+Srecheck-0056,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,10,5,"1092,638,64,32",200,—,,y,"arrow-shaped ink straddling the left column rule judged to be a rule ornament, not a sign of this cell"
+Srecheck-0057,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,11,5,"1156,638,53,32",200,8 30,u,y,
+Srecheck-0058,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,12,2,"1004,190,58,34",200,5 05,,y,rule above is the row rule
+Srecheck-0059,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,5,29,"594,935,59,36",200,ab,,y,thick bar above is a row rule across the table
+Srecheck-0060,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,6,29,"653,935,49,36",200,12 40,,y,
+Srecheck-0061,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,7,29,"702,935,59,36",200,ab,,y,thick bar above is a row rule across the table
+Srecheck-0062,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,10,29,"879,935,62,36",200,ab,,y,thick bar above is a row rule across the table
+Srecheck-0063,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,11,29,"941,935,63,36",200,ab,,y,thick bar above is a row rule; 7 32 above is the row above
+Srecheck-0064,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,15,29,"1176,935,59,36",200,2 40,u,y,
+Srecheck-0065,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,0,43,"330,1334,55,31",200,2 13,,y,"thick line below spans the table (row rule), not an underline"
+Srecheck-0066,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,4,43,"535,1334,59,31",200,,,,image not loaded
+Srecheck-0067,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,15,43,"1176,1334,59,31",200,,,,image not loaded
+Srecheck-0068,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,50,"338,177,63,27",200,,,,image not loaded
+Srecheck-0069,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,50,"519,177,63,27",200,8 48,u,y,
+Srecheck-0070,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,29,50,"798,177,63,27",200,1 47,,y,
+Srecheck-0071,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,50,"922,177,50,27",200,,,,image not loaded
+Srecheck-0072,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,34,50,"1087,177,53,27",200,,,,image not loaded
+Srecheck-0073,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,62,"338,517,63,28",200,,,,image not loaded
+Srecheck-0074,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,62,"401,517,63,28",200,11 30,u,y,
+Srecheck-0075,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,23,62,"464,517,55,28",200,—,,y,a heavy bar: a long dash/rule inside the cell
+Srecheck-0076,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,27,62,"690,517,54,28",200,—,,y,
+Srecheck-0077,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,62,"922,517,50,28",200,6 19,u,y,
+Srecheck-0078,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,33,62,"1024,517,63,28",200,—,,y,
+Srecheck-0079,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,34,64,"1087,570,53,30",200,Ank.,,y,
+Srecheck-0080,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,91,"401,1308,63,32",200,,,,image not loaded
+Srecheck-0081,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,91,"519,1308,63,32",200,11 40,,y,rule below is a row rule
+Srecheck-0082,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,28,92,"744,1340,54,30",200,,,,image not loaded
+Srecheck-0083,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,92,"861,1340,61,30",200,6 53,u,y,rule above is a row rule
+Srecheck-0084,sl-rfrkuf_394077458-19140001,13,60,13-c0-6-r0-36,cell,2,0,"480,365,54,25",200,6 20,,y,
+Srecheck-0085,sl-rfrkuf_394077458-19140001,13,60,13-c7-13-r0-36,cell,11,1,"1044,390,64,27",200,|,,y,
+Srecheck-0086,sl-rfrkuf_394077458-19140001,13,60,13-c0-6-r0-36,cell,1,2,"413,417,67,25",200,5 42,u,y,
+Srecheck-0087,sl-rfrkuf_394077458-19140001,13,60,13-c0-6-r0-36,cell,4,3,"598,442,63,27",200,,,,image not loaded
+Srecheck-0088,sl-rfrkuf_394077458-19140001,13,60,13-c7-13-r0-36,cell,7,3,"788,442,62,27",200,,,,image not loaded
+Srecheck-0089,sl-rfrkuf_394077458-19140001,13,60,13-c7-13-r0-36,cell,10,3,"979,442,65,27",200,7 39,u,y,
+Srecheck-0090,sl-rfrkuf_394077458-19140001,13,60,13-c0-6-r0-36,cell,5,36,"661,1342,63,32",200,2 02,,y,rule below is a row rule
+Srecheck-0091,sl-rfrkuf_394077458-19140001,13,60,13-c0-6-r0-36,cell,6,36,"724,1342,64,32",200,5 03,,y,rule below is a row rule
+Srecheck-0092,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,16,44,"397,390,62,26",200,,,,image not loaded
+Srecheck-0093,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,19,44,"586,390,60,26",200,1 20,,y,
+Srecheck-0094,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,15,77,"334,1289,63,29",200,10 25,,y,
+Srecheck-0095,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,17,77,"459,1289,63,29",200,11 57,,y,
+Srecheck-0096,sl-rfrkuf_394077458-19140001,13,61,13-c21-26-r44-80,cell,21,78,"715,1318,67,24",200,,,,image not loaded
+Srecheck-0097,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,14,79,"271,1342,63,27",200,8 33,,y,
+Srecheck-0098,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,20,79,"646,1342,69,27",200,7 04,u,y,
+Srecheck-0099,sl-rfrkuf_394077458-19140001,13,61,13-c21-26-r44-80,cell,23,79,"845,1342,60,27",200,,,,image not loaded
+Srecheck-0100,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,14,80,"271,1369,63,31",200,8 38,,y,rule below is a row rule
+Srecheck-0101,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,16,80,"397,1369,62,31",200,11 06,,y,
+Srecheck-0102,sl-rfrkuf_394077458-19140001,23,74,23-c0-6-r0-26,cell,6,0,"734,648,63,28",200,6 24,,y,
+Srecheck-0103,sl-rfrkuf_394077458-19140001,23,74,23-c7-12-r0-26,cell,8,0,"860,648,64,28",200,,,,image not loaded
+Srecheck-0104,sl-rfrkuf_394077458-19140001,23,74,23-c0-6-r0-26,cell,5,14,"670,1043,64,41",200,8 04,,y,
+Srecheck-0105,sl-rfrkuf_394077458-19140001,23,74,23-c7-12-r0-26,cell,8,14,"860,1043,64,41",200,8 34,,y,
+Srecheck-0106,sl-rfrkuf_394077458-19140001,23,74,23-c0-6-r0-26,cell,1,26,"409,1421,64,43",200,3 41,u,y,
+Srecheck-0107,sl-rfrkuf_394077458-19140001,23,74,23-c7-12-r0-26,cell,9,26,"924,1421,62,43",200,9 19,,y,thin line below is the row rule
+Srecheck-0108,sl-rfrkuf_394077458-19140001,23,74,23-c7-12-r0-26,cell,10,26,"986,1421,64,43",200,—,,y,
+Srecheck-0109,sl-rfrkuf_394077458-19140001,23,74,23-c7-12-r0-26,cell,11,26,"1050,1421,62,43",200,—,,y,
+Srecheck-0110,sl-rfrkuf_394077458-19140001,23,75,23-c13-18-r32-57,cell,16,32,"608,640,72,26",200,12 10,,y,
+Srecheck-0111,sl-rfrkuf_394077458-19140001,23,75,23-c19-24-r32-57,cell,21,32,"970,640,72,26",200,3 15,,y,
+Srecheck-0112,sl-rfrkuf_394077458-19140001,23,75,23-c13-18-r32-57,cell,15,57,"536,1407,72,44",200,12 39,,y,lines above/below are row rules
+Srecheck-0113,sl-rfrkuf_394077458-19140001,23,75,23-c13-18-r32-57,cell,17,57,"680,1407,73,44",200,—,,y,
+Srecheck-0114,sl-rfrkuf_394077458-19140001,23,76,23-c26-29-r64-89,cell,27,64,"415,628,73,26",200,7 05,u,y,
+Srecheck-0115,sl-rfrkuf_394077458-19140001,23,76,23-c30-32-r64-89,cell,32,64,"759,628,136,26",200,,,,image not loaded
+Srecheck-0116,sl-rfrkuf_394077458-19140001,23,76,23-c26-29-r64-89,cell,27,78,"415,1021,73,41",200,,,,image not loaded
+Srecheck-0117,sl-rfrkuf_394077458-19140001,23,76,23-c30-32-r64-89,cell,30,89,"633,1393,63,48",200,,,,image not loaded
+Srecheck-0118,sl-rfrkuf_394077458-19140001,23,77,23-c33-38-r95-123,cell,37,95,"707,343,72,43",200,—,,y,
+Srecheck-0119,sl-rfrkuf_394077458-19140001,23,77,23-c39-43-r95-123,cell,42,95,"1076,343,80,43",200,—,,y,
+Srecheck-0120,sl-rfrkuf_394077458-19140001,23,77,23-c33-38-r95-123,cell,34,109,"464,804,72,29",200,,,,image not loaded
+Srecheck-0121,sl-rfrkuf_394077458-19140001,23,77,23-c39-43-r95-123,cell,41,109,"1004,804,72,29",200,10 30,,y,
+Srecheck-0122,sl-rfrkuf_394077458-19140001,23,77,23-c39-43-r95-123,cell,39,123,"851,1190,72,42",200,,,,image not loaded
+Srecheck-0123,sl-rfrkuf_394077458-19140001,23,77,23-c39-43-r95-123,cell,43,123,"1156,1190,53,42",200,,,,image not loaded
+Srecheck-0124,sl-rfrkuf_394077458-19140001,23,78,23-c44-49-r135-163,cell,45,135,"409,341,72,42",200,,,,"zoom loaded only on the retry, after the first score had shown resolved values; not read blind, excluded"
+Srecheck-0125,sl-rfrkuf_394077458-19140001,23,78,23-c44-49-r135-163,cell,47,135,"563,341,81,42",200,,,,"zoom loaded only on the retry, after the first score had shown resolved values; not read blind, excluded"
+Srecheck-0126,sl-rfrkuf_394077458-19140001,23,78,23-c44-49-r135-163,cell,48,135,"644,341,73,42",200,,,,"zoom loaded only on the retry, after the first score had shown resolved values; not read blind, excluded"
+Srecheck-0127,sl-rfrkuf_394077458-19140001,23,78,23-c50-54-r135-163,cell,50,135,"789,341,81,42",200,5 44,,y,
+Srecheck-0128,sl-rfrkuf_394077458-19140001,23,78,23-c50-54-r135-163,cell,53,135,"1022,341,82,42",200,7 04,u,y,
+Srecheck-0129,sl-rfrkuf_394077458-19140001,23,78,23-c44-49-r135-163,cell,48,149,"644,797,73,27",200,,,,"zoom loaded only on the retry, after the first score had shown resolved values; not read blind, excluded"
+Srecheck-0130,sl-rfrkuf_394077458-19140001,23,78,23-c50-54-r135-163,cell,50,149,"789,797,81,27",200,,,,"zoom loaded only on the retry, after the first score had shown resolved values; not read blind, excluded"
+Srecheck-0131,sl-rfrkuf_394077458-19140001,23,79,23-c55-60-r175-202,cell,56,175,"456,322,72,43",200,,,,"zoom loaded only on the retry, after the first score had shown resolved values; not read blind, excluded"
+Srecheck-0132,sl-rfrkuf_394077458-19140001,23,79,23-c55-60-r175-202,cell,58,175,"601,322,80,43",200,,,,"zoom loaded only on the retry, after the first score had shown resolved values; not read blind, excluded"
+Srecheck-0133,sl-rfrkuf_394077458-19140001,23,79,23-c55-60-r175-202,cell,59,202,"681,1169,81,40",200,,,,"zoom loaded only on the retry, after the first score had shown resolved values; not read blind, excluded"

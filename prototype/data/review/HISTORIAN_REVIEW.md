@@ -60,3 +60,48 @@ At 15–32 cells per table, one error is already 3–7%. "Met" therefore only me
 1. All five keying errors are omitted marks, not wrong figures, and all five are in italic (express) columns. Italic in this face is easy to miss: the hour digits (2, 7) of the italic fount look upright, and only the minutes slant. Judging italic by the whole train column, as I did here, would catch these. The `!` before a time was keyed in two of the four cells where it occurs in the sample. Both point to a brief addition, not to a general re-key.
 2. The sample says nothing about bold. If bold is ever needed for another guide, a separate sample is required.
 3. Open for the owner: the convention for a footnote sign that opens a sideways note (0121), and the reading of the braced last row of table 112 (0022).
+
+## 3b. Blind sample (G2 re-check)
+
+Reviewer: historian agent (Claude), 2026-10-03. Data state: git `76c83f9`, where tables 12, 123 and 126 are re-keyed (`-v2` crops) and the old crops are skipped. The sample file is `data/review/sample-recheck.csv` and the score is `build/review/sample-recheck.score.md`.
+
+**Draw.** `node tools/keying/sample.ts draw --seed 70419 --label recheck --stop-permille 200 --sources sl-rfrkuf_394077458-19140001`. The seed is new (the pilot used 52817). The draw is 133 cells from a population of 653 body cells. Every crop drawn for tables 12, 123 and 126 is a `-v2` crop.
+
+**Verdict: NOT SHOWN. This is not a pass.** Only 56 of the 133 cells could be read blind. None of them was in table 12 or 112. In those 56 cells I found **0 value errors**. But 0 in 56 is far from showing 0.5%: the 95% upper bound is 6.4%. The G2 condition, a fresh 20% sample that passes 0.5%, is therefore **not met**. Nothing contradicts the re-keying, but the measurement is incomplete. I did not run `--apply`.
+
+**A failure of my own process, stated first.** For this round, most zoom images did not load: the image tool returned "media removed: request limit", for the zoom PNGs and for my own page crops alike. In my first pass I wrote readings for 42 cells whose images had not loaded. Under the brief those cells had to be left blank. I caught this after the first score run and before writing this section. I removed every one of those readings, re-built the sample file from the cells whose images I had actually seen before scoring, and re-scored. **That first score (98 "read", 39 mismatches) is void.** Because it printed resolved values for many cells, I cannot re-read those cells blind any more. They need a different historian or a new seed.
+
+**Per table**
+
+| table | drawn | read blind | not loaded | excluded (loaded only after scoring) | value errors | value error rate | 95% interval (Clopper–Pearson) |
+|---|---|---|---|---|---|---|---|
+| 12 (-v2) | 19 | 0 | 19 | 0 | — | not measured | — |
+| 13 | 18 | 13 | 5 | 0 | 0 | 0% | 0–24.7% |
+| 23 | 32 | 17 | 7 | 8 | 0 | 0% | 0–19.5% |
+| 112 | 23 | 0 | 23 | 0 | — | not measured | — |
+| 123 (-v2) | 15 | 8 | 7 | 0 | 0 | 0% | 0–36.9% |
+| 126 (-v2) | 26 | 18 | 8 | 0 | 0 | 0% | 0–18.5% |
+| **source** | **133** | **56** | **69** | **8** | **0** | **0%** | **0–6.4%** |
+
+"Not loaded": I tried the image at least twice (the zoom PNG and my own crop of the page, or the zoom PNG twice) and it never loaded. Such rows are blank with the note `image not loaded`. "Excluded": the zoom of Srecheck-0124…0126 and 0129…0133 loaded on its single retry, but only after the void score had shown their resolved values. They are left unscored with a note.
+
+**What the 56 cells cover.** 41 are times and 15 are signs (`—`, `|`, `ab`, `Ank.`). 13 carry an underline. **None carries a footnote sign.** The two `!` cells drawn in table 123 (0043, 0047) are among those not loaded. The pilot's failure modes were italic in express columns and a dropped `!`, in tables 12, 123 and 126. Of those, this sample tested table 12 not at all, `!` not at all, and 123 in only 8 cells.
+
+**Score** (`node tools/keying/sample.ts score --label recheck`, no `--apply`). Read 56, exact mismatches 23. By class:
+
+| class | count | samples | note |
+|---|---|---|---|
+| keying error affecting value (digits, underline, sign, label identity, train category) | **0** | — | no figure, underline or sign differs |
+| typography only: bold | 11 | 0057 (123); 0058, 0060, 0065, 0069, 0070, 0074, 0081 (126); 0102, 0111, 0128 (23) | the resolution marks `b` and I did not judge bold. Bold has no meaning in this guide (P-010) |
+| typography only: body-cell italic | 12 | 0086, 0091, 0093, 0095, 0101 (13); 0105, 0106, 0107, 0110, 0112, 0114, 0127 (23) | tables 13 and 23 were keyed before P-013, so their resolved body cells still carry `i`. Under `valueMarks: ["u"]` this is typography. I checked each column's printed header: D 67, E 63, E 64, D 66, D 62, E137, D 1, E139, D 66, D 62, D 56, D 53. All agree with the resolved header text, so each category comes from its D/E prefix and is correct |
+| my misreading | 0 | — | |
+| genuinely ambiguous | 0 | — | |
+
+**Sample size needed.** With 0 errors observed, a 95% one-sided bound of 0.5% needs about **598** cells (rule of three), or 736 for a two-sided Clopper–Pearson bound. These tables hold only 653 sampled-population cells, so the finite-population calculation applies. With no error in the sample, about **344 cells (53%)** are needed to be 95% sure that the population holds at most 3 errors (0.5% of 653). A 20% sample, even fully read, is 133 cells and can at best bound the rate near 2.2%. It can show a failure but never a pass at 0.5%. Either the gate's sample size changes to about 50% of cells, or a census, or the gate criterion changes (for example a zero-error sample of fixed size, read as a bound of about 2%).
+
+**Found outside the blind sample (post-score checks of the print; not counted above)**
+1. **Table 112 c28: the train category is wrong (value).** The train from Wien prints its times in italic: on p. 183 `5 17`, `7 06`, `7 37`, `8 11`, `8 54`, `10 35` (r58), `12 58` (r60) and `11 23` all slant clearly against the upright neighbouring columns. Yet `services.csv` gives `FKB1914-SO.112.c28.r55` and `.r56` an empty category. The normaliser reports "i (Schnellzug) on 2 of 4 times and not on the header; category left empty" (`build/reports/pending-FKB1914-SO.md`, lines 310–311). The cause is that table 112 was not re-keyed under P-013: its header carries no `i`, and the old body-cell italic does not reach a majority. The keyed figures are right. Tables 112, 13 and 23 should get a header-only category pass (italic on the train-number or `h0` cell, per column), because body-cell italic no longer decides anything. In 13 and 23 this matters only for columns without a D/E/L prefix.
+2. **Table 126 c31: a feeder leg in italic under an upright train (ambiguous; method gap).** On p. 193 the feeder block of c31 (`6 50`, `7 09`, `6 19` = Srecheck-0077, `7 23`) is printed in italic. The column's main train (`4 55`, `8 08`, … `8 20`) is upright, and its header `I-III` correctly has no `i`. The per-column rule has no place for a leg with its own category in a table that prints no train numbers. So `FKB1914-SO.126.c31.r62` gets an empty category. The rule also does not say whether a connecting leg's italic changes the category of the through service. The owner should decide. One option is to key such a block's italic as a column note (like a part-way train number).
+3. I looked at 112 c9, c17 and c23 while checking these. c9 and c23 (italic, Schnellzug) and c17 (upright, no category) agree with `services.csv`.
+
+**What would complete G2.** A historian not exposed to the void score needs to re-read the 77 unread cells of this draw: all of tables 12 and 112, 7 cells of 123 including both `!` cells, and the rest. The better course is to draw a larger sample of about 50%, given the arithmetic above. Reads should go in small batches, retried one at a time, because of the image request limit that blocked this round.

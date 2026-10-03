@@ -443,3 +443,23 @@ The full report is `data/review/PILOT_REPORT.md`. **Verdict: times are reliable,
 3. **Crop margins are wider,** and there is a rule for sideways notes interrupted by times.
 4. **Failed image loads are caught.** Agents stop and report any image read that fails. A post-check (`ocr-check`) compares keyed header train numbers with the page OCR, as a signal only, never as values, and flags crops a keyer may not have seen.
 5. **Tables 12, 123 and 126 are re-keyed in full** by fresh blind keyers, then resolved, then sampled at 20% across all six tables.
+
+## 2026-10-03 22:30 — G2 re-check sample: no errors found, but not conclusive (Event P-E020)
+
+**Draw.** Seed 70419, 133 cells from 653, taken from the -v2 crops for 12, 123 and 126.
+
+**Problems.** Image reads repeatedly failed with "media removed: request limit". Only 56 cells were read blind; tables 12 and 112 went unmeasured. The historian's first pass wrote readings for 42 cells never seen. They voided those and re-scored, but the void score had shown them the stored values, so those cells can no longer be re-read blind. This is a process failure and is recorded as such.
+
+**Result.** On the 56 cells read blind: **0 value errors** (95% interval 0–6.4%). The 23 mismatches are all typography: 11 bold, and 12 body italics keyed before the per-column rule, where the D/E headers still set the category correctly.
+
+**Across both samples,** no hour or minute figure was wrong in about 190 cells read blind.
+
+**Statistics.** Showing ≤ 0.5% with zero errors needs about 344 of 653 cells. A 20% sample bounds the rate only near 2.2%, so the G2 target as written cannot be shown by a 20% sample.
+
+**Gaps outside the sample:**
+- Table 112 c28 prints italic but has no header italic, so no category is set.
+- Table 126 c31 has an italic feeder block under an upright train, which the per-column rule cannot record.
+
+**Main operational finding.** Image-read limits, not keying skill, are now the bottleneck for resolvers and the historian alike.
+
+**Proposed remedy (owner's G2 decision pending).** Contact sheets: one image holding about 12–20 numbered cell zooms with their keys printed beside them. That cuts image requests about 15×. With it, either re-sample to the size the target needs, or replace the target with cumulative sampling during production.
