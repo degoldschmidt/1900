@@ -79,61 +79,61 @@ Sg2census-0117,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,18,3
 Sg2census-0118,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,4,5,"528,638,52,32",1000,9 10,u,y,"own zoom: underline under 10, separate from the heavy rule below the row"
 Sg2census-0119,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5-v2,cell,7,5,"683,638,64,32",1000,9 45,u,y,"own zoom: underline under 45, separate from the heavy rule below the row"
 Sg2census-0120,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,12,5,"1209,638,51,32",1000,9 05,u,y,"own zoom 8x: underline under 05, separate from the heavy rule below the row (hard to see on the sheet)"
-Sg2census-0121,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,13,5,"1260,638,61,32",1000,,,,
-Sg2census-0122,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,15,5,"1380,638,59,32",1000,,,,
-Sg2census-0123,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,17,5,"1494,638,57,32",1000,,,,
-Sg2census-0124,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,4,1,"535,159,59,31",1000,,,,
-Sg2census-0125,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,5,1,"594,159,59,31",1000,,,,
-Sg2census-0126,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,6,1,"653,159,49,31",1000,,,,
-Sg2census-0127,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,7,1,"702,159,59,31",1000,,,,
-Sg2census-0128,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,14,1,"1117,159,59,31",1000,,,,
-Sg2census-0129,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,4,2,"535,190,59,34",1000,,,,
-Sg2census-0130,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,6,2,"653,190,49,34",1000,,,,
-Sg2census-0131,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,9,2,"820,190,59,34",1000,,,,
-Sg2census-0132,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,2,29,"435,935,50,36",1000,,,,
-Sg2census-0133,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,4,29,"535,935,59,36",1000,,,,
-Sg2census-0134,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,5,29,"594,935,59,36",1000,,,,
-Sg2census-0135,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,6,29,"653,935,49,36",1000,,,,
-Sg2census-0136,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,9,29,"820,935,59,36",1000,,,,
-Sg2census-0137,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,13,29,"1062,935,55,36",1000,,,,
-Sg2census-0138,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,14,29,"1117,935,59,36",1000,,,,
-Sg2census-0139,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,2,31,"435,990,50,34",1000,,,,
-Sg2census-0140,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,6,31,"653,990,49,34",1000,,,,
-Sg2census-0141,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,7,31,"702,990,59,34",1000,,,,
-Sg2census-0142,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,9,31,"820,990,59,34",1000,,,,
-Sg2census-0143,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,12,31,"1004,990,58,34",1000,,,,
-Sg2census-0144,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,13,31,"1062,990,55,34",1000,,,,
-Sg2census-0145,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,14,31,"1117,990,59,34",1000,,,,
-Sg2census-0146,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,15,31,"1176,990,59,34",1000,,,,
-Sg2census-0147,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,0,43,"330,1334,55,31",1000,,,,
-Sg2census-0148,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,1,43,"385,1334,50,31",1000,,,,
-Sg2census-0149,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,5,43,"594,1334,59,31",1000,,,,
-Sg2census-0150,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,7,43,"702,1334,59,31",1000,,,,
-Sg2census-0151,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,9,43,"820,1334,59,31",1000,,,,
-Sg2census-0152,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,11,43,"941,1334,63,31",1000,,,,
-Sg2census-0153,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,20,50,"275,177,63,27",1000,,,,
-Sg2census-0154,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,50,"401,177,63,27",1000,,,,
-Sg2census-0155,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,50,"519,177,63,27",1000,,,,
-Sg2census-0156,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,27,50,"690,177,54,27",1000,,,,
-Sg2census-0157,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,50,"861,177,61,27",1000,,,,
-Sg2census-0158,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,34,50,"1087,177,53,27",1000,,,,
-Sg2census-0159,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,23,62,"464,517,55,28",1000,,,,
-Sg2census-0160,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,27,62,"690,517,54,28",1000,,,,
-Sg2census-0161,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,29,62,"798,517,63,28",1000,,,,
-Sg2census-0162,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,62,"861,517,61,28",1000,,,,
-Sg2census-0163,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,34,62,"1087,517,53,28",1000,,,,
-Sg2census-0164,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,64,"338,570,63,30",1000,,,,
-Sg2census-0165,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,64,"401,570,63,30",1000,,,,
-Sg2census-0166,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,23,64,"464,570,55,30",1000,,,,
-Sg2census-0167,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,29,64,"798,570,63,30",1000,,,,
-Sg2census-0168,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,64,"861,570,61,30",1000,,,,
-Sg2census-0169,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,64,"922,570,50,30",1000,,,,
-Sg2census-0170,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,32,64,"972,570,52,30",1000,,,,
-Sg2census-0171,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,34,64,"1087,570,53,30",1000,,,,
-Sg2census-0172,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,23,91,"464,1308,55,32",1000,,,,
-Sg2census-0173,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,91,"861,1308,61,32",1000,,,,
-Sg2census-0174,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,91,"922,1308,50,32",1000,,,,
-Sg2census-0175,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,32,91,"972,1308,52,32",1000,,,,
-Sg2census-0176,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,20,92,"275,1340,63,30",1000,,,,
-Sg2census-0177,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,92,"401,1340,63,30",1000,,,,
-Sg2census-0178,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,92,"519,1340,63,30",1000,,,,
+Sg2census-0121,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5-v2,cell,13,5,"1260,638,61,32",1000,7 00,,y,own zoom: no underline above the heavy rule (c12's 9 05 beside it does have one)
+Sg2census-0122,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,15,5,"1380,638,59,32",1000,6 10,,y,own zoom: no underline above the heavy rule
+Sg2census-0123,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5-v2,cell,17,5,"1494,638,57,32",1000,4 15,,y,own zoom: no underline; the underline at the top edge belongs to 7 21 above
+Sg2census-0124,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,4,1,"535,159,59,31",1000,—,,y,short dash mid-row
+Sg2census-0125,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,5,1,"594,159,59,31",1000,—,,y,short dash mid-row
+Sg2census-0126,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,6,1,"653,159,49,31",1000,7 10,,y,"own zoom: line below is a column-wide bar, not an underline"
+Sg2census-0127,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,7,1,"702,159,59,31",1000,10 00,,y,own zoom: line below is a column-wide bar; the ! above belongs to 6 31 in the row above
+Sg2census-0128,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,14,1,"1117,159,59,31",1000,9 55,u,n,own zoom 8x: minutes smeared; both figures show the 5's left upright and top flag (not 3s); underline clear; the underline at the top edge belongs to 7 01 above
+Sg2census-0129,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,4,2,"535,190,59,34",1000,6 05,,y,own zoom: no underline; bar along the top edge is structure
+Sg2census-0130,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,6,2,"653,190,49,34",1000,8 44,,y,"own zoom: the black triangle left of the column rule is the sideways capital A of a note in c5 (* An…), not a sign of this time"
+Sg2census-0131,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,9,2,"820,190,59,34",1000,12 59,,y,own zoom: no underline
+Sg2census-0132,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,2,29,"435,935,50,36",1000,ab,,y,heavy bar along the top edge is structure; the time below it (: 7 51) is in the next row
+Sg2census-0133,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,4,29,"535,935,59,36",1000,9 51,,y,own zoom: no underline
+Sg2census-0134,sl-rfrkuf_394077458-19140001,126,192,126-c1-5-r1-29-v2,cell,5,29,"594,935,59,36",1000,ab,,y,own zoom 8x: the b's ascender is faint but its upright and closed bowl are clear; heavy bar along the top edge is structure; 9 46 below is the next row
+Sg2census-0135,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,6,29,"653,935,49,36",1000,12 40,,y,own zoom: no underline
+Sg2census-0136,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r1-29-v2,cell,9,29,"820,935,59,36",1000,3 54,,y,own zoom: no underline
+Sg2census-0137,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,13,29,"1062,935,55,36",1000,ab,,y,"grid offset (own wide zoom with grid guides): c13's printed lines run 3-14 page px below the grid; ab pairs with c12's 9 05 and c11's ab (r29), the boxed 12 23 above is r28's line and 12 28 below is r30's; the box's bottom frame line above ab is structure"
+Sg2census-0138,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,14,29,"1117,935,59,36",1000,|,,y,a long pass bar runs mid-column through rows 27-31 and ends above 1 27 (r32); the c13 box's right frame line at the left edge is structure
+Sg2census-0139,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,2,31,"435,990,50,34",1000,|,,y,short bar mid-cell
+Sg2census-0140,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,6,31,"653,990,49,34",1000,1 57,,y,
+Sg2census-0141,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,7,31,"702,990,59,34",1000,—,,y,short dash level with the r31 line; 2 41 across the top edge is r30's line
+Sg2census-0142,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,9,31,"820,990,59,34",1000,3 45,,y,"3 00 above the top edge is r30's line, 3 15 below is r32's"
+Sg2census-0143,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,12,31,"1004,990,58,34",1000,10 41,u,y,own wide zoom; the underline at the top edge belongs to 8 30 above (r30)
+Sg2census-0144,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,13,31,"1062,990,55,34",1000,—,,y,grid offset (own wide zoom with grid guides): 12 28 at the top edge is r30's line (it pairs with c12's 8 30); the short dash below it pairs with c12's 10 41 (r31) and is this cell
+Sg2census-0145,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,14,31,"1117,990,59,34",1000,|,,y,pass bar mid-column (the long bar from r27 ends above 1 27 in r32)
+Sg2census-0146,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,15,31,"1176,990,59,34",1000,|,,y,"pass bar mid-column from r30 to r32 (ends above 2 33); the line near the right edge is the table border, the shaded strip beyond it the gutter"
+Sg2census-0147,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,0,43,"330,1334,55,31",1000,2 13,,y,own zoom: no underline; heavy rule below is structure
+Sg2census-0148,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,1,43,"385,1334,50,31",1000,10 02,,y,own zoom: no underline; heavy rule below is structure
+Sg2census-0149,sl-rfrkuf_394077458-19140001,126,192,126-c0-5-r31-43-v2,cell,5,43,"594,1334,59,31",1000,7 19,u,y,own zoom: underline under 19 above the heavy rule
+Sg2census-0150,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,7,43,"702,1334,59,31",1000,4 06,u;fn:°,y,"own zoom 10x: a small hollow ring before the hour, about half as tall as the raised minutes (°, not ○ or •); 06 underlined"
+Sg2census-0151,sl-rfrkuf_394077458-19140001,126,192,126-c6-10-r31-43-v2,cell,9,43,"820,1334,59,31",1000,9 36,u,y,own zoom
+Sg2census-0152,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r31-43-v2,cell,11,43,"941,1334,63,31",1000,9 21,u,y,own zoom
+Sg2census-0153,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,20,50,"275,177,63,27",1000,8 20,u,y,
+Sg2census-0154,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,50,"401,177,63,27",1000,1 25,fn::,y,own zoom: two stacked filled dots (colon) just right of the column rule before the hour; no underline
+Sg2census-0155,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,50,"519,177,63,27",1000,8 48,u,y,
+Sg2census-0156,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,27,50,"690,177,54,27",1000,—,,y,short dash mid-row
+Sg2census-0157,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,50,"861,177,61,27",1000,8 50,,y,own zoom: no underline
+Sg2census-0158,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,34,50,"1087,177,53,27",1000,11 15,,y,own zoom: no underline
+Sg2census-0159,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,23,62,"464,517,55,28",1000,—,,n,"own wide zoom with grid guides: the cell holds only a heavy horizontal rule over ~80% of the column width, standing mid-row level with r62's figures in c22 (11 30) and c24 (6 17), not on a row line; it sits under a sideways note and above the train's first time 6 18 (r63). Keyed as — under ""a horizontal dash or rule inside a cell, any length""; it may be meant as the structural bar before a train starts"
+Sg2census-0160,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,27,62,"690,517,54,28",1000,—,,y,short dash mid-row
+Sg2census-0161,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,29,62,"798,517,63,28",1000,—,,y,short dash mid-row
+Sg2census-0162,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,62,"861,517,61,28",1000,2 01,,y,own zoom: no underline
+Sg2census-0163,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,34,62,"1087,517,53,28",1000,—,,y,short dash mid-row; the underline at the top edge belongs to 9 20 above
+Sg2census-0164,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,21,64,"338,570,63,30",1000,|,,y,pass bar mid-column; the underline at the top edge belongs to 3 58 above
+Sg2census-0165,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,64,"401,570,63,30",1000,1 35,u,y,own zoom
+Sg2census-0166,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,23,64,"464,570,55,30",1000,|,,y,short bar mid-cell (own wide zoom)
+Sg2census-0167,sl-rfrkuf_394077458-19140001,126,193,126-c25-29-r50-92-v2,cell,29,64,"798,570,63,30",1000,Ank.,,y,word printed in the cell
+Sg2census-0168,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,64,"861,570,61,30",1000,2 50,,y,own zoom: no underline
+Sg2census-0169,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,64,"922,570,50,30",1000,5 55,,y,own zoom: no underline under 55; the curly brace below (cusp at the c31/c32 rule) joins c31 and c32 and is structure; c32's 6 28 has its own underline above the brace
+Sg2census-0170,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,32,64,"972,570,52,30",1000,6 28,u,y,"own zoom: own underline under 28, above the brace; the arrow (←) above-right is in c33, row above"
+Sg2census-0171,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,34,64,"1087,570,53,30",1000,Ank.,,y,word printed in the cell; the black oval below is in the next row
+Sg2census-0172,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,23,91,"464,1308,55,32",1000,9 00,,y,own zoom: no underline; bar below is structure
+Sg2census-0173,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,91,"861,1308,61,32",1000,5 25,,y,own zoom: no underline; line below runs across the whole column (bar)
+Sg2census-0174,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,31,91,"922,1308,50,32",1000,8 20,u,y,the underline at the top edge belongs to 8 15 above; bar below is structure
+Sg2census-0175,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,32,91,"972,1308,52,32",1000,10 04,u,y,own zoom; bar below is structure
+Sg2census-0176,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,20,92,"275,1340,63,30",1000,5 26,u,y,"own wide zoom: underline under 26; bar along the top edge is structure; below r91 the printed columns no longer match the grid, but 5 26 lies inside this box"
+Sg2census-0177,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,92,"401,1340,63,30",1000,10 48,,n,"own wide zoom with grid guides: below the bar after r91 the table has six printed columns (5 26 | 7 08 | ! 9 39 | 10 48 | — | 1 48) under the grid's five. This box holds the minutes 39 of ""! 9 39"" (whose printed column straddles the c21/c22 tick) and ""10 4"" of 10 48 (its 8 runs past the right tick; its printed column's centre is inside the box), so 10 48 is read; the alternative is 9 39 with fn:! (no rule is printed between 39 and 10 in this row)"
+Sg2census-0178,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,24,92,"519,1340,63,30",1000,1 48,,y,own wide zoom: the printed column holding 1 48 lies inside this box; bar along the top edge is structure

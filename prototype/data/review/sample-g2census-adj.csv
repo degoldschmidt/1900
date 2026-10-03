@@ -1,0 +1,7 @@
+sample_id,source_id,table_ref,page_seq,crop_id,kind,col,row,page_region,rate_permille,reread_text,reread_marks,reread_sure,note
+Sg2census-0002,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,4,0,"591,193,60,28",1000,,,,
+Sg2census-0045,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,18,61,"458,1657,54,35",1000,,,,
+Sg2census-0054,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,9,0,"1043,370,63,23",1000,,,,
+Sg2census-0099,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5-v2,cell,0,1,"298,128,61,28",1000,,,,
+Sg2census-0177,sl-rfrkuf_394077458-19140001,126,193,126-c20-24-r50-92-v2,cell,22,92,"401,1340,63,30",1000,,,,
+Sg2census-0248,sl-rfrkuf_394077458-19140001,23,76,23-c30-32-r64-89,cell,30,89,"633,1393,63,48",1000,,,,
