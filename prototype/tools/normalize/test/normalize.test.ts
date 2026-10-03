@@ -220,3 +220,25 @@ describe('normalize.ts command line', () => {
     expect(readFileSync(join(dir, 'canonical', 'stops.csv'), 'utf8')).toBe(before);
   });
 });
+
+describe('normalize.ts --partial and pending.ts', () => {
+  it('--partial writes an illegible cell as a pending stop that V11 then blocks; the work list names it', async () => {
+    const dir = join(mkdtempSync(join(tmpdir(), 'syn-normalize-partial-')), 'data');
+    cpSync(TRICKY, dir, { recursive: true });
+    for (const t of ['services', 'stops', 'footnotes']) writeFileSync(join(dir, 'canonical', `${t}.csv`), `${headerOf(specOf(t as 'stops')).join(',')}\n`);
+    writeFileSync(join(dir, 'canonical', 'waivers.csv'), 'waiver_id,src,note,historian,reviewed_on\n');
+    const cli = (...a: string[]) => spawnSync(process.execPath, ['tools/normalize/normalize.ts', '--edition', 'SYN_E9', '--table', 'SYN_T9', '--data', dir, ...a], { cwd: ROOT, encoding: 'utf8' });
+    expect(cli().status).toBe(1);
+    const ok = cli('--partial');
+    expect(ok.status, ok.stderr).toBe(0);
+    expect(ok.stdout).toMatch(/0 column\(s\) skipped/);
+    const stops = readFileSync(join(dir, 'canonical', 'stops.csv'), 'utf8');
+    expect(stops).toContain('SYN_E9.SYN_T9.c3,2,SYN_B,08:15,,0,,8 15,,,illegible,SYN_SRC_9:p6:SYN_T9:SYN_K2:c3r1-2');
+    const { pendingReport } = await import('../pending.ts');
+    const { loadDataset } = await import('../../schema/dataset.ts');
+    const md = pendingReport(loadDataset(dir), 'SYN_E9');
+    expect(md).toMatch(/\| c3r2 \(p6\) \| cell \|/);
+    expect(md).toContain('`SYN_SRC_9:p6:SYN_T9:SYN_K2:c3r2`');
+    expect(pendingReport(loadDataset(dir), 'SYN_E9')).toBe(md);
+  });
+});

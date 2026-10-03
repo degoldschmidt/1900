@@ -1,1 +1,8 @@
 segment_id,from_station,to_station,via,tier,games,notes
+S-BOD-PRG,BODENBACH,PRG-STB,Aussig,A,,"Bodenbach–Prague, former StEG (FKB table 112)"
+S-DRE-BER-ELS,DRE-HBF,BER-ANH,Elsterwerda,A,,Dresden–Berlin via Elsterwerda (FKB table 13)
+S-DRE-BER-ROD,DRE-HBF,BER-ANH,Röderau,A,,Dresden–Berlin via Röderau (FKB table 12)
+S-DRE-BOD,DRE-HBF,BODENBACH,Schandau,A,,"Dresden–Bodenbach, with the arm to Tetschen (FKB table 23)"
+S-PRG-WIE-FJB,PRG-FJB,WIE-FJB,Gmünd,A,,"Prague–Vienna via Gmünd, Franz-Josefs-Bahn (FKB table 123)"
+S-PRG-WIE-STEG,PRG-STB,WIE-STB,Kolin; Brünn,A,,"Prague–Vienna, former StEG (FKB table 112; Vienna Nordbahnhof as alternative end)"
+S-TET-WIE-NWB,TETSCHEN,WIE-NWB,Nimburg,A,,"Tetschen–Vienna, Nordwestbahn (FKB table 126)"

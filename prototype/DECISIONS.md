@@ -424,3 +424,11 @@ Eight old screens are removed. **The rules are unchanged.** The map layer is a `
 3. Re-key tables 12, 123 and 126 for signs only, then draw a fresh sample.
 
 The verdict stands as FAIL until a new sample passes. The tool was run without `--apply`, so nothing is marked for re-keying yet.
+
+## 2026-10-03 19:00 — D2 pilot complete; report for G2 (Event P-E019)
+
+The normaliser produced 175 services (127 trains), 487 stops, 189 footnotes and 30 running-rule proposals for the six pilot tables. It gained a partial mode, label markers, reverse reading, column notes as train headers, alternative end rows, and a train `category` field (a schema change). Validators: V11 has 71 illegible stops and V07 has 38 unreviewed rules, both expected. V03 found three print or reading problems, reported and not corrected. All other checks are clean.
+
+**Pilot cost:** about 3.0M tokens for 18 pages, about 100k per page recurring.
+
+The full report is `data/review/PILOT_REPORT.md`. **Verdict: times are reliable, marks fail the 0.5% target (3.8%).** Five fixes are proposed and await the owner's G2 decision.

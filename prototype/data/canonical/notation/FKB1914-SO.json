@@ -30,12 +30,14 @@
  "arrMarkers": [
   "in",
   "i.",
+  "i",
   "an"
  ],
  "depMarkers": [
   "a.",
   "aus",
-  "ab"
+  "ab",
+  "us"
  ],
  "singleTime": "dep",
  "unmarkedRunning": "daily",
@@ -60,21 +62,56 @@
    "mode": "rail",
    "segments": [
     "S-DRE-BER-ROD"
-   ]
+   ],
+   "trainKeyPrefix": "DE"
   },
   "13": {
    "operator": "Kgl. Sächs. Staatseisenbahnen (Dresden – Elsterwerda); Kgl. Preuß. Staatseisenbahnen (Elsterwerda – Berlin)",
    "mode": "rail",
    "segments": [
     "S-DRE-BER-ELS"
-   ]
+   ],
+   "trainKeyPrefix": "DE",
+   "labelMarkFlags": {
+    "●": "none"
+   }
   },
   "23": {
    "operator": "Kgl. Sächs. Staatseisenbahnen",
    "mode": "rail",
    "segments": [
     "S-DRE-BOD"
-   ]
+   ],
+   "trainKeyPrefix": "DE",
+   "altRows": [
+    [
+     14,
+     26
+    ],
+    [
+     46,
+     57
+    ],
+    [
+     78,
+     89
+    ],
+    [
+     95,
+     109
+    ],
+    [
+     135,
+     149
+    ],
+    [
+     175,
+     188
+    ]
+   ],
+   "labelMarkFlags": {
+    "□": "customs"
+   }
   },
   "112": {
    "operator": "K. k. Direktion für die Linien der Staatseisenbahn-Gesellschaft",
@@ -85,6 +122,18 @@
    ],
    "headerLines": [
     "classes"
+   ],
+   "trainKeyPrefix": "AT",
+   "unnumbered": true,
+   "altRows": [
+    [
+     53,
+     54
+    ],
+    [
+     55,
+     56
+    ]
    ]
   },
   "123": {
@@ -95,6 +144,20 @@
    ],
    "headerLines": [
     "classes"
+   ],
+   "trainKeyPrefix": "AT",
+   "unnumbered": true,
+   "upColumns": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
    ]
   },
   "126": {
@@ -105,11 +168,28 @@
    ],
    "headerLines": [
     "classes"
-   ]
+   ],
+   "trainKeyPrefix": "AT",
+   "unnumbered": true,
+   "altRows": [
+    [
+     29,
+     31,
+     43
+    ],
+    [
+     50,
+     62,
+     64
+    ]
+   ],
+   "dittoMarkers": {
+    "1": "a."
+   }
   }
  },
  "_draft": {
-  "status": "DRAFT for the historian (D2 pilot). Not yet named by data/canonical/editions.csv; the normaliser will not use it until an editions row FKB1914-SO points to it.",
+  "status": "DRAFT for the historian (D2 pilot). Named by editions.csv (FKB1914-SO); the normaliser reads it. Items under uncertain_for_historian and normaliser_reading are open until the historian confirms them.",
   "citations": {
    "validity": "sl-rfrkuf_394077458-19140001:p3:-:-:- (title page: 'Sommer-Ausgabe 1914 (1. Mai bis 30. September.)')",
    "signs": "sl-rfrkuf_394077458-19140001:p9:-:-:- (printed p. 5, 'Zeichenerklärung und allgemeine Bemerkungen, I. Zu den Fahrplänen', items 1–12 and the notes below them)"
@@ -133,21 +213,88 @@
   "uncertain_for_historian": [
    "Night-type reading: the page says underlined MINUTES mean 6.00 p.m.–5.59 a.m.; keyers mark the whole time cell u when its minutes are underlined. Confirm that no table uses underlining for anything else (some crops show underlined hours too, e.g. boxed or ruled times).",
    "Noon and midnight: 12 00–12 59 unmarked is read as 12.00–12.59 p.m. (day) and underlined as 0.00–0.59 a.m. (night) by the normaliser's night-type rule; confirm on a train crossing midnight (e.g. table 12 '12 24' in the night after Sundays).",
-   "Arrival and departure markers are PREFIXES in this guide ('a. Dresden Hbf.', 'aus Bodenbach', 'in Bodenbach', 'i. Dresden-Neustadt', '〃 Bodenb.'); the normaliser reads markers only from label sub-column 1 or as a SUFFIX. It needs prefix support (or alias rows per prefixed form) before these tables can be normalised. In table 123 the label carries two markers, one for each direction ('a. Dresd. Hbf. 23 i.').",
    "'a.' = ab (departure) and 'i.'/'in' = in (arrival) are inferred from usage, not stated on p9. 'an'/'Ank.' (arrival) and 'ab' also appear as words in time cells (tables 112, 126, 123: e.g. 'ab' above a time, 'Ank.' below the last time of a train); their reading must be decided per table.",
-   "Table 123 is printed both ways around a central station column: its right half (c10–c19) reads from bottom to top (Wien → Prag, marked by the up arrow). The normaliser reads every column top to bottom; it needs a per-column direction before table 123 can be normalised.",
    "Times printed once across two columns under a brace (table 112, Kolin–Wien rows of the two Bodenbach–Prag trains that join) are keyed in the leftmost column only; the historian decides whether the other train shares them.",
-   "Running days are printed as sideways notes inside the train columns (keyed from the column-notes crops with c:<n>) and as table footnotes ('• Nur Sonn- und Festtags vom 31. Mai bis mit 30. August und am 2. Juni'); the normaliser does not yet read column notes. unmarkedRunning 'daily' is assumed for columns without any note.",
-   "Sleeping cars: no sign on p9; sleeping cars are named in sideways notes ('Schlafwagen Berlin–Karlsbad', 'Schlafw.'), not header markers. sleeperMarkers lists those words for the column notes; the normaliser reads sleeperMarkers only from header cells.",
    "Classes: printed as a header line ('I-IV', 'II. III', 'I.-III.'), the class line is h1 in tables 12, 13, 23 and h0 in 112, 123, 126 (no train numbers printed there; 126 p1/p2 header band is empty).",
-   "Operators and segment ids are proposals: segments.csv is empty; the ids S-DRE-BER-ROD, S-DRE-BER-ELS, S-DRE-BOD, S-BOD-PRG, S-PRG-WIE-STEG, S-PRG-WIE-FJB and S-TET-WIE-NWB must be created (or renamed here) at normalisation.",
-   "Clock zone: the guide states no zone. Saxony, Prussia and Austria (Bohemia) all kept Central European Time (MEZ) for railways in 1914; to be confirmed from a cited source before zones.csv rows are written.",
-   "The '□' sign means customs examination in tables 23 ('In Tetschen u. Bodenbach Zollabfertigung') but other things elsewhere (table 123: Sunday trains), so it is a per-table footnote, not a guide-wide symbolFlag."
+   "The '□' sign means customs examination in tables 23 ('In Tetschen u. Bodenbach Zollabfertigung') but other things elsewhere (table 123: Sunday trains), so it is a per-table footnote, not a guide-wide symbolFlag.",
+   "Clock zones: the guide prints no zone on the pilot pages (p3, p5). zones.csv uses one railway clock for Saxony/Prussia (DE-MEZ-rail) and one for Bohemia/Lower Austria (AT-MEZ-rail), both +1 h (Mitteleuropäische Zeit), cited to p74 (table 23 prints Dresden and Bodenbach times in one column with no clock note) — the +3600 offset itself is NOT printed on any fetched page. The guide's 'Direkte Verbindungen' page (page_seq 355, printed about p. 351, not fetched) marks 'Goch (M.E.Z.)' and 'Boxtel (W.E.Z.)' in its OCR, which would cite MEZ for the German railways if fetched. Civil zones (DE-civil, AT-civil, +1 h) have no citation at all.",
+   "Bodenbach and Tetschen are both in Bohemia (AT), so they cannot be a V01 frontier pair (two stations in different countries); is_frontier is n for both. The guide's customs note (23: 'In Bodenbach und Tetschen Zollabfertigung', fn □ on both labels) sets the customs flag at both. Decide whether a German-side station should be keyed as the pair, or whether the frontier model should allow a frontier station without a pair.",
+   "Bodenbach: the Saxon tables' 'Bodenbach' and table 112's 'Bodenbach K.K.St.B.' are taken as one station (one joint station of the Saxon State Railways and the k.k. Staatsbahnen). Confirm.",
+   "Tetschen: table 23's 'Tetschen' and table 126's 'Tetschen N.W.B.' are taken as one station (the Nordwestbahn station on the right bank). Confirm.",
+   "Table 112's Kolin–Wien block is an extract ('Auszugsweise') with no Prague departure row: a down train has 'i. Prag Stbhf.' (arrival) and then its Vienna arrival. The normaliser writes Prague as an arrival-only stop; whether the Vienna times belong to the same train or to a connection out of Prague is for the historian.",
+   "Table 112 c4 r53/r54: the Vienna times are printed once, centred across c4 and c5 (resolver notes); they are keyed in c4 only, so c5 has no Vienna times. Decide whether c5 shares them.",
+   "Notes printed with a sign explain cells carrying that sign; the sign is looked up in the same column, then the footnotes of the same page, then the notes of the same page. Signs were sometimes unreadable (fn:?), and table 123's own footnotes (bottom of p189: '! über Tetschen-Wschetat-Pr.', '♣ An Werkt. nach Sonn- u. Festt. v. 15. Mai bis 6. Juli' …) were never cropped or keyed, so the ! marks on 123 c9 cannot be resolved: a footnote crop for table 123 is needed."
   ],
-  "valueMarks": "The signs page (p. 5, items 4, 6 and 10) gives meaning to italic figures (Luxuszug / Schnellzug) and underlined minutes (night 6.00 p.m.–5.59 a.m.); bold is not listed, so bold on times is typography (decision P-010)."
+  "valueMarks": "The signs page (p. 5, items 4, 6 and 10) gives meaning to italic figures (Luxuszug / Schnellzug) and underlined minutes (night 6.00 p.m.–5.59 a.m.); bold is not listed, so bold on times is typography (decision P-010).",
+  "normaliser_reading": {
+   "labels": "labelMarkers prefix: 'a.'/'aus'/'ab' = departure, 'i.'/'in'/'an' = arrival (inferred from usage, not stated on p9); a leading 〃 repeats the marker of the row above (table 126 r1 repeats the 'a.' of r0 'a. Leipzig Hbf.', which was not keyed: tables.126.dittoMarkers). 'i' without a full stop (13 l0r80 '1?0 i Dresden Hbf') is read as 'i.'. 'us' is the crop-truncated 'aus' (resolver notes on 23 l0r0 and l0r149: the crop cut the a at the left edge); it is listed as a departure marker only for that reason and should go when the crops are re-cut.",
+   "km_and_table_refs": "labelKm and labelTableRefs drop the distance figure before a name and the connecting-table numbers after it (p9 items 11 and 12). In table 123 r3 the label 'a. Prag (F.J.B.) 1 718' also carries '718': on p189 that is the boxed first time (7 18) of a local train (sign ♣) printed inside the label column, not a table number; that train was not keyed and is not on the corridor.",
+   "table_123": "upColumns c10–c19 are read bottom to top (Wien → Prag → Bodenbach → Dresden); a marker after the name is the upward reading's marker ('a. Dresd. Hbf. 23 i.': departure going down, arrival going up). Prag F.J.B. has one marker only ('a.'), so going up it is a single line (departure).",
+   "alternative_rows": "altRows: rows that are alternative ends of a column, not consecutive stops. Table 23: 'in Bodenbach' and 'in Tetschen' (and 'a. Tetschen'/'aus Bodenbach' upwards) — many trains show Tetschen at or before the Bodenbach time (e.g. c2 5 22 / 5 21, c13 11 50 / 11 49), so they are two arms, not one path. Table 112: 'Wien Nordb.' and 'Wien Staatsb' (and the two Vienna departures upwards). Table 126: 'in Prag F. J. B.', 'in Prag Ö. N. W. B.' and 'i. Wien N W. Bf' (Prague is reached by branches off the Tetschen–Wien line; c3 reaches Wien 8 24 before Prag Ö.N.W.B. 8 32). A train with times in several rows of a group gives one service per row (.r<row>), each as printed (through carriage or connection: the historian decides).",
+   "cell_words": "'ab' alone in a time cell (126 r29, r31) starts a new train at the next time below it; 'Ank.' (126 r62, r64) ends the train at the time above. Either splits the column; a part that meets only one keyed station is not written.",
+   "column_notes": "Column notes are classified by columnNotes: a train number with classes ('293 II-IV') gives a headerless column its number and classes; a class line alone gives its classes; 'Schlaf…' a sleeping car; 'D-Zug …' the category; the info patterns (dining car, route, 'Ausserdem' trains, customs, references, administrations, origin) have no running-day meaning. Every other note needs a running_rules.csv row before its column compiles. Proposals are in running_rules.csv with reviewed_by empty.",
+   "category": "p9 items 4–7: L + italic = Luxuszug, D = D-Zug, E = Eilzug, italic alone = Schnellzug. The category is the number's prefix, else a 'D-Zug' note, else italic on every time of the train. Mixed italic within one train is reported, not resolved.",
+   "classes": "Class lines are read with ranges ('I-IV' = 1–4); fourth class is printed but services.classes holds only 1–3, so it is dropped. 'I III' (112 h0c8–c10) is read literally as first and third class; '(I. II)' and '(I. III' as printed without the brackets.",
+   "trainKeys": "German tables: train_key DE-<number> (so the same train in tables 12, 13 and 23 is compared by V04). Austrian tables print no numbers: AT-T<table>-c<col>. Linking those to the German numbers is a historian decision (candidates in the pilot report)."
+  }
  },
  "valueMarks": [
   "u",
   "i"
- ]
+ ],
+ "labelMarkers": "prefix",
+ "labelKm": true,
+ "labelTableRefs": true,
+ "cellWords": {
+  "ab": "starts",
+  "Ank.": "ends"
+ },
+ "columnNotes": {
+  "header": "^(?<no>(?:[DEL] ?)?\\d+[a-z]?) (?<cls>(?:IV|I{1,3})[IV. -]*)$",
+  "classes": "^\\(?(?:IV|I{1,3})[IV. ,-]*\\)?(?: ?(?:[*:]|ab|Ab))?$",
+  "sleeper": [
+   "^Schlaf"
+  ],
+  "category": [
+   {
+    "re": "^D[- ]?Z(?:ug|\\.)",
+    "category": "D-Zug"
+   }
+  ],
+  "info": [
+   "Speise",
+   "^Spw\\.",
+   "^[Üü]b(?:er|\\.)",
+   "^Ausser",
+   "Zoll",
+   "^siehe",
+   "^s\\. a\\.",
+   "^\\(Auszugsweise",
+   "Vorort",
+   "Umsteigen",
+   "Automobil",
+   "E\\.-? ?D\\.? |Eisenb\\.-Dir|Sächs\\. Staatsb",
+   "^(?:[Vv]on|ab|in) [A-ZÄÖÜ][a-zäöüß]+\\.?$"
+  ],
+  "running": [
+   "\\b[Nn]ur\\b(?! ?(?:IV|I{1,3})\\b)",
+   "[Vv]erk(?:ehrt|\\.)",
+   "Sonn",
+   "Werkt",
+   "Festt",
+   "Jahrmarkt",
+   "\\d+\\. ?(?:Mai|Jun|Jul|Aug|Sep)",
+   "\\d+\\./\\d+\\."
+  ]
+ },
+ "category": {
+  "prefixes": {
+   "D": "D-Zug",
+   "E": "Eilzug",
+   "L": "Luxuszug"
+  },
+  "marks": {
+   "i": "Schnellzug"
+  }
+ }
 }

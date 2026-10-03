@@ -1,1 +1,7 @@
 city_id,name,country,jur_id,civil_zone_id,geo_src
+BERLIN,Berlin,DE,DE-PR,DE-civil,
+BODENBACH,Bodenbach,AT,AT-BOH,AT-civil,
+DRESDEN,Dresden,DE,DE-SN,DE-civil,
+PRAG,Prag,AT,AT-BOH,AT-civil,
+TETSCHEN,Tetschen,AT,AT-BOH,AT-civil,
+WIEN,Wien,AT,AT-NOE,AT-civil,

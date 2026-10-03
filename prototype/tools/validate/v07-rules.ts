@@ -12,6 +12,9 @@
  *    between March 1900 and February 1918);
  *  - two rank-1 segment_sources rows give one segment two truth editions on one day;
  *  - notation files that do not parse (reported while loading).
+ *  - a service whose running marks (running_as_printed) have a running_rules row that is not
+ *    reviewed: the normaliser's --partial mode applies such proposals, so the service may not be
+ *    compiled until the historian reviews them.
  * Warnings: a running_rules row not yet reviewed (the normaliser will not use it); a
  * segment_sources range reaching outside its edition's validity.
  */
@@ -37,6 +40,13 @@ export function v07(ds: Dataset): Issue[] {
     if (runningDays(compileRule(p.rule, [d0, d1]), d0, d1).length === 0) {
       E(w, `${s.service_id}: running_rule "${s.running_rule}" gives no running day in ${ed.edition_id} (${isoFromDay(d0)}..${isoFromDay(d1)})`);
     }
+  }
+  const rr = new Map(ds.t.running_rules.map((r) => [`${r.edition_id}\u0000${r.table_ref}\u0000${r.mark}`, r]));
+  for (const s of ds.t.services) {
+    const marks = s.running_as_printed.split(';').map((m) => m.trim()).filter(Boolean);
+    const keys = [...marks, ...(marks.length > 1 ? [marks.join('+')] : [])];
+    const pending = keys.filter((m) => { const r = rr.get(`${s.edition_id}\u0000${s.table_ref}\u0000${m}`); return r !== undefined && !r.reviewed_by; });
+    if (pending.length) E(`services.csv:${s.line}`, `${s.service_id}: running rule "${s.running_rule}" rests on running_rules rows not yet reviewed (${pending.join(', ')}); it cannot be compiled until a historian reviews them`);
   }
   for (const r of ds.t.running_rules) {
     const w = `running_rules.csv:${r.line}`;

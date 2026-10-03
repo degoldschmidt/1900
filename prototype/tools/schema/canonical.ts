@@ -206,6 +206,8 @@ const SERVICES = [
   { name: 'running_rule', type: 'text', req: true },
   { name: 'segment_ids', type: 'list', req: true, ref: 'segments.segment_id' },
   { name: 'src', type: 'cite', req: true },
+  /** Train category as the guide's notation reads it (e.g. D-Zug, Eilzug, Schnellzug); empty when not shown. */
+  { name: 'category', type: 'text' },
 ] as const satisfies readonly ColSpec[];
 
 const STOPS = [

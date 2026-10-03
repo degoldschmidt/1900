@@ -87,7 +87,7 @@ bundle uses is listed in the bundle and on the game's About screen.
 | `station_aliases.csv` | alias_as_printed, family | How each guide family prints each station; the normaliser maps labels through it |
 | `zones.csv` | zone_id, from | A clock: offset in seconds east of Greenwich (odd seconds allowed, e.g. Petersburg +7278), railway or civil |
 | `station_zones.csv` | station_id, zone_id, from | Which railway clock a station keeps, when (V09: exactly one on every day of every edition using it) |
-| `services.csv` | service_id | One printed train column in one table of one edition: train_key (identity across editions), number, name, operator, mode, classes, sleeper, the running marks as printed, the running rule (DSL), segments served |
+| `services.csv` | service_id | One printed train in one table of one edition: train_key (identity across editions), number, name, operator, mode, classes, sleeper, the running marks as printed, the running rule (DSL), segments served, and the train category as the notation reads it (e.g. D-Zug, Schnellzug) |
 | `stops.csv` | service_id, seq | Its times at node stations: local arrival and departure, day offsets, raw cell text, flags (`customs`, `passport`, `gauge`, `arr_only`, `dep_only`, `request`), status |
 | `footnotes.csv` | edition_id, table_ref, mark | Footnote text as printed |
 | `running_rules.csv` | edition_id, table_ref, mark | The interpretation of a footnote mark as a running rule (`none` if it does not concern running days), who interpreted it and the historian who reviewed it. Combined marks are written `a+b` |
@@ -122,7 +122,11 @@ waived compile (V11). A waiver is a row in `waivers.csv` — `waiver_id`, `src` 
 waived, cited as above), `note` (the historian's reasoning), `historian`, `reviewed_on` — accepting
 a cell that stays illegible or disputed; the normaliser then leaves that time empty and marks the
 stop `waived`. V11 requires a waiver whose cell lies within every waived stop's `src`, and also
-blocks illegible or unresolved keyed cells in any table that already has services.
+blocks illegible or unresolved keyed cells in any table that already has services. While a
+table is in progress, `normalize.ts --partial` writes such a cell's stop with status `illegible`
+or `unresolved` and no time, and applies unreviewed running-rule proposals; V11 and V07 then keep
+those rows out of every bundle until the historian settles them (`tools/normalize/pending.ts`
+lists what is open).
 
 ### Notation files
 

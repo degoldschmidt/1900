@@ -1,1 +1,5 @@
 zone_id,name,offset_seconds,applies_to,from,to,src
+DE-MEZ-rail,"Mitteleuropäische Zeit, German railways",3600,railway,1914-05-01,,sl-rfrkuf_394077458-19140001:p74:23:-:-
+AT-MEZ-rail,"Mitteleuropäische Zeit, Austrian railways",3600,railway,1914-05-01,,sl-rfrkuf_394077458-19140001:p74:23:-:-
+DE-civil,"Civil time, German Empire",3600,civil,1914-05-01,,sl-rfrkuf_394077458-19140001:p74:23:-:-
+AT-civil,"Civil time, Austria (Bohemia, Lower Austria)",3600,civil,1914-05-01,,sl-rfrkuf_394077458-19140001:p74:23:-:-

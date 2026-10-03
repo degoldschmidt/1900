@@ -42,9 +42,42 @@
  *       "headerLines": [...],                  // optional, overrides the guide-wide headerLines
  *       "trainKeys": {"3": "DE-D1"},           // optional train_key per column (default operator-trainNo)
  *       "columnSegments": {"5": ["S-EYD-WIR"]},  // optional
- *       "columnModes": {}, "columnOperators": {} // optional
+ *       "columnModes": {}, "columnOperators": {}, // optional
+ *       "trainKeyPrefix": "DE",                // optional: train_key = <prefix>-<train no> (default: operator)
+ *       "unnumbered": true,                    // optional: the table prints no train numbers; train_key =
+ *                                              //   <prefix>-T<table>-c<col> unless trainKeys names one
+ *       "upColumns": [10, 11],                 // optional: columns read bottom to top (a table printed both
+ *                                              //   ways round one station column)
+ *       "altRows": [[14, 26]],                 // optional: rows that are alternative ends (or, read upwards,
+ *                                              //   alternative starts) of a column's journey, e.g. two
+ *                                              //   terminal stations; a column with times in several rows of
+ *                                              //   a group gives one service per row, suffixed .r<row>
+ *       "dittoMarkers": {"1": "a."},           // optional: the marker a leading ditto stands for when the
+ *                                              //   row above it was not keyed
+ *       "labelMarkFlags": {"□": "customs"}     // optional: footnote marks (fn:x) on station labels that
+ *                                              //   set stop flags in this table
  *     }
- *   }
+ *   },
+ *   // Optional, for guides that print markers before names and notes inside train columns:
+ *   "labelMarkers": "prefix",                  // "suffix" (default) or "prefix": "a. Dresden", "in Bodenbach";
+ *                                              //   a leading ditto repeats the marker of the row above; in a
+ *                                              //   table with upColumns a marker after the name is the
+ *                                              //   upward reading's marker
+ *   "labelKm": true,                           // a figure before the name is a distance (dropped; "?" digits allowed)
+ *   "labelTableRefs": true,                    // figures after the name are connecting-table numbers (dropped)
+ *   "cellWords": {"ab": "starts", "Ank.": "ends"},  // whole-cell words: "starts" = a train starts at the next
+ *                                              //   time below it, "ends" = the train ends at the time above;
+ *                                              //   either splits the column into separate trains
+ *   "columnNotes": {                           // notes keyed from column-notes crops (marks c:<col>)
+ *     "header": "^(?<no>(?:[DE] ?)?\\d+[a-z]?) (?<cls>[IV][IV. -]*)$",  // a train number and class line
+ *     "classes": "^[IV][IV. -]*$",             // a class line alone
+ *     "sleeper": ["^Schlaf"],                  // a sleeping car
+ *     "info": ["^Speise"],                     // no running-day meaning (dining car, route, other trains…)
+ *     "running": ["Sonn"],                     // overrides sleeper, category and info (e.g. "Über X. Nur vom …")
+ *     "category": [{"re": "^D-Z", "category": "D-Zug"}]
+ *   },
+ *   "category": {"prefixes": {"D": "D-Zug"}, "marks": {"i": "Schnellzug"}}  // train category from the
+ *                                              //   train number's prefix, else from a mark on its times
  * }
  */
 import { MODES, STOP_FLAGS } from './canonical.ts';
@@ -73,6 +106,34 @@ export interface TableNotation {
   columnSegments?: Record<string, string[]>;
   columnModes?: Record<string, Mode>;
   columnOperators?: Record<string, string>;
+  trainKeyPrefix?: string;
+  unnumbered?: boolean;
+  upColumns?: number[];
+  altRows?: number[][];
+  dittoMarkers?: Record<string, string>;
+  labelMarkFlags?: Record<string, StopFlag | 'none'>;
+}
+
+export interface ColumnNotesNotation {
+  /** Regex with named groups `no` and `cls`: a train number and its class line printed part-way down a column. */
+  header?: string;
+  /** Regex: a class line alone. */
+  classes?: string;
+  /** Regexes: notes naming a sleeping car. */
+  sleeper: string[];
+  /** Regexes: notes without running-day meaning. */
+  info: string[];
+  /** Regexes: a note matching one of these is a running note even if it also matches sleeper, category or info. */
+  running: string[];
+  /** Train category named by a note. */
+  category: Array<{ re: string; category: string }>;
+}
+
+export interface CategoryNotation {
+  /** Train-number prefix (before a space or the digits) → category. */
+  prefixes: Record<string, string>;
+  /** Typographic mark on a column's times → category (used when no prefix applies). */
+  marks: Record<string, string>;
 }
 
 export interface Notation {
@@ -97,12 +158,19 @@ export interface Notation {
   tables: Record<string, TableNotation>;
   /** Type styles (b, i, u, sc) that carry meaning in this guide's tables (decision P-010); absent = default rules. */
   valueMarks?: string[];
+  labelMarkers?: 'suffix' | 'prefix';
+  labelKm?: boolean;
+  labelTableRefs?: boolean;
+  cellWords?: Record<string, 'starts' | 'ends'>;
+  columnNotes?: ColumnNotesNotation;
+  category?: CategoryNotation;
 }
 
 type Obj = Record<string, unknown>;
 const isObj = (v: unknown): v is Obj => typeof v === 'object' && v !== null && !Array.isArray(v);
 const isStrArr = (v: unknown): v is string[] => Array.isArray(v) && v.every((x) => typeof x === 'string');
 const isStrRec = (v: unknown): v is Record<string, string> => isObj(v) && Object.values(v).every((x) => typeof x === 'string');
+const isIntArr = (v: unknown): v is number[] => Array.isArray(v) && v.every((x) => Number.isInteger(x) && (x as number) >= 0);
 
 /** Parses and checks a notation file; returns null (with issues) if it is unusable. */
 export function parseNotation(text: string, file: string): { notation: Notation | null; issues: Issue[] } {
@@ -175,6 +243,21 @@ export function parseNotation(text: string, file: string): { notation: Notation 
         if (!isObj(cs) || Object.values(cs).some((v) => !isStrArr(v))) bad(`${where}.columnSegments must map columns to lists`);
         else tn.columnSegments = cs as Record<string, string[]>;
       }
+      if (tv.trainKeyPrefix !== undefined) { if (typeof tv.trainKeyPrefix !== 'string' || tv.trainKeyPrefix === '') bad(`${where}.trainKeyPrefix must be a non-empty string`); else tn.trainKeyPrefix = tv.trainKeyPrefix; }
+      if (tv.unnumbered !== undefined) { if (typeof tv.unnumbered !== 'boolean') bad(`${where}.unnumbered must be true or false`); else tn.unnumbered = tv.unnumbered; }
+      if (tv.upColumns !== undefined) { if (!isIntArr(tv.upColumns)) bad(`${where}.upColumns must be a list of column numbers`); else tn.upColumns = tv.upColumns; }
+      if (tv.altRows !== undefined) {
+        const ar = tv.altRows;
+        if (!Array.isArray(ar) || ar.some((g) => !isIntArr(g) || g.length < 2)) bad(`${where}.altRows must be a list of row groups (two or more rows each)`);
+        else if (new Set(ar.flat()).size !== ar.flat().length) bad(`${where}.altRows names a row twice`);
+        else tn.altRows = ar as number[][];
+      }
+      if (tv.dittoMarkers !== undefined) { if (!isStrRec(tv.dittoMarkers)) bad(`${where}.dittoMarkers must map rows to markers`); else tn.dittoMarkers = tv.dittoMarkers; }
+      if (tv.labelMarkFlags !== undefined) {
+        const lf = tv.labelMarkFlags;
+        if (!isStrRec(lf) || Object.values(lf).some((f) => f !== 'none' && !(STOP_FLAGS as readonly string[]).includes(f))) bad(`${where}.labelMarkFlags must map marks to stop flags (${STOP_FLAGS.join('|')}) or "none"`);
+        else tn.labelMarkFlags = lf as Record<string, StopFlag | 'none'>;
+      }
       tables[ref] = tn;
     }
   }
@@ -185,6 +268,61 @@ export function parseNotation(text: string, file: string): { notation: Notation 
     singleTime: singleTime === 'both' ? 'both' : 'dep', unmarkedRunning, symbolFlags: symbolFlags as Record<string, StopFlag>,
     sleeperMarkers: arr('sleeperMarkers', []), maxLegHours: typeof maxLegHours === 'number' ? maxLegHours : 20, headerLines, tables,
   };
+  if (j.labelMarkers !== undefined) {
+    if (j.labelMarkers !== 'suffix' && j.labelMarkers !== 'prefix') bad('labelMarkers must be "suffix" or "prefix"');
+    else notation.labelMarkers = j.labelMarkers;
+  }
+  for (const k of ['labelKm', 'labelTableRefs'] as const) {
+    if (j[k] === undefined) continue;
+    if (typeof j[k] !== 'boolean') bad(`${k} must be true or false`);
+    else notation[k] = j[k];
+  }
+  if (j.cellWords !== undefined) {
+    const cw = rec('cellWords');
+    if (Object.values(cw).some((v) => v !== 'starts' && v !== 'ends')) bad('cellWords values must be "starts" or "ends"');
+    else notation.cellWords = cw as Record<string, 'starts' | 'ends'>;
+  }
+  if (j.columnNotes !== undefined) {
+    const cn = j.columnNotes;
+    if (!isObj(cn)) bad('columnNotes must be an object');
+    else {
+      const re = (what: string, v: unknown): string | undefined => {
+        if (v === undefined) return undefined;
+        if (typeof v !== 'string') { bad(`columnNotes.${what} must be a regular expression string`); return undefined; }
+        try { new RegExp(v, 'u'); } catch (e) { bad(`columnNotes.${what}: ${(e as Error).message}`); return undefined; }
+        return v;
+      };
+      const res = (what: string, v: unknown): string[] => {
+        if (v === undefined) return [];
+        if (!isStrArr(v)) { bad(`columnNotes.${what} must be a list of regular expressions`); return []; }
+        return v.filter((x, i) => re(`${what}[${i}]`, x) !== undefined);
+      };
+      const cats: Array<{ re: string; category: string }> = [];
+      if (cn.category !== undefined) {
+        if (!Array.isArray(cn.category)) bad('columnNotes.category must be a list of {re, category}');
+        else cn.category.forEach((c, i) => {
+          if (!isObj(c) || typeof c.category !== 'string' || c.category === '') { bad(`columnNotes.category[${i}] needs re and category`); return; }
+          const r = re(`category[${i}].re`, c.re);
+          if (r !== undefined) cats.push({ re: r, category: c.category });
+        });
+      }
+      const h = re('header', cn.header);
+      if (h !== undefined && !/\(\?<no>/.test(h)) bad('columnNotes.header needs a named group (?<no>…)');
+      const cl = re('classes', cn.classes);
+      notation.columnNotes = { sleeper: res('sleeper', cn.sleeper), info: res('info', cn.info), running: res('running', cn.running), category: cats };
+      if (h !== undefined) notation.columnNotes.header = h;
+      if (cl !== undefined) notation.columnNotes.classes = cl;
+    }
+  }
+  if (j.category !== undefined) {
+    const c = j.category;
+    if (!isObj(c)) bad('category must be an object {prefixes, marks}');
+    else {
+      const pre = c.prefixes ?? {}; const mk = c.marks ?? {};
+      if (!isStrRec(pre) || !isStrRec(mk)) bad('category.prefixes and category.marks must map strings to categories');
+      else notation.category = { prefixes: pre, marks: mk };
+    }
+  }
   if (j.valueMarks !== undefined) {
     const vm = arr('valueMarks');
     const badMark = vm.find((m) => !['b', 'i', 'u', 'sc'].includes(m));

@@ -22,7 +22,7 @@ discover → coverage matrix → gate G1 → manifests → fetch → layout → 
 | 11. Resolve | `node tools/keying/resolve-support.ts <source_id> <table_ref>`, then a third agent per `tools/keying/RESOLVER_BRIEF.md` | diff, page image | `build/resolve/…/packet.md` + zooms; the resolver's `<crop_id>.R.csv` |
 | 12. Merge | `node tools/keying/merge.ts <source_id> <table_ref>` | A, B, the resolver's rows | complete `<crop_id>.R.csv`; status `resolved` |
 | 13. Review page | `node tools/review/side-by-side.ts <source_id> <table_ref>` | crops, R | `build/review/<source_id>-<table_ref>.html` |
-| 14. Normalise | `tools/normalize/` (separate workstream) | resolved cells, notation | `data/canonical/*.csv` |
+| 14. Normalise | `node tools/normalize/normalize.ts --edition <edition_id> --table <table_ref> [--partial]`, then `node tools/normalize/pending.ts --edition <edition_id>` | resolved cells, notation | `data/canonical/*.csv`; the historian's work list `build/reports/pending-<edition_id>.md` |
 | 15. Validate | `npm run data:validate` | canonical tables, raw keying | `build/reports/validation.md` |
 | 16. Historian | `tools/keying/HISTORIAN_BRIEF.md`; `node tools/keying/sample.ts draw/score` | everything above, the scans | `data/review/HISTORIAN_REVIEW.md`, `data/review/sample-*.csv` |
 

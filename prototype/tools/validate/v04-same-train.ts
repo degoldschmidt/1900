@@ -7,6 +7,10 @@
  * shared stations. Disagreements are errors (one table was misread, or the guide contradicts
  * itself and the historian must resolve it).
  *
+ * Services the normaliser wrote for one printed column with alternative ends (service ids
+ * <column>.r<row>, see tools/normalize/normalize.ts altRows) are compared like any other pair but
+ * not reported as "the same train twice".
+ *
  * Across source families (e.g. Bradshaw's Continental against the Reichs-Kursbuch), services with
  * the same train_key in editions whose validity overlaps are compared the same way and every
  * difference is a warning: the truth comes from segment_sources.csv, the other guide only
@@ -65,7 +69,10 @@ export function v04(ds: Dataset): Issue[] {
       for (let j = i + 1; j < list.length; j++) {
         const a = list[i]!; const b = list[j]!;
         if (a.edition_id === b.edition_id) {
-          if (a.table_ref === b.table_ref) out.push(issue('V04', 'warning', `train ${key}`, `${a.service_id} and ${b.service_id} are the same train twice in table ${a.table_ref}`));
+          const alt = (id: string) => id.replace(/\.r\d+$/, '');
+          if (a.table_ref === b.table_ref && !(alt(a.service_id) === alt(b.service_id) && a.service_id !== alt(a.service_id))) {
+            out.push(issue('V04', 'warning', `train ${key}`, `${a.service_id} and ${b.service_id} are the same train twice in table ${a.table_ref}`));
+          }
           report('error', a, b);
           continue;
         }

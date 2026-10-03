@@ -5,14 +5,15 @@
  *
  * Errors:
  *  - time goes backwards between consecutive stops, or a dwell is negative (departure before arrival);
- *  - the first stop has no departure, or its departure is not on day offset 0;
+ *  - the first stop has no departure (unless its cell is waived or not yet read: V11's business),
+ *    or its departure is not on day offset 0;
  *  - a leg is impossibly fast: above twice the mode's upper bound, or zero time over more than 1 km.
  * Warnings:
  *  - a leg's speed (great-circle distance / scheduled time) is outside the mode's bounds:
  *    rail 8–110 km/h, steamer and ferry 5–40 km/h (great-circle distance understates the route,
  *    so slow legs are only suspicious);
  *  - a dwell over 6 hours; zero running time between two different stations;
- *  - the last stop has no arrival; a station has no railway zone (V09 reports it as an error).
+ *  - the last stop has no arrival (likewise); a station has no railway zone (V09 reports it as an error).
  * Info: a leg whose stations lack coordinates (speed not checked).
  */
 import type { Dataset } from '../schema/dataset.ts';
@@ -35,10 +36,12 @@ export function v03(ds: Dataset): Issue[] {
     const E = (m: string) => out.push(issue('V03', 'error', w, m));
     const W = (m: string) => out.push(issue('V03', 'warning', w, m));
     const first = stops[0]!;
-    if (first.dep_local === '') E(`first stop ${first.station_id} has no departure`);
+    // A waived or not yet readable cell leaves its time empty on purpose (V11 owns those stops).
+    const read = (s: typeof first) => s.status === 'agree' || s.status === 'resolved';
+    if (first.dep_local === '') { if (read(first)) E(`first stop ${first.station_id} has no departure`); }
     else if (first.dep_dayoff !== 0) E(`first departure (${first.station_id}) must be on day offset 0, not ${first.dep_dayoff}`);
     const last = stops[stops.length - 1]!;
-    if (last.arr_local === '') W(`last stop ${last.station_id} has no arrival`);
+    if (last.arr_local === '' && read(last)) W(`last stop ${last.station_id} has no arrival`);
     const abs = absStops(stops, zl, ed.valid_from);
     if (abs.errors.length) { W(`not checked: ${[...new Set(abs.errors)].join('; ')}`); continue; }
     const [lo, hi] = SPEED_BOUNDS[svc.mode] ?? [8, 110];

@@ -1,1 +1,2 @@
 edition_id,source_id,family,label,issue_date,valid_from,valid_to,notation_file,gap_flag,notes
+FKB1914-SO,sl-rfrkuf_394077458-19140001,FKB,"R. Fritzsches Kursbuch, Sommer-Ausgabe 1914",,1914-05-01,1914-09-30,notation/FKB1914-SO.json,n,"Validity as printed on the title page (p3): ""Sommer-Ausgabe 1914 (1. Mai bis 30. September.)"". D2 pilot edition."
