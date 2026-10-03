@@ -168,3 +168,44 @@ All six agree with the stored values (two differ in bold only). That completes t
 - both stops of both flagged legs are as printed.
 
 The 112 c14 leg (Bodenbach 22.45 → Prag 18.10 the next day, 4 km/h) is therefore not a reading error. The column holds only those two times and a class line printed part-way down (`II.III`, from the column-notes crop), so it probably carries two trains that the normaliser joined. It is left for the historian's check of the page, with the other structural items. (The score's FAIL line for this file is no verdict: six chosen cells are not a sample.)
+
+## 3d. Census of the remaining cells (G2 close)
+
+Reviewers: two blind historian agents, H5 (tables 12, 13 and 23) and H6 (112, 123 and 126), and one adjudicator agent (Claude), 2026-10-03; written up by the coordinator. Owner's decision P-014. Files: the census `data/review/sample-g2census.csv` (with the readers' files `-H5`/`-H6`), the adjudication `data/review/adjudication-g2census.csv` (brief beside it), and the score `build/review/sample-g2census.score.md`.
+
+**What was read.** Every sampleable cell that no reader had yet checked: 288 cells on 19 plain contact sheets, with nothing washed or drawn on the print. All sheets loaded, and the readers settled doubtful cells on zooms they cut from the scan. Read: 288. Unsure: 9. Illegible: 0. With §3c and the targeted re-read, all 653 cells of the source have now been read blind by a third reader.
+
+**Adjudication.** The tool listed 5 value mismatches (and 111 cells differing in typography only). A fresh agent judged them, together with one cell where a reader had flagged a possible shared miss (23 c30 r89, a half-disc). As before, it saw the two readings unlabelled with the key kept apart.
+
+| sample | cell | stored | other reading | verdict | class |
+|---|---|---|---|---|---|
+| 0002 | 112 c4 r0 | `5 45` u | `5 46` u | stored | reader misread: a flat-topped 5 |
+| 0045 | 112 c18 r61 | `48` | `1 48` | other | **keying error**: an upright hour 1 with a weak flag stands on the c17\|c18 rule under a brace and was taken for the rule |
+| 0054 | 12 c9 r0 | `7 13` u | `7 15` u | other | **keying error**: the italic figure fused with the underline matches the column's 5s, not its 3s (keyers split 5/3; the resolver chose 3) |
+| 0099 | 123 c0 r1 | `11 15` u | `11 15` u `fn:!` | other | **keying error**: a `!` level with and just before the time, at a crop's left edge; both keyers missed it |
+| 0177 | 126 c22 r92 | `9 39 10 48` `fn:!` | `10 48` | other | **keying error**: below r91 the print has six columns under the grid's five, and the keyed cell joined two printed columns |
+| 0248 | 23 c30 r89 | `10 52` u | `10 52` u `fn:◗` | stored | flagged check: the half-disc stands above the time, in r88's line |
+
+**Result.** Every cell has been read, so the count is exact and has no sampling error: **6 keying errors in 653 cells, 0.92%** (2 in §3c, 4 here), against a 0.5% target. **G2 fails** under the rule fixed before the census (P-014). All six errors are corrected in the resolved files, each citing its case.
+
+Three of the six changed the canonical data silently:
+- the Tetschen time lost 12 hours (0165);
+- a departure moved 2 minutes (0054);
+- a `!` was missing (0099).
+
+Two the normaliser had already flagged as unreadable, so no wrong time was stored: 0045 and 0177. One had no data impact (0343).
+
+**The open layout gap.** Table 126 rows 92–93 print six columns under the grid's five. The extra printed column (`! 9 39` and the time below it) has no grid column, so that train's last two times are not keyed. The layout needs a sixth column there, and that block must be re-cut and keyed.
+
+**Which checks would have caught them.** The cells of this source fall into risk classes that the tools can list:
+
+| class | cells | errors in the class |
+|---|---|---|
+| keyers disagree on the value | 17 | 0054, 0165 |
+| resolver override (`other`) | 5 | 0165, 0343 |
+| the normaliser cannot read the cell as a time | 2 | 0045, 0177 |
+| V03 warns about the leg | 4 | 0165 |
+| any keyer unsure | 180 | 0045, 0054, 0177, 0343 |
+| first column of a crop | 115 | 0099 |
+
+The first four classes together hold about 25 cells (4% of the source) and contain 5 of the 6 errors. The sixth (0099) is a sign in a crop's washed left margin; that is a fault of the crops, fixed at its cause. Cells where both keyers agreed, were sure and were not at a crop's edge had no error in 653 cells read. No hour figure was wrong anywhere. The two wrong minute or hour readings came from a split decision (0054) and a figure on a rule (0045).

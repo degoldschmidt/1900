@@ -530,3 +530,42 @@ The 112 c14 leg (Bodenbach 22.45 → Prag 18.10 the next day, 4 km/h) is therefo
 G2 passes when the exact one-sided 95% upper bound is at most 0.5%. With no further keying error, that holds from 589 cells read. A further confirmed error is corrected, and the source is then judged on the complete count (a census has no sampling error: its rate is the number found).
 
 **In parallel.** Fritzsche Winter 1913/14 (`sl-rfrkuf_394077458-19130002`) is fetched and laid out for C07's changeover. Keying waits for G2.
+
+## 2026-10-03 21:50 — G2 census: 6 keying errors in all 653 cells, 0.92%, FAIL (Event P-E022)
+
+**Census.** Two fresh blind historians read the 288 cells still unchecked. With P-E021 that makes every one of the 653 cells read by a third reader.
+
+**Adjudication.** The 5 mismatches went to a fresh blind adjudicator, together with one cell a reader flagged. The result: 4 keying errors, 1 reader misread, and the flagged cell right.
+
+| cell | what was wrong |
+|---|---|
+| 112 c18 r61 | the hour 1 stood on a rule under a brace; keyed "48" |
+| 12 c9 r0 | 7 13 for 7 15, the resolver's choice in a keyer split |
+| 123 c0 r1 | a `!` at a crop's left edge, missed by both keyers |
+| 126 c22 r92 | six printed columns under five ruled ones, so two times were joined |
+
+**Verdict.** An exact count, with no sampling: **6 keying errors in 653 cells, 0.92% > 0.5%. G2 fails** under the rule fixed in P-014. All six errors are corrected. Summer 1914 is now the first fully verified source: every cell has been read by two keyers, a resolver where they disagreed, and a blind third reader, with every disagreement adjudicated. Details are in `data/review/HISTORIAN_REVIEW.md` §3d.
+
+**Where the errors were** (cells per class out of 653; an error can fall in several classes):
+
+| class | cells | errors |
+|---|---|---|
+| keyer value disputes | 17 | 2 |
+| resolver overrides | 5 | 2 |
+| cells the normaliser cannot read as a time | 2 | 2 |
+| V03 physics flags | 4 | 1 |
+| a crop's washed left margin | — | 1 (its cause is fixed in the crops) |
+
+The first four classes are about 25 cells (4%) and hold 5 of the 6 errors.
+
+**What the method gets.**
+- The briefs now cover:
+  - figures on rules;
+  - two times under one brace;
+  - signs above a time;
+  - comparing a doubtful digit with its column;
+  - a grid that disagrees with the print.
+- Next: the crops keep a clear strip at their edges, as the zooms now do. This waits until the Winter 1913/14 agent has finished; its crops are then re-cut, which costs nothing since nothing is keyed yet.
+- Open: table 126 r92–93 needs a sixth grid column, and its two missing times keyed.
+
+**For the owner (G2).** How to run Winter 1913/14 and later sources.
