@@ -3,7 +3,9 @@
  *  - its source institution;
  *  - any institution with an open cooperation edge from the source on that day
  *    (param "coop.edge", key "SOURCE>READER", value CoopEdge). Edges with `retro: true` also open
- *    records written before the edge opened (the August 1914 fusion opens old files);
+ *    records written before the edge opened (the August 1914 fusion opens old files). An edge may
+ *    pass only some record kinds (`kinds`) and only a keyed share of records (`permille`, drawn
+ *    once per record, reader and row: "liaison-pass");
  *  - subject to archive survival: from the day a "archive.survival" row (key = source) applies,
  *    only a keyed `permille` share of that source's records still exist for anyone.
  */
@@ -19,6 +21,18 @@ export interface CoopEdge {
   lagSec: [number, number];
   /** Does the edge open records written before it opened? */
   retro: boolean;
+  /** Record kinds the edge passes; all kinds when absent. */
+  kinds?: string[];
+  /** Share of records the edge passes, per mille (keyed per record, reader and row); all when absent. */
+  permille?: number;
+}
+
+/** Whether a cooperation row passes this record to this reader at all (kind filter and keyed share). */
+export function edgePasses(rec: RecordTuple, reader: string, row: ParamRow, seed: number): boolean {
+  const edge = row.value as CoopEdge;
+  if (edge.kinds && !edge.kinds.includes(rec.kind)) return false;
+  if (edge.permille !== undefined && !chancePermille(edge.permille, seed, 'liaison-pass', rec.id, reader, row.id)) return false;
+  return true;
 }
 
 export interface Survival { permille: number }
@@ -57,6 +71,7 @@ export function readersOf(rec: RecordTuple, day: DayNumber, params: ParamLayer, 
       const open = r.from <= day && (r.to === null || day < r.to);
       if (!open) continue;
       const edge = r.value as CoopEdge;
+      if (!edgePasses(rec, reader, r, seed)) continue;
       if (edge.retro || dayOf(rec.time) >= r.from) { out.add(reader); break; }
     }
   }

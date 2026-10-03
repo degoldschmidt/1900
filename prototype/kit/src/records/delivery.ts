@@ -18,7 +18,7 @@ import type { ParamLayer } from '../params/layer.ts';
 import type { Instant } from '../time/instant.ts';
 import { NEVER, dayOf, instantOf } from '../time/instant.ts';
 import { belowN } from '../rng/draw.ts';
-import { coopRowsFrom, survives, type CoopEdge } from './readers.ts';
+import { coopRowsFrom, survives, edgePasses, type CoopEdge } from './readers.ts';
 
 export const LAG = 'records.lag';
 export const DELIVERED_EVENT = 'kit.RecordDelivered';
@@ -40,24 +40,32 @@ export function sourceLag(rec: RecordTuple, params: ParamLayer, seed: number): n
   return v ? drawIn(v, seed, 'lag', rec.id, rec.source) : 0;
 }
 
-/** The instant `reader` can first read `rec`, or NEVER. */
-export function arrival(rec: RecordTuple, reader: string, params: ParamLayer, seed: number): Instant {
+/** When `reader` can first read `rec`, and through which cooperation row (null: its own ledger, or never). */
+export interface Arrival { at: Instant; via: string | null }
+
+export function arrivalVia(rec: RecordTuple, reader: string, params: ParamLayer, seed: number): Arrival {
   const atSource = rec.time + sourceLag(rec, params, seed);
-  if (reader === rec.source) return survives(rec, dayOf(atSource), params, seed) ? atSource : NEVER;
+  if (reader === rec.source) return { at: survives(rec, dayOf(atSource), params, seed) ? atSource : NEVER, via: null };
   const rows = coopRowsFrom(params, rec.source).get(reader) ?? [];
-  let best = NEVER;
+  let best: Arrival = { at: NEVER, via: null };
   for (const row of rows) {
     const edge = row.value as CoopEdge;
     const open = instantOf(row.from, 0);
     const close = row.to === null ? NEVER : instantOf(row.to, 0);
     if (rec.time >= close) continue;
     if (!edge.retro && rec.time < open) continue;
+    if (!edgePasses(rec, reader, row, seed)) continue;
     const t = Math.max(atSource, open) + drawIn(edge.lagSec, seed, 'liaison', rec.id, reader, row.id);
     if (t >= close) continue;
     if (!survives(rec, dayOf(t), params, seed)) continue;
-    if (t < best) best = t;
+    if (t < best.at) best = { at: t, via: row.id };
   }
   return best;
+}
+
+/** The instant `reader` can first read `rec`, or NEVER. */
+export function arrival(rec: RecordTuple, reader: string, params: ParamLayer, seed: number): Instant {
+  return arrivalVia(rec, reader, params, seed).at;
 }
 
 /** Lazy view: everything `reader` holds by time `t`, in record order. */

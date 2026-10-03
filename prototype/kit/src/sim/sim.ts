@@ -37,10 +37,18 @@ export interface Scenario<Setup = unknown> {
   setup: Setup;
   /** Rows replacing or adding to the bundle's parameter rows (tests force delays this way). */
   paramOverrides?: ParamRow[];
+  /**
+   * Commands played before the player takes over (a later start reached through honest history).
+   * They are replayed at construction, are not part of the player's log, and no snapshot is kept
+   * from inside them.
+   */
+  prologue?: { log: Array<InputEntry<Command>>; processed: number };
 }
 
-export interface Ctx<S> {
+export interface Ctx<S, B = unknown> {
   readonly now: Instant;
+  /** The game's data bundle (static; never part of state). Handlers of a restored game reach it here. */
+  readonly bundle: B;
   readonly seed: number;
   readonly state: S;
   readonly params: ParamLayer;
@@ -61,18 +69,18 @@ export interface Ctx<S> {
   trace(kind: string, data?: unknown): void;
 }
 
-export type Handler<S> = (state: S, payload: any, ctx: Ctx<S>) => void;
+export type Handler<S, B = unknown> = (state: S, payload: any, ctx: Ctx<S, B>) => void;
 
 export interface GameDef<S, C extends Command, B = unknown> {
   id: string;
   /** Builds the initial state and schedules the first events. */
-  init(ctx: Ctx<undefined>, bundle: B, scenario: Scenario): S;
+  init(ctx: Ctx<undefined, B>, bundle: B, scenario: Scenario): S;
   /** The parameter rows the game uses (from its bundle). */
   paramRows(bundle: B): readonly ParamRow[];
-  handlers: Record<string, Handler<S>>;
+  handlers: Record<string, Handler<S, B>>;
   /** Returns an error message for an invalid command, or null. */
-  validate(state: S, cmd: C, ctx: Ctx<S>): string | null;
-  apply(state: S, cmd: C, ctx: Ctx<S>): void;
+  validate(state: S, cmd: C, ctx: Ctx<S, B>): string | null;
+  apply(state: S, cmd: C, ctx: Ctx<S, B>): void;
 }
 
 export interface InputEntry<C> { k: number; cmd: C }
@@ -135,13 +143,20 @@ export class Sim<S, C extends Command, B = unknown> {
     for (const day of this.params.boundaries(dayOf(scenario.start) + 1, dayOf(scenario.end))) {
       this.queue.push(instantOf(day, 0), PRIO_PARAMS, PARAM_CHANGED, { day, ...this.params.changesOn(day) });
     }
+    if (scenario.prologue) {
+      this.replayLog(scenario.prologue.log as Array<InputEntry<C>>, scenario.prologue.processed);
+      this.log.length = 0;
+      this.snapshots.length = 0;
+      this.lastMonth = monthKeyOf(this.now);
+    }
     this.snapshots.push(this.snapshot());
   }
 
-  private makeCtx<T>(state: T): Ctx<T> {
+  private makeCtx<T>(state: T): Ctx<T, B> {
     const sim = this;
     return {
       get now() { return sim.now; },
+      bundle: this.bundle,
       seed: this.seed,
       state,
       params: this.params,

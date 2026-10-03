@@ -9,7 +9,7 @@ export interface ParamRow {
   id: string;
   param: string;
   /** What the key names: an edge "STA>STB", a jurisdiction, an institution, a station, a pair "A>B", or "global". */
-  keyKind: 'edge' | 'jurisdiction' | 'institution' | 'station' | 'city' | 'pair' | 'currency' | 'global';
+  keyKind: 'edge' | 'jurisdiction' | 'institution' | 'station' | 'city' | 'topic' | 'pair' | 'currency' | 'global';
   key: string;
   from: number;
   to: number | null;
