@@ -97,6 +97,18 @@ describe('contact sheets', () => {
     expect(fitTile(200, 26, 337, 291)).toBeNull();
   });
 
+  it('--plain leaves the print untouched and --context widens the view (for adjudicating a disagreement)', async () => {
+    expect(fitTile(60, 25, 1000, 1000, { minScale: 2, maxScale: 4, context: 2 })!.mx).toBe(42);
+    expect(fitTile(60, 25, 1000, 1000, { minScale: 2, maxScale: 4 })!.mx).toBe(21);
+    const { r } = await sampled();
+    const mean = async (dir: string) => (await sharp(join(dir, 'sheet-01.png')).stats()).channels[0]!.mean;
+    const washed = await runContactSheets(r, 'cs', { perSheet: 4, out: 'build/review/washed' });
+    const plain = await runContactSheets(r, 'cs', { perSheet: 4, mark: 'plain', out: 'build/review/plain' });
+    expect(plain.rows).toEqual(washed.rows);
+    expect(await mean(plain.dir)).toBeLessThan(await mean(washed.dir)); // the column rules round each cell stay dark
+    await expect(runContactSheets(r, 'cs', { context: 0 })).rejects.toThrow(/--context/);
+  });
+
   it('never carries the transcription: no resolved value or earlier re-reading in sheets.csv or on a tile', async () => {
     const { r } = await sampled();
     const res = await runContactSheets(r, 'cs');

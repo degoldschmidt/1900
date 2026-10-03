@@ -523,9 +523,10 @@ export async function zoomKey(page: PageRaw, layout: Layout, crop: CropRow, key:
 /**
  * How a zoom marks its item: `outline` draws a translucent red box on the item's edges (resolver
  * zooms); `wash` washes the context around the item pale (WASH_OPACITY, as the margins of crops) and
- * draws nothing on the print, since an outline sits where an underline would be (contact sheets).
+ * draws nothing on the print, since an outline sits where an underline would be (contact sheets);
+ * `plain` changes nothing in the image (the item is marked outside it, e.g. by a sheet's ticks).
  */
-export type ZoomMark = 'outline' | 'wash';
+export type ZoomMark = 'outline' | 'wash' | 'plain';
 
 /**
  * In a `wash` zoom, a strip just above and below the item's box stays at full contrast (fractions of
@@ -546,7 +547,7 @@ export async function renderZoom(page: PageRaw, padded: Box, box: Box, s: number
   const above = Math.min(ry, bh * WASH_CLEAR.above); const below = Math.min(H - ry - bh, bh * WASH_CLEAR.below);
   const shapes = mark === 'outline'
     ? `<rect x="${rx.toFixed(1)}" y="${ry.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="none" stroke="${RED}" stroke-width="2" opacity="0.55"/>`
-    : frame({ x: 0, y: 0, w: W, h: H }, rx, ry - above, W - rx - bw, H - ry - bh - below).map(washRect).join('');
+    : mark === 'wash' ? frame({ x: 0, y: 0, w: W, h: H }, rx, ry - above, W - rx - bw, H - ry - bh - below).map(washRect).join('') : '';
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${shapes}</svg>`;
   return sharp(img.data, { raw: { width: W, height: H, channels: 3 } })
     .composite([{ input: Buffer.from(svg), left: 0, top: 0 }]).png().toBuffer();

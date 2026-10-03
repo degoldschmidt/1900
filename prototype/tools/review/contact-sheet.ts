@@ -2,7 +2,7 @@
  * Contact sheets: many sampled cells on one image, for a blind re-reading with few image requests
  * (PLAN.md addendum of 3 Oct 2026, 22:40; tools/keying/HISTORIAN_BRIEF.md, "Contact sheets").
  *
- *   node tools/review/contact-sheet.ts --sample <label> [--per-sheet 16] [--filter-tables 12,13,23] [--out <dir>]
+ *   node tools/review/contact-sheet.ts --sample <label> [--per-sheet 16] [--filter-tables 12,13,23] [--out <dir>] [--plain] [--context 1]
  *
  * Reads data/review/sample-<label>.csv (tools/keying/sample.ts draw) and lays its cells out as
  * numbered tiles, up to 16 per sheet (4×4). A tile is the cell cut from its page scan at page_region
@@ -28,6 +28,10 @@
  *   sheet-01.png, sheet-02.png, …   the sheets (earlier sheet-NN.png and sheets.csv there are removed)
  *   sheets.csv   sheet, tile, file, sample_id, source_id, table_ref, page_seq, kind, col, row, scale:
  *                the sample row each numbered tile shows, and its magnification
+ *
+ * --plain leaves the print untouched (no wash; the ticks still mark the cell) and --context k shows k
+ * times the usual context: for adjudicating a disagreement, where the rows and columns around a cell
+ * (a rule above it, a sign beside it) matter as much as the cell.
  *
  * Tiles are built from a list of TileItem, so a resolver packet can later become a second input.
  *
@@ -72,9 +76,13 @@ export interface SheetOptions {
   maxScale: number;
   /** Most tiles per sheet. */
   perSheet: number;
+  /** `wash` (default: the context pale, for blind readers) or `plain` (the print untouched, for adjudicating a disagreement). */
+  mark: 'wash' | 'plain';
+  /** Multiplies the context round each cell (CONTEXT): 2 shows about twice as much of the neighbouring rows and columns. */
+  context: number;
 }
 
-export const SHEET_DEFAULTS: SheetOptions = { maxLong: 1500, minScale: 2, maxScale: 4, perSheet: 16 };
+export const SHEET_DEFAULTS: SheetOptions = { maxLong: 1500, minScale: 2, maxScale: 4, perSheet: 16, mark: 'wash', context: 1 };
 
 /** Fixed sizes in output px: sheet padding, gap between tiles, label band, tick frame round the image, least tile width (for the band). */
 export const TILE = { pad: 10, gap: 12, band: 46, frame: 12, minWidth: 220 } as const;
@@ -103,11 +111,12 @@ const floor2 = (v: number) => Math.floor(v * 100) / 100;
  * context if the cell then still gets minScale, less context if that is what it takes, null if even
  * the least context leaves it below minScale.
  */
-export function fitTile(w: number, h: number, areaW: number, areaH: number, o: Pick<SheetOptions, 'minScale' | 'maxScale'> = SHEET_DEFAULTS): TileFit | null {
+export function fitTile(w: number, h: number, areaW: number, areaH: number, o: Pick<SheetOptions, 'minScale' | 'maxScale'> & { context?: number } = SHEET_DEFAULTS): TileFit | null {
   if (areaW <= 0 || areaH <= 0) return null;
+  const k = o.context ?? 1;
   const scale = (mx: number, my: number) => floor2(Math.min(o.maxScale, areaW / (w + 2 * mx), areaH / (h + 2 * my)));
-  let mx = Math.max(CONTEXT.minPx, Math.round(CONTEXT.x * w));
-  let my = Math.max(CONTEXT.minPx, Math.round(CONTEXT.y * h));
+  let mx = Math.max(CONTEXT.minPx, Math.round(k * CONTEXT.x * w));
+  let my = Math.max(CONTEXT.minPx, Math.round(k * CONTEXT.y * h));
   let s = scale(mx, my);
   if (s < o.minScale) {
     mx = Math.max(CONTEXT.minPx, Math.min(mx, Math.floor((areaW / o.minScale - w) / 2)));
@@ -115,7 +124,7 @@ export function fitTile(w: number, h: number, areaW: number, areaH: number, o: P
     s = scale(mx, my);
     if (s < o.minScale) return null;
   }
-  my = Math.max(my, Math.min(Math.round(CONTEXT.yMax * h), Math.floor((areaH / s - h) / 2)));
+  my = Math.max(my, Math.min(Math.round(k * CONTEXT.yMax * h), Math.floor((areaH / s - h) / 2)));
   return { mx, my, s, W: Math.max(1, Math.round((w + 2 * mx) * s)), H: Math.max(1, Math.round((h + 2 * my) * s)) };
 }
 
@@ -224,6 +233,7 @@ export interface ContactSheetResult {
 export async function buildContactSheets(r: Roots, items: readonly TileItem[], dir: string, opts: Partial<SheetOptions> = {}): Promise<ContactSheetResult> {
   const o: SheetOptions = { ...SHEET_DEFAULTS, ...opts };
   if (!Number.isInteger(o.perSheet) || o.perSheet < 1) throw new Error(`--per-sheet must be a positive whole number, not ${o.perSheet}`);
+  if (!(o.context > 0)) throw new Error(`--context must be a positive number, not ${o.context}`);
   if (items.length === 0) throw new Error('no cells to put on contact sheets');
   const { grid, fits } = chooseGrid(items.map((it) => [it.region[2], it.region[3]] as const), o);
 
@@ -262,7 +272,7 @@ export async function buildContactSheets(r: Roots, items: readonly TileItem[], d
       if (b[0] < 0 || b[1] < 0 || b[0] + b[2] > page.width || b[1] + b[3] > page.height) {
         throw new Error(`${it.sample_id}: page_region ${boxStr(b)} lies outside page ${g.page_seq} (${page.width}×${page.height} after a ${g.deskew}° deskew)`);
       }
-      images[i] = await renderZoom(page, [b[0] - f.mx, b[1] - f.my, b[2] + 2 * f.mx, b[3] + 2 * f.my], b, f.s, 'wash');
+      images[i] = await renderZoom(page, [b[0] - f.mx, b[1] - f.my, b[2] + 2 * f.mx, b[3] + 2 * f.my], b, f.s, o.mark);
     }
   }
 
@@ -331,13 +341,15 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const opt = (f: string) => { const i = args.indexOf(f); return i >= 0 ? args[i + 1] : undefined; };
   const label = opt('--sample');
   if (!label) {
-    console.error('usage: contact-sheet.ts --sample <label> [--per-sheet 16] [--filter-tables 12,13,23] [--out <dir>]');
+    console.error('usage: contact-sheet.ts --sample <label> [--per-sheet 16] [--filter-tables 12,13,23] [--out <dir>] [--plain] [--context 1]');
     process.exit(1);
   }
   const o: Partial<SheetOptions> & { tables?: string[]; out?: string } = {};
   if (opt('--per-sheet') !== undefined) o.perSheet = Number(opt('--per-sheet'));
   if (opt('--filter-tables') !== undefined) o.tables = opt('--filter-tables')!.split(',').map((t) => t.trim()).filter(Boolean);
   if (opt('--out') !== undefined) o.out = opt('--out')!;
+  if (args.includes('--plain')) o.mark = 'plain';
+  if (opt('--context') !== undefined) o.context = Number(opt('--context'));
   runContactSheets(roots(), label, o).then((res) => {
     for (const w of res.warnings) console.warn(`warning: ${w}`);
     const big = res.sheets.reduce((a, s) => (s.width * s.height > a.width * a.height ? s : a));
