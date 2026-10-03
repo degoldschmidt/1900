@@ -1,0 +1,5 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-cn-p5-c44-49,footnote,0,0,doubtful,Nur Sonn- und Festtags.,c:44,n,Nur Sonn- und Festtags.,c:44,y
+23-cn-p5-c44-49,footnote,0,1,doubtful,Speise- wagen Wien Fr.J.B.- Dresden.,c:46,n,Speise- wagen Wien Fr.J.B.- Dresden.,c:46,n
+23-cn-p5-c44-49,footnote,0,2,doubtful,Speise- wagen Karlsbad- Berlin.,c:47,n,Speise- wagen Karlsbad- Berlin.,c:47,n
+23-cn-p5-c44-49,footnote,0,3,doubtful,in Riesa.,c:49,y,in Riesa.,c:49,n

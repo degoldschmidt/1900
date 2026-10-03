@@ -1,0 +1,11 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-c55-60-r175-202,header,55,0,doubtful,E 138,,n,E 138,,y
+23-c55-60-r175-202,header,57,0,doubtful,456,fn:•,n,456,fn:•,y
+23-c55-60-r175-202,header,56,1,doubtful,II.III.,,n,II.III.,,n
+23-c55-60-r175-202,label,0,175,text+marks,a. Tetschen □. .,,y,a. Tetschen,fn:□,y
+23-c55-60-r175-202,label,0,188,text+marks,aus Bodenbach □.,,y,aus Bodenbach,fn:□,y
+23-c55-60-r175-202,label,0,202,text,62 in Dresden Hbf. .,,n,62 in Dresden Hbf.,,y
+23-c55-60-r175-202,cell,57,175,doubtful,9 12,u;fn:•,n,9 12,u;fn:•,y
+23-c55-60-r175-202,cell,60,175,marks,10 23,u,y,10 23,b;u,n
+23-c55-60-r175-202,cell,60,188,marks,10 26,u,y,10 26,b;u,n
+23-c55-60-r175-202,cell,60,202,marks,12 09,u,y,12 09,b;u,n

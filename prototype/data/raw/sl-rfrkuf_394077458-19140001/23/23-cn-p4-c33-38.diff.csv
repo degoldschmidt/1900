@@ -1,0 +1,8 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-cn-p4-c33-38,footnote,0,0,doubtful,□ In Tetschen u. Bodenbach Zoll- abfertigung.,c:37;c:38;c:39;fn:□,n,□ In Tetschen u. Bodenbach Zoll- abfertigung.,c:37;c:38;c:39;fn:□,n
+23-cn-p4-c33-38,footnote,0,2,doubtful,Schlaf- wagen Karlsbad- Berlin.,c:33,n,Schlaf- wagen Karlsbad- Berlin.,c:33,n
+23-cn-p4-c33-38,footnote,0,3,text+marks,Schlafwagen Wien-Berlin.,c:34,y,Speisewagen Tetsch.-Berlin,c:36,n
+23-cn-p4-c33-38,footnote,0,4,text,Speisewagen Tetsch.-Berlin,c:36,n,Schlafwagen Wien-Leipzig.,c:36,n
+23-cn-p4-c33-38,footnote,0,5,text+marks,Schlafwagen Wien-Leipzig.,c:36,n,Speise- wagen Prag- Berlin.,c:38,n
+23-cn-p4-c33-38,footnote,0,6,text+marks,Speise- wagen Prag- Berlin.,c:38,n,Schlafwagen Wien-Berlin.,c:34,y
+23-cn-p4-c33-38,footnote,0,7,doubtful,in Riesa,c:37,n,in Riesa,c:37,n

@@ -1,0 +1,10 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-c26-29-r64-89,header,28,0,doubtful,451,,n,451,,y
+23-c26-29-r64-89,label,0,64,doubtful,aus Dresden Hbf. 4,,n,aus Dresden Hbf. 4,,n
+23-c26-29-r64-89,label,0,78,text+marks,62 in Bodenbach □.,,y,62 in Bodenbach,fn:□,y
+23-c26-29-r64-89,label,0,89,text+marks,62 in Tetschen □ .,,y,62 in Tetschen,fn:□,y
+23-c26-29-r64-89,cell,29,64,doubtful,8 12,b;u,n,8 12,b;u,n
+23-c26-29-r64-89,cell,28,78,marks,8 41,b;u,n,8 41,u,y
+23-c26-29-r64-89,cell,29,78,doubtful,10 00,b;u,n,10 00,b;u,n
+23-c26-29-r64-89,cell,28,89,marks,8 39,b;u;fn:!,n,8 39,u;fn:!,n
+23-c26-29-r64-89,cell,29,89,doubtful,10 01,b;u,n,10 01,b;u,n

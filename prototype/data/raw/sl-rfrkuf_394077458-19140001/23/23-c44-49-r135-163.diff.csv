@@ -1,0 +1,7 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-c44-49-r135-163,label,0,135,text+marks,a. Tetschen □. .,,y,a. Tetschen,fn:□,y
+23-c44-49-r135-163,label,0,149,text+marks,us Bodenbach □.,,n,us Bodenbach,fn:□,n
+23-c44-49-r135-163,label,0,163,doubtful,in Dresden Hbf.,,n,in Dresden Hbf.,,n
+23-c44-49-r135-163,cell,49,135,doubtful,4 35,b,n,4 35,b,n
+23-c44-49-r135-163,cell,49,149,doubtful,4 36,b,n,4 36,b,n
+23-c44-49-r135-163,cell,49,163,doubtful,6 23,b;u,n,6 23,b;u,n

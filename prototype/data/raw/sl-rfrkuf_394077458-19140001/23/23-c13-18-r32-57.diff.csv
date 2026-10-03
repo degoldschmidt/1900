@@ -1,0 +1,6 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-c13-18-r32-57,label,0,32,doubtful,aus Dresden Hbf. 4,,y,aus Dresden Hbf. 4,,n
+23-c13-18-r32-57,label,0,46,text+marks,62 in Bodenbach □.,,y,62 in Bodenbach,fn:□,y
+23-c13-18-r32-57,label,0,57,text+marks,62 in Tetschen □. .,,y,62 in Tetschen,fn:□,y
+23-c13-18-r32-57,cell,17,32,marks,12 53,,y,12 53,b,n
+23-c13-18-r32-57,cell,17,46,marks,2 29,,y,2 29,b,n

@@ -1,0 +1,17 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-c0-6-r0-26,header,4,0,doubtful,435,fn:◗,n,435,fn:◗,n
+23-c0-6-r0-26,header,6,0,doubtful,505,,n,505,,n
+23-c0-6-r0-26,header,1,1,doubtful,I-III,,y,I-III,,n
+23-c0-6-r0-26,header,6,1,doubtful,II-IV,,n,II-IV,,n
+23-c0-6-r0-26,label,0,0,doubtful,us Dresden Hbf. 4,,n,us Dresden Hbf. 4,,n
+23-c0-6-r0-26,label,0,14,text+marks,in Bodenbach □.,,n,in Bodenbach,fn:□,n
+23-c0-6-r0-26,label,0,26,text+marks,2 in Tetschen □ .,,n,in Tetschen,fn:□,n
+23-c0-6-r0-26,cell,1,0,doubtful,2 30,u;i,n,2 30,u;i,n
+23-c0-6-r0-26,cell,2,0,doubtful,3 40,,n,3 40,,n
+23-c0-6-r0-26,cell,4,0,doubtful,6 00,b,n,6 00,b,n
+23-c0-6-r0-26,cell,5,0,illegible,6 06,fn:?,x,6 06,fn:?,x
+23-c0-6-r0-26,cell,6,0,doubtful,6 24,b,n,6 24,b,n
+23-c0-6-r0-26,cell,1,14,doubtful,3 40,u;i,y,3 40,u;i,n
+23-c0-6-r0-26,cell,4,14,doubtful,7 58,b,n,7 58,b,n
+23-c0-6-r0-26,cell,1,26,doubtful,3 41,u;i,y,3 41,u;i,n
+23-c0-6-r0-26,cell,3,26,doubtful,,,y,,,n

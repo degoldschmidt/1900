@@ -1,0 +1,4 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-cn-p5-c50-54,footnote,0,0,doubtful,□ In Tetschen und Bodenbach Zollabfertigung,c:54;fn:□,n,□ In Tetschen und Bodenbach Zollabfertigung,c:54;fn:□,n
+23-cn-p5-c50-54,footnote,0,1,doubtful,Speisew. Wien- Bodenbach-Berlin,c:50,n,Speisew. Wien- Bodenbach-Berlin,c:50,n
+23-cn-p5-c50-54,footnote,0,3,doubtful,■ Über Döbeln.,c:53;fn:■,y,■ Über Döbeln.,c:53;fn:■,n

@@ -1,0 +1,12 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-c39-43-r95-123,header,43,0,doubtful,446,,n,446,,n
+23-c39-43-r95-123,header,42,1,doubtful,I.-III.,,n,I.-III.,,n
+23-c39-43-r95-123,header,43,1,illegible,I.-I?,,x,I.-I?,,x
+23-c39-43-r95-123,label,0,95,text+marks,a. Tetschen □. .,,y,a. Tetschen,fn:□,y
+23-c39-43-r95-123,label,0,109,text+marks,aus Bodenbach □.,,y,aus Bodenbach,fn:□,y
+23-c39-43-r95-123,cell,40,95,doubtful,8 48,b,n,8 48,b,n
+23-c39-43-r95-123,cell,43,95,illegible,12 1?,,x,12 1?,,x
+23-c39-43-r95-123,cell,40,109,doubtful,8 48,b,n,8 48,b,n
+23-c39-43-r95-123,cell,43,109,doubtful,|,,n,|,,n
+23-c39-43-r95-123,cell,40,123,doubtful,10 48,b,n,10 48,b,n
+23-c39-43-r95-123,cell,43,123,doubtful,1 48,,n,1 48,,n

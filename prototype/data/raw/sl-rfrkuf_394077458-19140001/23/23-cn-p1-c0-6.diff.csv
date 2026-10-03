@@ -1,0 +1,10 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-cn-p1-c0-6,footnote,0,1,illegible,◗ Sonn- u. Fest- tags nur I.-III. Kl.,c:2;fn:◗,y,? Nur Sonn- und Festtags.,c:5;fn:?,x
+23-cn-p1-c0-6,footnote,0,2,text+marks,0 über Döbeln.,c:3;fn:0,n,◗ Sonn- u. Fest- tags nur I.-III. Kl.,c:2;fn:◗,n
+23-cn-p1-c0-6,footnote,0,3,illegible,? Nur Sonn- und Festtags.,c:5;fn:?,n,? über Döbeln.,c:3;fn:?,x
+23-cn-p1-c0-6,footnote,0,4,doubtful,: ab Riesa,c:6;fn::,n,: ab Riesa,c:6;fn::,n
+23-cn-p1-c0-6,footnote,0,5,text,Schlafw. Berlin Karlsbad,c:1,n,Schlafw.,c:1,y
+23-cn-p1-c0-6,footnote,0,6,text+marks,Nur Sonn- und Festtags.,c:3,y,Berlin Karlsbad,c:1,n
+23-cn-p1-c0-6,footnote,0,7,text+marks,□ In Bodenbach und Tetschen Zollabfertigung.,c:4;c:5;fn:□,y,Nur Sonn- und Festtags.,c:3,y
+23-cn-p1-c0-6,footnote,0,8,text+marks,† bis Caslau (Ank. 1 34),c:3;c:4;c:5;fn:†,y,□ In Bodenbach und Tetschen Zollabfertigung.,c:4;c:5;fn:□,y
+23-cn-p1-c0-6,footnote,0,9,missing-A,,,,† bis Caslau (Ank. 1 34),c:3;c:4;c:5;fn:†,y

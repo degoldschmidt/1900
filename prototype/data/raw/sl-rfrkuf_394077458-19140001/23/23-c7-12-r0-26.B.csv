@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure
+23-c7-12-r0-26,header,7,0,509,,y
+23-c7-12-r0-26,header,8,0,E137,,y
+23-c7-12-r0-26,header,9,0,E139,,y
+23-c7-12-r0-26,header,10,0,437,,n
+23-c7-12-r0-26,header,11,0,517,,y
+23-c7-12-r0-26,header,12,0,D 68,,n
+23-c7-12-r0-26,header,7,1,I.-III.,,y
+23-c7-12-r0-26,header,8,1,I-III,,n
+23-c7-12-r0-26,header,9,1,I.-III.,,y
+23-c7-12-r0-26,header,10,1,I-III,,y
+23-c7-12-r0-26,header,11,1,II.-IV,,y
+23-c7-12-r0-26,header,12,1,I.-III.,,y
+23-c7-12-r0-26,label,0,0,us Dresden Hbf. 4,,n
+23-c7-12-r0-26,cell,7,0,7 03,,y
+23-c7-12-r0-26,cell,8,0,7 10,i,n
+23-c7-12-r0-26,cell,9,0,7 53,i,y
+23-c7-12-r0-26,cell,10,0,8 30,b,n
+23-c7-12-r0-26,cell,11,0,9 11,,y
+23-c7-12-r0-26,cell,12,0,10 00,i,y
+23-c7-12-r0-26,label,0,14,in Bodenbach,fn:□,n
+23-c7-12-r0-26,cell,7,14,8 20,,y
+23-c7-12-r0-26,cell,8,14,8 34,i,y
+23-c7-12-r0-26,cell,9,14,|,,n
+23-c7-12-r0-26,cell,10,14,10 07,b,n
+23-c7-12-r0-26,cell,11,14,,,n
+23-c7-12-r0-26,cell,12,14,,,y
+23-c7-12-r0-26,label,0,26,in Tetschen,fn:□,n
+23-c7-12-r0-26,cell,7,26,,,y
+23-c7-12-r0-26,cell,8,26,8 35,i,y
+23-c7-12-r0-26,cell,9,26,9 19,i,y
+23-c7-12-r0-26,cell,10,26,—,,y
+23-c7-12-r0-26,cell,11,26,—,,y
+23-c7-12-r0-26,cell,12,26,10 53,i,y

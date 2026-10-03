@@ -1,0 +1,12 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-c30-32-r64-89,header,31,0,doubtful,D196,,n,D196,,y
+23-c30-32-r64-89,header,30,1,doubtful,I-III,,n,I-III,,n
+23-c30-32-r64-89,header,31,1,doubtful,I.-III.,,n,I.-III.,,n
+23-c30-32-r64-89,header,32,1,doubtful,I.-IV,,n,I.-IV,,n
+23-c30-32-r64-89,label,0,64,doubtful,aus Dresden Hbf. 4,,n,aus Dresden Hbf. 4,,n
+23-c30-32-r64-89,label,0,78,text+marks,62 in Bodenbach □.,,y,62 in Bodenbach,fn:□,y
+23-c30-32-r64-89,label,0,89,text+marks,62 in Tetschen □ .,,y,62 in Tetschen,fn:□,y
+23-c30-32-r64-89,cell,30,64,doubtful,9 55,u;i,y,9 55,u;i,n
+23-c30-32-r64-89,cell,32,64,doubtful,11 10,u,n,11 10,u,n
+23-c30-32-r64-89,cell,30,89,marks,10 52,u;i;fn:◗,n,10 52,u;i,n
+23-c30-32-r64-89,cell,31,89,marks,11 51,u;i;fn:◗,n,11 51,u;i,n

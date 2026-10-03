@@ -1,0 +1,3 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-cn-p3-c30-32,footnote,0,0,text+marks,Speisewagen Berlin-Tetschen.,c:30,n,Schlafwagen Berlin-Wien und Leipzig-Wien.,c:31,n
+23-cn-p3-c30-32,footnote,0,1,text+marks,Schlafwagen Berlin-Wien und Leipzig-Wien.,c:31,n,Speisewagen Berlin-Tetschen.,c:30,n

@@ -1,0 +1,15 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+23-c19-24-r32-57,header,19,0,marks,445,,y,445,b,n
+23-c19-24-r32-57,header,24,0,illegible,44?,,x,44?,,x
+23-c19-24-r32-57,header,24,1,illegible,I-I?,,x,I-I?,,x
+23-c19-24-r32-57,label,0,32,doubtful,aus Dresden Hbf. 4,,y,aus Dresden Hbf. 4,,n
+23-c19-24-r32-57,label,0,46,text+marks,62 in Bodenbach □.,,y,62 in Bodenbach,fn:□,y
+23-c19-24-r32-57,label,0,57,text+marks,62 in Tetschen □. .,,y,62 in Tetschen,fn:□,y
+23-c19-24-r32-57,cell,19,32,doubtful,2 22,b,n,2 22,b,n
+23-c19-24-r32-57,cell,21,32,doubtful,3 15,b,n,3 15,b,n
+23-c19-24-r32-57,cell,22,32,illegible,4 00,fn:?,x,4 00,,n
+23-c19-24-r32-57,cell,24,32,illegible,4?,,x,4?,,x
+23-c19-24-r32-57,cell,19,46,doubtful,4 08,b,n,4 08,b,n
+23-c19-24-r32-57,cell,24,46,illegible,6?,,x,6?,,x
+23-c19-24-r32-57,cell,19,57,doubtful,4 08,b;fn:!,n,4 08,b;fn:!,n
+23-c19-24-r32-57,cell,24,57,doubtful,,,n,,,n
