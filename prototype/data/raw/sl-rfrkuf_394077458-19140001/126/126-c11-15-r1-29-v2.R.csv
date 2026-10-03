@@ -14,7 +14,7 @@ crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
 126-c11-15-r1-29-v2,cell,15,1,10 53,u,n,A,10 53 with a rule under the minutes
 126-c11-15-r1-29-v2,cell,11,2,4 52,,n,A,4 52 in lighter strokes than the heavy 5 05 beside it
 126-c11-15-r1-29-v2,cell,12,2,5 05,b,y,B,thick heavy upright figures
-126-c11-15-r1-29-v2,cell,13,2,9 20,b,n,other,heavy upright; no rule under 20 in the zoom
+126-c11-15-r1-29-v2,cell,13,2,9 20,b;u,y,B,"G2 adjudication P-E021 case 2: a thick underline under 20 on the cell's lower edge (keyer B, historian H2 and the adjudicator; every time in the column has one there); the earlier resolution 9 20 [b] read it away under the zoom's red outline. Without it the train needs 15 h Dresden-Tetschen (V03: 3 km/h)"
 126-c11-15-r1-29-v2,cell,14,2,11 16,u,y,agree,
 126-c11-15-r1-29-v2,cell,15,2,12 09,u,y,B,rule under 09 visible in the zoom
 126-c11-15-r1-29-v2,cell,11,29,ab,,y,agree,
