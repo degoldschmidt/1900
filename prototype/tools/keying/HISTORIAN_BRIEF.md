@@ -21,18 +21,36 @@ For each zone row (`zones.csv`, `station_zones.csv`): the time standard and its 
 Draw the sample yourself, with a seed you choose and record:
 
 ```
-node tools/keying/sample.ts draw --seed <your seed> --label <label>
+node tools/keying/sample.ts draw --seed <your seed> --label <label> [--n <count>]
 ```
 
-It takes 5% of the stop cells (body cells with a printed sign) of every resolved table and 10% of the fare cells (tables whose `layout.json` says `"table_kind": "fares"`), at least one per table, and writes `data/review/sample-<label>.csv` with **where** to look (`source_id`, `page_seq`, `table_ref`, `crop_id`, `kind`, `col`, `row`, `page_region` as `x,y,w,h` in the page image) but not what was transcribed. A zoom of each sampled cell is in `build/review/sample-<label>/<sample_id>.png`.
+By default it takes 5% of the stop cells (body cells with a printed sign) of every resolved table and 10% of the fare cells (tables whose `layout.json` says `"table_kind": "fares"`), at least one per table. With `--n <count>` it takes exactly that many cells, split over the tables in proportion to their size, at least one each (the G2 sample uses `--n 360`: with no error, 344 cells read out of 653 are needed to show 0.5%, and the rest is headroom for cells that cannot be read). It writes `data/review/sample-<label>.csv` with **where** to look (`source_id`, `page_seq`, `table_ref`, `crop_id`, `kind`, `col`, `row`, `page_region` as `x,y,w,h` in the page image) but not what was transcribed. A zoom of each sampled cell is in `build/review/sample-<label>/<sample_id>.png`.
 
-Re-read each cell **from the scan** (the zoom, or the page at `page_region`), following `tools/keying/KEYER_BRIEF.md`, and fill `reread_text`, `reread_marks`, `reread_sure` (`y`/`n`/`x`) and, if useful, `note`. Do not open the `.R.csv` files, the review pages or `stops.csv` until the sample is scored: the point is a reading the transcription cannot influence. Then
+Re-read each cell **from the scan**, on the contact sheets below, following `tools/keying/KEYER_BRIEF.md`, and fill `reread_text`, `reread_marks`, `reread_sure` (`y`/`n`/`x`) and, if useful, `note`. Do not open the `.R.csv` files, the review pages or `stops.csv` until the sample is scored: the point is a reading the transcription cannot influence.
+
+#### Contact sheets: reading the sample
+
+Image requests are limited (reads fail with "media removed: request limit"), so read the cells from contact sheets, 16 cells per image, not from one zoom per request:
+
+```
+node tools/review/contact-sheet.ts --sample <label> [--filter-tables 12,13,23] [--per-sheet 16]
+```
+
+It writes `build/review/sample-<label>/sheet-01.png`, `sheet-02.png` … and `sheets.csv`, which maps each `(sheet, tile)` to its `sample_id`. With `--filter-tables`, the sheets of those tables go to their own sub-folder (`tables-12-13-23/`): when two reviewers split a sample by table, each reads only their own folder and fills only their own tables' rows. Each tile shows one cell cut from the page scan, magnified 2× or more: the cell at full contrast between four red ticks, the rows and columns around it washed pale as context, and over it a band with a large tile number and the cell's key (`table 126 · c31 · r62`). A sheet never shows a transcription.
+
+1. **One sheet per image request.** Never ask for two images in one request, and do not open the per-cell zooms as well.
+2. Read every tile of the sheet, then write the readings into the sample rows that `sheets.csv` names for those tiles before you open the next sheet. Check the tile number against `sheets.csv` for every row you fill.
+3. **If an image does not load** (an error such as "media removed: request limit", or a reply without the picture): stop, wait about a minute, and retry that sheet once. If it fails again, stop reading and report which sheets did not load and how many cells you read.
+4. **Never fill a cell you have not seen** on a sheet that loaded. Leave its row blank, with a note such as `image not loaded`: a blank row is unread, so it is neither scored nor an error. A tile you see but cannot read gets `reread_sure=x` and a note; it is not measured either.
+5. Read the cell between the ticks, not the pale context. Underlining and signs (`!`, `□`, `°` … before or after a time, as `fn:` marks) are value. In Fritzsches Kursbuch 1914 bold has no meaning, and a train's italic is judged once on its column's header cell (P-013), so do not mark `i` on body cells.
+
+Then
 
 ```
 node tools/keying/sample.ts score --label <label> [--apply]
 ```
 
-compares your reading with the resolved cells. A source whose sampled cells are more than **0.5%** wrong fails: the tables with errors are re-keyed (`--apply` marks their crops `rekey` in `data/raw/status.csv`). Before you accept a mismatch as a keying error, look again: if your own reading was wrong, say so in the note and correct the sample row; the score is re-run on the corrected file.
+compares your reading with the resolved cells **by value**, with the guide's notation rules (P-005, P-010, P-013): a difference in typography alone (a separator, bold where the guide gives it no meaning, italic on a body cell) is listed but is not an error. Unread and illegible rows are listed apart, without their stored values. For each source the score gives the exact one-sided 95% upper bound on the value error rate, with the finite-population (hypergeometric) correction over the source's sampleable cells, and the verdict: **PASS when the bound is at most 0.5%**, FAIL otherwise, with the number of cells that would have to be read at the current error count. In a failing source the tables with errors are re-keyed (`--apply` marks their crops `rekey` in `data/raw/status.csv`). Before you accept a mismatch as a keying error, look again: if your own reading was wrong, say so in the note and correct the sample row; the score is re-run on the corrected file.
 
 ### 4. Waivers
 Every cell left `illegible` (or disputed) that the game needs must be either re-read from a better scan or waived. A waiver is a row in `data/canonical/waivers.csv`: `waiver_id, src, note, historian, reviewed_on`, where `src` cites the single cell and `note` gives your reasoning (what the context shows, e.g. the same train in the return table or in another guide). Review every existing waiver as well; a waiver must never invent a time the page does not support.
@@ -67,7 +85,7 @@ Reviewer: <name/agent>. Data state: <git commit or tag>. Validation report: <dat
 | zone_id / station_id | verdict | evidence | action |
 
 ## 3. Blind sample
-Seed <n>, label <label>; read <n>, errors <n> (<‰>); per source: … ; tables sent for re-keying: … .
+Seed <n>, label <label>; sheets loaded <n> of <n>; read <n>, unread <n>, value errors <n>; per source: 95% upper bound <x>% as `sample.ts score` gives it, PASS / FAIL; tables sent for re-keying: … .
 Mismatches I attribute to my own misreading: … .
 
 ## 4. Waivers

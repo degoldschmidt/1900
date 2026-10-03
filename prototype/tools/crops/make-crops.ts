@@ -368,7 +368,8 @@ export async function cutScaled(page: PageRaw, box: Box, s: number, outW: number
   return { data, width: outW, height: outH };
 }
 
-const RED = '#b00020';
+/** The red of the rulers and zoom outlines. */
+export const RED = '#b00020';
 
 function svgText(x: number, y: number, s: string, size: number, anchor: 'start' | 'middle' | 'end' = 'middle'): string {
   return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-family="DejaVu Sans, Liberation Sans, sans-serif" font-size="${size}" fill="${RED}" text-anchor="${anchor}" dominant-baseline="central">${s}</text>`;
@@ -453,8 +454,10 @@ export function marginRects(g: Geometry): Rect[] {
   return out;
 }
 
+const washRect = (r: Rect) => `<rect x="${r.x.toFixed(1)}" y="${r.y.toFixed(1)}" width="${r.w.toFixed(1)}" height="${r.h.toFixed(1)}" fill="#ffffff" opacity="${WASH_OPACITY}"/>`;
+
 function marginWash(g: Geometry): string[] {
-  return marginRects(g).map((r) => `<rect x="${r.x.toFixed(1)}" y="${r.y.toFixed(1)}" width="${r.w.toFixed(1)}" height="${r.h.toFixed(1)}" fill="#ffffff" opacity="${WASH_OPACITY}"/>`);
+  return marginRects(g).map(washRect);
 }
 
 function footnoteCaptionSvg(g: Geometry): string {
@@ -514,10 +517,29 @@ export async function zoomKey(page: PageRaw, layout: Layout, crop: CropRow, key:
   const mx = Math.max(8, Math.round(box[2] * marginF)); const my = Math.max(8, Math.round(box[3] * marginF));
   const padded: Box = [box[0] - mx, box[1] - my, box[2] + 2 * mx, box[3] + 2 * my];
   const s = Math.min(o.scale ?? 4, (o.maxLong ?? 1500) / Math.max(padded[2], padded[3]));
+  return renderZoom(page, padded, box, s, 'outline');
+}
+
+/**
+ * How a zoom marks its item: `outline` draws a translucent red box on the item's edges (resolver
+ * zooms); `wash` washes everything around the item pale (WASH_OPACITY, as the margins of crops) and
+ * draws nothing on the print, since an outline sits where an underline would be (contact sheets).
+ */
+export type ZoomMark = 'outline' | 'wash';
+
+/**
+ * Cuts `padded` (a page box holding the item's `box`) from the page, magnified s× to
+ * round(w·s) × round(h·s), and marks the item. Shared by zoomKey and the contact sheets.
+ */
+export async function renderZoom(page: PageRaw, padded: Box, box: Box, s: number, mark: ZoomMark = 'outline'): Promise<Buffer> {
   const W = Math.max(1, Math.round(padded[2] * s)); const H = Math.max(1, Math.round(padded[3] * s));
   const img = await cutScaled(page, padded, s, W, H);
-  const rx = mx * s; const ry = my * s;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><rect x="${rx.toFixed(1)}" y="${ry.toFixed(1)}" width="${(box[2] * s).toFixed(1)}" height="${(box[3] * s).toFixed(1)}" fill="none" stroke="${RED}" stroke-width="2" opacity="0.55"/></svg>`;
+  const rx = (box[0] - padded[0]) * s; const ry = (box[1] - padded[1]) * s;
+  const bw = box[2] * s; const bh = box[3] * s;
+  const shapes = mark === 'outline'
+    ? `<rect x="${rx.toFixed(1)}" y="${ry.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="none" stroke="${RED}" stroke-width="2" opacity="0.55"/>`
+    : frame({ x: 0, y: 0, w: W, h: H }, rx, ry, W - rx - bw, H - ry - bh).map(washRect).join('');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${shapes}</svg>`;
   return sharp(img.data, { raw: { width: W, height: H, channels: 3 } })
     .composite([{ input: Buffer.from(svg), left: 0, top: 0 }]).png().toBuffer();
 }

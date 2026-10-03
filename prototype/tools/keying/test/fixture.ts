@@ -5,6 +5,8 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 import { roots, type Roots } from '../paths.ts';
 import { writeLong, type KeyedCell } from '../longcsv.ts';
+import { runDiff } from '../diff.ts';
+import { mergeCrop } from '../merge.ts';
 import type { Layout } from '../../crops/layout.ts';
 import { makeCrops } from '../../crops/make-crops.ts';
 
@@ -56,6 +58,20 @@ export async function setupTable(o: { table?: string; kind?: Layout['table_kind'
   writeFileSync(join(dir, 'layout.json'), JSON.stringify(layout(table, o.kind ?? 'timetable')));
   await makeCrops(r, SOURCE, table);
   return { r, dir };
+}
+
+/** Tables T9 (timetable) and T10 (fares), both keyed from the truth by A and B and resolved: 11 printed body cells each. */
+export async function resolvedTables(): Promise<Roots> {
+  const { r, dir } = await setupTable({ table: 'T9' });
+  const t10 = await setupTable({ table: 'T10', kind: 'fares', r });
+  for (const [d, table] of [[dir, 'T9'], [t10.dir, 'T10']] as const) {
+    const grid = GRID.replace('T9', table); const fn = FN.replace('T9', table);
+    writeKeyer(d, grid, 'A', truthGrid()); writeKeyer(d, grid, 'B', truthGrid());
+    writeKeyer(d, fn, 'A', truthFootnotes()); writeKeyer(d, fn, 'B', truthFootnotes());
+    runDiff(r, SOURCE, table);
+    for (const crop of [grid, fn]) if (!mergeCrop(r, SOURCE, table, crop).ok) throw new Error(`fixture: ${crop} did not resolve`);
+  }
+  return r;
 }
 
 export function writeKeyer(dir: string, crop: string, who: 'A' | 'B' | 'R', cells: KeyedCell[] | string): void {
