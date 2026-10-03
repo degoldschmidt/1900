@@ -1,0 +1,7 @@
+crop_id,kind,col,row,text_as_printed,marks,sure
+123-cn-p1-c0-4,footnote,0,0,* An d. Beneschauer u. Woticer Jahrmarktst.,c:1;fn:*,n
+123-cn-p1-c0-4,footnote,0,1,D-Zug Berl.- Prag-Triest,c:0,y
+123-cn-p1-c0-4,footnote,0,2,Speisewag. Prag-Wien.,c:3,y
+123-cn-p1-c0-4,footnote,0,3,I.-III,c:1,y
+123-cn-p1-c0-4,footnote,0,4,I. Jun,c:0,x
+123-cn-p1-c0-4,footnote,0,5,§ ab,c:1;fn:§,x
