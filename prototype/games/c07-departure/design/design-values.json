@@ -1,0 +1,4 @@
+{
+  "note": "Game-rule constants labelled as design values (not historical data). Each entry: {id, value, unit, rationale}. Empty until this game's rules are built.",
+  "values": []
+}
