@@ -96,3 +96,57 @@ Two blind keyer agents worked from the crop images only, then a diff, then two r
 **Implications for real pages.** Scan quality, not keying, sets the abstention rate. Real scans should be fetched at the highest resolution the library offers, so crops resemble page 7 rather than pages 11 and 23. Validator V04 (the same train agreeing across tables) gives a second check on train numbers.
 
 **Next.** Round 2 on three fresh pages with the revised briefs, to confirm the resolved target before D1 is closed.
+
+## 2026-10-03 12:20 — Rules specifications written (Event P-E007; Decision P-004)
+
+Each game now has `design/RULES.md` and `design/DATA_NEEDS.md`. These are design documents, not rule code, so the plan's order (no rule code before a game's data freeze) holds. They contain mechanics only. Every historical value is a named parameter to be transcribed and cited, and every orientation date is flagged "to verify".
+
+| Game | Commands | Event types | Design values | Hypothesis metrics |
+|---|---|---|---|---|
+| C07 The Departure | 7 | 23 | 60 (DV-C07-) | H07-1 to H07-6, 14 metrics |
+| C01 Several Masters | 18 | 15 + 3 kit | 84 (DV-C01-) | H01-1 to H01-6, 13 metrics |
+| C04 The Legend Portfolio | 12 | 19 | 47 (DV-C04-) | H04-1 to H04-6, 14 metrics |
+
+**Kit gaps the specs found, now closed in the kit or tooling:**
+- metrics receive the questionnaire answers;
+- `Ctx.pick` (a keyed CDF draw);
+- `Ctx.bundle` (needed because a game restored from a snapshot never runs `init`);
+- cooperation edges filtered by record kind and keyed pass share, with `arrivalVia` naming the delivering row;
+- scenario prologues;
+- key kinds `city` and `topic`;
+- game-prefixed design-value ids;
+- draw-free worst-case exposure (`records/exposure.ts`) for player-side indicators, so hidden draws cannot leak.
+
+One gap is left to the C07 build: filtering a known graph by mode or operator.
+
+**Proposed scope additions for gate G1** (from the data-needs lists):
+1. Brussels–Rotterdam as a corridor (C01).
+2. A winter 1913–14 issue for the Harwich–Hook of Holland route both ways (C04).
+3. The Flushing route promoted to the tier needed for C04's escape-by-unknown-boat test (H04-6).
+
+**Spec questions with defaults adopted provisionally (Decision P-004).** The owner may override any of them at G1.
+
+Already settled by the kit changes:
+- the questionnaire channel (C07 Q5);
+- the design-value id format (C07 Q6);
+- kit gaps K1 and K2 (C01 Q6).
+
+| # | Game | Question | Default adopted |
+|---|---|---|---|
+| 1 | C07 | No May 1914 issue transcribed: may the June/July anchor be the truth from the changeover date its own preliminary pages print? | Yes, if printed and cited; otherwise S1 moves to the first transcribed summer issue |
+| 2 | C07 | Warsaw | Only if Berlin–Alexandrowo–Warsaw–Petersburg is transcribed |
+| 3 | C07 | Arrest after one detection | Keep; two detections if playtests find it harsh |
+| 4 | C07 | Hunter present in S1 | Yes (one code path) |
+| 5 | C01 | Should distinct cipher keywords cost something? | No; reuse is a measured choice |
+| 6 | C01 | Pre-war flips without a cited power row | Stop pay and watch only |
+| 7 | C01 | The commission house | A design row, labelled; its legal environment cited |
+| 8 | C01 | Aug–Sep 1914 London–Paris and London–Rotterdam | Close at cited suspension dates; show the source gap |
+| 9 | C01 | Fusion date if no source dates liaison | The cited British declaration of war, date basis design, stated on About |
+| 10 | C04 | No pre-war record path gives one service both a Berlin and a London record | Test-only reach rows for T1–T2; in play, links come from footprints, wartime Rotterdam, queries, searches and photographs |
+| 11 | C04 | Both services read Rotterdam police registers from the outbreak | Yes, labelled design |
+| 12 | C04 | A non-British second passport at S1 | No |
+| 13 | C04 | Questionnaire by an `Answer` command | Yes, so answers replay |
+| 14 | C04 | Alibi veto window | 7 days (DV-C04-005); revisit after playtest |
+| 15 | C04 | Keep the second hunting service and the photograph rule | Keep; decide at G1 by source coverage |
+
+Question 10 bears on C04's hook. Before the war, linking two legends depends mostly on the player's own footprint crossing jurisdictions. The owner should weigh this at G1, together with the wartime source sub-gate.
