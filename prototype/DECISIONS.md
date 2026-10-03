@@ -42,7 +42,7 @@ Fix during M2: the itinerary rounds were not monotone when the start was seeded 
 
 Access re-checked at 10:01: the four library domains still do not connect. D0 remains blocked.
 
-## 2026-10-03 10:50 — D1 data tooling built (Event P-E005)
+## 2026-10-03 10:22 — D1 data tooling built (Event P-E005)
 
 Both halves of the data tooling are built, reviewed and committed; 288 tests pass across the prototype, with typecheck and static checks clean.
 
@@ -63,7 +63,7 @@ Both halves of the data tooling are built, reviewed and committed; 288 tests pas
 
 Keyer calibration on synthetic pages, the last D1 exit criterion, is under way: three pages, nine crops, two blind keyers, then resolution and scoring against hidden ground truth.
 
-## 2026-10-03 12:00 — Keyer calibration, round 1 (Event P-E006; Decision P-003)
+## 2026-10-03 10:46 — Keyer calibration, round 1 (Event P-E006; Decision P-003)
 
 **Set-up.** Three synthetic period-style pages with sealed ground truth, nine crops, 724 cells per keyer:
 - seed 7: light degradation, the realism target;
@@ -97,7 +97,7 @@ Two blind keyer agents worked from the crop images only, then a diff, then two r
 
 **Next.** Round 2 on three fresh pages with the revised briefs, to confirm the resolved target before D1 is closed.
 
-## 2026-10-03 12:20 — Rules specifications written (Event P-E007; Decision P-004)
+## 2026-10-03 10:48 — Rules specifications written (Event P-E007; Decision P-004)
 
 Each game now has `design/RULES.md` and `design/DATA_NEEDS.md`. These are design documents, not rule code, so the plan's order (no rule code before a game's data freeze) holds. They contain mechanics only. Every historical value is a named parameter to be transcribed and cited, and every orientation date is flagged "to verify".
 
@@ -151,7 +151,7 @@ Already settled by the kit changes:
 
 Question 10 bears on C04's hook. Before the war, linking two legends depends mostly on the player's own footprint crossing jurisdictions. The owner should weigh this at G1, together with the wartime source sub-gate.
 
-## 2026-10-03 12:50 — Keyer calibration, round 2; D1 closed (Event P-E008; Decision P-005)
+## 2026-10-03 11:01 — Keyer calibration, round 2; D1 closed (Event P-E008; Decision P-005)
 
 **Set-up.** Three fresh synthetic pages with sealed ground truth, 677 cells per keyer:
 - seed 31: light degradation, mrn/aft style;
@@ -186,7 +186,7 @@ Two new blind keyers worked from the revised briefs, then one resolver.
 
 The owner reported opening the four library domains. All four still get "403 to CONNECT" from the environment proxy, both in this session's container and in a fresh throwaway session started in the same environment at 11:05 (since archived). The environment is still listed as "Default - trusted network access", so the change has not reached its policy. The owner will re-check and save Network access: Custom, with the four domains and the package-manager defaults. The D0 run-book is in `PLAN.md` (addendum of 3 October).
 
-## 2026-10-03 11:25 — C07 mechanics preview on invented data (Decision P-006); PR #1 merged
+## 2026-10-03 11:22 — C07 mechanics preview on invented data (Decision P-006); PR #1 merged
 
 **Owner decision.** Build a playable C07 mechanics preview now, on an invented railway, instead of waiting for transcribed 1914 data. This reverses scope choice 5 ("no game-rule code before that game's data freeze") for C07 only. The owner chose it over waiting for library access or supplying scans.
 
@@ -198,7 +198,7 @@ The owner reported opening the four library domains. All four still get "403 to 
 
 **PR #1 merged** into `master` (merge commit `1a11e5c`) at the owner's request. The working branch was not reset to the new `master`, because the reset was refused by the session's permission check. Further commits continue on the same branch from the merged head, so a later PR will show only new work.
 
-## 2026-10-03 12:05 — D0 discovery, first pass: no full-view 1912–1915 timetable (Event P-E010)
+## 2026-10-03 11:46 — D0 discovery, first pass: no full-view 1912–1915 timetable (Event P-E010)
 
 **Access.** Since 11:25 UTC the environment reaches archive.org in full: search, metadata, OCR, page images and the `*.archive.org` mirrors. It also reaches Gallica (SRU search) and the HathiTrust catalogue API, which looks volumes up by identifier only. HathiTrust's catalogue search and page images (`babel`) answer with a Cloudflare bot challenge, so HathiTrust volumes cannot be searched or fetched from here.
 
@@ -221,7 +221,7 @@ Gate G1's pass condition (a full-view guide valid June–July 1914 covering at l
 
 **Next: gate G1 (owner).** The plan's options are (a) the owner scans facsimile pages, (b) national guides per segment from further libraries, (c) dropping tier B, (d) shifting dates.
 
-## 2026-10-03 12:20 — Gate G1: facsimile scans plus more libraries (Decision P-007)
+## 2026-10-03 11:50 — Gate G1: facsimile scans plus more libraries (Decision P-007)
 
 **Owner decision.** Both of these at once:
 
@@ -249,7 +249,7 @@ The photos enter as source `os-bradshaw-continental-1913` through the new `tools
 
 If the field accepts wildcards: `*.europeana.eu`, `*.deutsche-digitale-bibliothek.de`, `*.slub-dresden.de`, `*.digitale-sammlungen.de`, `*.staatsbibliothek-berlin.de`, `*.kb.nl`, `*.onb.ac.at`. The search targets are a Reichs-Kursbuch or a regional Prussian Kursbuch for spring and summer 1914, the Dutch Officieele Reisgids, Austrian Kursbücher, and Russian timetable pages.
 
-## 2026-10-03 13:20 — C07 preview, stage 1: rules, invented world, view models (Event P-E011)
+## 2026-10-03 12:15 — C07 preview, stage 1: rules, invented world, view models (Event P-E011)
 
 **Built:**
 - The real C07 rules, per `design/RULES.md`: 7 commands, 23 event types, one file per §5 module, and `metrics.ts` for every §1 metric.
@@ -275,7 +275,7 @@ If the field accepts wildcards: `*.europeana.eu`, `*.deutsche-digitale-bibliothe
 - The Tier-0 political event tests (T5a, T5b), since the invented world has no history. The code paths exist and are exercised through test overrides.
 - The browser half of the replay test (T7), which waits for stage 2.
 
-## 2026-10-03 13:45 — D0, second pass in the newly opened libraries (Event P-E012; Decision P-009)
+## 2026-10-03 12:37 — D0, second pass in the newly opened libraries (Event P-E012; Decision P-009)
 
 **Access.** These are reachable: the Europeana API, SLUB Dresden (its `/data/kitodo/` paths serve METS, images, OCR and PDFs; the viewer pages have a bot check), the Munich digital collections, both Berlin State Library hosts, and Polona. These are not: `www.europeana.eu`, `www.deutsche-digitale-bibliothek.de`, `labs.ddb.de`, `www.delpher.nl`, `resolver.kb.nl`, `anno.onb.ac.at` and `digital.onb.ac.at`.
 
@@ -295,7 +295,7 @@ If the field accepts wildcards: `*.europeana.eu`, `*.deutsche-digitale-bibliothe
 - **The D2 pilot moves to Berlin – Vienna in Fritzsche Summer 1914** (both directions). It needs no owner photos, so it can start now. The planned pilot corridor, Berlin – St Petersburg, waits for the facsimile.
 - Winter 1914/15 gives a wartime comparison on the same corridor.
 
-## 2026-10-03 14:10 — C07 preview, stage 2: playable page (Event P-E013)
+## 2026-10-03 12:42 — C07 preview, stage 2: playable page (Event P-E013)
 
 **The page.** Preact screens built on the stage-1 view models:
 - diary with the booked departure as a ticket, its slack and a latest-leave time;
@@ -316,7 +316,7 @@ If the field accepts wildcards: `*.europeana.eu`, `*.deutsche-digitale-bibliothe
 
 **Follow-up.** The release bundle's JavaScript includes the preview scenario files, because `scenarios.ts` imports them. The data block stays clean, but the scenarios should be loaded only in the preview build. This is to be fixed before the 1914 release.
 
-## 2026-10-03 15:00 — D2 pilot preparation on Fritzsche Summer 1914 (Event P-E014)
+## 2026-10-03 13:31 — D2 pilot preparation on Fritzsche Summer 1914 (Event P-E014)
 
 **Source.** `sl-rfrkuf_394077458-19140001`, *R. Fritzsches Kursbuch*, Sommer-Ausgabe 1914, valid 1 May – 30 September 1914, from SLUB Dresden. SLUB is now a discovery and fetch library (`tools/discover/slub.ts`): it reads the METS, uses ALTO OCR to locate pages, and fetches 300 dpi JPEGs.
 
@@ -344,7 +344,7 @@ Also the explanation of signs (p. 5) and the title page. In all, 18 pages, fetch
 
 **Known hard spots:** the lower section of p. 192; p. 75's last column partly in the binding; braced shared times in table 112.
 
-## 2026-10-03 16:10 — D2 pilot keying and diff; value rules per guide (Event P-E015; Decisions P-010, P-011)
+## 2026-10-03 13:52 — D2 pilot keying and diff; value rules per guide (Event P-E015; Decisions P-010, P-011)
 
 **Keying.** Six blind keyer agents, two per batch: about 900,000 tokens for 69 crops on 18 pages. Two keyers made small blindness breaches; neither touched its partner's file. Keyer A of batch X listed its own empty output folder. Keyer B of batch Z ran a self-check over other B files after its keying was done.
 
@@ -375,7 +375,7 @@ With P-010, grid agreement per crop rose: table 12 to 81–100%, 13 to 89–98%,
 
 The historian's blind sample then measures whether resolution alone reaches the target. The re-key threshold for the full run is a G2 decision, informed by that sample.
 
-## 2026-10-03 16:40 — First playtest of the C07 preview: map-first redesign (Event P-E016; Decision P-012)
+## 2026-10-03 13:57 — First playtest of the C07 preview: map-first redesign (Event P-E016; Decision P-012)
 
 **Owner's playtest verdict.** "Not good at all": most game elements were confusing and not motivating. Asked what failed, the owner chose all four options:
 - too many screens (Diary, Plan, Board, Town, Pocket, Ledger);
@@ -394,7 +394,7 @@ The historian's blind sample then measures whether resolution alone reaches the 
 
 The rules engine, data model, save codes and metrics stay. H07-1 is restated for the map: "players use time in town for optional acts before departures". The metric remains verbs per stay and the waiting share.
 
-## 2026-10-03 18:00 — C07 preview rebuilt map-first (Event P-E017)
+## 2026-10-03 14:41 — C07 preview rebuilt map-first (Event P-E017)
 
 The preview now plays on a map, following P-012.
 - **Map (home):** a full-screen atlas of the invented countries, with sea, borders, railways and the steamer route. Your token and the goal flag with its deadline sit on it, towns one train away are emphasised, known police attention shows as a shaded ring, and night dims the map.
@@ -405,7 +405,7 @@ The preview now plays on a map, following P-012.
 
 Eight old screens are removed. **The rules are unchanged.** The map layer is a `map` key in the world bundle, kept out of the data hash, so golden runs and save codes still match. Tests: 404 unit tests (14 new) and 28/28 E2E, including full playthroughs on phone and desktop under the artifact CSP. The page is 402 KB, and it is republished to the same private link.
 
-## 2026-10-03 18:30 — D2 pilot, historian's blind sample: FAIL on marks (Event P-E018)
+## 2026-10-03 14:43 — D2 pilot, historian's blind sample: FAIL on marks (Event P-E018)
 
 **Sample.** Seed 52817, a 20% stratified sample (132 cells): table 12, 18; 13, 18; 23, 32; 112, 23; 123, 15; 126, 26. The historian re-read every cell from the scans, blind to the transcription.
 
@@ -425,7 +425,7 @@ Eight old screens are removed. **The rules are unchanged.** The map layer is a `
 
 The verdict stands as FAIL until a new sample passes. The tool was run without `--apply`, so nothing is marked for re-keying yet.
 
-## 2026-10-03 19:00 — D2 pilot complete; report for G2 (Event P-E019)
+## 2026-10-03 15:05 — D2 pilot complete; report for G2 (Event P-E019)
 
 The normaliser produced 175 services (127 trains), 487 stops, 189 footnotes and 30 running-rule proposals for the six pilot tables. It gained a partial mode, label markers, reverse reading, column notes as train headers, alternative end rows, and a train `category` field (a schema change). Validators: V11 has 71 illegible stops and V07 has 38 unreviewed rules, both expected. V03 found three print or reading problems, reported and not corrected. All other checks are clean.
 
@@ -433,7 +433,7 @@ The normaliser produced 175 services (127 trains), 487 stops, 189 footnotes and 
 
 The full report is `data/review/PILOT_REPORT.md`. **Verdict: times are reliable, marks fail the 0.5% target (3.8%).** Five fixes are proposed and await the owner's G2 decision.
 
-## 2026-10-03 19:10 — Gate G2: fix the method, then re-check (Decision P-013)
+## 2026-10-03 15:05 — Gate G2: fix the method, then re-check (Decision P-013)
 
 **Owner decision.** Apply the pilot report's five fixes. Re-key tables 12, 123 and 126 under the new brief. A fresh 20% blind sample must pass the 0.5% target before more transcription. After that, the first new volume is Fritzsche Winter 1913/14 (`rfrkuf_394077458-19130002`) for the same Berlin–Vienna corridor. Paired with Summer 1914, it gives C07 the real 1 May 1914 changeover.
 
@@ -444,7 +444,7 @@ The full report is `data/review/PILOT_REPORT.md`. **Verdict: times are reliable,
 4. **Failed image loads are caught.** Agents stop and report any image read that fails. A post-check (`ocr-check`) compares keyed header train numbers with the page OCR, as a signal only, never as values, and flags crops a keyer may not have seen.
 5. **Tables 12, 123 and 126 are re-keyed in full** by fresh blind keyers, then resolved, then sampled at 20% across all six tables.
 
-## 2026-10-03 22:30 — G2 re-check sample: no errors found, but not conclusive (Event P-E020)
+## 2026-10-03 16:52 — G2 re-check sample: no errors found, but not conclusive (Event P-E020)
 
 **Draw.** Seed 70419, 133 cells from 653, taken from the -v2 crops for 12, 123 and 126.
 
@@ -463,3 +463,41 @@ The full report is `data/review/PILOT_REPORT.md`. **Verdict: times are reliable,
 **Main operational finding.** Image-read limits, not keying skill, are now the bottleneck for resolvers and the historian alike.
 
 **Proposed remedy (owner's G2 decision pending).** Contact sheets: one image holding about 12–20 numbered cell zooms with their keys printed beside them. That cuts image requests about 15×. With it, either re-sample to the size the target needs, or replace the target with cumulative sampling during production.
+
+## 2026-10-03 19:50 — G2 final blind sample: 2 keying errors in 359 cells, FAIL (Event P-E021)
+
+**Draw.** Seed 19140501, 360 of the 653 sampleable cells of Fritzsche Summer 1914 (all six tables, in proportion), read on contact sheets by two blind historians split by table, H1 (12, 13, 23) and H2 (112, 123, 126). All 23 sheets loaded; no image failed.
+
+**Exposure, handled before scoring.** The sign-example index printed its cells' stored readings, and 7 sampled cells were examples that both historians had seen. The rule, fixed before any score in commit `fafaf38`: drop those readings, and have a fresh historian (H3), who never saw the index, re-read the seven. H3 agreed on all seven.
+
+**Score.** 359 read, 1 illegible to the reader, 7 value mismatches.
+
+**Adjudication.** A fresh agent judged each mismatch on untouched zooms, with the two readings unlabelled and the key kept apart. Result: 2 keying errors and 5 reader misreads, detailed in `data/review/HISTORIAN_REVIEW.md` §3c.
+
+| case | finding | data impact |
+|---|---|---|
+| 0165, 126 c13 r2 | Tetschen 9 20 is underlined, so 21:20, not 09:20 | yes |
+| 0343, 23 c54 r135 | the □ belongs to the sideways customs note, not to the cell | none |
+
+**Verdict under the pre-registered rule: FAIL.** 2 errors in 359 read: observed 0.56%, exact 95% upper bound 1.225% (at most 8 of 653). Passing at this count needs at least 589 cells read with no further error.
+
+**Cause.** Both errors are resolver overrides (resolution `other`): 2 of the 3 such cells sampled; the source has 5. The other 356 cells read had no error: 197 keyer-agreed and 159 where the resolver chose a keyer's reading. No hour or minute figure was wrong in the sample.
+- The 0165 override read an underline away under the zoom's red outline. Table 126's grid sits about 8 px above its times, which puts the underline right on that edge. V03 had flagged the leg at 3 km/h, and nobody re-read it.
+- The 0343 override predates P-013's sideways-note rule.
+
+**Fixed.**
+1. Zooms mark the cell with ticks in a frame outside the image; nothing is drawn on the print.
+2. The contact-sheet wash keeps a clear strip round the cell, for underlines and edge signs. Its `--plain` and `--context` options serve adjudication.
+3. `tools/review/physics-queue.ts` turns V03's leg and dwell issues into blind re-reads.
+4. Briefs:
+   - a bar across a column on a row line is structure, not `—`;
+   - a resolver looks for a mark one keyer saw below the cell's edge before dropping it;
+   - every `other` resolution and every V03 leg warning is re-read blind;
+   - every mismatch is adjudicated before it counts.
+5. The sign-example index gives no readings and skips unread sampled cells. The draw warns about overlap, and contact sheets refuse it.
+6. Both errors are corrected in the resolved files. 126.c13 now reaches Tetschen at 21.20, and its V03 warning is gone.
+7. The log's heading times from P-E005 on had run ahead of the clock (estimates). They are corrected to their commit times, and the plan addendum on G2 to 18:01 UTC.
+
+**Targeted re-read (H4).** Pending. A fresh blind historian (H4) is re-reading, on one plain contact sheet (`data/review/sample-g2fix.csv`), the six cells in these groups that no reader had verified: the 2 remaining resolver overrides (`other`), the 2 remaining keyer disagreements on an underline, and the other stop of each V03-flagged leg (112 c14, 126 c13). Its result will be added here.
+
+**For the owner (G2).** The source fails the rule as set. The errors are few, of one kind, and fixed at the cause. Options are put to the owner with this entry.

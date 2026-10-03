@@ -1,0 +1,7 @@
+sample_id,source_id,table_ref,page_seq,crop_id,kind,col,row,page_region,rate_permille,reread_text,reread_marks,reread_sure,note
+Sg2fix-0001,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,9,40,"1043,1481,63,31",,,,,
+Sg2fix-0002,sl-rfrkuf_394077458-19140001,23,74,23-c0-6-r0-26,cell,2,0,"473,648,71,28",,,,,
+Sg2fix-0003,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,92,"861,1340,61,30",,,,,
+Sg2fix-0004,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,12,85,"286,1414,63,26",,,,,
+Sg2fix-0005,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,47,"1158,1482,67,32",,,,,
+Sg2fix-0006,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,13,1,"1062,159,55,31",,,,,

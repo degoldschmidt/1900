@@ -105,3 +105,56 @@ Reviewer: historian agent (Claude), 2026-10-03. Data state: git `76c83f9`, where
 3. I looked at 112 c9, c17 and c23 while checking these. c9 and c23 (italic, Schnellzug) and c17 (upright, no category) agree with `services.csv`.
 
 **What would complete G2.** A historian not exposed to the void score needs to re-read the 77 unread cells of this draw: all of tables 12 and 112, 7 cells of 123 including both `!` cells, and the rest. The better course is to draw a larger sample of about 50%, given the arithmetic above. Reads should go in small batches, retried one at a time, because of the image request limit that blocked this round.
+
+## 3c. Blind sample (G2 final, contact sheets)
+
+Reviewers: three blind historian agents (H1, H2 and H3) and one adjudicator agent (Claude), 2026-10-03; written up by the coordinator. Data state: git `5922cb8` (draw) to `8028de2` (adjudicated). Files: the sample `data/review/sample-g2final.csv`, the adjudication `data/review/adjudication-g2final.csv` (brief beside it) and the score `build/review/sample-g2final.score.md`.
+
+**Draw.** `node tools/keying/sample.ts draw --seed 19140501 --label g2final --n 360 --sources sl-rfrkuf_394077458-19140001`. That is 360 of the 653 cells (55%), proportional by table (112: 63, 12: 50, 123: 40, 126: 71, 13: 50, 23: 86), and only from resolved crops: the superseded crops of 12, 123 and 126 are never drawn.
+
+**Reading.** On contact sheets (`tools/review/contact-sheet.ts`, 16 tiles per image, 23 sheets). H1 read tables 12, 13 and 23 (12 sheets) and H2 read 112, 123 and 126 (11 sheets). Every sheet loaded. Both re-checked doubtful marks on unwashed zooms they cut from the scans.
+
+**Exposure, and how it was handled.** The sign-example index (`build/brief/signs/index.md`) printed the stored reading of each example cell. Seven sampled cells were examples: 0001, 0034 and 0114 in H2's tables, and 0065, 0069, 0071 and 0077 in H1's. Both historians had opened the index.
+- Before anything was scored (commit `fafaf38`), their readings of these seven were dropped.
+- H3, who never saw the old index, re-read them and agreed with the stored value on all seven.
+- The index now gives no readings, and examples skip every sampled cell.
+
+**Score before adjudication.**
+- Read: 359.
+- Illegible to the reader: 1 (0067: a 3 or an 8 blotted into its underline).
+- Value mismatches: 7.
+- Typography only: 177. These are bold, which has no meaning in this guide, and body-cell italic (P-013).
+
+**Adjudication.** A fresh agent judged each mismatch on a plain contact sheet: nothing washed or drawn on the print, and a wide view round the cell. It was given the two readings unlabelled, in a seeded random order, and the key stayed apart until it had decided.
+
+| sample | cell | stored | reader | verdict | class |
+|---|---|---|---|---|---|
+| 0031 | 112 c16 r55 (Wien Staatsb.) | `10 00` u | `10 22` u | stored | reader misread: italic 00 (closed slanted ovals), not 22 |
+| 0165 | 126 c13 r2 (Tetschen) | `9 20` | `9 20` u | reader | **keying error**: a thick underline under 20, on the cell's lower edge |
+| 0169 | 126 c7 r29 | `ab` | `— ab` | stored | reader misread: a heavy bar on the r28/r29 line closes the note area above |
+| 0171 | 126 c10 r29 | `ab` | `— ab` | stored | reader misread: the bottom edge of the boxed note "□ An Sonn- u. F.T. …" |
+| 0172 | 126 c11 r29 | `ab` | `— ab` | stored | reader misread: the bar closes c11's frame round 6 05–7 32 |
+| 0178 | 126 c4 r31 | `ab` | `— ab` | stored | reader misread: a hairline on the r30/r31 line separates two trains |
+| 0343 | 23 c54 r135 | `□` | (empty) | reader | **keying error**: the □ opens the boxed sideways note "In Tetschen und Bodenbach Zollabfertigung" and belongs to it |
+
+**Verdict: FAIL** under the rule fixed before the draw. There are 2 keying errors in 359 cells read: observed 0.56%, exact one-sided 95% upper bound 1.225% (at most 8 of 653). At this error count the source passes only if at least 589 cells are read (230 more) with no further error.
+
+**What the two errors have in common.** Both are resolver overrides, readings the resolver wrote because it judged both keyers wrong (resolution `other`). The source has 5 such cells. The sample held 3, and 2 of them were wrong. The other 356 cells read had no keying error: 197 where the keyers agreed and 159 where the resolver chose one keyer's reading. No hour or minute figure was wrong anywhere in the sample; the one digit dispute (0031) was the reader's.
+- **0165.** Keyer B had the underline and keyer A did not. The resolver wrote `9 20` without it ("no rule under 20 in the zoom"), for two reasons:
+  - the zoom's red outline lay on the cell's lower edge, exactly where the underline is printed;
+  - in table 126 the grid's row lines sit about 8 px above the line of times, so underlines fall on or just below a cell's edge.
+
+  Without the underline the train runs Dresden 18.30 → Tetschen 09.20 the next day, 15 hours for about 50 km. V03 had warned at 3 km/h, but nobody followed the warning up. **Data impact: yes** (09:20 should be 21:20).
+- **0343.** Both keyers left the cell empty, which was correct. The resolver put the □ in the cell "as the station sign". Table 23 was resolved before the sideways-note rule (P-013). The note and its □ are keyed from the column-notes crop. **Data impact: none**, since the normaliser ignores a lone sign.
+
+**Reader errors.** H2 misread 5 of its 174 cells:
+- four bars on row lines read as in-cell dashes. The keyer brief said "a horizontal dash or rule inside a cell → —" without saying how to tell a row-line bar from an in-cell dash;
+- one italic 00 read as 22, marked sure after a second look.
+
+No misreading by H1 or H3 was found. Only mismatches are adjudicated, though, so a reader's error that happens to agree with a wrong stored value cannot show here.
+
+**Corrected** in the resolved files, each citing this adjudication:
+- 126 c13 r2 is now `9 20 [b;u]` (resolution B, keyer B's reading). 126.c13 now reaches Tetschen at 21.20 the same evening, and V03's warning is gone.
+- 23 c54 r135 is now empty, as both keyers had it.
+
+**Targeted re-read (H4).** Pending. A fresh blind historian (H4) is re-reading, on one plain contact sheet (`data/review/sample-g2fix.csv`), the six cells in these groups that no reader had verified: the 2 remaining resolver overrides (`other`), the 2 remaining keyer disagreements on an underline, and the other stop of each V03-flagged leg (112 c14, 126 c13). Its result will be added here.
