@@ -52,11 +52,13 @@ export const stationName = (b: C07Bundle, id: string): string => b.station.get(i
 export const cityName = (b: C07Bundle, id: string): string => b.city.get(id)?.name ?? id;
 export const instName = (b: C07Bundle, id: string): string => b.inst.get(id)?.name ?? id;
 
-export interface CitationView { title: string; page: string; table: string | null; edition: string | null }
+export interface CitationView { title: string; page: string; table: string | null; edition: string | null; text: string }
 export function citation(b: C07Bundle, i: number | null | undefined): CitationView | null {
   if (i === null || i === undefined) return null;
   const c = b.raw.citations[i];
-  return c ? { title: c.sourceTitle, page: c.printedPage, table: c.tableRef, edition: c.edition } : null;
+  if (!c) return null;
+  const text = `${c.sourceTitle}, page ${c.printedPage}${c.tableRef ? `, table ${c.tableRef}` : ''}`;
+  return { title: c.sourceTitle, page: c.printedPage, table: c.tableRef, edition: c.edition, text };
 }
 
 const VERB_LABEL: Record<string, string> = {
@@ -80,3 +82,45 @@ const INTERRUPT_LABEL: Record<string, string> = {
   ending: 'The end',
 };
 export const interruptLabel = (kind: string): string => INTERRUPT_LABEL[kind] ?? kind;
+
+/** What kind of offer a commission is, in words (offers have no names of their own). */
+export const offerName = (kind: string): string => (kind === 'chain' ? 'the commission' : kind === 'errand' ? 'an errand' : kind === 'away' ? 'an away offer' : kind);
+
+const GHOST_TEXT: Record<string, string> = {
+  withdrawn: 'is withdrawn: it no longer runs', retimed: 'now runs at another time', notThatDay: 'does not run on that day', suspended: 'is suspended', ok: 'runs',
+};
+const PAY_WHAT: Record<string, string> = { fare: 'the fare', lodging: 'the room', rent: 'the rent', bill: 'the bill' };
+
+const trainNoOf = (b: C07Bundle, key: unknown): string => {
+  const i = typeof key === 'string' ? b.tt.tripsByKey.get(key)?.[0] : undefined;
+  return i === undefined ? 'train' : b.tt.trips[i]!.trainNo;
+};
+const placeName = (b: C07Bundle, id: unknown): string => (typeof id !== 'string' ? '' : b.station.get(id)?.name ?? b.city.get(id)?.name ?? id);
+
+/** One sentence for an interrupt, from its public reference (the diary's notes and the arrival). */
+export function interruptText(b: C07Bundle, kind: string, ref: unknown, city: string): string {
+  const r = (ref ?? {}) as Record<string, unknown>;
+  const num = (k: string): number => (typeof r[k] === 'number' ? r[k] as number : 0);
+  switch (kind) {
+    case 'arrival': return `Arrived at ${placeName(b, r.station)}, ${num('delaySec') > 0 ? `${fmtDuration(num('delaySec'))} late` : 'on time'}.`;
+    case 'missed': return `Missed the ${trainNoOf(b, r.trainKey)} at ${placeName(b, r.station)}: ${fmtDuration(num('delaySec'))} late against ${fmtDuration(Math.max(0, num('slackSec')))} of slack.`;
+    case 'ghost': {
+      const truth = typeof r.truthDep === 'number' && r.status === 'retimed' ? ` (it leaves at ${clock(b, city, r.truthDep).time})` : '';
+      return `The ${trainNoOf(b, r.trainKey)} from ${placeName(b, r.station)} ${GHOST_TEXT[String(r.status)] ?? 'is not as the guide said'}${truth}. The booking is void.`;
+    }
+    case 'verbFailed': return `${verbLabel(String(r.verb ?? ''))} could not happen${r.reason ? `: ${String(r.reason)}` : ''}.`;
+    case 'news': return `New items in the ${placeName(b, r.city) || 'local'} papers.`;
+    case 'offer': return `${num('n') === 1 ? 'A letter' : `${num('n')} letters`} with offers at the ${placeName(b, r.city)} post office.`;
+    case 'lapsed': return r.failed ? `Stage ${num('stage') + 1} of the commission was not done in time; the commission has failed.` : `An offer lapsed${r.rival === true ? '; a rival delivered it' : r.rival === false ? '; nobody took it' : ''}.`;
+    case 'cable': return `Telegram answered: the ${trainNoOf(b, r.trainKey)} ${r.runs ? 'runs' : 'does not run'} that day.`;
+    case 'remittance': return r.purpose === 'remit' ? (r.met ? 'The remittance met the bill.' : 'The remittance came, but did not meet the bill.') : 'Funds wired from home have reached your letter of credit.';
+    case 'noticed': return `You notice a man watching${r.station ? ` at ${placeName(b, r.station)}` : r.city ? ` in ${placeName(b, r.city)}` : ''}.`;
+    case 'refused': return `Refused at ${placeName(b, r.station)}: your papers do not pass.`;
+    case 'suspended': return 'A service you rely on is suspended.';
+    case 'papers': return 'The frontier asks for new papers.';
+    case 'cannotPay': return `Not enough money for ${PAY_WHAT[String(r.what)] ?? verbLabel(String(r.what ?? 'that'))}.`;
+    case 'collapse': return 'You collapse from exhaustion and lose a day.';
+    case 'ending': return 'The scenario is over.';
+    default: return interruptLabel(kind);
+  }
+}

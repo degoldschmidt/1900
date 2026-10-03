@@ -13,7 +13,7 @@ import type { VerbArgs } from '../rules/types.ts';
 import { stopOf } from '../rules/travel.ts';
 import { checkCommand, draftSlot, type C07Command } from '../commands.ts';
 import { type PublicState, type ViewData, asRules } from './public.ts';
-import { clock, money, verbLabel, recordLabel, instName, stationName, type Clock } from './format.ts';
+import { clock, money, verbLabel, recordLabel, instName, stationName, offerName, type Clock } from './format.ts';
 
 export interface RecordPreview { kind: string; label: string; named: boolean; confidence: number; readers: Array<{ reader: string; name: string; minSec: number; maxSec: number }> }
 export interface ActionPreview { durationSec: number; start: Clock | null; end: Clock | null; cost: string[]; health: number; records: RecordPreview[]; traceScore: number }
@@ -35,7 +35,7 @@ function verbCandidates(p: PublicState, d: ViewData): Array<{ label: string; ver
   out.push({ label: 'Collect poste restante', verb: 'posteRestante', args: {} });
   for (const o of p.commissions.offers.filter((x) => x.status === 'held')) {
     const i = o.stages.findIndex((st) => st.done === null);
-    if (i >= 0 && o.stages[i]!.city === city) out.push({ label: `Meeting for ${o.id} (stage ${i + 1})`, verb: 'meet', args: { offer: o.id, stage: i } });
+    if (i >= 0 && o.stages[i]!.city === city) out.push({ label: `Meeting for ${offerName(o.kind)} (stage ${i + 1} of ${o.stages.length})`, verb: 'meet', args: { offer: o.id, stage: i } });
   }
   const bk = p.diary.booking;
   if (bk && bk.next < bk.legs.length) {
@@ -92,7 +92,7 @@ export function actionsView(p: PublicState, d: ViewData): ActionView[] {
     }
     for (const o of p.commissions.offers.filter((x) => x.status === 'open' && x.revealed)) {
       const cmd: C07Command = { type: 'acceptOffer', offerId: o.id };
-      out.push({ id: `accept-${o.id}`, label: `Accept ${o.id} (${money(b, o.pay)})`, cmd, legal: check(cmd) === null, error: check(cmd), preview: NO_PREVIEW });
+      out.push({ id: `accept-${o.id}`, label: `Accept ${offerName(o.kind)} (${money(b, o.pay)})`, cmd, legal: check(cmd) === null, error: check(cmd), preview: NO_PREVIEW });
     }
     if (p.me.where.k === 'aboard') {
       const r = p.me.where.ride; const trip = b.tt.trip(r.tripId); const t = b.tt.trips[trip]!;

@@ -16,4 +16,9 @@ describe('single-file bundling', () => {
     expect(frag).toContain('<div id="app"></div>');
     expect(frag).not.toContain('charset');
   });
+  it('keeps page metadata out of the fragment, so it starts with the title, the font link and the style', () => {
+    const frag = toFragment('<html><head>\n<meta charset="utf-8">\n<title>T</title>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=X">\n<style>s</style>\n<meta name="build-id" content="b">\n</head><body>\n<div id="app"></div>\n</body></html>');
+    expect(frag.split('\n').slice(0, 3).map((l) => l.slice(0, 6))).toEqual(['<title', '<link ', '<style']);
+    expect(frag).not.toContain('<meta');
+  });
 });

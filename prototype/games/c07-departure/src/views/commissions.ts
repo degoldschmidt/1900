@@ -9,11 +9,11 @@ import { plannerView } from '../rules/knowledge.ts';
 import { checkCommand } from '../commands.ts';
 import { type PublicState, type ViewData, asRules } from './public.ts';
 import { plannerStart } from './planner.ts';
-import { clock, money, cityName, type Clock } from './format.ts';
+import { clock, money, cityName, offerName, type Clock } from './format.ts';
 
 export interface StageView { index: number; city: string; cityName: string; open: Clock; close: Clock; done: Clock | null; earliestArrival: Clock | null; reachable: boolean }
 export interface OfferView {
-  id: string; kind: string; status: string; pay: string; revealed: boolean; rival: boolean | null; postCity: string | null;
+  id: string; kind: string; name: string; status: string; pay: string; revealed: boolean; rival: boolean | null; postCity: string | null;
   stages: StageView[]; accept: { legal: boolean; error: string | null } | null;
 }
 export interface CommissionsViewModel { held: OfferView[]; open: OfferView[]; closed: OfferView[]; unread: number }
@@ -29,7 +29,7 @@ export function commissionsView(p: PublicState, d: ViewData): CommissionsViewMod
   const toView = (o: PublicState['commissions']['offers'][number]): OfferView => {
     const err = o.status === 'open' && o.revealed ? checkCommand(s, b, d.params, d.params, d.now, null, { type: 'acceptOffer', offerId: o.id }) : null;
     return {
-      id: o.id, kind: o.kind, status: o.status, pay: money(b, o.pay), revealed: o.revealed, rival: o.status === 'lapsed' ? o.rival : null, postCity: o.post,
+      id: o.id, kind: o.kind, name: offerName(o.kind), status: o.status, pay: money(b, o.pay), revealed: o.revealed, rival: o.status === 'lapsed' ? o.rival : null, postCity: o.post,
       stages: o.stages.map((st, index) => {
         const a = arriveAt(st.city);
         return {

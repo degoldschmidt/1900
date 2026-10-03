@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { scanSource } from '../determinism-scan.ts';
 import { checkFile, importsOf } from '../import-boundaries.ts';
 import { stripCommentsAndStrings } from '../source-files.ts';
+import { noSynthetic } from '../no-synthetic.ts';
+import { mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 describe('determinism scan', () => {
   it('flags each banned API', () => {
@@ -58,5 +62,24 @@ describe('import boundaries', () => {
   });
   it('keeps the kit independent of games', () => {
     expect(checkFile('kit/src/sim/sim.ts', "import x from '../../../games/c07-departure/src/game.ts';")).not.toEqual([]);
+  });
+});
+
+describe('no-synthetic', () => {
+  const page = (meta: object, extra = ''): string => `<script type="application/json" id="game-data">${JSON.stringify({ meta, x: extra })}</script>`;
+  it('refuses synthetic data in release pages and accepts it only in debug and preview pages', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'nosyn-'));
+    writeFileSync(join(dir, 'g.html'), page({ synthetic: false }));
+    writeFileSync(join(dir, 'g.debug.html'), page({ synthetic: true }, 'SYN_A'));
+    writeFileSync(join(dir, 'g.preview.html'), page({ synthetic: true }, 'SYN_A'));
+    writeFileSync(join(dir, 'g.preview.artifact.html'), page({ synthetic: true }, 'SYN_A'));
+    expect(noSynthetic(dir)).toEqual([]);
+    writeFileSync(join(dir, 'h.html'), page({ synthetic: true }, 'SYN_A'));
+    writeFileSync(join(dir, 'h.preview.html'), page({ synthetic: false }));
+    expect(noSynthetic(dir)).toEqual([
+      'h.html: meta.synthetic is not false',
+      'h.html: contains a synthetic identifier (SYN_)',
+      'h.preview.html: a preview page must carry data marked synthetic',
+    ]);
   });
 });

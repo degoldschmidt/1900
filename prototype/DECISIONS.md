@@ -294,3 +294,24 @@ If the field accepts wildcards: `*.europeana.eu`, `*.deutsche-digitale-bibliothe
 - **C07's changeover scenario (S1) can now be real.** The Fritzsche pair sits exactly either side of the 1 May 1914 change, so S1 is re-pointed to the Berlin – Dresden – Prague – Vienna corridor.
 - **The D2 pilot moves to Berlin – Vienna in Fritzsche Summer 1914** (both directions). It needs no owner photos, so it can start now. The planned pilot corridor, Berlin – St Petersburg, waits for the facsimile.
 - Winter 1914/15 gives a wartime comparison on the same corridor.
+
+## 2026-10-03 14:10 — C07 preview, stage 2: playable page (Event P-E013)
+
+**The page.** Preact screens built on the stage-1 view models:
+- diary with the booked departure as a ticket, its slack and a latest-leave time;
+- Advance, which first lists what will pass;
+- planner with miss odds and the records each choice writes;
+- departure board with citations, town, pocket, ledger, letters, newspaper and About;
+- arrival, the questionnaire and the autopsy.
+
+**Saving.** Save codes are kept in local storage when it is available, with copy and paste of the code; the host's `hot` snapshot keeps a running game across a republish.
+
+**The build.** `node tools/make/bundle-game.ts c07 --preview` writes `dist/c07-departure.preview(.artifact).html` (391 KB). It uses the `__PREVIEW__` define, which lets a preview page carry synthetic data. Release pages still refuse synthetic data; they show the placeholder and pass the no-synthetic check.
+
+**Tests.** 364 unit tests and 28 of 28 E2E pass.
+- The whole tutorial is played in Chromium twice: on a phone from file://, and as the published fragment under the artifact CSP on a desktop.
+- Save codes replay between Node and the browser to the same hash, which completes RULES T7.
+- Play continues with storage refused.
+- 19 screens were captured at 1280×800 and 390×844 in light and dark, with no horizontal scroll.
+
+**Follow-up.** The release bundle's JavaScript includes the preview scenario files, because `scenarios.ts` imports them. The data block stays clean, but the scenarios should be loaded only in the preview build. This is to be fixed before the 1914 release.

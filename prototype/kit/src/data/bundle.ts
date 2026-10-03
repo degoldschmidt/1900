@@ -69,12 +69,15 @@ export function isReady(b: GameBundle): b is GameBundle & ReadyBundle {
   return b.meta.status === 'ready';
 }
 
-/** Reads the inlined bundle. Release builds reject synthetic data. */
+/**
+ * Reads the inlined bundle. Release builds reject synthetic data; debug builds and a game's
+ * mechanics-preview page (built with `__PREVIEW__`) accept it.
+ */
 export function loadFromDom(id = 'game-data', doc: Document = document): GameBundle {
   const el = doc.getElementById(id);
   if (!el || !el.textContent) throw new Error(`No element #${id} holds game data.`);
   const bundle = decodeBundle(el.textContent);
-  if (bundle.meta.synthetic && !__DEBUG__) {
+  if (bundle.meta.synthetic && !__DEBUG__ && !__PREVIEW__) {
     throw new Error('This release build contains synthetic test data and cannot run.');
   }
   return bundle;

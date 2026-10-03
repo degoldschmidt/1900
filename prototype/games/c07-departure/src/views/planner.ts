@@ -13,7 +13,7 @@ import { itineraryForecast, changeSec } from '../rules/forecast.ts';
 import { costOf, traceScore, type TraceItem } from '../rules/costs.ts';
 import { checkCommand, type C07Command } from '../commands.ts';
 import { type PublicState, type ViewData, asRules } from './public.ts';
-import { stationClock, money, stationName, cityName, citation, type Clock, type CitationView } from './format.ts';
+import { stationClock, money, stationName, cityName, citation, recordLabel, instName, type Clock, type CitationView } from './format.ts';
 
 export interface SourceView { kind: 'guide' | 'porter' | 'board' | 'cable' | 'observed'; edition: string; editionLabel: string; confidence: number; learnedDay: number | null }
 
@@ -32,6 +32,8 @@ export interface PlannerOption {
   classes: ClassOption[];
   sleeper: { available: boolean; fare: string[]; cmd: C07Command | null; legal: boolean; error: string | null };
   trace: TraceItem[]; traceScore: number;
+  /** The records the journey writes, in words. */
+  traceLabels: Array<{ kind: string; label: string; named: boolean; readers: string[] }>;
   isDefault: boolean;
 }
 
@@ -128,7 +130,7 @@ export function plannerView(p: PublicState, d: ViewData, to: string): PlannerVie
       durationSec: legs[legs.length - 1]!.arr - legs[0]!.dep, trains: legs.length, legs: legs.map((l) => legView(d, p, l)),
       changes: fc.changes.map((c) => ({ ...c, stationName: stationName(b, c.station) })), odds: fc.odds, minSlackSec: fc.minSlackSec,
       classes, sleeper: { available: hasBerth, fare: berth ? berth.money.map((m) => money(b, m)) : [], cmd: berthCmd, legal: berthErr === null, error: berthErr },
-      trace, traceScore: traceScore(trace), isDefault: false,
+      trace, traceScore: traceScore(trace), traceLabels: trace.map((t) => ({ kind: t.kind, label: recordLabel(t.kind), named: t.named, readers: t.reach.map((r) => instName(b, r.reader)) })), isDefault: false,
     };
   });
   const limit = dv<number>(b, 'DV-C07-064');

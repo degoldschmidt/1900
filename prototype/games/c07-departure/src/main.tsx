@@ -1,8 +1,20 @@
+/**
+ * The page entry. With a ready data bundle (today only the invented preview world, Decision P-006)
+ * it runs the game; while the 1914 data awaits transcription the release page shows what the
+ * prototype will test. Boots through the artifact host's hot-reload hooks when present, so a
+ * republish keeps a running game (its save code is the snapshot).
+ */
 import { render } from 'preact';
 import '#kit/ui/reset.css';
 import './style.css';
-import { loadFromDom } from '#kit/data/bundle.ts';
+import { loadFromDom, isReady } from '#kit/data/bundle.ts';
 import type { GameBundle } from '#kit/data/bundle.ts';
+import { Sim } from '#kit/sim/sim.ts';
+import { installTestHooks } from '#kit/devtools/test-hooks.ts';
+import { mountInspector } from '#kit/devtools/inspector.tsx';
+import { module } from './game.ts';
+import { App, type Holder } from './app/App.tsx';
+import { Game } from './app/controller.ts';
 
 const TITLE = 'The Departure';
 const HOOK = 'A spy’s life played as an itinerary: every action has to fit into the slack before a train that leaves without you.';
@@ -41,11 +53,52 @@ function Failure({ message }: { message: string }) {
   );
 }
 
-const root = document.getElementById('app');
-if (root) {
+/** The artifact host's hot-reload hooks (all optional; absent outside the host). */
+interface HotHost {
+  ready?: (start: (data: unknown) => void) => void;
+  data?: unknown;
+  snapshot?: (get: () => unknown) => void;
+}
+declare global { interface Window { claude?: { hot?: HotHost } } }
+
+/** A save code handed back by the host after a republish: `{save}` or the code itself. */
+function savedCode(data: unknown): string | null {
+  if (typeof data === 'string' && data) return data;
+  if (data && typeof data === 'object' && typeof (data as { save?: unknown }).save === 'string') return (data as { save: string }).save;
+  return null;
+}
+
+const holder: Holder = { game: null };
+
+function start(data: unknown): void {
+  const root = document.getElementById('app');
+  if (!root) return;
   try {
-    render(<Placeholder bundle={loadFromDom()} />, root);
+    const raw = loadFromDom();
+    if (!isReady(raw)) { render(<Placeholder bundle={raw} />, root); return; }
+    const bundle = module.bundleFrom(raw);
+    let initial: Game | null = null;
+    const code = savedCode(data);
+    if (code) { try { initial = Game.restore(bundle, code); } catch { initial = null; } }
+    holder.game = initial;
+    const dataHash = raw.meta.dataHash;
+    if (__DEBUG__ || __PREVIEW__) {
+      let spare: Game | null = null;
+      installTestHooks({
+        getSim: () => holder.game?.sim ?? (spare ??= Game.create(bundle, module.scenarioIds[0]!)).sim,
+        create: (id, seed) => new Sim(module.game, bundle, module.scenario(bundle, id, seed)),
+        buildId: __BUILD_ID__, dataHash,
+      });
+    }
+    try { window.claude?.hot?.snapshot?.(() => ({ save: holder.game?.saveCode() ?? null })); } catch { /* the host refused; nothing to keep */ }
+    render(<App bundle={bundle} holder={holder} initial={initial} />, root);
+    if (__DEBUG__) {
+      mountInspector({ getSim: () => holder.game?.sim ?? Game.create(bundle, module.scenarioIds[0]!).sim, buildId: __BUILD_ID__, dataHash });
+    }
   } catch (err) {
     render(<Failure message={err instanceof Error ? err.message : String(err)} />, root);
   }
 }
+
+if (window.claude?.hot?.ready) window.claude.hot.ready(start);
+else start(window.claude?.hot?.data ?? {});

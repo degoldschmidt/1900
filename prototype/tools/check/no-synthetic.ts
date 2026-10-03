@@ -8,12 +8,23 @@ export function extractData(html: string): string | null {
   return m ? (m[1] ?? null) : null;
 }
 
-/** Release builds (not *.debug.html) must not carry synthetic fixtures or SYN_ identifiers. */
+/**
+ * Release builds must not carry synthetic fixtures or SYN_ identifiers. Exempt: debug builds
+ * (*.debug.html) and mechanics-preview pages (*.preview.html, *.preview.artifact.html), which run
+ * on an invented world by design (Decision P-006) and must say so: their data has to be marked
+ * synthetic.
+ */
 export function noSynthetic(distDir = join(ROOT, 'dist')): string[] {
   const problems: string[] = [];
   if (!existsSync(distDir)) return problems;
   for (const f of readdirSync(distDir).sort()) {
     if (!f.endsWith('.html') || f.includes('.debug.')) continue;
+    if (f.includes('.preview.')) {
+      const data = extractData(readFileSync(join(distDir, f), 'utf8'));
+      const meta = data === null ? undefined : (JSON.parse(data) as { meta?: { synthetic?: boolean } }).meta;
+      if (meta?.synthetic !== true) problems.push(`${f}: a preview page must carry data marked synthetic`);
+      continue;
+    }
     const data = extractData(readFileSync(join(distDir, f), 'utf8'));
     if (data === null) { problems.push(`${f}: no game-data block`); continue; }
     const meta = (JSON.parse(data) as { meta?: { synthetic?: boolean } }).meta;

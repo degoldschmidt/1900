@@ -15,8 +15,9 @@ export type AnyModule = GameModule<any, Command, any>;
 
 // Kit code reads the build-time flags esbuild defines for the pages; the Node tools run the
 // simulation as a debug build would (records frozen, synthetic data allowed).
-const g = globalThis as { __DEBUG__?: boolean; __BUILD_ID__?: string };
+const g = globalThis as { __DEBUG__?: boolean; __BUILD_ID__?: string; __PREVIEW__?: boolean };
 g.__DEBUG__ ??= true;
+g.__PREVIEW__ ??= false;
 g.__BUILD_ID__ ??= 'node';
 
 /** A game's mechanics-preview bundle (invented data; C07 only so far), when it has one. */

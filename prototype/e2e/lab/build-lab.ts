@@ -12,7 +12,7 @@ export async function buildLab(out = LAB_HTML): Promise<string> {
     entryPoints: [join(ROOT, 'e2e', 'lab', 'lab.tsx')],
     bundle: true, format: 'iife', platform: 'browser', target: 'es2022', minify: false, write: false,
     jsx: 'automatic', jsxImportSource: 'preact', logLevel: 'silent',
-    define: { __DEBUG__: 'true', __BUILD_ID__: '"lab"' },
+    define: { __DEBUG__: 'true', __BUILD_ID__: '"lab"', __PREVIEW__: 'false' },
   });
   const js = res.outputFiles[0]!.text.replace(/<\/script/gi, '<\\/script');
   const html = `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Kit lab</title>` +

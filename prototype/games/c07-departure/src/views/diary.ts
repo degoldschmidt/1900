@@ -8,7 +8,7 @@ import { computeFlow, leaveAt } from '../rules/diary.ts';
 import { costOf, traceScore } from '../rules/costs.ts';
 import { hoursOf, type VerbName } from '../rules/verbs.ts';
 import { type PublicState, type ViewData, asRules } from './public.ts';
-import { clock, stationClock, money, stationName, cityName, verbLabel, interruptLabel, recordLabel, hoursText, type Clock } from './format.ts';
+import { clock, stationClock, money, stationName, cityName, verbLabel, interruptLabel, interruptText, recordLabel, hoursText, type Clock } from './format.ts';
 import { legView, type LegView } from './planner.ts';
 
 export interface SlotView {
@@ -26,7 +26,7 @@ export interface DiaryViewModel {
   lodged: { city: string; cityName: string; tier: string; since: Clock } | null;
   booking: null | { id: number; legs: LegView[]; cls: number; sleeper: boolean; missOdds: number; minSlackSec: number; next: number; leaveAt: Clock | null; countdownSec: number | null; slackSec: number | null };
   slots: SlotView[];
-  interrupts: Array<{ index: number; at: Clock; kind: string; label: string; ref: unknown }>;
+  interrupts: Array<{ index: number; at: Clock; kind: string; label: string; text: string; ref: unknown }>;
   ended: boolean;
 }
 
@@ -65,7 +65,7 @@ export function diaryView(p: PublicState, d: ViewData): DiaryViewModel {
       leaveAt: Number.isFinite(leave) ? clock(b, city, leave) : null, countdownSec: Number.isFinite(leave) ? leave - d.now : null, slackSec: Number.isFinite(flow.slack) ? flow.slack : null,
     } : null,
     slots: slotViews,
-    interrupts: p.diary.interrupts.map((i, index) => ({ index, at: clock(b, city, i.at), kind: i.kind, label: interruptLabel(i.kind), ref: i.ref })),
+    interrupts: p.diary.interrupts.map((i, index) => ({ index, at: clock(b, city, i.at), kind: i.kind, label: interruptLabel(i.kind), text: interruptText(b, i.kind, i.ref, city), ref: i.ref })),
     ended: p.ending !== null,
   };
 }
@@ -77,7 +77,8 @@ export function upcomingView(p: PublicState, d: ViewData): UpcomingItem[] {
   const b = d.b; const s = asRules(p);
   const city = p.me.where.k === 'city' ? p.me.where.city : cityOfStation(b, p.me.where.ride.to);
   const items: Array<{ t: number; what: string; interrupts: boolean }> = [];
-  for (const f of computeFlow(s, { b, params: d.params, now: d.now }).slots) {
+  const flow = computeFlow(s, { b, params: d.params, now: d.now }).slots;
+  for (const f of flow) {
     const x = p.diary.slots.find((y) => y.id === f.id)!;
     if (!f.ok) { items.push({ t: d.now, what: `${verbLabel(x.verb)} cannot happen: ${f.reason}`, interrupts: true }); continue; }
     if (f.travel > 0) items.push({ t: f.start - f.travel, what: `Go to the ${f.venue}`, interrupts: false });
@@ -86,20 +87,36 @@ export function upcomingView(p: PublicState, d: ViewData): UpcomingItem[] {
   }
   for (const x of p.diary.slots.filter((y) => y.state === 'running')) items.push({ t: x.end, what: `${verbLabel(x.verb)} ends`, interrupts: false });
   const bk = p.diary.booking;
+  const trainNo = (tripId: string): string => b.tt.trips[b.tt.trip(tripId)]!.trainNo;
+  /** The booked legs still ahead: each departure and change, and the final arrival, where the diary stops. */
+  const legsAhead = (from: number): void => {
+    if (!bk) return;
+    for (let i = from; i < bk.legs.length; i++) {
+      const leg = bk.legs[i]!;
+      items.push({ t: leg.dep, what: `Departure of the ${trainNo(leg.tripId)} from ${stationName(b, leg.from)}${i === bk.next && p.me.where.k === 'city' ? ' (if it runs as you believe)' : ''}`, interrupts: false });
+      if (i + 1 < bk.legs.length) items.push({ t: leg.arr, what: `Change at ${stationName(b, leg.to)} (a late arrival can miss the next train)`, interrupts: false });
+      else items.push({ t: leg.arr, what: `Arrival at ${stationName(b, leg.to)} (timetable)`, interrupts: true });
+    }
+  };
   if (bk && p.me.where.k === 'city' && bk.next < bk.legs.length) {
     const leg = bk.legs[bk.next]!;
     const leave = leaveAt(s, b);
     if (Number.isFinite(leave)) items.push({ t: leave, what: `Leave for ${stationName(b, leg.from)}`, interrupts: false });
     items.push({ t: leg.dep - dv<number>(b, 'DV-C07-001'), what: `On the platform at ${stationName(b, leg.from)}`, interrupts: false });
-    items.push({ t: leg.dep, what: `Departure of ${b.tt.trips[b.tt.trip(leg.tripId)]!.trainNo} (if it runs as you believe)`, interrupts: false });
+    legsAhead(bk.next);
   }
   if (p.me.where.k === 'aboard') {
     const r = p.me.where.ride;
-    items.push({ t: r.schedArr + r.shownDelay, what: `Arrival at ${stationName(b, r.to)} (timetable)`, interrupts: true });
+    const onward = bk && bk.id === r.booking && r.leg + 1 < bk.legs.length;
+    items.push({ t: r.schedArr + r.shownDelay, what: onward ? `Change at ${stationName(b, r.to)} (a late arrival can miss the next train)` : `Arrival at ${stationName(b, r.to)} (timetable)`, interrupts: !onward });
+    if (onward) legsAhead(r.leg + 1);
   }
   for (const o of p.commissions.offers.filter((x) => x.status === 'held')) {
     const i = o.stages.findIndex((st) => st.done === null);
-    if (i >= 0) items.push({ t: o.stages[i]!.close, what: `Meeting in ${cityName(b, o.stages[i]!.city)} closes`, interrupts: true });
+    if (i < 0) continue;
+    // A meeting already entered for this stage, and fitting its window, keeps the stage from lapsing.
+    const covered = p.diary.slots.some((x) => x.verb === 'meet' && x.args.offer === o.id && Number(x.args.stage) === i && (x.state === 'running' || flow.some((f) => f.id === x.id && f.ok && f.end <= o.stages[i]!.close)));
+    if (!covered) items.push({ t: o.stages[i]!.close, what: `Meeting in ${cityName(b, o.stages[i]!.city)} closes`, interrupts: true });
   }
   if (p.ledger.rent) items.push({ t: p.ledger.rent.nextDue, what: 'Rent falls due', interrupts: false });
   if (p.ledger.bill && !p.ledger.bill.met) items.push({ t: p.ledger.bill.maturity, what: 'The bill matures', interrupts: true });

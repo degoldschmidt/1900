@@ -4,6 +4,7 @@ export default defineConfig({
   define: {
     __DEBUG__: 'true',
     __BUILD_ID__: JSON.stringify('test'),
+    __PREVIEW__: 'false',
   },
   oxc: { jsx: { runtime: 'automatic', importSource: 'preact' } },
   test: {
