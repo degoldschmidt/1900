@@ -65,14 +65,15 @@ export const DIFF_COLUMNS = ['crop_id', 'kind', 'col', 'row', 'reason', 'a_text'
 /** Compares two readings over expected ∪ A ∪ B, after matching B's notes to A's by content. */
 /**
  * Value rules for a source: from the notation file in data/canonical/notation/ whose `src` cites this
- * source (decision P-010), or the default rules when the guide has none yet.
+ * source (decision P-010: `valueMarks` for body cells; P-013: `category.marks` on header cells), or
+ * the default rules when the guide has none yet.
  */
 export function valueRulesFor(r: Roots, source: string): ValueRules {
   const dir = join(r.data, 'canonical', 'notation');
   if (!existsSync(dir)) return DEFAULT_RULES;
   for (const f of readdirSync(dir).filter((x) => x.endsWith('.json')).sort()) {
     try {
-      const n = JSON.parse(readFileSync(join(dir, f), 'utf8')) as { src?: string; valueMarks?: string[] };
+      const n = JSON.parse(readFileSync(join(dir, f), 'utf8')) as { src?: string; valueMarks?: string[]; category?: { marks?: Record<string, string> } };
       if (typeof n.src === 'string' && n.src.startsWith(`${source}:`)) return rulesFromNotation(n);
     } catch { /* an unreadable notation file is reported by the validators */ }
   }

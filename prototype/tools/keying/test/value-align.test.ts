@@ -170,3 +170,42 @@ describe('per-guide value rules (P-010)', async () => {
     expect(rulesFromNotation(null)).toBe(DEFAULT_RULES);
   });
 });
+
+describe('train category on the header; signs (P-013)', async () => {
+  const { valueOf, sameValue, rulesFromNotation, isSignWord, canonicalSign } = await import('../value.ts');
+  const { parseLong } = await import('../longcsv.ts');
+  const fritzsche = rulesFromNotation({ valueMarks: ['u'], category: { marks: { i: 'Schnellzug' } } });
+  const r = (text: string, marks: string[] = []) => ({ text, marks });
+
+  it('makes italic typography on body cells and value on header cells when the guide reads the category from it', () => {
+    expect(valueOf(r('7 26', ['i']), 'cell', fritzsche)).toBe(valueOf(r('7 26'), 'cell', fritzsche));
+    expect(valueOf(r('7 26', ['u', 'i']), 'cell', fritzsche)).not.toBe(valueOf(r('7 26'), 'cell', fritzsche));
+    expect(valueOf(r('D 53', ['i']), 'header', fritzsche)).not.toBe(valueOf(r('D 53'), 'header', fritzsche));
+    // Bold on a train number stays typography; a guide without category marks keeps italic typography on headers.
+    expect(valueOf(r('D 53', ['b', 'i']), 'header', fritzsche)).toBe(valueOf(r('D 53', ['i']), 'header', fritzsche));
+    const plainGuide = rulesFromNotation({ valueMarks: ['u'] });
+    expect(valueOf(r('D 53', ['i']), 'header', plainGuide)).toBe(valueOf(r('D 53'), 'header', plainGuide));
+    // An empty header cell of a headerless table can carry the column's italic.
+    expect(valueOf(r('', ['i']), 'header', fritzsche)).not.toBe(valueOf(r(''), 'header', fritzsche));
+  });
+
+  it('reads a doubled sign the same whether written as one token, two marks or with a space', () => {
+    const parse = (marks: string) => parseLong(`crop_id,kind,col,row,text_as_printed,marks,sure\nX,cell,1,1,8 15,${marks},y\n`).cells[0]!.marks;
+    expect(parse('fn:°;fn:°')).toEqual(['fn:°°']);
+    expect(parse('fn:°°')).toEqual(['fn:°°']);
+    expect(parse('u;fn:□;fn:□')).toEqual(['u', 'fn:□□']);
+    expect(parse('fn:°;fn:○')).toEqual(['fn:°', 'fn:○']);
+    expect(sameValue(r('°°'), r('° °'), 'cell', fritzsche)).toBe(true);
+    expect(isSignWord('°°')).toBe(true);
+    expect(isSignWord('°○')).toBe(false);
+    expect(valueOf(r('in Bodenbach °°'), 'label')).toBe(valueOf(r('in Bodenbach', ['fn:°°']), 'label'));
+    expect(valueOf(r('in Bodenbach °°'), 'label')).not.toBe(valueOf(r('in Bodenbach', ['fn:°']), 'label'));
+  });
+
+  it('treats look-alike characters of one sign as the same sign, and the small and large rings as different', () => {
+    expect(canonicalSign('º˚◯☐')).toBe('°°○□');
+    expect(sameValue(r('8 15', ['fn:º']), r('8 15', ['fn:°']), 'cell', fritzsche)).toBe(true);
+    expect(sameValue(r('8 15', ['fn:°']), r('8 15', ['fn:○']), 'cell', fritzsche)).toBe(false);
+    expect(sameValue(r('8 15', ['fn:!']), r('8 15'), 'cell', fritzsche)).toBe(false);
+  });
+});

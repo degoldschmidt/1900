@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import sharp from 'sharp';
 import { expectedKeys, keyBox, keyInCrop, parseCropsCsv, parseLayout, validateLayout, writeCropsCsv, type Layout } from '../layout.ts';
-import { loadPage, makeCrops, planCrops, RULER, splitEven, zoomKey } from '../make-crops.ts';
+import { loadPage, makeCrops, marginRects, panelMargins, planCrops, RULER, splitEven, zoomKey } from '../make-crops.ts';
 import { roots, type Roots } from '../../keying/paths.ts';
 
 const COL_X = Array.from({ length: 13 }, (_, i) => 230 + 60 * i);
@@ -101,7 +101,8 @@ describe('planCrops', () => {
     // 8 columns of 160 px plus a 200 px label column cannot reach 2× in 1500 px, nor can two blocks of 4;
     // the blocks with the highest magnification are chosen and the shortfall is reported.
     expect(crops.map((c) => c.cols)).toEqual([[0, 3], [4, 7], [0, 3], [4, 7]]);
-    expect(crops[0]!.geometry.scale).toBe(1.71);
+    // (4 × 160 + 200 px plus a 25 px margin each side of label and body: 1442 / 940 px.)
+    expect(crops[0]!.geometry.scale).toBe(1.53);
     expect(crops[0]!.warnings[0]).toMatch(/below 2×/);
   });
 
@@ -168,6 +169,20 @@ describe('makeCrops', () => {
     changed.panels[0]!.cols_per_crop = 4;
     writeFileSync(join(dir, 'layout.json'), JSON.stringify(changed));
     await expect(makeCrops(other, 'ia-testbook', 'T57')).rejects.toThrow(/drops crops that already have keyings \(T57-c0-5-r0-9\)/);
+    // Redrawing a keyed crop under its own id is refused too; a new keying round gets new ids.
+    writeFileSync(join(dir, 'layout.json'), JSON.stringify(LAYOUT));
+    await expect(makeCrops(other, 'ia-testbook', 'T57')).rejects.toThrow(/T57-c0-5-r0-9 are already keyed/);
+    writeFileSync(join(dir, 'layout.json'), JSON.stringify({ ...LAYOUT, crop_round: 2 }));
+    const round2 = await makeCrops(other, 'ia-testbook', 'T57');
+    expect(round2.crops[0]!.crop_id).toBe('T57-c0-5-r0-9-v2');
+    expect(round2.superseded).toEqual(['T57-c0-5-r0-9']);
+    expect(existsSync(join(dir, 'T57-c0-5-r0-9.A.csv'))).toBe(true);
+    expect(existsSync(join(other.scans, 'ia-testbook', 'crops', 'T57', 'T57-c0-5-r0-9.png'))).toBe(true);
+    // Within the new round the orphan check applies again.
+    writeFileSync(join(dir, 'T57-c0-5-r0-9-v2.A.csv'), 'crop_id,kind,col,row,text_as_printed,marks,sure\n');
+    writeFileSync(join(dir, 'layout.json'), JSON.stringify({ ...LAYOUT, crop_round: 2, panels: [{ ...LAYOUT.panels[0]!, cols_per_crop: 4 }] }));
+    await expect(makeCrops(other, 'ia-testbook', 'T57')).rejects.toThrow(/drops crops that already have keyings \(T57-c0-5-r0-9-v2\)/);
+    writeFileSync(join(dir, 'layout.json'), JSON.stringify(changed));
     const forced = await makeCrops(other, 'ia-testbook', 'T57', { force: true });
     expect(forced.crops[0]!.crop_id).toBe('T57-c0-3-r0-9');
     expect(existsSync(join(other.scans, 'ia-testbook', 'crops', 'T57', 'T57-c0-3-r0-9.png'))).toBe(true);
@@ -228,7 +243,9 @@ describe('skip_rows (node-only rule)', () => {
     expect(g.runs.map((u) => u.rows)).toEqual([[0, 2], [9, 9], [15, 16]]);
     // Runs are drawn one gap apart, each as tall as its rows.
     expect(g.runs[1]!.outY).toBe(g.runs[0]!.outY + g.runs[0]!.outH + RULER.gap);
-    expect(g.runs[0]!.outH).toBe(Math.round(75 * g.scale));
+    // Each run shows its three rows of 25 px and an 11 px margin above and below.
+    expect(g.margin).toEqual({ x: 24, y: 11 });
+    expect(g.runs[0]!.outH).toBe(Math.round((75 + 2 * 11) * g.scale));
     const keys = expectedKeys(SKIPPING, crops[0]!);
     expect(keys.filter((k) => k.kind === 'cell').map((k) => k.row).filter((v, i, a) => a.indexOf(v) === i)).toEqual([0, 1, 2, 9, 15, 16]);
     expect(keyInCrop(SKIPPING, crops[0]!, { kind: 'cell', col: 0, row: 5 })).toBe(false);
@@ -247,7 +264,7 @@ describe('skip_rows (node-only rule)', () => {
     const run = crop.geometry.runs.find((u) => u.rows[0] === 12)!;
     const g = crop.geometry;
     // The black block of c7 r12 lies in the run of r12, at its own place.
-    expect(grey(data, info.width, info.channels, g.out.body.x + (COL_X[7]! + 30 - g.page.body[0]) * g.scale, run.outY + 12 * g.scale)).toBeLessThan(60);
+    expect(grey(data, info.width, info.channels, g.out.body.x + (COL_X[7]! + 30 - g.page.body[0]) * g.scale, run.outY + (ROW_Y[12]! + 12 - run.pageY) * g.scale)).toBeLessThan(60);
   });
 });
 
@@ -259,7 +276,9 @@ describe('column notes', () => {
     const n = notes[1]!;
     expect(n.footnotes).toBe(true);
     expect(n.body).toEqual([590, 40, 360, 560]);
-    expect(n.geometry.tiles!.map((t) => t.box)).toEqual([[590, 40, 360, 310], [590, 290, 360, 310]]);
+    // The block's columns plus a 24 px margin at each side; the crop's own box (crops.csv) has none.
+    expect(n.geometry.tiles!.map((t) => t.box)).toEqual([[566, 40, 408, 310], [566, 290, 408, 310]]);
+    expect(n.geometry.noteCols).toEqual([6, 11]);
     expect(Math.max(n.geometry.width, n.geometry.height)).toBeLessThanOrEqual(1500);
     expect(expectedKeys(SKIPPING, n)).toEqual([]);
     expect(keyInCrop(SKIPPING, n, { kind: 'footnote', col: 0, row: 4 })).toBe(true);
@@ -271,5 +290,56 @@ describe('column notes', () => {
     const back = parseCropsCsv(writeCropsCsv(all)).find((c) => c.crop_id === n.crop_id)!;
     expect(back.footnotes).toBe(true);
     expect(keyBox(SKIPPING, back, { kind: 'footnote', col: 0, row: 0 })).toEqual(n.body);
+  });
+});
+
+describe('margins and keying rounds (P-013)', () => {
+  it('widens every part by a margin, washed pale, without changing the crop boxes or ids', () => {
+    const p = LAYOUT.panels[0]!;
+    // 40% of the 60 px columns (at most one 25 px row height); 45% of the 25 px rows.
+    expect(panelMargins(p)).toEqual({ x: 24, y: 11 });
+    expect(panelMargins(p, { x: 0, y: 0 })).toEqual({ x: 0, y: 0 });
+    const c = planCrops(LAYOUT)[1]!;
+    expect(c.crop_id).toBe('T57-c6-11-r0-9');
+    expect(c.body).toEqual([590, 100, 360, 250]);
+    const g = c.geometry;
+    expect(g.page.body).toEqual([590 - 24, 100 - 11, 360 + 48, 250 + 22]);
+    expect(g.page.label).toEqual([20 - 24, 100 - 11, 200 + 48, 250 + 22]);
+    expect(g.page.header).toEqual([590 - 24, 40 - 11, 360 + 48, 55 + 22]);
+    expect(Math.max(g.width, g.height)).toBeLessThanOrEqual(1500);
+    expect(g.scale).toBeGreaterThanOrEqual(2);
+    // The wash covers the strips: the body's right strip is margin.x × scale wide.
+    const right = marginRects(g).filter((r) => r.x + r.w === g.out.body.x + g.out.body.w && r.w < g.out.body.w);
+    expect(right.some((r) => Math.abs(r.w - 24 * g.scale) < 1e-6)).toBe(true);
+    const plain = planCrops(LAYOUT, { margin: { x: 0, y: 0 } })[1]!;
+    expect(marginRects(plain.geometry)).toEqual([]);
+    expect(plain.geometry.page.body).toEqual(plain.body);
+  });
+
+  it('shows a figure printed across the last column rule, washed', async () => {
+    const other = roots({ root: mkdtempSync(join(tmpdir(), 'p1900-crops4-')) });
+    mkdirSync(join(other.scans, 'ia-testbook'), { recursive: true });
+    // A black block straddling the right rule of c11 (the block's last column).
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="700"><rect width="1000" height="700" fill="#fff"/><rect x="${COL_X[12]! - 6}" y="${ROW_Y[3]! + 6}" width="16" height="13" fill="#000"/></svg>`;
+    writeFileSync(join(other.scans, 'ia-testbook', 'p3.png'), await sharp(Buffer.from(svg)).png().toBuffer());
+    mkdirSync(join(other.data, 'raw', 'ia-testbook', 'T57'), { recursive: true });
+    writeFileSync(join(other.data, 'raw', 'ia-testbook', 'T57', 'layout.json'), JSON.stringify(LAYOUT));
+    const res = await makeCrops(other, 'ia-testbook', 'T57');
+    const crop = res.crops.find((c) => c.crop_id === 'T57-c6-11-r0-9')!;
+    const g = crop.geometry;
+    const { data, info } = await sharp(join(other.scans, 'ia-testbook', 'crops', 'T57', `${crop.crop_id}.png`)).raw().toBuffer({ resolveWithObject: true });
+    const at = (px: number, py: number) => grey(data, info.width, info.channels, g.out.body.x + (px - g.page.body[0]) * g.scale, g.out.body.y + (py - g.page.body[1]) * g.scale);
+    expect(at(COL_X[12]! - 3, ROW_Y[3]! + 12)).toBeLessThan(60); // inside the crop: full black
+    const beyond = at(COL_X[12]! + 6, ROW_Y[3]! + 12); // past the rule, in the margin: washed grey
+    expect(beyond).toBeGreaterThan(90);
+    expect(beyond).toBeLessThan(170);
+  });
+
+  it('gives a re-cut table new crop ids (crop_round), so the earlier round\'s keyings are kept', async () => {
+    expect(validateLayout({ ...LAYOUT, crop_round: 0 })).toEqual(['crop_round must be a positive integer']);
+    const ids = planCrops({ ...LAYOUT, crop_round: 2 }).map((c) => c.crop_id);
+    expect(ids).toEqual(['T57-c0-5-r0-9-v2', 'T57-c6-11-r0-9-v2', 'T57-c0-5-r10-19-v2', 'T57-c6-11-r10-19-v2', 'T57-fn-p1-v2']);
+    expect(planCrops({ ...SKIPPING, crop_round: 3 }).filter((c) => c.crop_id.includes('-cn-')).map((c) => c.crop_id)).toEqual(['T57-cn-p1-c0-5-v3', 'T57-cn-p1-c6-11-v3']);
+    expect(planCrops({ ...LAYOUT, crop_round: 1 })[0]!.crop_id).toBe('T57-c0-5-r0-9');
   });
 });

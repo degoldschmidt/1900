@@ -10,7 +10,8 @@
  *   - footnote: col = 0, row = order of appearance in the crop (0-based).
  *
  * marks is a semicolon list of b (bold/heavy), u (underlined), i (italic), sc (small capitals) and
- * fn:<symbol> (a footnote reference mark attached to the cell, e.g. fn:* fn:† fn:a).
+ * fn:<symbol> (a footnote reference mark attached to the cell, e.g. fn:* fn:† fn:a; a doubled or
+ * stacked sign is the sign written twice, fn:°°, and fn:°;fn:° is read as fn:°°).
  * The resolved file (.R.csv) adds resolution (agree|A|B|other|illegible) and note.
  */
 import { cmpStr, parseCsv, writeCsv, type CsvRow } from './csv.ts';
@@ -75,6 +76,19 @@ export function isMark(m: string): boolean {
   return TYPO_ORDER.includes(m) || /^fn:[^\s;]+$/.test(m) || /^c:\d+$/.test(m);
 }
 
+/**
+ * A doubled or stacked sign is one sign written twice (`fn:°°`, decision P-013). A keyer who gives the
+ * same footnote sign twice as two marks (`fn:°;fn:°`) means that sign doubled: the two are joined.
+ */
+export function joinDoubledSigns(list: readonly string[]): string[] {
+  const out: string[] = [];
+  for (const m of list) {
+    if (m.startsWith('fn:') && out.includes(m) && [...m.slice(3)].length === 1) out[out.indexOf(m)] = `fn:${m.slice(3).repeat(2)}`;
+    else out.push(m);
+  }
+  return out;
+}
+
 /** Parses a marks field into a canonical list: unique, typographic marks first (b,u,i,sc), then fn:* sorted. */
 export function canonicalMarks(s: string | readonly string[]): string[] {
   const list = (typeof s === 'string' ? s.split(';') : [...s]).map((m) => m.trim()).filter(Boolean);
@@ -118,7 +132,7 @@ function parseCommon(r: CsvRow, where: string, errors: string[]): KeyedCell | nu
   const text = normText(r.text_as_printed ?? '');
   if (/["]/.test(text) && kind !== 'footnote') errors.push(`${where}: ASCII quote in text; key printed ditto marks as ${TOKENS.ditto}`);
   if (!ok) return null;
-  return { crop_id: (r.crop_id ?? '').trim(), kind: kind as Kind, col: col!, row: row!, text, marks: canonicalMarks(rawMarks), sure: sure as Sure };
+  return { crop_id: (r.crop_id ?? '').trim(), kind: kind as Kind, col: col!, row: row!, text, marks: canonicalMarks(joinDoubledSigns(rawMarks)), sure: sure as Sure };
 }
 
 /** Parses a keyer file (.A.csv / .B.csv / ground truth). Duplicate keys and crop_id mismatches are errors. */

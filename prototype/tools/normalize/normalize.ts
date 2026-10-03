@@ -72,7 +72,10 @@
  *    footnotes of the same page, then the notes of the same page, then the whole table. A sign on
  *    a station label needs tables.<t>.labelMarkFlags (a stop flag, or "none");
  *  - the category is the train number's prefix (category.prefixes), else a category note, else a
- *    type style carried by every time of the train (category.marks).
+ *    type style (category.marks) marked on the column's train-number header cell (any header line
+ *    when the table prints no numbers; the number note of a train numbered part-way down), as keyed
+ *    since decision P-013; keyings made before it carry the style on the times instead, and a train
+ *    whose times mostly carry it counts as marked.
  * Every row's src is source:p<page>:table:crop:cell (cells c<col>r<row>, two-line stops
  * c<col>r<row>-<row2>, headers h<line>c<col>, footnotes f<n>).
  */
@@ -779,7 +782,8 @@ export function normalizeTable(inp: NormalizeInput, opts: NormalizeOptions = {})
         }
       }
       if (colNotes.some((x) => x.kind === 'sleeper')) sleeper = true;
-      // Category: number prefix, else a note, else a type style on every time.
+      // Category: number prefix, else a note, else the type style marked on the column's header
+      // (decision P-013), else, for keyings made before P-013, a type style on most of its times.
       let category = '';
       if (n.category) {
         const pm = /^([A-Z])\s?\d/.exec(trainNo);
@@ -787,11 +791,17 @@ export function normalizeTable(inp: NormalizeInput, opts: NormalizeOptions = {})
         if (pm && n.category.prefixes[pm[1]!]) category = n.category.prefixes[pm[1]!]!;
         else if (cats.length === 1) category = cats[0]!;
         else {
+          // Where the category mark is keyed: the train-number cell (any header line when the table
+          // prints no numbers), or the number note of a train numbered part-way down the column.
+          const markedOn: Cell[] = [];
+          if (segIdx === 0) markedOn.push(...(tno?.text ? [tno.cell] : headerCells.map((h) => h.cell)));
+          if (numberNotes.length === 1 && (segIdx > 0 || (trainNo !== '' && !tno?.text))) markedOn.push(numberNotes[0]!.cell);
           const timed = events.filter((e) => e.sec !== null);
           for (const [mk, cat] of Object.entries(n.category.marks).sort((a, b) => cmpStr(a[0], b[0]))) {
+            if (markedOn.some((c) => c.marks.includes(mk))) { category = cat; break; }
             const k = timed.filter((e) => e.cell.marks.includes(mk)).length;
-            if (k === timed.length && k > 0) { category = cat; break; }
-            if (k > 0) CW(tw, `${mk} (${cat}) on ${k} of ${timed.length} times; category left empty`);
+            if (k > 0 && k < timed.length) CW(tw, `${mk} (${cat}) on ${k} of ${timed.length} times and not on the header${2 * k > timed.length ? `; mostly ${mk}, read as ${cat}` : '; category left empty'}`);
+            if (k > 0 && 2 * k > timed.length) { category = cat; break; }
           }
         }
       }

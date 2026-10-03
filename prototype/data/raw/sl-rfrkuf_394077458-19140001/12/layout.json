@@ -3,6 +3,7 @@
   "source_id": "sl-rfrkuf_394077458-19140001",
   "table_ref": "12",
   "table_kind": "timetable",
+  "crop_round": 2,
   "panels": [
     {
       "panel": "p1",

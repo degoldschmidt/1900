@@ -137,7 +137,7 @@ describe('table 12 (Dresden–Röderau–Berlin), pp. 54–55', () => {
   });
   it('a running note printed in a column needs (and gets) its running_rules row', () => {
     expect(svc(res, '12.c5')).toMatchObject({ running_as_printed: '•@c5', running_rule: 'from:1914-05-29;daily', category: '' });
-    expect(warns(res)).toContain('FKB1914-SO 12 c5: i (Schnellzug) on 1 of 4 times; category left empty');
+    expect(warns(res)).toContain('FKB1914-SO 12 c5: i (Schnellzug) on 1 of 4 times and not on the header; category left empty');
     expect(res.footnotes.map((f) => f.mark).sort()).toEqual(['@c0', '@c2', '•@c5']);
   });
   it('a column whose train continues under another number at an unkeyed row is flagged, not merged (13 c5: 329, then 323)', () => {
@@ -242,6 +242,48 @@ describe('table 112 (Bodenbach–Prag–Wien), p. 178: a braced time keyed in on
     expect(stops(res, '112.c5')).toEqual(['BODENBACH /08:47', 'PRG-STB 11:05/']);
     expect(svc(res, '112.c5')).toMatchObject({ train_key: 'AT-T112-c5', category: 'Schnellzug', classes: ['1', '2', '3'] });
     expect(svc(res, '112.c4.r53')).toMatchObject({ train_key: 'AT-T112-c4', classes: ['1', '2'] });
+  });
+});
+
+describe('train category from the column header (decision P-013)', () => {
+  const labels: R[] = [['label', 0, 0, 'a. Dresden Hbf.'], ['label', 0, 40, '198 i.Berlin Anh.Bf.312']];
+  const numbered = normalizeTable(input('12', { trainKeyPrefix: 'DE' }, {
+    '12-c0-5-r0-40-v2': { page: 58, rows: [...labels,
+      // c0: italic marked once on the train number, times keyed without i (the new brief).
+      ['header', 0, 0, '57', 'i'], ['header', 0, 1, 'I-III'], ['cell', 0, 0, '7 20'], ['cell', 0, 40, '10 21'],
+      // c1: an old keying: no header mark, its times italic.
+      ['header', 1, 0, '59'], ['header', 1, 1, 'I-III'], ['cell', 1, 0, '8 20', 'i'], ['cell', 1, 40, '11 21', 'i'],
+      // c2: an old keying with italic on one time of two: not mostly, so no category.
+      ['header', 2, 0, '61'], ['header', 2, 1, 'I-III'], ['cell', 2, 0, '9 20', 'i'], ['cell', 2, 40, '12 21'],
+      // c3: a D prefix wins over the header mark.
+      ['header', 3, 0, 'D 53', 'i'], ['header', 3, 1, 'I-III'], ['cell', 3, 0, '9 30'], ['cell', 3, 40, '12 31'],
+      // c4: no number in the header; the train's number note carries the italic.
+      ['header', 4, 0, ''], ['header', 4, 1, ''], ['cell', 4, 0, '9 40'], ['cell', 4, 40, '12 41'],
+      // c5: an ordinary train.
+      ['header', 5, 0, '295'], ['header', 5, 1, 'II-IV'], ['cell', 5, 0, '9 50'], ['cell', 5, 40, '12 51'],
+    ] },
+    '12-cn-p1-c0-5-v2': { page: 58, rows: [['footnote', 0, 0, '293 II-IV', 'c:4;i']] },
+  }));
+  it('reads the category from the italic train number, the number note, or (old keyings) mostly italic times', () => {
+    expect(errs(numbered)).toEqual([]);
+    expect(svc(numbered, '12.c0')?.category).toBe('Schnellzug');
+    expect(svc(numbered, '12.c1')?.category).toBe('Schnellzug');
+    expect(svc(numbered, '12.c2')?.category).toBe('');
+    expect(warns(numbered)).toContain('FKB1914-SO 12 c2: i (Schnellzug) on 1 of 2 times and not on the header; category left empty');
+    expect(svc(numbered, '12.c3')?.category).toBe('D-Zug');
+    expect(svc(numbered, '12.c4')).toMatchObject({ train_key: 'DE-293', category: 'Schnellzug' });
+    expect(svc(numbered, '12.c5')?.category).toBe('');
+  });
+  it('in a table without train numbers the italic is marked on the column\'s header line', () => {
+    const res = normalizeTable(input('126', { trainKeyPrefix: 'AT', unnumbered: true, headerLines: ['classes'] }, {
+      '126-c1-8-r1-29-v2': { page: 192, rows: [...labels,
+        ['header', 3, 0, '', 'i'], ['cell', 3, 0, '2 30', 'u'], ['cell', 3, 40, '4 48', 'u'],
+        ['header', 4, 0, ''], ['cell', 4, 0, '6 05'], ['cell', 4, 40, '9 51'],
+      ] },
+    }));
+    expect(errs(res)).toEqual([]);
+    expect(svc(res, '126.c3')?.category).toBe('Schnellzug');
+    expect(svc(res, '126.c4')?.category).toBe('');
   });
 });
 

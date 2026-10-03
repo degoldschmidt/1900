@@ -12,8 +12,20 @@
  * A thin orange gap marks where the parts were stitched together, and where rows listed in the
  * panel's skip_rows (node-only rule) were left out between kept rows.
  *
- * Block size: 6–8 columns × 12–18 kept rows, the largest that can be magnified at least 2× (at most 3×)
- * with the long side ≤ 1500 px. A very high-resolution scan may get less than 2× (warned).
+ * Block size: 4–8 columns × 12–18 kept rows, the largest that can be magnified at least 2× (at most 3×)
+ * with the long side ≤ 1500 px (margins included; with them, wide columns may need blocks of 4 or 5).
+ * A very high-resolution scan may get less than 2× (warned).
+ *
+ * Margins (decision P-013): every part shows a strip of the page beyond its box, so a figure printed
+ * across a column rule, a label's last letters past the label box, and the edge column of a block are
+ * not cut. The strips are MARGIN_X of the panel's median column width left and right (at least
+ * MIN_MARGIN_PX) and MARGIN_Y of its median row height above and below the header band and each run of
+ * kept rows. They are washed pale, so the keyer sees where the crop's own cells end; the ruler numbers
+ * only the crop's own columns and rows. Footnote and column-notes crops get the same pale side strips.
+ * crops.csv keeps the unpadded boxes.
+ *
+ * A layout with crop_round n ≥ 2 (a table re-cut for a new keying round) gives every crop id the
+ * suffix -v<n> (tools/crops/layout.ts), so the new keyings never overwrite the earlier round's files.
  *
  * A panel with a footnote_bbox also gets a footnote crop <table_ref>-fn-<panel> (the box alone,
  * magnified up to 3×, under a caption), keyed as kind=footnote lines. A panel with a notes_bbox gets a
@@ -31,7 +43,7 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 import type { OverlayOptions } from 'sharp';
 import {
-  colRange, cropRowToCsv, headerLines, isSkippedRow, keptRows, keyBox, labelCols, loadCropsCsv, loadLayout, nCols, panelForCrop, rowRange,
+  colRange, cropRoundSuffix, cropRowToCsv, headerLines, isSkippedRow, keptRows, keyBox, labelCols, loadCropsCsv, loadLayout, nCols, panelForCrop, rowRange,
   writeCropsCsv, type Box, type CellKey, type CropRow, type Layout, type Panel,
 } from './layout.ts';
 import { cropImage, cropsCsv, keyingCsv, layoutJson, roots, scansDir, type Roots } from '../keying/paths.ts';
@@ -44,25 +56,55 @@ export interface CropOptions {
   maxScale?: number;
   cols?: [number, number];
   rows?: [number, number];
+  /** Margins as fractions of the panel's median column width (x) and row height (y); 0 for none. */
+  margin?: { x: number; y: number };
 }
 
-const DEFAULTS = { maxLong: 1500, minScale: 2, maxScale: 3, cols: [6, 8] as [number, number], rows: [12, 18] as [number, number] };
+/** Default margins: 40% of a column width at the sides, 45% of a row height above and below. */
+export const MARGIN_X = 0.4;
+export const MARGIN_Y = 0.45;
+/** The smallest margin in page pixels (when a margin is asked for at all). */
+export const MIN_MARGIN_PX = 8;
+
+const DEFAULTS = { maxLong: 1500, minScale: 2, maxScale: 3, cols: [4, 8] as [number, number], rows: [12, 18] as [number, number], margin: { x: MARGIN_X, y: MARGIN_Y } };
+
+/** Page-pixel margins of a panel's crops: [left/right, top/bottom]. */
+export interface Margins { x: number; y: number }
+
+function median(v: number[]): number {
+  if (v.length === 0) return 0;
+  const s = [...v].sort((a, b) => a - b);
+  return s[Math.floor(s.length / 2)]!;
+}
+
+/** The margins of a panel's crops in page pixels, from its median column width (at most one row height) and kept-row height. */
+export function panelMargins(p: Panel, m: { x: number; y: number } = DEFAULTS.margin): Margins {
+  const widths = p.col_x.slice(1).map((x, i) => x - p.col_x[i]!);
+  const heights = keptRows(p).map((r) => p.row_y[r - p.first_row + 1]! - p.row_y[r - p.first_row]!);
+  const px = (f: number, base: number) => (f > 0 ? Math.max(MIN_MARGIN_PX, Math.round(f * base)) : 0);
+  // The side margin is for a few characters, so it never exceeds a row height (the type size), however wide the columns.
+  return { x: Math.min(px(m.x, median(widths)), Math.max(MIN_MARGIN_PX, median(heights))), y: px(m.y, median(heights)) };
+}
 
 /** Fixed ruler and gap sizes in output pixels. */
 export const RULER = { left: 52, top: 26, gap: 6 } as const;
 
 export interface Rect { x: number; y: number; w: number; h: number }
 
-/** A run of consecutive kept rows: its page y-range and where it is drawn (output y). */
+/** A run of consecutive kept rows: its page y-range (margins included) and where it is drawn (output y). */
 export interface RowRun { rows: [number, number]; pageY: number; pageH: number; outY: number; outH: number }
 
 export interface Geometry {
   scale: number;
   /** Column-notes crops: the page boxes and output rectangles of their side-by-side parts. */
   tiles?: Array<{ box: Box; rect: Rect }>;
+  /** Column-notes crops: the block's absolute columns (the ruler names only these). */
+  noteCols?: [number, number];
+  /** The page-pixel margins around each part (washed pale in the image). */
+  margin: Margins;
   width: number;
   height: number;
-  /** Page boxes of the four parts (label and body span every row of the block, kept or not). */
+  /** Page boxes of the four parts, margins included (label and body span every row of the block, kept or not). */
   page: { corner: Box; header: Box; label: Box; body: Box };
   /** Output rectangles of the four parts. */
   out: { corner: Rect; header: Rect; label: Rect; body: Rect };
@@ -92,7 +134,8 @@ export function splitEven(n: number, per: number): Array<[number, number]> {
   return out;
 }
 
-function pageBoxes(p: Panel, cols: [number, number], rows: [number, number]) {
+/** The crop's boxes without margins (as written to crops.csv). */
+function gridBoxes(p: Panel, cols: [number, number], rows: [number, number]) {
   const ci0 = cols[0] - p.first_col; const ci1 = cols[1] - p.first_col;
   const ri0 = rows[0] - p.first_row; const ri1 = rows[1] - p.first_row;
   const bx = p.col_x[ci0]!; const by = p.row_y[ri0]!;
@@ -102,7 +145,23 @@ function pageBoxes(p: Panel, cols: [number, number], rows: [number, number]) {
     body,
     header: [body[0], hb[1], body[2], hb[3]] as Box,
     label: [lb[0], body[1], lb[2], body[3]] as Box,
-    corner: [lb[0], hb[1], lb[2], hb[3]] as Box,
+  };
+}
+
+/**
+ * The page boxes of the four parts with margins: widened by m.x at the sides and by m.y above and
+ * below (label and body are drawn run by run, each run with its own m.y above and below).
+ */
+function pageBoxes(p: Panel, cols: [number, number], rows: [number, number], m: Margins) {
+  const g = gridBoxes(p, cols, rows);
+  const hb = p.header_bbox; const lb = p.label_bbox;
+  const wide = (b: Box): Box => [b[0] - m.x, b[1], b[2] + 2 * m.x, b[3]];
+  const tall = (b: Box): Box => [b[0], b[1] - m.y, b[2], b[3] + 2 * m.y];
+  return {
+    body: tall(wide(g.body)),
+    header: tall(wide(g.header)),
+    label: tall(wide(g.label)),
+    corner: tall(wide([lb[0], hb[1], lb[2], hb[3]])),
   };
 }
 
@@ -113,8 +172,8 @@ export function fitScale(labelW: number, bodyW: number, headerH: number, bodyH: 
   return Math.floor(Math.min(o.maxScale, sw, sh) * 100) / 100;
 }
 
-/** Runs of consecutive kept rows within the absolute range `rows` (page y-ranges). */
-export function rowRuns(p: Panel, rows: [number, number]): Array<{ rows: [number, number]; pageY: number; pageH: number }> {
+/** Runs of consecutive kept rows within the absolute range `rows` (page y-ranges, widened by `marginY` above and below). */
+export function rowRuns(p: Panel, rows: [number, number], marginY = 0): Array<{ rows: [number, number]; pageY: number; pageH: number }> {
   const out: Array<{ rows: [number, number]; pageY: number; pageH: number }> = [];
   for (let r = rows[0]; r <= rows[1]; r++) {
     if (isSkippedRow(p, r)) continue;
@@ -124,19 +183,19 @@ export function rowRuns(p: Panel, rows: [number, number]): Array<{ rows: [number
   }
   for (const run of out) {
     const y0 = p.row_y[run.rows[0] - p.first_row]!; const y1 = p.row_y[run.rows[1] - p.first_row + 1]!;
-    run.pageY = y0; run.pageH = y1 - y0;
+    run.pageY = y0 - marginY; run.pageH = y1 - y0 + 2 * marginY;
   }
   return out;
 }
 
-/** Page height of the kept rows and the output height of the gaps between their runs. */
-function keptHeight(p: Panel, rows: [number, number]): { pageH: number; gapsH: number } {
-  const runs = rowRuns(p, rows);
+/** Page height of the kept rows (margins included) and the output height of the gaps between their runs. */
+function keptHeight(p: Panel, rows: [number, number], marginY: number): { pageH: number; gapsH: number } {
+  const runs = rowRuns(p, rows, marginY);
   return { pageH: runs.reduce((a, r) => a + r.pageH, 0), gapsH: Math.max(0, runs.length - 1) * RULER.gap };
 }
 
-export function geometry(p: Panel, cols: [number, number], rows: [number, number], scale: number): Geometry {
-  const b = pageBoxes(p, cols, rows);
+export function geometry(p: Panel, cols: [number, number], rows: [number, number], scale: number, m: Margins = { x: 0, y: 0 }): Geometry {
+  const b = pageBoxes(p, cols, rows, m);
   const s = scale;
   const Lw = Math.round(b.label[2] * s); const Bw = Math.round(b.body[2] * s);
   const Hh = Math.round(b.header[3] * s);
@@ -144,7 +203,7 @@ export function geometry(p: Panel, cols: [number, number], rows: [number, number
   const y0 = RULER.top; const y1 = y0 + Hh + RULER.gap;
   const runs: RowRun[] = [];
   let y = y1;
-  for (const r of rowRuns(p, rows)) {
+  for (const r of rowRuns(p, rows, m.y)) {
     if (runs.length) y += RULER.gap;
     const outH = Math.max(1, Math.round(r.pageH * s));
     runs.push({ ...r, outY: y, outH });
@@ -153,6 +212,7 @@ export function geometry(p: Panel, cols: [number, number], rows: [number, number
   const Bh = y - y1;
   return {
     scale: s,
+    margin: m,
     width: x1 + Bw,
     height: y1 + Bh,
     page: b,
@@ -170,8 +230,10 @@ export function geometry(p: Panel, cols: [number, number], rows: [number, number
 export function planCrops(layout: Layout, opts: CropOptions = {}): PlannedCrop[] {
   const o = { ...DEFAULTS, ...opts };
   const out: PlannedCrop[] = [];
+  const suffix = cropRoundSuffix(layout);
   for (const p of layout.panels) {
     const n = nCols(p); const kept = keptRows(p); const m = kept.length;
+    const mg = panelMargins(p, o.margin);
     /** Kept-row block [i, j] (indices into `kept`) → absolute row range. */
     const absRows = (rr: [number, number]): [number, number] => [kept[rr[0]]!, kept[rr[1]]!];
     const colChoices = p.cols_per_crop ? [p.cols_per_crop] : range(o.cols[1], o.cols[0]);
@@ -185,8 +247,8 @@ export function planCrops(layout: Layout, opts: CropOptions = {}): PlannedCrop[]
       let minS = Infinity;
       for (const rr of rb) for (const cc of cb) {
         const ar = absRows(rr);
-        const b = pageBoxes(p, [cc[0] + p.first_col, cc[1] + p.first_col], ar);
-        const kh = keptHeight(p, ar);
+        const b = pageBoxes(p, [cc[0] + p.first_col, cc[1] + p.first_col], ar, mg);
+        const kh = keptHeight(p, ar, mg.y);
         minS = Math.min(minS, fitScale(b.label[2], b.body[2], b.header[3], kh.pageH, o, kh.gapsH));
       }
       if (!best || minS > best.minS + 1e-9) best = { cb, rb, minS };
@@ -196,22 +258,23 @@ export function planCrops(layout: Layout, opts: CropOptions = {}): PlannedCrop[]
     for (const rr of rb) for (const cc of cb) {
       const cols: [number, number] = [cc[0] + p.first_col, cc[1] + p.first_col];
       const rows = absRows(rr);
-      const b = pageBoxes(p, cols, rows);
-      const kh = keptHeight(p, rows);
+      const b = pageBoxes(p, cols, rows, mg);
+      const g = gridBoxes(p, cols, rows);
+      const kh = keptHeight(p, rows, mg.y);
       const s = fitScale(b.label[2], b.body[2], b.header[3], kh.pageH, o, kh.gapsH);
       const warnings: string[] = [];
       if (s < o.minScale) warnings.push(`magnification ${s}× is below ${o.minScale}× (the scan is large or the block cannot shrink further)`);
       if (s <= 0) throw new Error(`panel ${p.panel}: crop cannot fit in ${o.maxLong} px`);
       out.push({
-        crop_id: `${layout.table_ref}-c${cols[0]}-${cols[1]}-r${rows[0]}-${rows[1]}`,
+        crop_id: `${layout.table_ref}-c${cols[0]}-${cols[1]}-r${rows[0]}-${rows[1]}${suffix}`,
         page_seq: p.page_seq, table_ref: layout.table_ref,
-        body: b.body, header: b.header, label: b.label, cols, rows,
-        panel: p.panel, geometry: geometry(p, cols, rows, s), warnings, footnotes: false,
+        body: g.body, header: g.header, label: g.label, cols, rows,
+        panel: p.panel, geometry: geometry(p, cols, rows, s, mg), warnings, footnotes: false,
       });
     }
-    if (p.footnote_bbox) out.push(planFootnoteCrop(layout, p, o));
+    if (p.footnote_bbox) out.push(planFootnoteCrop(layout, p, o, mg));
     if (p.notes_bbox) for (const cc of cb) {
-      const nc = planNotesCrop(layout, p, [cc[0] + p.first_col, cc[1] + p.first_col], o);
+      const nc = planNotesCrop(layout, p, [cc[0] + p.first_col, cc[1] + p.first_col], o, mg);
       if (nc) out.push(nc);
     }
   }
@@ -221,17 +284,18 @@ export function planCrops(layout: Layout, opts: CropOptions = {}): PlannedCrop[]
 const ZERO: Rect = { x: 0, y: 0, w: 0, h: 0 };
 const NO_BOX: Box = [0, 0, 0, 0];
 
-/** The footnote box of a panel as its own crop, under a one-line caption. */
-function planFootnoteCrop(layout: Layout, p: Panel, o: { maxLong: number; maxScale: number }, box?: Box): PlannedCrop {
-  const fb = box ?? p.footnote_bbox!;
-  const s = Math.floor(Math.min(o.maxScale, o.maxLong / fb[2], (o.maxLong - RULER.top) / fb[3]) * 100) / 100;
-  const w = Math.round(fb[2] * s); const h = Math.round(fb[3] * s);
+/** The footnote box of a panel as its own crop (with margins all round), under a one-line caption. */
+function planFootnoteCrop(layout: Layout, p: Panel, o: { maxLong: number; maxScale: number }, mg: Margins): PlannedCrop {
+  const fb = p.footnote_bbox!;
+  const pb: Box = [fb[0] - mg.x, fb[1] - mg.y, fb[2] + 2 * mg.x, fb[3] + 2 * mg.y];
+  const s = Math.floor(Math.min(o.maxScale, o.maxLong / pb[2], (o.maxLong - RULER.top) / pb[3]) * 100) / 100;
+  const w = Math.round(pb[2] * s); const h = Math.round(pb[3] * s);
   return {
-    crop_id: `${layout.table_ref}-fn-${p.panel}`, page_seq: p.page_seq, table_ref: layout.table_ref,
+    crop_id: `${layout.table_ref}-fn-${p.panel}${cropRoundSuffix(layout)}`, page_seq: p.page_seq, table_ref: layout.table_ref,
     body: fb, header: NO_BOX, label: NO_BOX, cols: [0, -1], rows: [0, -1], footnotes: true, panel: p.panel, warnings: [],
     geometry: {
-      scale: s, width: Math.max(w, 420), height: RULER.top + h,
-      page: { corner: NO_BOX, header: NO_BOX, label: NO_BOX, body: fb },
+      scale: s, margin: mg, width: Math.max(w, 420), height: RULER.top + h,
+      page: { corner: NO_BOX, header: NO_BOX, label: NO_BOX, body: pb },
       out: { corner: ZERO, header: ZERO, label: ZERO, body: { x: 0, y: RULER.top, w, h } },
       runs: [],
     },
@@ -241,26 +305,27 @@ function planFootnoteCrop(layout: Layout, p: Panel, o: { maxLong: number; maxSca
 /** Overlap (page px) of the top and bottom halves of a column-notes crop. */
 export const NOTES_OVERLAP = 30;
 
-/** A column-notes crop for one block of columns: the notes box cut to those columns, halves side by side. */
-function planNotesCrop(layout: Layout, p: Panel, cols: [number, number], o: { maxLong: number; maxScale: number }): PlannedCrop | null {
+/** A column-notes crop for one block of columns: the notes box cut to those columns (with side margins), halves side by side. */
+function planNotesCrop(layout: Layout, p: Panel, cols: [number, number], o: { maxLong: number; maxScale: number }, mg: Margins): PlannedCrop | null {
   const nb = p.notes_bbox!;
   const x0 = Math.max(nb[0], p.col_x[cols[0] - p.first_col]!); const x1 = Math.min(nb[0] + nb[2], p.col_x[cols[1] - p.first_col + 1]!);
   if (x1 - x0 < 4) return null;
-  const w = x1 - x0; const half = Math.ceil(nb[3] / 2);
-  const top: Box = [x0, nb[1], w, Math.min(nb[3], half + NOTES_OVERLAP)];
-  const bottom: Box = [x0, nb[1] + half - NOTES_OVERLAP, w, nb[3] - half + NOTES_OVERLAP];
+  const half = Math.ceil(nb[3] / 2);
+  const px0 = x0 - mg.x; const w = x1 - x0 + 2 * mg.x;
+  const top: Box = [px0, nb[1], w, Math.min(nb[3], half + NOTES_OVERLAP)];
+  const bottom: Box = [px0, nb[1] + half - NOTES_OVERLAP, w, nb[3] - half + NOTES_OVERLAP];
   const gap = 4 * RULER.gap;
   const s = Math.floor(Math.min(o.maxScale, (o.maxLong - gap) / (2 * w), (o.maxLong - RULER.top) / Math.max(top[3], bottom[3])) * 100) / 100;
   const W = Math.round(w * s);
   const tiles = [top, bottom].map((box, i) => ({ box, rect: { x: i * (W + gap), y: RULER.top, w: W, h: Math.round(box[3] * s) } }));
-  const body: Box = [x0, nb[1], w, nb[3]];
+  const body: Box = [x0, nb[1], x1 - x0, nb[3]];
   return {
-    crop_id: `${layout.table_ref}-cn-${p.panel}-c${cols[0]}-${cols[1]}`, page_seq: p.page_seq, table_ref: layout.table_ref,
+    crop_id: `${layout.table_ref}-cn-${p.panel}-c${cols[0]}-${cols[1]}${cropRoundSuffix(layout)}`, page_seq: p.page_seq, table_ref: layout.table_ref,
     body, header: NO_BOX, label: NO_BOX, cols: [0, -1], rows: [0, -1], footnotes: true, colNotes: true, panel: p.panel,
     warnings: s < 1.5 ? [`column notes magnified only ${s}×`] : [],
     geometry: {
-      scale: s, width: 2 * W + gap, height: RULER.top + Math.max(...tiles.map((t) => t.rect.h)),
-      page: { corner: NO_BOX, header: NO_BOX, label: NO_BOX, body }, out: { corner: ZERO, header: ZERO, label: ZERO, body: ZERO }, runs: [], tiles,
+      scale: s, margin: { x: mg.x, y: 0 }, noteCols: cols, width: 2 * W + gap, height: RULER.top + Math.max(...tiles.map((t) => t.rect.h)),
+      page: { corner: NO_BOX, header: NO_BOX, label: NO_BOX, body: [px0, nb[1], w, nb[3]] }, out: { corner: ZERO, header: ZERO, label: ZERO, body: ZERO }, runs: [], tiles,
     },
   };
 }
@@ -335,7 +400,7 @@ export function rulerSvg(p: Panel, crop: Pick<CropRow, 'cols' | 'rows'>, g: Geom
     }
   }
   // Header lines.
-  const oh = g.out.header; const hb = p.header_bbox;
+  const oh = g.out.header; const hb = g.page.header;
   if (p.header_y) {
     for (let h = 0; h < p.header_y.length - 1; h++) {
       const ya = oh.y + (p.header_y[h]! - hb[1]) * s; const yb = oh.y + (p.header_y[h + 1]! - hb[1]) * s;
@@ -345,7 +410,7 @@ export function rulerSvg(p: Panel, crop: Pick<CropRow, 'cols' | 'rows'>, g: Geom
     parts.push(svgText(RULER.left - 6, oh.y + oh.h / 2, headerLines(p) === 1 ? 'h0' : `h0-${headerLines(p) - 1}`, 11, 'end'));
   }
   // Label sub-columns.
-  const ol = g.out.label; const lb = p.label_bbox;
+  const ol = g.out.label; const lb = g.page.label;
   if (p.label_x) {
     for (let k = 0; k < p.label_x.length - 1; k++) {
       const xa = ol.x + (p.label_x[k]! - lb[0]) * s; const xb = ol.x + (p.label_x[k + 1]! - lb[0]) * s;
@@ -359,18 +424,49 @@ export function rulerSvg(p: Panel, crop: Pick<CropRow, 'cols' | 'rows'>, g: Geom
   gap(g.out.label.x + g.out.label.w, RULER.top, RULER.gap, g.height - RULER.top);
   gap(RULER.left, g.out.header.y + g.out.header.h, g.width - RULER.left, RULER.gap);
   for (let k = 1; k < g.runs.length; k++) gap(RULER.left, g.runs[k]!.outY - RULER.gap, g.width - RULER.left, RULER.gap);
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${g.width}" height="${g.height}">${parts.join('')}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${g.width}" height="${g.height}">${marginWash(g).join('')}${parts.join('')}</svg>`;
+}
+
+/** Opacity of the white wash over the margins: the print stays readable but visibly outside the crop. */
+export const WASH_OPACITY = 0.5;
+
+/** The four strips of `r` within `l`, `t`, `rt`, `b` output pixels of its edges. */
+function frame(r: Rect, l: number, t: number, rt: number, b: number): Rect[] {
+  const out: Rect[] = [];
+  if (t > 0) out.push({ x: r.x, y: r.y, w: r.w, h: Math.min(t, r.h) });
+  if (b > 0) out.push({ x: r.x, y: r.y + r.h - Math.min(b, r.h), w: r.w, h: Math.min(b, r.h) });
+  if (l > 0) out.push({ x: r.x, y: r.y + t, w: Math.min(l, r.w), h: Math.max(0, r.h - t - b) });
+  if (rt > 0) out.push({ x: r.x + r.w - Math.min(rt, r.w), y: r.y + t, w: Math.min(rt, r.w), h: Math.max(0, r.h - t - b) });
+  return out.filter((x) => x.w > 0 && x.h > 0);
+}
+
+/** The margin strips of a crop (output rectangles), washed pale in the image. */
+export function marginRects(g: Geometry): Rect[] {
+  const mx = g.margin.x * g.scale; const my = g.margin.y * g.scale;
+  if (mx <= 0 && my <= 0) return [];
+  if (g.tiles) return g.tiles.flatMap((t) => frame(t.rect, mx, 0, mx, 0));
+  if (g.runs.length === 0) return frame(g.out.body, mx, my, mx, my);
+  const out = [...frame(g.out.corner, mx, my, mx, my), ...frame(g.out.header, mx, my, mx, my)];
+  for (const run of g.runs) for (const part of ['label', 'body'] as const) {
+    out.push(...frame({ x: g.out[part].x, y: run.outY, w: g.out[part].w, h: run.outH }, mx, my, mx, my));
+  }
+  return out;
+}
+
+function marginWash(g: Geometry): string[] {
+  return marginRects(g).map((r) => `<rect x="${r.x.toFixed(1)}" y="${r.y.toFixed(1)}" width="${r.w.toFixed(1)}" height="${r.h.toFixed(1)}" fill="#ffffff" opacity="${WASH_OPACITY}"/>`);
 }
 
 function footnoteCaptionSvg(g: Geometry): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${g.width}" height="${g.height}">${svgText(6, RULER.top / 2, 'footnotes: key each line as kind=footnote, col 0, row 0, 1, 2 … top to bottom', 12, 'start')}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${g.width}" height="${g.height}">${marginWash(g).join('')}${svgText(6, RULER.top / 2, 'footnotes: key each line as kind=footnote, col 0, row 0, 1, 2 … top to bottom', 12, 'start')}</svg>`;
 }
 
 /** Column ruler over each part of a column-notes crop (c<n> over each train column), and the gap between the parts. */
 export function notesRulerSvg(p: Panel, g: Geometry): string {
-  const s = g.scale; const parts: string[] = [];
+  const s = g.scale; const parts: string[] = [...marginWash(g)];
+  const [c0, c1] = g.noteCols ?? [p.first_col, p.first_col + p.col_x.length - 2];
   for (const [k, t] of (g.tiles ?? []).entries()) {
-    for (let i = 0; i < p.col_x.length - 1; i++) {
+    for (let i = c0 - p.first_col; i <= c1 - p.first_col; i++) {
       const xa = t.rect.x + (p.col_x[i]! - t.box[0]) * s; const xb = t.rect.x + (p.col_x[i + 1]! - t.box[0]) * s;
       if (xb <= t.rect.x + 1 || xa >= t.rect.x + t.rect.w - 1) continue;
       const ca = Math.max(xa, t.rect.x); const cb = Math.min(xb, t.rect.x + t.rect.w);
@@ -440,7 +536,11 @@ export function findPageImage(r: Roots, source: string, seq: number): string {
   throw new Error(`no page image p${seq}.<ext> in ${dir} (run tools/fetch/fetch-pages.ts first)`);
 }
 
-export interface MakeCropsResult { crops: PlannedCrop[]; written: string[]; warnings: string[] }
+export interface MakeCropsResult {
+  crops: PlannedCrop[]; written: string[]; warnings: string[];
+  /** Keyed crops of an earlier keying round left out of the new crops.csv (crop_round). */
+  superseded: string[];
+}
 
 /** Plans and renders every crop of a table and writes crops.csv. */
 export async function makeCrops(r: Roots, source: string, table: string, o: CropOptions & { force?: boolean; dryRun?: boolean } = {}): Promise<MakeCropsResult> {
@@ -450,11 +550,24 @@ export async function makeCrops(r: Roots, source: string, table: string, o: Crop
   const warnings = crops.flatMap((c) => c.warnings.map((w) => `${c.crop_id}: ${w}`));
   // Refuse to orphan existing keyings when the crop plan changes.
   const indexPath = cropsCsv(r, source, table);
+  const superseded: string[] = [];
   if (existsSync(indexPath) && !o.force) {
     const newIds = new Set(crops.map((c) => c.crop_id));
-    const orphaned = loadCropsCsv(indexPath).filter((c) => !newIds.has(c.crop_id))
+    const suffix = cropRoundSuffix(layout);
+    const dropped = loadCropsCsv(indexPath).filter((c) => !newIds.has(c.crop_id))
       .filter((c) => (['A', 'B', 'R'] as const).some((w) => existsSync(keyingCsv(r, source, table, c.crop_id, w))));
+    // Crops of an earlier keying round (a layout with a higher crop_round) are superseded on purpose;
+    // their keying files stay on disk.
+    const orphaned = dropped.filter((c) => !suffix || c.crop_id.endsWith(suffix));
+    superseded.push(...dropped.filter((c) => !orphaned.includes(c)).map((c) => c.crop_id));
     if (orphaned.length) throw new Error(`the new crop plan drops crops that already have keyings (${orphaned.map((c) => c.crop_id).join(', ')}); pass --force to re-plan anyway`);
+  }
+  // Refuse to redraw the image of a crop that is already keyed: the keyings must stay tied to the image the
+  // keyers saw. A table re-cut for a new keying round sets crop_round in layout.json (new ids).
+  if (!o.force && !o.dryRun) {
+    const keyed = crops.filter((c) => existsSync(cropImage(r, source, table, c.crop_id))
+      && (['A', 'B', 'R'] as const).some((w) => existsSync(keyingCsv(r, source, table, c.crop_id, w))));
+    if (keyed.length) throw new Error(`crops ${keyed.map((c) => c.crop_id).join(', ')} are already keyed; redrawing them would change the images their keyers saw. Set "crop_round" in layout.json to cut new crops for a new keying round, or pass --force`);
   }
   const written: string[] = [];
   if (!o.dryRun) {
@@ -471,7 +584,7 @@ export async function makeCrops(r: Roots, source: string, table: string, o: Crop
     writeTextFile(indexPath, writeCropsCsv(crops));
     written.push(indexPath);
   }
-  return { crops, written, warnings };
+  return { crops, written, warnings, superseded };
 }
 
 export async function zoomFromFiles(r: Roots, source: string, table: string, cropId: string, key: CellKey, o: { scale?: number } = {}): Promise<Buffer> {
@@ -507,6 +620,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       const res = await makeCrops(r, source, table, { force: flag('--force'), dryRun: flag('--dry-run') });
       for (const c of res.crops) console.log(`${c.crop_id}  page ${c.page_seq}  ${c.geometry.width}×${c.geometry.height}  ×${c.geometry.scale}`);
       for (const w of res.warnings) console.warn(`warning: ${w}`);
+      if (res.superseded.length) console.log(`${res.superseded.length} keyed crop(s) of an earlier round left out of crops.csv (their keyings stay on disk): ${res.superseded.join(', ')}`);
       console.log(`${res.crops.length} crop(s)${flag('--dry-run') ? ' planned (dry run)' : ` written; index ${cropsCsv(r, source, table)}`}`);
     }
   } catch (e) {

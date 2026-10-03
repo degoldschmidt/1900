@@ -31,8 +31,15 @@
  *     "skip_rows": [3, 4, 5],             // optional: absolute body rows that are not keyed (node-only rule)
  *     "cols_per_crop": 8, "rows_per_crop": 18   // optional overrides of the crop block size
  *   }],
+ *   "crop_round": 2,                      // optional: crops re-cut for a new keying round (see below)
  *   "notes": "free text"
  * }
+ *
+ * Re-cutting a keyed table (decision P-013): crop ids name the block (`<table_ref>-c<a>-<b>-r<c>-<d>`),
+ * so crops cut again with the same blocks would get the ids of the crops already keyed, and the new
+ * keyings would overwrite the old files. A layout with "crop_round": n (n ≥ 2) gives every crop id the
+ * suffix `-v<n>` (`12-c0-5-r0-40-v2`, `12-cn-p1-c0-5-v2`); the earlier round's keying files stay as they
+ * are, outside the new crops.csv.
  *
  * Node-only transcription (PLAN.md, scope choice 1): a row listed in skip_rows keeps its absolute
  * number but is neither shown in the crops nor keyed; crops stitch the kept rows together, with an
@@ -91,7 +98,14 @@ export interface Layout {
   table_kind?: 'timetable' | 'fares' | 'other';
   title?: string;
   panels: Panel[];
+  /** Keying round of the crops (≥ 2 adds `-v<n>` to every crop id); absent = the first round. */
+  crop_round?: number;
   notes?: string;
+}
+
+/** The crop-id suffix of a layout's keying round: "" for the first round, "-v<n>" from the second. */
+export function cropRoundSuffix(l: Pick<Layout, 'crop_round'>): string {
+  return l.crop_round !== undefined && l.crop_round >= 2 ? `-v${l.crop_round}` : '';
 }
 
 export const CROP_COLUMNS = ['crop_id', 'page_seq', 'table_ref', 'x', 'y', 'w', 'h', 'header_bbox', 'label_bbox', 'col_range', 'row_range'] as const;
@@ -179,6 +193,7 @@ export function validateLayout(l: unknown, imageSizes?: Map<number, { width: num
   if (typeof L.source_id !== 'string' || !L.source_id) errs.push('source_id missing');
   if (typeof L.table_ref !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._~-]*$/.test(L.table_ref)) errs.push('table_ref missing or not filename-safe');
   if (L.table_kind !== undefined && !['timetable', 'fares', 'other'].includes(L.table_kind)) errs.push('table_kind must be timetable|fares|other');
+  if (L.crop_round !== undefined && (!Number.isInteger(L.crop_round) || L.crop_round < 1)) errs.push('crop_round must be a positive integer');
   if (!Array.isArray(L.panels) || L.panels.length === 0) { errs.push('panels must be a non-empty array'); return errs; }
   const names = new Set<string>();
   L.panels.forEach((p, i) => {
@@ -309,6 +324,21 @@ export function panelForCrop(layout: Layout, crop: Pick<CropRow, 'page_seq' | 'c
 }
 
 export interface CellKey { kind: Kind; col: number; row: number }
+
+/** The panel holding a key, by the panels' absolute ranges. */
+export function panelForKey(layout: Layout, k: { kind: string; col: number; row: number }): Panel | null {
+  const inCols = (p: Panel) => k.col >= colRange(p)[0] && k.col <= colRange(p)[1];
+  const inRows = (p: Panel) => k.row >= rowRange(p)[0] && k.row <= rowRange(p)[1];
+  return layout.panels.find((p) => (k.kind === 'cell' ? inCols(p) && inRows(p) : k.kind === 'header' ? inCols(p) : k.kind === 'label' ? inRows(p) : false)) ?? null;
+}
+
+/** A crop row spanning a whole panel, so keyBox and zoomKey can locate any of its keys. */
+export function panelCrop(layout: Layout, p: Panel): CropRow {
+  return {
+    crop_id: `${layout.table_ref}-${p.panel}`, page_seq: p.page_seq, table_ref: layout.table_ref,
+    body: [0, 0, 1, 1], header: [0, 0, 1, 1], label: [0, 0, 1, 1], cols: colRange(p), rows: rowRange(p), footnotes: false,
+  };
+}
 
 /** Every (kind, col, row) a keyer must produce for a crop, footnotes excepted (their count varies). */
 export function expectedKeys(layout: Layout, crop: CropRow): CellKey[] {

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Test fixture for tools/keying/ocr-check.ts: ALTO words over the 1000×700 test page of the T57 layout
+     (columns at x = 230 + 60·i, header line 0 at y 40–58). Header numbers of c0–c5 match keyer A; those of
+     c6–c11 match no keyer. A time "10 22" is split into two tokens in c2 r3. -->
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v2#">
+  <Description><MeasurementUnit>pixel</MeasurementUnit></Description>
+  <Layout>
+    <Page ID="p3" WIDTH="1000" HEIGHT="700" PHYSICAL_IMG_NR="3">
+      <PrintSpace HPOS="0" VPOS="0" WIDTH="1000" HEIGHT="700"><TextBlock>
+      <TextLine HPOS="242" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="281" HPOS="242" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="302" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="D53" HPOS="302" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="362" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="295" HPOS="362" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="422" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="57" HPOS="422" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="482" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="311" HPOS="482" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="542" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="412" HPOS="542" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="602" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="666" HPOS="602" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="662" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="667" HPOS="662" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="722" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="668" HPOS="722" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="782" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="669" HPOS="782" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="842" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="670" HPOS="842" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="902" VPOS="44" WIDTH="32" HEIGHT="12"><String CONTENT="671" HPOS="902" VPOS="44" WIDTH="32" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="360" VPOS="181" WIDTH="16" HEIGHT="12"><String CONTENT="10" HPOS="360" VPOS="181" WIDTH="16" HEIGHT="12"/></TextLine>
+      <TextLine HPOS="378" VPOS="178" WIDTH="14" HEIGHT="9"><String CONTENT="22" HPOS="378" VPOS="178" WIDTH="14" HEIGHT="9"/></TextLine>
+      <TextLine HPOS="30" VPOS="106" WIDTH="60" HEIGHT="12"><String CONTENT="Dresden" HPOS="30" VPOS="106" WIDTH="60" HEIGHT="12"/></TextLine>
+      </TextBlock></PrintSpace>
+    </Page>
+  </Layout>
+</alto>
