@@ -1,0 +1,133 @@
+sample_id,source_id,table_ref,page_seq,crop_id,kind,col,row,page_region,rate_permille,reread_text,reread_marks,reread_sure,note
+Spilot-0001,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,10,0,"951,193,56,28",200,3 12,,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0002,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,7,47,"774,1482,53,32",200,4 02,,y,
+Spilot-0003,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,8,47,"827,1482,60,32",200,3 21,i,y,
+Spilot-0004,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,12,47,"1052,1482,50,32",200,10 30,u,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0005,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,47,"1158,1482,67,32",200,6 10,u,y,
+Spilot-0006,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,0,53,"389,1650,51,27",200,—,,y,
+Spilot-0007,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,1,53,"440,1650,52,27",200,2 05,i,y,
+Spilot-0008,sl-rfrkuf_394077458-19140001,112,182,112-c0-7-r0-54,cell,2,53,"492,1650,53,27",200,—,,y,
+Spilot-0009,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,9,53,"887,1650,64,27",200,4 45,u,y,underline hidden by zoom box edge; clear on page
+Spilot-0010,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,53,"1158,1650,67,27",200,—,,y,
+Spilot-0011,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,8,54,"827,1677,60,27",200,—,,y,
+Spilot-0012,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,11,54,"1007,1677,45,27",200,11 15,,y,
+Spilot-0013,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,17,55,"403,143,55,27",200,6 30,u,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0014,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,24,55,"800,143,54,27",200,—,,y,
+Spilot-0015,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,25,55,"854,143,54,27",200,11 35,,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0016,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,28,55,"1025,143,58,27",200,11 35,,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0017,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,21,56,"628,170,57,28",200,—,,y,
+Spilot-0018,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,19,58,"512,337,53,41",200,10 15,,y,
+Spilot-0019,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,24,58,"800,337,54,41",200,1 55,,y,
+Spilot-0020,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,26,58,"908,337,54,41",200,6 55,u,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0021,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,22,60,"685,1625,62,32",200,3 49,i,y,
+Spilot-0022,sl-rfrkuf_394077458-19140001,112,183,112-c15-22-r55-61,cell,18,61,"458,1657,54,35",200,48 |,,n,"brace over c17-c18 above this row; c17 shows italic 1 10, c18 a small raised 48 then a short vertical rule. Re-checked after scoring: the short rule is printed (resolved has 48 alone); whether it is a pass sign or part of the brace layout is not decidable; genuinely ambiguous"
+Spilot-0023,sl-rfrkuf_394077458-19140001,112,183,112-c23-29-r55-61,cell,26,61,"908,1657,54,35",200,12 09,u,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0024,sl-rfrkuf_394077458-19140001,12,58,12-c0-5-r0-40,cell,1,0,"537,370,63,23",200,5 45,fn:§;u,y,§ printed before the time
+Spilot-0025,sl-rfrkuf_394077458-19140001,12,58,12-c0-5-r0-40,cell,1,1,"537,393,63,26",200,5 50,u,y,
+Spilot-0026,sl-rfrkuf_394077458-19140001,12,58,12-c0-5-r0-40,cell,5,1,"790,393,63,26",200,8 33,,y,
+Spilot-0027,sl-rfrkuf_394077458-19140001,12,58,12-c0-5-r0-40,cell,2,2,"600,419,63,26",200,7 26,i,n,minutes italic; hour figure barely slanted
+Spilot-0028,sl-rfrkuf_394077458-19140001,12,58,12-c6-11-r0-40,cell,9,2,"1043,419,63,26",200,7 21,i;u,n,"D 53 column (D-Zug); minutes italic (1 with curved foot, unlike the roman 1 in the 283 column), italic 7 looks upright in this face. Re-checked after scoring: keep i; resolved lacks it; probable keying error"
+Spilot-0029,sl-rfrkuf_394077458-19140001,12,58,12-c6-11-r0-40,cell,6,3,"853,445,64,27",200,2 30,,y,
+Spilot-0030,sl-rfrkuf_394077458-19140001,12,58,12-c6-11-r0-40,cell,11,3,"1168,445,52,27",200,10 04,u,y,
+Spilot-0031,sl-rfrkuf_394077458-19140001,12,58,12-c6-11-r0-40,cell,6,40,"853,1481,64,31",200,7 52,u,y,
+Spilot-0032,sl-rfrkuf_394077458-19140001,12,59,12-c18-23-r48-88,cell,18,48,"728,392,64,28",200,4 55,,y,
+Spilot-0033,sl-rfrkuf_394077458-19140001,12,59,12-c18-23-r48-88,cell,21,48,"908,392,62,28",200,7 25,u,y,
+Spilot-0034,sl-rfrkuf_394077458-19140001,12,59,12-c12-17-r48-88,cell,12,85,"286,1414,63,26",200,7 58,,y,
+Spilot-0035,sl-rfrkuf_394077458-19140001,12,59,12-c18-23-r48-88,cell,22,85,"970,1414,64,26",200,2 09,i;u,n,minutes italic; hour figure barely slanted
+Spilot-0036,sl-rfrkuf_394077458-19140001,12,59,12-c12-17-r48-88,cell,12,86,"286,1440,63,27",200,8 01,,y,
+Spilot-0037,sl-rfrkuf_394077458-19140001,12,59,12-c12-17-r48-88,cell,14,86,"412,1440,65,27",200,9 41,i,y,
+Spilot-0038,sl-rfrkuf_394077458-19140001,12,59,12-c18-23-r48-88,cell,19,86,"792,1440,52,27",200,—,,y,
+Spilot-0039,sl-rfrkuf_394077458-19140001,12,59,12-c12-17-r48-88,cell,16,87,"539,1467,64,27",200,4 44,,y,
+Spilot-0040,sl-rfrkuf_394077458-19140001,12,59,12-c12-17-r48-88,cell,13,88,"349,1494,63,33",200,10 58,,y,"line below is the table rule, not an underline"
+Spilot-0041,sl-rfrkuf_394077458-19140001,12,59,12-c12-17-r48-88,cell,17,88,"603,1494,125,33",200,6 56,i;u,y,
+Spilot-0042,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5,cell,0,0,"298,94,61,34",200,9 55,fn:!;i;u,y,"! printed before the time, clearly inside the cell (re-checked after scoring: resolved lacks fn:!; keying error)"
+Spilot-0043,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5,cell,4,0,"528,94,52,34",200,2 30,i;u,n,minutes italic; hour figure barely slanted
+Spilot-0044,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5,cell,7,0,"683,94,64,34",200,11 30,i,y,
+Spilot-0045,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5,cell,9,0,"796,94,54,34",200,2 23,fn:!,n,"CORRECTED after scoring: first read 2 22; at higher zoom the last minute digit has a rounded lower bowl and a waist on the left, i.e. a 3 (2/3 confusable, blurred). ! printed before the time; the arrow sign on the column rule to the right is not part of the cell"
+Spilot-0046,sl-rfrkuf_394077458-19140001,123,189,123-c10-14-r0-5,cell,13,0,"1260,94,61,34",200,3 52,i,y,
+Spilot-0047,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5,cell,17,0,"1494,94,57,34",200,2 25,i;u,y,"re-checked after scoring: c17 is an italic (express) column throughout (10 18, 9 30, 8 39, 8 13 plainly italic; 12 58 below with italic 1); the italic 2 looks upright in this face. Resolved lacks i; keying error"
+Spilot-0048,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5,cell,18,0,"1551,94,49,34",200,—,,y,
+Spilot-0049,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5,cell,19,0,"1600,94,56,34",200,9 39,i,y,
+Spilot-0050,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5,cell,0,1,"298,128,61,28",200,11 15,fn:!;i;u,y,"! printed before the time, clearly inside the cell (re-checked after scoring: resolved lacks fn:!; keying error)"
+Spilot-0051,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5,cell,4,1,"528,128,52,28",200,4 05,i;u,y,
+Spilot-0052,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5,cell,6,1,"634,128,49,28",200,8 47,i,n,minutes italic; hour figure upright-looking
+Spilot-0053,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5,cell,6,3,"634,188,49,30",200,2 03,,y,
+Spilot-0054,sl-rfrkuf_394077458-19140001,123,189,123-c15-19-r0-5,cell,19,3,"1600,188,56,30",200,4 16,u,y,
+Spilot-0055,sl-rfrkuf_394077458-19140001,123,189,123-c0-4-r0-5,cell,1,5,"359,638,54,32",200,12 40,,y,
+Spilot-0056,sl-rfrkuf_394077458-19140001,123,189,123-c5-9-r0-5,cell,8,5,"747,638,49,32",200,6 52,i,y,
+Spilot-0057,sl-rfrkuf_394077458-19140001,126,192,126-c9-15-r1-29,cell,11,1,"941,159,63,31",200,2 22,,y,
+Spilot-0058,sl-rfrkuf_394077458-19140001,126,192,126-c9-15-r1-29,cell,11,2,"941,190,63,34",200,4 52,,y,
+Spilot-0059,sl-rfrkuf_394077458-19140001,126,192,126-c9-15-r1-29,cell,14,2,"1117,190,59,34",200,11 16,i;u,y,
+Spilot-0060,sl-rfrkuf_394077458-19140001,126,192,126-c9-15-r1-29,cell,15,2,"1176,190,59,34",200,12 09,i;u,y,
+Spilot-0061,sl-rfrkuf_394077458-19140001,126,192,126-c1-8-r1-29,cell,3,29,"485,935,50,36",200,—,,y,
+Spilot-0062,sl-rfrkuf_394077458-19140001,126,192,126-c1-8-r1-29,cell,5,29,"594,935,59,36",200,ab,,n,"a heavy bar (end of the sideways note box above) runs across the top of the cell; read as a rule, not a dash sign"
+Spilot-0063,sl-rfrkuf_394077458-19140001,126,192,126-c1-8-r1-29,cell,6,29,"653,935,49,36",200,12 40,,y,
+Spilot-0064,sl-rfrkuf_394077458-19140001,126,192,126-c9-15-r1-29,cell,15,29,"1176,935,59,36",200,2 40,i;u,y,"re-checked after scoring: minutes plainly slanted, 1 47 above italic, c15 an italic column; resolved lacks i; keying error"
+Spilot-0065,sl-rfrkuf_394077458-19140001,126,192,126-c0-7-r31-43,cell,2,31,"435,990,50,34",200,|,,y,
+Spilot-0066,sl-rfrkuf_394077458-19140001,126,192,126-c0-7-r31-43,cell,4,31,"535,990,59,34",200,ab,,y,
+Spilot-0067,sl-rfrkuf_394077458-19140001,126,192,126-c0-7-r31-43,cell,5,31,"594,990,59,34",200,—,,y,
+Spilot-0068,sl-rfrkuf_394077458-19140001,126,192,126-c0-7-r31-43,cell,6,31,"653,990,49,34",200,1 57,,y,
+Spilot-0069,sl-rfrkuf_394077458-19140001,126,192,126-c8-15-r31-43,cell,15,31,"1176,990,59,34",200,|,,y,faint pass bar continuing from 2 40 down to 2 33
+Spilot-0070,sl-rfrkuf_394077458-19140001,126,192,126-c0-7-r31-43,cell,3,43,"485,1334,50,31",200,8 24,,y,
+Spilot-0071,sl-rfrkuf_394077458-19140001,126,192,126-c0-7-r31-43,cell,4,43,"535,1334,59,31",200,3 00,i,y,
+Spilot-0072,sl-rfrkuf_394077458-19140001,126,192,126-c8-15-r31-43,cell,11,43,"941,1334,63,31",200,9 21,i;u,y,
+Spilot-0073,sl-rfrkuf_394077458-19140001,126,193,126-c20-27-r50-92,cell,20,50,"275,177,63,27",200,8 20,i;u,n,minutes italic; hour figure upright-looking
+Spilot-0074,sl-rfrkuf_394077458-19140001,126,193,126-c20-27-r50-92,cell,27,50,"690,177,54,27",200,—,,y,
+Spilot-0075,sl-rfrkuf_394077458-19140001,126,193,126-c28-34-r50-92,cell,32,50,"972,177,52,27",200,7 10,,y,
+Spilot-0076,sl-rfrkuf_394077458-19140001,126,193,126-c28-34-r50-92,cell,31,62,"922,517,50,28",200,6 19,i;u,n,minutes italic; hour figure upright-looking
+Spilot-0077,sl-rfrkuf_394077458-19140001,126,193,126-c28-34-r50-92,cell,32,62,"972,517,52,28",200,4 40,,y,
+Spilot-0078,sl-rfrkuf_394077458-19140001,126,193,126-c20-27-r50-92,cell,24,64,"519,570,63,30",200,7 50,,y,
+Spilot-0079,sl-rfrkuf_394077458-19140001,126,193,126-c28-34-r50-92,cell,29,64,"798,570,63,30",200,Ank.,,y,
+Spilot-0080,sl-rfrkuf_394077458-19140001,126,193,126-c20-27-r50-92,cell,22,91,"401,1308,63,32",200,7 39,,y,
+Spilot-0081,sl-rfrkuf_394077458-19140001,126,193,126-c20-27-r50-92,cell,20,92,"275,1340,63,30",200,5 26,i;u,y,
+Spilot-0082,sl-rfrkuf_394077458-19140001,126,193,126-c28-34-r50-92,cell,31,92,"922,1340,50,30",200,—,,y,
+Spilot-0083,sl-rfrkuf_394077458-19140001,13,60,13-c0-6-r0-36,cell,1,0,"413,365,67,25",200,5 36,i;u,y,
+Spilot-0084,sl-rfrkuf_394077458-19140001,13,60,13-c7-13-r0-36,cell,11,0,"1044,365,64,25",200,10 23,i;u,y,
+Spilot-0085,sl-rfrkuf_394077458-19140001,13,60,13-c7-13-r0-36,cell,12,0,"1108,365,59,25",200,11 45,u,y,
+Spilot-0086,sl-rfrkuf_394077458-19140001,13,60,13-c0-6-r0-36,cell,2,1,"480,390,54,27",200,6 25,,y,
+Spilot-0087,sl-rfrkuf_394077458-19140001,13,60,13-c7-13-r0-36,cell,9,1,"914,390,65,27",200,|,,y,
+Spilot-0088,sl-rfrkuf_394077458-19140001,13,60,13-c0-6-r0-36,cell,1,2,"413,417,67,25",200,5 42,i;u,y,
+Spilot-0089,sl-rfrkuf_394077458-19140001,13,60,13-c7-13-r0-36,cell,9,2,"914,417,65,25",200,5 19,i,y,
+Spilot-0090,sl-rfrkuf_394077458-19140001,13,60,13-c7-13-r0-36,cell,10,2,"979,417,65,25",200,7 34,u,y,
+Spilot-0091,sl-rfrkuf_394077458-19140001,13,60,13-c0-6-r0-36,cell,5,36,"661,1342,63,32",200,2 02,,y,
+Spilot-0092,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,20,44,"646,390,69,26",200,2 25,,y,
+Spilot-0093,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,14,77,"271,1289,63,29",200,8 28,,y,
+Spilot-0094,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,17,77,"459,1289,63,29",200,11 57,i,y,
+Spilot-0095,sl-rfrkuf_394077458-19140001,13,61,13-c21-26-r44-80,cell,22,78,"782,1318,63,24",200,11 46,i;u,y,brace printed above the cell
+Spilot-0096,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,16,79,"397,1342,62,27",200,|,,y,
+Spilot-0097,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,17,79,"459,1342,63,27",200,|,,y,
+Spilot-0098,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,20,79,"646,1342,69,27",200,7 04,u,y,
+Spilot-0099,sl-rfrkuf_394077458-19140001,13,61,13-c21-26-r44-80,cell,21,79,"715,1342,67,27",200,|,,y,
+Spilot-0100,sl-rfrkuf_394077458-19140001,13,61,13-c14-20-r44-80,cell,15,80,"334,1369,63,31",200,10 40,,y,
+Spilot-0101,sl-rfrkuf_394077458-19140001,23,74,23-c0-6-r0-26,cell,1,0,"409,648,64,28",200,2 30,i;u,n,minutes italic; hour figure upright-looking; a speck before the minutes
+Spilot-0102,sl-rfrkuf_394077458-19140001,23,74,23-c7-12-r0-26,cell,7,0,"797,648,63,28",200,7 03,,y,
+Spilot-0103,sl-rfrkuf_394077458-19140001,23,74,23-c0-6-r0-26,cell,4,14,"607,1043,63,41",200,7 58,,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0104,sl-rfrkuf_394077458-19140001,23,74,23-c7-12-r0-26,cell,10,14,"986,1043,64,41",200,10 07,,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0105,sl-rfrkuf_394077458-19140001,23,74,23-c0-6-r0-26,cell,1,26,"409,1421,64,43",200,3 41,i;u,y,
+Spilot-0106,sl-rfrkuf_394077458-19140001,23,75,23-c13-18-r32-57,cell,13,32,"393,640,72,26",200,10 06,,y,
+Spilot-0107,sl-rfrkuf_394077458-19140001,23,75,23-c13-18-r32-57,cell,13,46,"393,1033,72,41",200,11 50,,y,
+Spilot-0108,sl-rfrkuf_394077458-19140001,23,75,23-c13-18-r32-57,cell,16,46,"608,1033,72,41",200,1 07,i,y,
+Spilot-0109,sl-rfrkuf_394077458-19140001,23,75,23-c19-24-r32-57,cell,23,46,"1105,1033,71,41",200,6 08,u,y,
+Spilot-0110,sl-rfrkuf_394077458-19140001,23,75,23-c19-24-r32-57,cell,19,57,"824,1407,74,44",200,4 08,fn:!,y,"! printed before the time; bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0111,sl-rfrkuf_394077458-19140001,23,76,23-c26-29-r64-89,cell,27,64,"415,628,73,26",200,7 05,i;u,n,minutes italic; hour figure upright-looking
+Spilot-0112,sl-rfrkuf_394077458-19140001,23,76,23-c26-29-r64-89,cell,28,64,"488,628,73,26",200,—,,y,
+Spilot-0113,sl-rfrkuf_394077458-19140001,23,76,23-c26-29-r64-89,cell,27,78,"415,1021,73,41",200,8 04,i;u,n,minutes italic; hour figure upright-looking
+Spilot-0114,sl-rfrkuf_394077458-19140001,23,77,23-c33-38-r95-123,cell,33,95,"385,343,79,43",200,—,,y,
+Spilot-0115,sl-rfrkuf_394077458-19140001,23,77,23-c33-38-r95-123,cell,38,95,"779,343,72,43",200,—,,y,
+Spilot-0116,sl-rfrkuf_394077458-19140001,23,77,23-c39-43-r95-123,cell,40,95,"923,343,81,43",200,8 48,,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0117,sl-rfrkuf_394077458-19140001,23,77,23-c39-43-r95-123,cell,42,95,"1076,343,80,43",200,—,,y,
+Spilot-0118,sl-rfrkuf_394077458-19140001,23,77,23-c33-38-r95-123,cell,33,109,"385,804,79,29",200,1 20,i;u,y,
+Spilot-0119,sl-rfrkuf_394077458-19140001,23,77,23-c33-38-r95-123,cell,35,109,"536,804,71,29",200,5 15,u,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0120,sl-rfrkuf_394077458-19140001,23,77,23-c39-43-r95-123,cell,40,123,"923,1190,81,42",200,10 48,,y,"row is ""in Dresden Hbf."" (checked against the label column); 10 13 above belongs to ""aus Pirna""; bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0121,sl-rfrkuf_394077458-19140001,23,78,23-c50-54-r135-163,cell,54,135,"1104,341,66,42",200,,,n,"only the □ that opens the boxed sideways note (□ In Tetschen ... Zollabfertigung) runs through this cell; per the brief such a note is not cell content. Re-checked after scoring: resolved keys □ as the cell; a convention question, not a misreading"
+Spilot-0122,sl-rfrkuf_394077458-19140001,23,78,23-c50-54-r135-163,cell,51,149,"870,797,72,27",200,—,,y,
+Spilot-0123,sl-rfrkuf_394077458-19140001,23,78,23-c50-54-r135-163,cell,53,149,"1022,797,82,27",200,7 03,u,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"
+Spilot-0124,sl-rfrkuf_394077458-19140001,23,78,23-c50-54-r135-163,cell,54,149,"1104,797,66,27",200,—,,y,
+Spilot-0125,sl-rfrkuf_394077458-19140001,23,78,23-c50-54-r135-163,cell,50,163,"789,1188,81,39",200,6 53,i;u,y,
+Spilot-0126,sl-rfrkuf_394077458-19140001,23,78,23-c50-54-r135-163,cell,54,163,"1104,1188,66,39",200,9 29,u,y,
+Spilot-0127,sl-rfrkuf_394077458-19140001,23,79,23-c55-60-r175-202,cell,57,175,"528,322,73,43",200,9 12,fn:•;u,y,bullet printed before the time
+Spilot-0128,sl-rfrkuf_394077458-19140001,23,79,23-c55-60-r175-202,cell,56,188,"456,778,72,28",200,—,,y,
+Spilot-0129,sl-rfrkuf_394077458-19140001,23,79,23-c55-60-r175-202,cell,57,188,"528,778,73,28",200,9 12,u,y,
+Spilot-0130,sl-rfrkuf_394077458-19140001,23,79,23-c55-60-r175-202,cell,58,188,"601,778,80,28",200,9 30,u,y,
+Spilot-0131,sl-rfrkuf_394077458-19140001,23,79,23-c55-60-r175-202,cell,57,202,"528,1169,73,40",200,11 02,u,y,
+Spilot-0132,sl-rfrkuf_394077458-19140001,23,79,23-c55-60-r175-202,cell,60,202,"762,1169,82,40",200,12 09,u,y,"bold not judged (no meaning in this guide, P-010); resolved has b: typography only"

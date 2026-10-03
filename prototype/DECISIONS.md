@@ -404,3 +404,23 @@ The preview now plays on a map, following P-012.
 - **Pocket** is a sheet. The tutorial opens with three coach marks, and the autopsy is a map replay.
 
 Eight old screens are removed. **The rules are unchanged.** The map layer is a `map` key in the world bundle, kept out of the data hash, so golden runs and save codes still match. Tests: 404 unit tests (14 new) and 28/28 E2E, including full playthroughs on phone and desktop under the artifact CSP. The page is 402 KB, and it is republished to the same private link.
+
+## 2026-10-03 18:30 — D2 pilot, historian's blind sample: FAIL on marks (Event P-E018)
+
+**Sample.** Seed 52817, a 20% stratified sample (132 cells): table 12, 18; 13, 18; 23, 32; 112, 23; 123, 15; 126, 26. The historian re-read every cell from the scans, blind to the transcription.
+
+**Result.** **5 keying errors in 132 (3.8%; 95% interval about 1.6–8.6%)** against the 0.5% target, so the source fails.
+- **Every error is a missing mark.** Italic was left out in an express-train column three times, and a "!" printed before a time was dropped twice.
+- **No hour or minute figure was wrong** in the sample.
+- Two cells are genuinely ambiguous. The historian corrected one misreading of their own.
+- 15 bold-only differences are not value errors under P-010.
+- By table: 13, 23 and 112 show no keying error; 12, 123 and 126 show one or more.
+
+**Reading.** Agent keying is reliable for the figures that drive the game (times) and unreliable for small typographic signs and per-cell italic. Italic marks a whole train (an express), so it belongs to the column, not the cell.
+
+**Proposed fixes, for G2:**
+1. Read train category once per column (from the header and the column's type) and stop keying italic cell by cell. The normaliser applies it to the whole column.
+2. Add the "!" sign, and a short list of this guide's signs, to the keyer brief with zoomed examples.
+3. Re-key tables 12, 123 and 126 for signs only, then draw a fresh sample.
+
+The verdict stands as FAIL until a new sample passes. The tool was run without `--apply`, so nothing is marked for re-keying yet.
