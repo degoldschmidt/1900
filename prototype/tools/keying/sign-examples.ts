@@ -6,7 +6,7 @@
  * Reads every resolved file (<crop_id>.R.csv, of any keying round) under data/raw/<source>/, picks
  * cells whose resolved reading carries one of the signs below (a footnote mark fn:<sign>, a sign in the
  * text, or a type style), and cuts each from its page scan with tools/crops/make-crops.ts zoomKey: the
- * cell with a margin, magnified 4×, outlined in red. Writes <out>/<sign>-<n>.png, <out>/index.md,
+ * cell with a margin, magnified 4×, red ticks in a frame at its edges. Writes <out>/<sign>-<n>.png, <out>/index.md,
  * which names the sign of every image, how to key it, and the cell it was cut from, and <out>/examples.csv
  * (the same cells as data). Scans and their derivatives are not committed (build/ is git-ignored), so the
  * brief says "if present".
@@ -205,7 +205,7 @@ export async function makeSignExamples(r: Roots, source: string, o: { per?: numb
   const index = [
     '# Sign examples for the keyer brief',
     '',
-    `Cut by \`node tools/keying/sign-examples.ts --source ${source}\` from the resolved pilot cells (${relative(r.root, outDir) || outDir}). Each image is one cell from the page scan, magnified 4×; the red outline is the cell's box, not print. Read the sign from the image: this index gives no readings, and no cell drawn for a historian's sample is used here.`,
+    `Cut by \`node tools/keying/sign-examples.ts --source ${source}\` from the resolved pilot cells (${relative(r.root, outDir) || outDir}). Each image is one cell from the page scan, magnified 4×; the red ticks in the white frame mark the cell's edges (nothing is drawn on the print). Read the sign from the image: this index gives no readings, and no cell drawn for a historian's sample is used here.`,
     '',
     '| image | sign | key as | cell |',
     '|---|---|---|---|',

@@ -128,7 +128,7 @@ Fritzsche explains its signs on p. 5 ("Zeichenerklärung"). The ones you will me
 
 Signs are small: before writing a time, look at the space just left of its hour figure and just right of its minutes. A sign whose shape you cannot name is `fn:?` with `sure=x`, never the nearest sign in this list.
 
-**Examples.** If the folder `build/brief/signs/` exists, look at its images before you start: each shows one sign, cut from the pilot pages and magnified (the cell outlined in red; `index.md` there says which sign each image shows). If an image there does not load, carry on without it (rule 5): never guess what it showed.
+**Examples.** If the folder `build/brief/signs/` exists, look at its images before you start: each shows one sign, cut from the pilot pages and magnified (red ticks outside the image mark the cell; `index.md` there says which sign each image shows). If an image there does not load, carry on without it (rule 5): never guess what it showed.
 
 ## sure
 

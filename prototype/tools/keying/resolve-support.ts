@@ -6,7 +6,7 @@
  * For each crop at status diffed (or the named crops), re-diffs A and B and writes into
  * build/resolve/<source_id>/<table_ref>/<crop_id>/:
  *   packet.md        what the resolver reads: the crop image, then one section per disputed cell with
- *                    both readings and its zoomed sub-crop (4×, the cell outlined in red)
+ *                    both readings and its zoomed sub-crop (4×, red ticks outside the image at the cell's edges)
  *   packet.json      the same data for scripts
  *   zoom-<kind>-c<col>-r<row>.png   one per disputed cell
  *   R.template.csv   the rows the resolver must fill in (resolution, text_as_printed, marks, sure, note)

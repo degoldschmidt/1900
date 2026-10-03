@@ -7,7 +7,7 @@ Two keyers transcribed the same crop independently (`tools/keying/KEYER_BRIEF.md
 `node tools/keying/resolve-support.ts <source_id> <table_ref> <crop_id>` writes `build/resolve/<source_id>/<table_ref>/<crop_id>/`:
 
 - `packet.md`: the crop image's path, then one section per disputed cell: its key (kind, col, row), the reason (`text`, `marks`, `text+marks`, `typography`, `missing-A`, `missing-B`, `illegible`, `doubtful`), keyer A's and keyer B's readings, and its zoom;
-- `zoom-<kind>-c<col>-r<row>.png`: the cell cut from the page scan with a margin, magnified 4×, the cell's box outlined in translucent red (the outline sits on the cell boundary; it is not a printed rule);
+- `zoom-<kind>-c<col>-r<row>.png`: the cell cut from the page scan with a margin, magnified 4×, the print untouched; red ticks in the white frame round the image mark the cell's four edges (nothing is drawn on the print, so an underline just below the cell's lower edge is visible: look for it there);
 - `R.template.csv`: one line per disputed cell, for you to fill.
 
 For a column-notes crop (`-cn-`), the zoom of a note shows the whole crop part; read the note in the crop itself. A column-notes line keyed by one keyer only (`missing-A`/`missing-B`) is resolved like any other: keep it if the note is printed in that column, otherwise choose `other` with empty text.

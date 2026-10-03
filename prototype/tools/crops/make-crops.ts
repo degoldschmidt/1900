@@ -509,24 +509,31 @@ export async function renderCrop(page: PageRaw, p: Panel, crop: PlannedCrop): Pr
 
 /**
  * A single keyed item cut from the page with a margin, magnified (default 4×, long side ≤ 1500 px),
- * with the item's own box outlined in translucent red. For resolvers.
+ * the print untouched and the item's edges marked by red ticks in a white frame outside the image
+ * (ZOOM_FRAME px wide). For resolvers, sample zooms and sign examples. (Until P-E021 the item's box
+ * was outlined in red on the print, where an underline sits: a resolver read an underline away.)
  */
 export async function zoomKey(page: PageRaw, layout: Layout, crop: CropRow, key: CellKey, o: { scale?: number; margin?: number; maxLong?: number } = {}): Promise<Buffer> {
   const box = keyBox(layout, crop, key);
   const marginF = o.margin ?? (key.kind === 'footnote' ? 0.05 : 0.35);
   const mx = Math.max(8, Math.round(box[2] * marginF)); const my = Math.max(8, Math.round(box[3] * marginF));
   const padded: Box = [box[0] - mx, box[1] - my, box[2] + 2 * mx, box[3] + 2 * my];
-  const s = Math.min(o.scale ?? 4, (o.maxLong ?? 1500) / Math.max(padded[2], padded[3]));
-  return renderZoom(page, padded, box, s, 'outline');
+  const s = Math.min(o.scale ?? 4, ((o.maxLong ?? 1500) - 2 * ZOOM_FRAME) / Math.max(padded[2], padded[3]));
+  return renderZoom(page, padded, box, s, 'ticks');
 }
 
 /**
- * How a zoom marks its item: `outline` draws a translucent red box on the item's edges (resolver
- * zooms); `wash` washes the context around the item pale (WASH_OPACITY, as the margins of crops) and
- * draws nothing on the print, since an outline sits where an underline would be (contact sheets);
- * `plain` changes nothing in the image (the item is marked outside it, e.g. by a sheet's ticks).
+ * How a zoom marks its item: `ticks` leaves the print untouched and adds a white frame ZOOM_FRAME px
+ * wide round the image with red ticks at the item's edges (zoomKey); `outline` draws a translucent
+ * red box on the item's edges, on the print, where an underline would be (kept for comparison only);
+ * `wash` washes the context around the item pale (WASH_OPACITY, as the margins of crops) and draws
+ * nothing on the print (contact sheets); `plain` changes nothing (the item is marked outside the
+ * image, e.g. by a sheet's ticks).
  */
-export type ZoomMark = 'outline' | 'wash' | 'plain';
+export type ZoomMark = 'ticks' | 'outline' | 'wash' | 'plain';
+
+/** Width of the white frame that carries a `ticks` zoom's edge marks, px. */
+export const ZOOM_FRAME = 14;
 
 /**
  * In a `wash` zoom, a strip round the item's box stays at full contrast (above and below: fractions of
@@ -538,9 +545,10 @@ export const WASH_CLEAR = { above: 0.15, below: 0.4, side: 0.25 } as const;
 
 /**
  * Cuts `padded` (a page box holding the item's `box`) from the page, magnified s× to
- * round(w·s) × round(h·s), and marks the item. Shared by zoomKey and the contact sheets.
+ * round(w·s) × round(h·s) (plus the frame of a `ticks` zoom), and marks the item. Shared by zoomKey
+ * and the contact sheets.
  */
-export async function renderZoom(page: PageRaw, padded: Box, box: Box, s: number, mark: ZoomMark = 'outline'): Promise<Buffer> {
+export async function renderZoom(page: PageRaw, padded: Box, box: Box, s: number, mark: ZoomMark = 'ticks'): Promise<Buffer> {
   const W = Math.max(1, Math.round(padded[2] * s)); const H = Math.max(1, Math.round(padded[3] * s));
   const img = await cutScaled(page, padded, s, W, H);
   const rx = (box[0] - padded[0]) * s; const ry = (box[1] - padded[1]) * s;
@@ -550,6 +558,19 @@ export async function renderZoom(page: PageRaw, padded: Box, box: Box, s: number
   const shapes = mark === 'outline'
     ? `<rect x="${rx.toFixed(1)}" y="${ry.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="none" stroke="${RED}" stroke-width="2" opacity="0.55"/>`
     : mark === 'wash' ? frame({ x: 0, y: 0, w: W, h: H }, rx - left, ry - above, W - rx - bw - right, H - ry - bh - below).map(washRect).join('') : '';
+  if (mark === 'ticks') {
+    const F = ZOOM_FRAME; const L = F - 4;
+    const x0 = F + rx; const x1 = x0 + bw; const y0 = F + ry; const y1 = y0 + bh;
+    const line = (a: number, b: number, c: number, d: number) => `<line x1="${a.toFixed(1)}" y1="${b.toFixed(1)}" x2="${c.toFixed(1)}" y2="${d.toFixed(1)}" stroke="${RED}" stroke-width="3"/>`;
+    const ticks = [
+      line(x0, 1, x0, 1 + L), line(x1, 1, x1, 1 + L), line(x0, F + H + 3, x0, F + H + 3 + L), line(x1, F + H + 3, x1, F + H + 3 + L),
+      line(1, y0, 1 + L, y0), line(1, y1, 1 + L, y1), line(F + W + 3, y0, F + W + 3 + L, y0), line(F + W + 3, y1, F + W + 3 + L, y1),
+    ];
+    const tickSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W + 2 * F}" height="${H + 2 * F}">${ticks.join('')}</svg>`;
+    const zoom = await sharp(img.data, { raw: { width: W, height: H, channels: 3 } }).png().toBuffer();
+    return sharp({ create: { width: W + 2 * F, height: H + 2 * F, channels: 3, background: WHITE } })
+      .composite([{ input: zoom, left: F, top: F }, { input: Buffer.from(tickSvg), left: 0, top: 0 }]).png().toBuffer();
+  }
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${shapes}</svg>`;
   return sharp(img.data, { raw: { width: W, height: H, channels: 3 } })
     .composite([{ input: Buffer.from(svg), left: 0, top: 0 }]).png().toBuffer();

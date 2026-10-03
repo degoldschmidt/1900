@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import sharp from 'sharp';
 import { expectedKeys, keyBox, keyInCrop, parseCropsCsv, parseLayout, validateLayout, writeCropsCsv, type Layout } from '../layout.ts';
-import { loadPage, makeCrops, marginRects, panelMargins, planCrops, renderZoom, RULER, splitEven, zoomKey } from '../make-crops.ts';
+import { loadPage, makeCrops, marginRects, panelMargins, planCrops, renderZoom, RULER, splitEven, ZOOM_FRAME, zoomKey } from '../make-crops.ts';
 import { roots, type Roots } from '../../keying/paths.ts';
 
 const COL_X = Array.from({ length: 13 }, (_, i) => 230 + 60 * i);
@@ -195,9 +195,16 @@ describe('zoomKey', () => {
     const crop = planCrops(LAYOUT)[3]!;
     const png = await zoomKey(page, LAYOUT, crop, { kind: 'cell', col: 7, row: 12 });
     const { data, info } = await sharp(png).raw().toBuffer({ resolveWithObject: true });
-    // 60×25 cell, margins max(8, 35%) = 21 px and 9 px → 102×43 page px → 408×172 at 4×.
-    expect([info.width, info.height]).toEqual([408, 172]);
+    // 60×25 cell, margins max(8, 35%) = 21 px and 9 px → 102×43 page px → 408×172 at 4×, in a 14 px frame.
+    expect([info.width, info.height]).toEqual([408 + 2 * ZOOM_FRAME, 172 + 2 * ZOOM_FRAME]);
     expect(grey(data, info.width, info.channels, info.width / 2, info.height / 2)).toBeLessThan(60);
+    // Nothing is drawn on the print: the cell's bottom edge (where an underline sits) is as the page has it,
+    // and the red ticks stand in the frame, at the cell's edges.
+    const red = (x: number, y: number) => { const i = (Math.round(y) * info.width + Math.round(x)) * info.channels; return data[i]! > 150 && data[i + 1]! < 90 && data[i + 2]! < 90; };
+    const cellLeft = ZOOM_FRAME + 21 * 4; const cellBottom = ZOOM_FRAME + (9 + 25) * 4;
+    expect(red(cellLeft, 6)).toBe(true); // top tick over the cell's left edge
+    expect(red(4, cellBottom)).toBe(true); // left tick at the cell's bottom edge
+    for (let x = cellLeft + 8; x < cellLeft + 60 * 4 - 8; x += 16) expect(red(x, cellBottom)).toBe(false);
     const foot = await zoomKey(page, LAYOUT, crop, { kind: 'footnote', col: 0, row: 0 });
     expect((await sharp(foot).metadata()).width).toBeLessThanOrEqual(1500);
   });
