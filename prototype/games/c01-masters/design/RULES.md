@@ -432,6 +432,8 @@ Postal or telegraphic reports; provenance or whereabouts lies; households, accou
 
 ## 11. Kit gaps
 
+**Status (3 Oct 2026):** all six gaps are closed in the kit or tooling: `Ctx.bundle`; `metrics(sim, answers)`; `CoopEdge.kinds` and `CoopEdge.permille` with the draw `('liaison-pass', rec, reader, row)` and `arrivalVia() → {at, via}`; key kinds `city` and `topic`; `Scenario.prologue: {log, processed}`, which is replayed at construction and kept out of the player's log and snapshots; and game-prefixed design-value ids.
+
 | # | Gap | Proposed API | Game fallback |
 |---|---|---|---|
 | K1 | Handlers and `validate` cannot reach the bundle (timetable, calendar); a restored `Sim` never runs `init` | `Ctx.bundle: Readonly<B>` | Singleton set by `bundleFrom`, checked against `state.dataHash` |

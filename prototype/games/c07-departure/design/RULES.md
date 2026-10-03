@@ -420,6 +420,8 @@ Several legends and linkage; conversation, ciphers, forgery, bribery; luggage; s
 
 ## 11. Kit gaps
 
+**Status (3 Oct 2026):** K1, K2 and K4 are in the kit (`metrics(sim, answers)`, `Ctx.pick`, key kinds `city` and `topic`), and T-1 is fixed (game-prefixed ids pass validation). K3 stays open until the C07 build needs it; until then use the fallback. `Ctx.bundle` (from the C01 review) also exists: handlers must read the bundle there, not from a module-level reference, because a game restored from a snapshot never runs `init`.
+
 | Id | Gap | Proposed API | Fallback |
 |---|---|---|---|
 | K1 | Metrics cannot see questionnaire answers | `GameModule.metrics?(sim, answers?: SaveCode['answers'])`; `analyze.ts` passes `save.answers` | an `answer` command that writes them to state |

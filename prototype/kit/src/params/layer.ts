@@ -92,4 +92,5 @@ export class PublicParams {
   get<T>(param: string, key: string, day: DayNumber): T | undefined { return this.layer.get<T>(param, key, day); }
   row(param: string, key: string, day: DayNumber): ParamRow | undefined { return this.layer.row(param, key, day); }
   history(param: string, key: string): ParamRow[] { return this.layer.history(param, key); }
+  rowsFor(param: string): readonly ParamRow[] { return this.layer.rowsFor(param); }
 }

@@ -111,3 +111,31 @@ describe('scenario prologues', () => {
     }
   });
 });
+
+describe('worst-case exposure for indicators', async () => {
+  const { earliestPossibleArrival, possibleReaders } = await import('../src/records/exposure.ts');
+  const { delivered } = await import('../src/records/delivery.ts');
+  it('is never later or narrower than the truth on the same rows', () => {
+    const params = new ParamLayer(toyRows());
+    const st = new RecordStore();
+    for (let n = 0; n < 300; n++) {
+      const r = st.append({ kind: n % 2 ? 'SYN.registration' : 'SYN.sighting', subject: 'SYN_courier', predicate: 'p', value: n, confidence: 900, source: n % 2 ? 'SYN_police' : 'SYN_gossip', time: instantOf(D0, 0) + n * 3_000, authorship: 'world' });
+      for (const reader of ['SYN_police', 'SYN_gossip', 'SYN_hunter']) {
+        for (const seed of [1, 2, 3]) expect(earliestPossibleArrival(r, reader, params)).toBeLessThanOrEqual(arrival(r, reader, params, seed));
+      }
+    }
+    const t = instantOf(D0 + 9, 0);
+    for (const seed of [1, 2, 3]) {
+      for (const r of delivered(st, 'SYN_hunter', t, params, seed)) expect(possibleReaders(r, t, params)).toContain('SYN_hunter');
+    }
+  });
+
+  it('works on the public view, which hides non-public rows', () => {
+    const rows = toyRows().map((r) => (r.id === 'coop-2' ? { ...r, public: true } : r));
+    const pub = new ParamLayer(rows).publicView();
+    const r = { kind: 'SYN.sighting', source: 'SYN_gossip', time: instantOf(D0 + 2, 0) };
+    expect(possibleReaders(r, instantOf(D0 + 3, 0), pub)).toEqual(['SYN_gossip', 'SYN_hunter']);
+    const slip = { kind: 'SYN.registration', source: 'SYN_police', time: instantOf(D0 + 4, 0) };
+    expect(possibleReaders(slip, instantOf(D0 + 5, 0), pub)).toEqual(['SYN_police']); // coop-1 is not public
+  });
+});
