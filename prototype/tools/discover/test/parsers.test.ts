@@ -142,3 +142,23 @@ describe('Gallica', () => {
     expect(ga.parseContentSearch(fx('ga-contentsearch.xml')).map((h) => h.view)).toEqual([37, 214]);
   });
 });
+
+describe('archive.org page-indexed OCR (hOCR search text + page index)', () => {
+  it('splits text by the page index and reports printed page numbers', () => {
+    const pages = ['Title page', 'Berlin dep. 11 0  Eydtkuhnen arr. 7 15', 'Index', 'Köln — Berlin  Wirballen'];
+    const text = pages.join('');
+    let at = 0;
+    const index = pages.map((p) => { const e = [at, at + p.length, 0, 0]; at += p.length; return e; });
+    expect(ia.splitByPageIndex(text, index)).toEqual(pages);
+    const hits = ia.grepPages(ia.splitByPageIndex(text, index), ['Berlin', 'Eydtkuhnen', 'Wirballen'], 2);
+    expect(hits.map((h) => [h.page_seq, h.stations])).toEqual([[2, ['Berlin', 'Eydtkuhnen']], [4, ['Berlin', 'Wirballen']]]);
+    const printed = ia.printedPages({ pages: [{ leafNum: 1, pageNumber: '410' }, { leafNum: 3, pageNumber: '' }] });
+    expect(printed.get(2)).toBe('410');
+    expect(printed.has(4)).toBe(false);
+  });
+
+  it('finds the hOCR files in item metadata', () => {
+    const item = ia.parseMetadata({ metadata: { identifier: 'x' }, files: [{ name: 'x_hocr_searchtext.txt.gz' }, { name: 'x_hocr_pageindex.json.gz' }, { name: 'x_page_numbers.json' }, { name: 'x_djvu.txt', format: 'DjVuTXT' }] })!;
+    expect([item.hocrSearchTextFile, item.hocrPageIndexFile, item.pageNumbersFile, item.djvuTxtFile]).toEqual(['x_hocr_searchtext.txt.gz', 'x_hocr_pageindex.json.gz', 'x_page_numbers.json', 'x_djvu.txt']);
+  });
+});

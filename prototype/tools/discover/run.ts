@@ -19,6 +19,7 @@
  * A host refused by the environment's egress proxy is reported once ("host blocked by environment
  * egress policy: <host>") and skipped; the exit status is then 3.
  */
+import { gunzipSync } from 'node:zlib';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { BlockedHostError, createHttp, ensureProxyEnv, type Http } from './http.ts';
@@ -254,15 +255,23 @@ export function mergeIntoCatalogue(r: Roots, found: readonly CatalogueRow[]): st
 
 // ---------------------------------------------------------------- grep
 
-export interface GrepRow { page_seq: number; stations: string[] }
+export interface GrepRow { page_seq: number; stations: string[]; printed?: string }
 
 export async function grepSource(http: Http, sourceId: string, stations: readonly string[], minStations: number): Promise<{ rows: GrepRow[]; links: string[] }> {
   const { library, libraryId } = parseSourceId(sourceId);
   if (library === 'archive.org') {
     const item = ia.parseMetadata((await http.get(ia.metadataUrl(libraryId), { accept: 'application/json' })).json());
     if (!item) throw new Error(`archive.org has no item ${libraryId}`);
-    if (!item.djvuTxtFile) throw new Error(`archive.org item ${libraryId} has no DjVuTXT full text`);
+    if (item.hocrSearchTextFile && item.hocrPageIndexFile) {
+      const text = gunzipSync((await http.get(ia.downloadUrl(libraryId, item.hocrSearchTextFile), { accept: 'application/gzip' })).body).toString('utf8');
+      const index = JSON.parse(gunzipSync((await http.get(ia.downloadUrl(libraryId, item.hocrPageIndexFile), { accept: 'application/gzip' })).body).toString('utf8')) as number[][];
+      const printed = item.pageNumbersFile ? ia.printedPages((await http.get(ia.downloadUrl(libraryId, item.pageNumbersFile), { accept: 'application/json' })).json()) : new Map<number, string>();
+      const rows = ia.grepPages(ia.splitByPageIndex(text, index), stations, minStations).map((h) => (printed.has(h.page_seq) ? { ...h, printed: printed.get(h.page_seq)! } : h));
+      return { rows, links: [] };
+    }
+    if (!item.djvuTxtFile) throw new Error(`archive.org item ${libraryId} has no OCR text`);
     const text = (await http.get(ia.djvuTxtUrl(libraryId, item.djvuTxtFile), { accept: 'text/plain' })).text();
+    if (!text.includes('\f')) throw new Error(`archive.org item ${libraryId}: djvu.txt has no page breaks and the item has no hOCR page index, so pages cannot be located`);
     return { rows: ia.grepStations(text, stations, minStations), links: [] };
   }
   if (library === 'gallica') {
@@ -299,7 +308,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       const stations = (opt('--stations') ?? '').split(',').map((s) => s.trim()).filter(Boolean);
       if (!source || stations.length === 0) throw new Error('usage: run.ts grep <source_id> --stations "A,B|B2,…" [--min 2] [--out file.csv]');
       const res = await grepSource(http, source, stations, Number(opt('--min') ?? '1'));
-      const csv = writeCsv(['page_seq', 'n_stations', 'stations'], res.rows.map((x) => ({ page_seq: String(x.page_seq), n_stations: String(x.stations.length), stations: x.stations.join(';') })));
+      const csv = writeCsv(['page_seq', 'printed_page', 'n_stations', 'stations'], res.rows.map((x) => ({ page_seq: String(x.page_seq), printed_page: x.printed ?? '', n_stations: String(x.stations.length), stations: x.stations.join(';') })));
       const out = opt('--out');
       if (out) writeTextFile(out, csv); else process.stdout.write(csv);
       for (const l of res.links) console.log(l);

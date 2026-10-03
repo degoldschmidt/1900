@@ -12,10 +12,13 @@
  *   (usually <identifier>_djvu.txt).
  * - Page images (BookReader): https://archive.org/download/<identifier>/page/n<leaf>.jpg, leaf 0-based.
  *
- * ASSUMPTION (djvu.txt pages): the DjVuTXT derivative holds one block of text per scanned leaf, in
- * leaf order, separated by form feeds (U+000C). Page i (0-based) of the split text is leaf n<i>,
- * which we store as page_seq = i + 1. Verify against the BookReader for each source before using
- * page numbers from the grep: blank leaves may be omitted on some items, which would shift numbers.
+ * Pages (verified against live archive.org on 3 Oct 2026): djvu.txt has NO page separators on
+ * current items (no form feeds), so it cannot locate pages. Items OCRed with the hOCR pipeline carry
+ *   <id>_hocr_searchtext.txt.gz   the plain text of all leaves, concatenated;
+ *   <id>_hocr_pageindex.json.gz   one [textStart, textEnd, hocrStart, hocrEnd] entry per leaf, in leaf order;
+ *   <id>_page_numbers.json        { pages: [{ leafNum, pageNumber, … }] } with printed page numbers.
+ * Leaf i (0-based) is stored as page_seq = i + 1 and is the BookReader page n<i>. djvu.txt split on
+ * form feeds remains a fallback for older items that have no hOCR files.
  */
 import type { CatalogueRow } from './catalogue.ts';
 import { sourceIdFor } from './catalogue.ts';
@@ -85,6 +88,10 @@ export interface IaItem {
   imagecount: number | null;
   copyright: string;
   djvuTxtFile: string | null;
+  /** Page-indexed OCR (preferred for locating pages). */
+  hocrSearchTextFile: string | null;
+  hocrPageIndexFile: string | null;
+  pageNumbersFile: string | null;
   files: Array<{ name: string; format: string }>;
 }
 
@@ -106,6 +113,9 @@ export function parseMetadata(json: unknown): IaItem | null {
     imagecount: Number.isFinite(ic) && ic > 0 ? ic : null,
     copyright: flat(m['possible-copyright-status']) || flat(m.rights),
     djvuTxtFile: djvu ? djvu.name : null,
+    hocrSearchTextFile: files.find((f) => f.name.endsWith('_hocr_searchtext.txt.gz'))?.name ?? null,
+    hocrPageIndexFile: files.find((f) => f.name.endsWith('_hocr_pageindex.json.gz'))?.name ?? null,
+    pageNumbersFile: files.find((f) => f.name.endsWith('_page_numbers.json'))?.name ?? null,
     files,
   };
 }
@@ -143,9 +153,22 @@ export function normaliseIaDate(s: string): string {
 
 // ---------------------------------------------------------------- full-text grep
 
-/** Splits djvu.txt into pages on form feeds (see the ASSUMPTION above). */
+/** Splits djvu.txt into pages on form feeds (fallback for items without hOCR files). */
 export function splitDjvuPages(text: string): string[] {
   return text.split('\f');
+}
+
+/** Splits hOCR search text into leaves using the page index ([textStart, textEnd, …] per leaf). */
+export function splitByPageIndex(text: string, index: ReadonlyArray<readonly number[]>): string[] {
+  return index.map((e) => text.slice(e[0] ?? 0, e[1] ?? 0));
+}
+
+/** Printed page number per page_seq (leaf + 1), from <id>_page_numbers.json. */
+export function printedPages(json: unknown): Map<number, string> {
+  const out = new Map<number, string>();
+  const pages = (json as { pages?: Array<{ leafNum?: number; pageNumber?: string }> })?.pages ?? [];
+  for (const p of pages) if (typeof p.leafNum === 'number' && p.pageNumber) out.set(p.leafNum + 1, String(p.pageNumber));
+  return out;
 }
 
 /** Lower-cases, strips diacritics, folds ß/œ/æ and turns punctuation into single spaces. */
@@ -164,6 +187,8 @@ function foldPage(p: string): string {
 export interface StationHit {
   page_seq: number;
   stations: string[];
+  /** The printed page number, when the item records one. */
+  printed?: string;
 }
 
 /**
@@ -172,7 +197,12 @@ export interface StationHit {
  * matched (descending), then page. Values are never read from OCR: this only finds pages.
  */
 export function grepStations(text: string, stations: readonly string[], minStations = 1): StationHit[] {
-  const pages = splitDjvuPages(text).map(foldPage);
+  return grepPages(splitDjvuPages(text), stations, minStations);
+}
+
+/** As grepStations, over text already split into pages (page_seq = index + 1). */
+export function grepPages(rawPages: readonly string[], stations: readonly string[], minStations = 1): StationHit[] {
+  const pages = rawPages.map(foldPage);
   const patterns = stations.map((s) => ({ name: s.split('|')[0]!.trim(), variants: s.split('|').map((v) => ` ${foldForMatch(v)} `).filter((v) => v.trim()) }));
   const hits: StationHit[] = [];
   pages.forEach((page, i) => {

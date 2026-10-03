@@ -197,3 +197,26 @@ The owner reported opening the four library domains. All four still get "403 to 
 4. **Its playtest results answer the mechanics hypotheses only** (H07-1 to H07-6, for the loop). Historical texture is judged again on the 1914 build.
 
 **PR #1 merged** into `master` (merge commit `1a11e5c`) at the owner's request. The working branch was not reset to the new `master`, because the reset was refused by the session's permission check. Further commits continue on the same branch from the merged head, so a later PR will show only new work.
+
+## 2026-10-03 12:05 — D0 discovery, first pass: no full-view 1912–1915 timetable (Event P-E010)
+
+**Access.** Since 11:25 UTC the environment reaches archive.org in full: search, metadata, OCR, page images and the `*.archive.org` mirrors. It also reaches Gallica (SRU search) and the HathiTrust catalogue API, which looks volumes up by identifier only. HathiTrust's catalogue search and page images (`babel`) answer with a Cloudflare bot challenge, so HathiTrust volumes cannot be searched or fetched from here.
+
+**Run.** `tools/discover/run.ts` worked through the 22 search-plan entries and wrote 370 rows to `data/sources/catalogue.csv`. Follow-up searches by hand used archive.org's full-text search API (`be-api.us.archive.org/fts`), which searches inside every scanned book.
+
+**Finding.** No continental or national timetable valid in 1912–1915 is in full view:
+- archive.org has Bradshaw's Continental for 1875, 1880 and 1888 and a 1934 issue; a Livret-Chaix of 1869; and British Bradshaws for 1877 and 1943. Its only 1915 "Bradshaw" is the shareholders' manual.
+- Gallica holds only the Livret-Chaix railway maps.
+- No Reichs-Kursbuch, Cook's Continental or Dutch Reisgids issue for 1912–1915 turned up.
+
+Gate G1's pass condition (a full-view guide valid June–July 1914 covering at least 90% of tier A) is therefore **not met** with the open libraries.
+
+**Useful finds:**
+- *Bradshaw's Through Routes to the Chief Cities…*, 52nd issue, 1913 (`ia-bradshaws-india-1913`). From printed page 1 (page_seq 70) it holds tables of through fares from London to continental destinations by named route (via Calais, Ostend, Flushing, the Hook, Harwich), 1st and 2nd class, single and return. These are fare data for all three games, but there are no train times.
+- Baedeker's *Russia* (English, 1914) and other Baedekers.
+- 191 Reichsgesetzblatt records, Le Temps (62 periodical records) and the Journal officiel on Gallica.
+- German local newspapers of 1911–1916 from Polish digital libraries, mirrored on archive.org (Thorn *Die Presse*, *Posener Tageblatt*, *Lodzer Zeitung*). These printed local timetables at changeovers and may give a cross-check for single stations.
+
+**Tool fix from live data.** Current archive.org djvu.txt has no page breaks, so the page grep put every hit on page 1. The grep now uses the item's `_hocr_searchtext.txt.gz` with `_hocr_pageindex.json.gz` (page_seq = leaf + 1) and reports printed page numbers from `_page_numbers.json`. Tests were added.
+
+**Next: gate G1 (owner).** The plan's options are (a) the owner scans facsimile pages, (b) national guides per segment from further libraries, (c) dropping tier B, (d) shifting dates.
