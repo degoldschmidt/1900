@@ -6,9 +6,16 @@
  * Reads every resolved file (<crop_id>.R.csv, of any keying round) under data/raw/<source>/, picks
  * cells whose resolved reading carries one of the signs below (a footnote mark fn:<sign>, a sign in the
  * text, or a type style), and cuts each from its page scan with tools/crops/make-crops.ts zoomKey: the
- * cell with a margin, magnified 4×, outlined in red. Writes <out>/<sign>-<n>.png and <out>/index.md,
- * which names the sign of every image, how to key it, and the cell it was cut from. Scans and their
- * derivatives are not committed (build/ is git-ignored), so the brief says "if present".
+ * cell with a margin, magnified 4×, outlined in red. Writes <out>/<sign>-<n>.png, <out>/index.md,
+ * which names the sign of every image, how to key it, and the cell it was cut from, and <out>/examples.csv
+ * (the same cells as data). Scans and their derivatives are not committed (build/ is git-ignored), so the
+ * brief says "if present".
+ *
+ * Keyers and historians read this folder, so it must not reveal a sampled cell (decision P-E021): the
+ * index gives no readings, and a cell drawn for any historian sample (data/review/sample-*.csv) is never
+ * an example. A sample drawn after the examples were cut may still coincide with one; sample.ts draw
+ * warns, and tools/review/contact-sheet.ts refuses to make that sample's sheets until this tool is run
+ * again (exampleOverlap below).
  *
  * Where the historian's blind sample (data/review/sample-*.csv) re-read a cell differently, the
  * historian's reading is used (bold, which the historian does not judge, is kept from the resolved
@@ -22,7 +29,7 @@
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
-import { cmpStr, readCsvFile, writeTextFile } from './csv.ts';
+import { cmpStr, readCsvFile, writeCsv, writeTextFile } from './csv.ts';
 import { canonicalMarks, cellRef, marksString, normText, parseResolved, type ResolvedCell } from './longcsv.ts';
 import { assertSafeId, layoutJson, roots, type Roots } from './paths.ts';
 import { loadLayout, panelCrop, panelForKey, type Layout } from '../crops/layout.ts';
@@ -87,6 +94,42 @@ export function historianReadings(r: Roots, source: string): Map<string, { text:
   return out;
 }
 
+/** Where a cell sits in its table, whichever crop keyed it: "<table>/<kind>:<col>:<row>". */
+export const tableCellKey = (table: string, c: { kind: string; col: number | string; row: number | string }): string => `${table}/${c.kind}:${c.col}:${c.row}`;
+
+/** The cells of a source drawn for any historian sample (data/review/sample-*.csv), filled in or not. */
+export function sampledCells(r: Roots, source: string): Set<string> {
+  const out = new Set<string>();
+  const dir = join(r.data, 'review');
+  if (!existsSync(dir)) return out;
+  for (const f of readdirSync(dir).filter((x) => /^sample-.*\.csv$/.test(x)).sort(cmpStr)) {
+    for (const row of readCsvFile(join(dir, f)).rows) if (row.source_id === source) out.add(tableCellKey(row.table_ref ?? '', { kind: row.kind ?? '', col: row.col ?? '', row: row.row ?? '' }));
+  }
+  return out;
+}
+
+export const EXAMPLE_COLUMNS = ['image', 'sign', 'source_id', 'table_ref', 'page_seq', 'crop_id', 'kind', 'col', 'row'] as const;
+
+/** The examples file the briefs point to (build/brief/signs/examples.csv). */
+export const signExamplesCsv = (r: Roots): string => join(r.build, 'brief', 'signs', 'examples.csv');
+
+/**
+ * Sample rows whose cell is also a sign example in build/brief/signs/ (none when that folder has no
+ * examples.csv): a reader of the brief has seen that cell named with its sign, so it is not blind.
+ */
+export function exampleOverlap(r: Roots, rows: ReadonlyArray<{ sample_id?: string; source_id?: string; table_ref?: string; kind?: string; col?: string; row?: string }>): Array<{ sample_id: string; image: string }> {
+  const path = signExamplesCsv(r);
+  if (!existsSync(path)) return [];
+  const images = new Map<string, string>();
+  for (const e of readCsvFile(path).rows) images.set(`${e.source_id}|${tableCellKey(e.table_ref ?? '', { kind: e.kind ?? '', col: e.col ?? '', row: e.row ?? '' })}`, e.image ?? '');
+  const out: Array<{ sample_id: string; image: string }> = [];
+  for (const row of rows) {
+    const image = images.get(`${row.source_id}|${tableCellKey(row.table_ref ?? '', { kind: row.kind ?? '', col: row.col ?? '', row: row.row ?? '' })}`);
+    if (image !== undefined) out.push({ sample_id: row.sample_id ?? '', image });
+  }
+  return out;
+}
+
 /** All resolved grid cells of a source, by table (with the historian's re-reading where there is one). */
 export function resolvedCells(r: Roots, source: string): Array<{ table: string; cropId: string; cell: ResolvedCell }> {
   const dir = join(r.data, 'raw', source);
@@ -134,11 +177,13 @@ export async function makeSignExamples(r: Roots, source: string, o: { per?: numb
   const per = o.per ?? 2;
   const outDir = o.out ?? join(r.build, 'brief', 'signs');
   const signs = o.signs ?? FKB_SIGNS;
-  const examples = pickExamples(resolvedCells(r, source), signs, per);
+  const sampled = sampledCells(r, source);
+  const examples = pickExamples(resolvedCells(r, source).filter((x) => !sampled.has(tableCellKey(x.table, x.cell))), signs, per);
   const layouts = new Map<string, Layout>();
   const pages = new Map<string, PageRaw>();
   const written: string[] = [];
   const rows: string[] = [];
+  const csvRows: Array<Record<string, string>> = [];
   const count = new Map<string, number>();
   for (const ex of examples) {
     let layout = layouts.get(ex.table);
@@ -153,23 +198,24 @@ export async function makeSignExamples(r: Roots, source: string, o: { per?: numb
     const file = join(outDir, `${ex.sign.name}-${n}.png`);
     writeTextFile(file, await zoomKey(page, layout, panelCrop(layout, panel), ex.cell, { scale: 4 }));
     written.push(file);
-    const reading = `${ex.cell.text || '(blank)'}${ex.cell.marks.length ? ` [${marksString(ex.cell.marks)}]` : ''}`;
-    rows.push(`| \`${ex.sign.name}-${n}.png\` | ${ex.sign.label} | \`${ex.sign.keyAs}\` | ${source}:p${panel.page_seq}:${ex.table}:${ex.cropId}:${cellRef(ex.cell)} | \`${reading}\` |`);
+    rows.push(`| \`${ex.sign.name}-${n}.png\` | ${ex.sign.label} | \`${ex.sign.keyAs}\` | ${source}:p${panel.page_seq}:${ex.table}:${ex.cropId}:${cellRef(ex.cell)} |`);
+    csvRows.push({ image: `${ex.sign.name}-${n}.png`, sign: ex.sign.name, source_id: source, table_ref: ex.table, page_seq: String(panel.page_seq), crop_id: ex.cropId, kind: ex.cell.kind, col: String(ex.cell.col), row: String(ex.cell.row) });
   }
   const missing = signs.filter((s) => !count.has(s.name)).map((s) => s.name);
   const index = [
     '# Sign examples for the keyer brief',
     '',
-    `Cut by \`node tools/keying/sign-examples.ts --source ${source}\` from the resolved pilot cells (${relative(r.root, outDir) || outDir}). Each image is one cell from the page scan, magnified 4×; the red outline is the cell's box, not print.`,
+    `Cut by \`node tools/keying/sign-examples.ts --source ${source}\` from the resolved pilot cells (${relative(r.root, outDir) || outDir}). Each image is one cell from the page scan, magnified 4×; the red outline is the cell's box, not print. Read the sign from the image: this index gives no readings, and no cell drawn for a historian's sample is used here.`,
     '',
-    '| image | sign | key as | cell | resolved reading |',
-    '|---|---|---|---|---|',
+    '| image | sign | key as | cell |',
+    '|---|---|---|---|',
     ...rows,
     '',
     missing.length ? `No example in the resolved cells for: ${missing.join(', ')} (the doubled signs of the pilot were all in column notes).` : '',
     '',
   ].join('\n');
   writeTextFile(join(outDir, 'index.md'), index);
+  writeTextFile(join(outDir, 'examples.csv'), writeCsv(EXAMPLE_COLUMNS, csvRows));
   return { written, missing, index };
 }
 

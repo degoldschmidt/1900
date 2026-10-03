@@ -1,8 +1,14 @@
 import { describe, expect, it } from 'vitest';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { parseCsv, writeCsv } from '../csv.ts';
 import type { ResolvedCell } from '../longcsv.ts';
-import { FKB_SIGNS, pickExamples } from '../sign-examples.ts';
+import { runDraw, SAMPLE_COLUMNS } from '../sample.ts';
+import { exampleOverlap, FKB_SIGNS, makeSignExamples, pickExamples, signExamplesCsv } from '../sign-examples.ts';
 import { panelForKey } from '../../crops/layout.ts';
 import type { Layout } from '../../crops/layout.ts';
+import { runContactSheets } from '../../review/contact-sheet.ts';
+import { resolvedTables, SOURCE, truthGrid } from './fixture.ts';
 
 const cell = (col: number, row: number, text: string, marks: string[], resolution: ResolvedCell['resolution'] = 'agree', sure: ResolvedCell['sure'] = 'y'): ResolvedCell =>
   ({ crop_id: 'X', kind: 'cell', col, row, text, marks, sure, resolution, note: '' });
@@ -24,6 +30,31 @@ describe('sign examples', () => {
     expect(of('excl')).toEqual([]); // the only ! is illegible
     expect(of('italic')).toEqual(['23 c4']); // a time with another sign is no example of a type style
     expect(of('dot')).toEqual(['23 c5']);
+  });
+
+  it('gives no readings, never shows a sampled cell, and a sample drawn later that hits an example is caught (P-E021)', async () => {
+    const r = await resolvedTables();
+    const first = await makeSignExamples(r, SOURCE, { per: 2 });
+    for (const v of truthGrid().map((c) => c.text).filter((t) => t.length > 2)) expect(first.index).not.toContain(v);
+    expect(first.index).toContain('| image | sign | key as | cell |');
+    const examples = () => parseCsv(readFileSync(signExamplesCsv(r), 'utf8')).rows;
+    const dagger = () => examples().filter((e) => e.sign === 'dagger').map((e) => `${e.table_ref} c${e.col}r${e.row} ${e.image}`);
+    expect(dagger()).toEqual(['T10 c2r1 dagger-1.png', 'T9 c2r1 dagger-2.png']);
+
+    // A sample drawn afterwards that holds the T9 dagger cell: the draw reports it, the contact sheets refuse it.
+    const drawn = await runDraw(r, 'late', { seed: '5', n: 22 });
+    const t9dagger = parseCsv(readFileSync(join(r.data, 'review', 'sample-late.csv'), 'utf8')).rows.find((x) => x.table_ref === 'T9' && x.col === '2' && x.row === '1')!;
+    expect(drawn.examples).toContainEqual({ sample_id: t9dagger.sample_id, image: 'dagger-2.png' });
+    await expect(runContactSheets(r, 'late')).rejects.toThrow(/sign examples in build\/brief\/signs/);
+
+    // Cut again: sampled cells are skipped, so nothing overlaps and the sheets can be made.
+    const path = join(r.data, 'review', 'sample-late.csv');
+    writeFileSync(path, writeCsv(SAMPLE_COLUMNS, parseCsv(readFileSync(path, 'utf8')).rows.filter((x) => x.table_ref === 'T9')));
+    await makeSignExamples(r, SOURCE, { per: 2 });
+    expect(dagger()).toEqual(['T10 c2r1 dagger-1.png']);
+    expect(examples().filter((e) => e.table_ref === 'T9')).toEqual([]);
+    expect(exampleOverlap(r, parseCsv(readFileSync(path, 'utf8')).rows)).toEqual([]);
+    expect((await runContactSheets(r, 'late')).rows).toHaveLength(11);
   });
 
   it('finds the panel of a key by its absolute position', () => {

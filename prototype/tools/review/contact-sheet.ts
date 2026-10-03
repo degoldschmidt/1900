@@ -8,8 +8,9 @@
  * numbered tiles, up to 16 per sheet (4×4). A tile is the cell cut from its page scan at page_region
  * (the panel's deskew applied, as for the crops), with context around it, magnified 2× to 4×
  * (make-crops.ts renderZoom, the code of the resolver and sample zooms): the cell is at full contrast
- * with red ticks outside the image at its four edges, the context is washed pale, and nothing is drawn
- * on the print (an outline would sit where an underline is printed). A band over the image carries a
+ * with red ticks outside the image at its four edges, the context is washed pale (except a strip just
+ * above and below the cell, where an underline or a sign may sit past the row line: make-crops.ts
+ * WASH_CLEAR), and nothing is drawn on the print (an outline would sit where an underline is printed). A band over the image carries a
  * large tile number, running through the run's sheets, and the cell's key (table · c<col> · r<row>).
  * A tile NEVER carries a transcription: only the location fields of a sample row are read (never
  * reread_*, note or any keying file), so neither the resolved reading nor an earlier re-reading can
@@ -29,6 +30,10 @@
  *                the sample row each numbered tile shows, and its magnification
  *
  * Tiles are built from a list of TileItem, so a resolver packet can later become a second input.
+ *
+ * A sample whose cells include a current sign example (build/brief/signs/examples.csv) is refused: the
+ * brief shows that cell named with its sign, so the reading would not be blind (P-E021). Cutting the
+ * examples again (tools/keying/sign-examples.ts) skips every sampled cell.
  */
 import { existsSync, readdirSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -38,6 +43,7 @@ import { readCsvFile, writeCsv, writeTextFile, type CsvRow } from '../keying/csv
 import { KINDS, type Kind } from '../keying/longcsv.ts';
 import { assertSafeId, cropsCsv, layoutJson, roots, type Roots } from '../keying/paths.ts';
 import { SAMPLE_COLUMNS } from '../keying/sample.ts';
+import { exampleOverlap } from '../keying/sign-examples.ts';
 import { boxStr, keyBox, loadCropsCsv, loadLayout, panelForCrop, panelForKey, parseBox, type Box, type CropRow, type Layout } from '../crops/layout.ts';
 import { findPageImage, loadPage, RED, renderZoom } from '../crops/make-crops.ts';
 
@@ -312,6 +318,11 @@ export function sheetsDir(r: Roots, label: string, tables?: readonly string[]): 
 export async function runContactSheets(r: Roots, label: string, o: Partial<SheetOptions> & { tables?: readonly string[]; out?: string } = {}): Promise<ContactSheetResult> {
   const { tables, out, ...sheet } = o;
   const items = itemsFromSample(r, label, tables);
+  const seen = exampleOverlap(r, items.map((it) => ({ sample_id: it.sample_id, source_id: it.source_id, table_ref: it.table_ref, kind: it.kind, col: String(it.col), row: String(it.row) })));
+  if (seen.length) {
+    throw new Error(`${seen.length} cell(s) of sample ${label} are sign examples in build/brief/signs/, which a historian reads (${seen.map((e) => `${e.sample_id} = ${e.image}`).join(', ')}): `
+      + 'run node tools/keying/sign-examples.ts again first (it skips sampled cells)');
+  }
   return buildContactSheets(r, items, out ? resolve(r.root, out) : sheetsDir(r, label, tables), sheet);
 }
 

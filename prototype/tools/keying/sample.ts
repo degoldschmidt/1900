@@ -51,6 +51,7 @@ import { valueRulesFor } from './diff.ts';
 import { valueOf, type ValueRules } from './value.ts';
 import { keyBox, loadLayout, panelForCrop, type CropRow } from '../crops/layout.ts';
 import { findPageImage, loadPage, zoomKey, type PageRaw } from '../crops/make-crops.ts';
+import { exampleOverlap } from './sign-examples.ts';
 
 export const SAMPLE_COLUMNS = [
   'sample_id', 'source_id', 'table_ref', 'page_seq', 'crop_id', 'kind', 'col', 'row', 'page_region', 'rate_permille',
@@ -173,7 +174,12 @@ export function drawSample(pop: readonly PopulationCell[], o: DrawOptions): Arra
   return out;
 }
 
-export async function runDraw(r: Roots, label: string, o: DrawOptions & { sources?: readonly string[] }): Promise<{ rows: number; csv: string }> {
+/**
+ * Draws a sample and writes its file and zooms. `examples` lists the drawn cells that are also sign
+ * examples in build/brief/signs/ (sign-examples.ts): the brief names those cells with their signs, so
+ * the examples must be cut again (they then skip sampled cells) before a historian reads this sample.
+ */
+export async function runDraw(r: Roots, label: string, o: DrawOptions & { sources?: readonly string[] }): Promise<{ rows: number; csv: string; examples: Array<{ sample_id: string; image: string }> }> {
   assertSafeId('label', label);
   const picked = drawSample(collectPopulation(r, o.sources), o);
   const pages = new Map<string, PageRaw | null>();
@@ -200,7 +206,7 @@ export async function runDraw(r: Roots, label: string, o: DrawOptions & { source
   }
   const csv = writeCsv(SAMPLE_COLUMNS, rows);
   writeTextFile(join(r.data, 'review', `sample-${label}.csv`), csv);
-  return { rows: rows.length, csv };
+  return { rows: rows.length, csv, examples: exampleOverlap(r, rows) };
 }
 
 // ---------------------------------------------------------------- the bound
@@ -480,6 +486,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       const res = await runDraw(r, label, o);
       console.log(`${res.rows} cell(s) → ${join(r.data, 'review', `sample-${label}.csv`)} (zooms in ${join(r.build, 'review', `sample-${label}`)}/)`);
       if (o.n !== undefined && res.rows < o.n) console.log(`note: the population holds only ${res.rows} cell(s); all were drawn`);
+      if (res.examples.length) {
+        console.log(`warning: ${res.examples.length} drawn cell(s) are sign examples in build/brief/signs/ (${res.examples.map((e) => `${e.sample_id} = ${e.image}`).join(', ')}).`);
+        console.log('Run node tools/keying/sign-examples.ts again before a historian reads this sample: it skips sampled cells. contact-sheet.ts refuses the sample until then.');
+      }
     } else if (args[0] === 'score') {
       const label = opt('--label');
       if (!label) throw new Error('score needs --label');
