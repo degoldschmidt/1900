@@ -1,0 +1,11 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-c6-10-r31-43-v2,header,6,0,doubtful,,,y,,,n
+126-c6-10-r31-43-v2,header,7,0,doubtful,,i,n,,i,n
+126-c6-10-r31-43-v2,header,10,0,doubtful,,,y,,,n
+126-c6-10-r31-43-v2,label,0,31,doubtful,in Prag Ö. N.W.B.,,n,in Prag Ö. N.W.B.,,n
+126-c6-10-r31-43-v2,label,0,43,doubtful,457 i. Wien N.W.Bf.,,n,457 i. Wien N.W.Bf.,,n
+126-c6-10-r31-43-v2,cell,6,31,typography,1 57,,y,1 57,b,y
+126-c6-10-r31-43-v2,cell,8,31,typography,6 15,u,y,6 15,b;u,y
+126-c6-10-r31-43-v2,cell,6,43,typography,10 30,u,n,10 30,b;u,n
+126-c6-10-r31-43-v2,cell,7,43,doubtful,4 06,u;fn:°,n,4 06,u;fn:°,y
+126-c6-10-r31-43-v2,cell,8,43,typography,9 16,u,y,9 16,b;u,y

@@ -1,0 +1,6 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+12-cn-p2-c16-19-v2,footnote,0,0,doubtful,"◗ Vom 15. Juni bis 15. September ab Sassnitz 9 46, ab Bergen 10 21",c:17;fn:◗,y,"◗ Vom 15. Juni bis 15. September ab Sassnitz 9 46, ab Bergen 10 21",c:17;fn:◗,n
+12-cn-p2-c16-19-v2,footnote,0,2,doubtful,□ In der Nacht nach Sonn- u. Festtagen: 12 02.,c:18;fn:□,y,□ In der Nacht nach Sonn- u. Festtagen: 12 02.,c:18;fn:□,n
+12-cn-p2-c16-19-v2,footnote,0,3,doubtful,† Ab Jüterbog Zug 294.,c:18;fn:†,n,† Ab Jüterbog Zug 294.,c:18;fn:†,n
+12-cn-p2-c16-19-v2,footnote,0,4,doubtful,! Über Tetschen-Schreckenstein,c:18;fn:!,n,! Über Tetschen-Schreckenstein,c:18;fn:!,n
+12-cn-p2-c16-19-v2,footnote,0,5,missing-A,,,,: ab 16./9. 1 49,c:18;fn::,n

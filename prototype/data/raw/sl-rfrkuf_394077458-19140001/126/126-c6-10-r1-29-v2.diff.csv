@@ -1,0 +1,14 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-c6-10-r1-29-v2,header,6,0,doubtful,,,n,,,n
+126-c6-10-r1-29-v2,header,7,0,doubtful,,i,y,,i,n
+126-c6-10-r1-29-v2,header,10,0,doubtful,,,y,,,n
+126-c6-10-r1-29-v2,label,0,1,illegible,? Dresden Hbf. 23,,x,?? Dresden Hbf. 23,,x
+126-c6-10-r1-29-v2,label,0,2,illegible,a. Tetschen N.W.B. 131 14?,,x,a. Tetschen N.W.B. 131 14?,,x
+126-c6-10-r1-29-v2,label,0,29,text,in Prag F. J. B. 122,,n,in Prag N.J.B. 122,,n
+126-c6-10-r1-29-v2,cell,8,1,typography,10 06,,y,10 06,b,y
+126-c6-10-r1-29-v2,cell,6,2,typography,8 44,,y,8 44,b,y
+126-c6-10-r1-29-v2,cell,8,2,typography,2 22,,y,2 22,b,y
+126-c6-10-r1-29-v2,cell,10,2,text,—,,n,,,n
+126-c6-10-r1-29-v2,cell,6,29,typography,12 40,,y,12 40,b,y
+126-c6-10-r1-29-v2,cell,8,29,typography,4 40,,y,4 40,b,y
+126-c6-10-r1-29-v2,cell,10,29,doubtful,ab,,n,ab,,y

@@ -1,0 +1,15 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+123-c0-4-r0-5-v2,header,0,0,doubtful,I.-III,i,n,I.-III,i,y
+123-c0-4-r0-5-v2,header,2,0,doubtful,I.-III,,n,I.-III,,n
+123-c0-4-r0-5-v2,header,3,0,doubtful,I.-III,i,y,I.-III,i,n
+123-c0-4-r0-5-v2,label,0,0,doubtful,a. Dresd. Hbf. 23 i.,,n,a. Dresd. Hbf. 23 i.,,n
+123-c0-4-r0-5-v2,label,0,1,doubtful,〃 Bodenb. 113 〃,,y,〃 Bodenb. 113 〃,,n
+123-c0-4-r0-5-v2,label,0,3,text,a. Prag(F.J.B.)1 718,,n,a. Prag (F.J.B.) 1 718,,n
+123-c0-4-r0-5-v2,label,0,5,doubtful,850 i. Wien F.J.B. 150 a.,,n,850 i. Wien F.J.B. 150 a.,,n
+123-c0-4-r0-5-v2,cell,0,0,marks,9 55,u,y,9 55,u;fn:!,y
+123-c0-4-r0-5-v2,cell,4,0,typography,2 30,u,y,2 30,b;u,n
+123-c0-4-r0-5-v2,cell,4,1,typography,4 05,u,y,4 05,b;u,n
+123-c0-4-r0-5-v2,cell,2,3,typography,6 55,,y,6 55,b,y
+123-c0-4-r0-5-v2,cell,4,3,typography,9 30,,n,9 30,b,y
+123-c0-4-r0-5-v2,cell,1,5,typography,12 40,,y,12 40,b,n
+123-c0-4-r0-5-v2,cell,4,5,typography,9 10,u,y,9 10,b;u,n

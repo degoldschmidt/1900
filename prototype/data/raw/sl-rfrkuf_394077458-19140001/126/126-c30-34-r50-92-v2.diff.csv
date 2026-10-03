@@ -1,0 +1,17 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-c30-34-r50-92-v2,header,31,0,doubtful,I-III,,n,I-III,,y
+126-c30-34-r50-92-v2,header,32,0,doubtful,I-III,,n,I-III,,y
+126-c30-34-r50-92-v2,label,0,50,doubtful,aus Wien N.W.Bf.,,n,aus Wien N.W.Bf.,,n
+126-c30-34-r50-92-v2,label,0,62,doubtful,a. Prag Ö. N.W.B.,,n,a. Prag Ö. N.W.B.,,n
+126-c30-34-r50-92-v2,label,0,64,typography,a. Prag F. J. B. 122,,y,a. Prag F.J.B. 122,,y
+126-c30-34-r50-92-v2,label,0,92,doubtful,in Dresd. Hbf. 23,,n,in Dresd. Hbf. 23,,n
+126-c30-34-r50-92-v2,cell,31,50,typography,4 55,,y,4 55,b,y
+126-c30-34-r50-92-v2,cell,32,50,typography,7 10,,y,7 10,b,y
+126-c30-34-r50-92-v2,cell,33,50,typography,6 44,u,y,6 44,b;u,n
+126-c30-34-r50-92-v2,cell,34,50,typography,11 15,,y,11 15,b,y
+126-c30-34-r50-92-v2,cell,32,62,typography,4 40,,y,4 40,b,y
+126-c30-34-r50-92-v2,cell,31,64,typography,5 55,,y,5 55,b,y
+126-c30-34-r50-92-v2,cell,31,91,typography,8 20,u,y,8 20,b;u,y
+126-c30-34-r50-92-v2,cell,32,91,typography,10 04,u,y,10 04,b;u,y
+126-c30-34-r50-92-v2,cell,30,92,marks,6 53,,y,6 53,u,y
+126-c30-34-r50-92-v2,cell,32,92,marks,12 09,,y,12 09,b;u,y

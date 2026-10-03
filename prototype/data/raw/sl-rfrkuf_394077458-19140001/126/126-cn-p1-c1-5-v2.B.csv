@@ -1,0 +1,7 @@
+crop_id,kind,col,row,text_as_printed,marks,sure
+126-cn-p1-c1-5-v2,footnote,0,0,? Zollrevision des nach Wien N.W. Bf. bezw. Triest aufgegebenen Gepäcks kann auf Wunsch der Reisenden in Wien bezw. Triest erfolgen.,c:1;fn:?,x
+126-cn-p1-c1-5-v2,footnote,0,1,D-Zug Reichenberg-Wien N.W.B. über Nimburg und Brüx-Aussig- Teplitzer Bhf.-Wien N.W.B. über Prag K.F.J.B.-Kolin.,c:2,n
+126-cn-p1-c1-5-v2,footnote,0,2,"Ausserd.: ab Nimb. 5 10, i. Gr.-Wosek 5 38, i. Kolin 5 53 n. m. Kl",c:5,n
+126-cn-p1-c1-5-v2,footnote,0,3,"* Nur werktags vor Sonn- u. Festtagen, II. u. III. Kl.",c:5;fn:*,y
+126-cn-p1-c1-5-v2,footnote,0,4,: D-Zug Stuttgart- Furth i. W.-König- grätz über Prag F.J.B.-Wysocan.,c:3;c:4;c:5;fn::,n
+126-cn-p1-c1-5-v2,footnote,0,5,■ Am Werktage vor Sonn- u. Festtagen.,c:2;fn:■,y

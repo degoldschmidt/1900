@@ -1,0 +1,5 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-cn-p1-c1-5-v2,footnote,0,0,illegible,♣ Zollrevision des nach Wien N.W. Bf. bezw. Triest aufgegebenen Gepäcks kann auf Wunsch der Reisenden in Wien bezw. Triest erfolgen.,c:1;fn:♣,n,? Zollrevision des nach Wien N.W. Bf. bezw. Triest aufgegebenen Gepäcks kann auf Wunsch der Reisenden in Wien bezw. Triest erfolgen.,c:1;fn:?,x
+126-cn-p1-c1-5-v2,footnote,0,1,doubtful,D-Zug Reichenberg-Wien N.W.B. über Nimburg und Brüx-Aussig- Teplitzer Bhf.-Wien N.W.B. über Prag K.F.J.B.-Kolin.,c:2,n,D-Zug Reichenberg-Wien N.W.B. über Nimburg und Brüx-Aussig- Teplitzer Bhf.-Wien N.W.B. über Prag K.F.J.B.-Kolin.,c:2,n
+126-cn-p1-c1-5-v2,footnote,0,2,doubtful,"Ausserd.: ab Nimb. 5 10, i. Gr.-Wosek 5 38, i. Kolin 5 53 n. m. Kl",c:5,n,"Ausserd.: ab Nimb. 5 10, i. Gr.-Wosek 5 38, i. Kolin 5 53 n. m. Kl",c:5,n
+126-cn-p1-c1-5-v2,footnote,0,4,doubtful,: D-Zug Stuttgart- Furth i. W.-König- grätz über Prag F.J.B.-Wysocan.,c:3;c:4;c:5;fn::,n,: D-Zug Stuttgart- Furth i. W.-König- grätz über Prag F.J.B.-Wysocan.,c:3;c:4;c:5;fn::,n

@@ -1,0 +1,17 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-c11-15-r1-29-v2,header,15,0,doubtful,,i,y,,i,n
+126-c11-15-r1-29-v2,label,0,1,illegible,? Dresden Hbf. 23,,x,?? Dresden Hbf. 23,,x
+126-c11-15-r1-29-v2,label,0,2,illegible,a. Tetschen N.W.B. 131 14?,,x,a. Tetschen N.W.B. 131 14?,,x
+126-c11-15-r1-29-v2,label,0,29,text,in Prag F. J. B. 122,,n,in Prag N.J.B. 122,,n
+126-c11-15-r1-29-v2,cell,11,1,typography,2 22,,y,2 22,b,y
+126-c11-15-r1-29-v2,cell,12,1,typography,2 22,,y,2 22,b,y
+126-c11-15-r1-29-v2,cell,13,1,typography,6 30,u,y,6 30,b;u,y
+126-c11-15-r1-29-v2,cell,14,1,doubtful,9 55,u,n,9 55,u,n
+126-c11-15-r1-29-v2,cell,15,1,doubtful,10 53,u,n,10 53,u,n
+126-c11-15-r1-29-v2,cell,11,2,typography,4 52,,y,4 52,b,y
+126-c11-15-r1-29-v2,cell,12,2,typography,5 05,,y,5 05,b,y
+126-c11-15-r1-29-v2,cell,13,2,marks,9 20,,y,9 20,b;u,y
+126-c11-15-r1-29-v2,cell,15,2,marks,12 09,,n,12 09,u,y
+126-c11-15-r1-29-v2,cell,12,29,typography,9 05,u,y,9 05,b;u,y
+126-c11-15-r1-29-v2,cell,13,29,text,,,n,ab,,n
+126-c11-15-r1-29-v2,cell,14,29,text,,,y,|,,n

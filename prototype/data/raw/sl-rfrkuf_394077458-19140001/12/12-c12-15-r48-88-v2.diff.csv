@@ -1,0 +1,15 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+12-c12-15-r48-88-v2,header,14,0,doubtful,D 68,i,n,D 68,i,y
+12-c12-15-r48-88-v2,label,0,85,doubtful,189 in Dresden-Neustadt,,n,189 in Dresden-Neustadt,,n
+12-c12-15-r48-88-v2,label,0,87,doubtful,181 i. Dresden Wettinerstr.,,n,181 i. Dresden Wettinerstr.,,n
+12-c12-15-r48-88-v2,label,0,88,doubtful,198 〃 Dresden Hbf.,,n,198 〃 Dresden Hbf.,,n
+12-c12-15-r48-88-v2,cell,12,48,doubtful,,,y,,,n
+12-c12-15-r48-88-v2,cell,15,48,typography,6 15,,y,6 15,b,n
+12-c12-15-r48-88-v2,cell,12,85,doubtful,7 58,,y,7 58,,n
+12-c12-15-r48-88-v2,cell,15,85,typography,12 15,,y,12 15,b,y
+12-c12-15-r48-88-v2,cell,12,86,typography,8 01,,y,8 01,b,n
+12-c12-15-r48-88-v2,cell,15,86,typography,12 18,,n,12 18,b,n
+12-c12-15-r48-88-v2,cell,12,87,typography,8 04,,y,8 04,b,n
+12-c12-15-r48-88-v2,cell,15,87,typography,12 21,,y,12 21,b,y
+12-c12-15-r48-88-v2,cell,12,88,typography,8 09,,y,8 09,b,n
+12-c12-15-r48-88-v2,cell,15,88,typography,12 26,,y,12 26,b,y

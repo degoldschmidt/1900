@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure
+12-c16-19-r48-88-v2,header,16,0,284,,y
+12-c16-19-r48-88-v2,header,17,0,D 56,i,y
+12-c16-19-r48-88-v2,header,18,0,832,,y
+12-c16-19-r48-88-v2,header,19,0,290,,y
+12-c16-19-r48-88-v2,header,16,1,I-IV.,,y
+12-c16-19-r48-88-v2,header,17,1,I.-III.,,y
+12-c16-19-r48-88-v2,header,18,1,I-IV.,,y
+12-c16-19-r48-88-v2,header,19,1,II-IV,,y
+12-c16-19-r48-88-v2,label,0,48,a. Berlin Anh. Bf. 315,,y
+12-c16-19-r48-88-v2,cell,16,48,12 10,b,y
+12-c16-19-r48-88-v2,cell,17,48,4 28,,y
+12-c16-19-r48-88-v2,cell,18,48,4 55,b,n
+12-c16-19-r48-88-v2,cell,19,48,—,,y
+12-c16-19-r48-88-v2,label,0,85,189 in Dresden-Neustadt,,n
+12-c16-19-r48-88-v2,cell,16,85,4 38,b,y
+12-c16-19-r48-88-v2,cell,17,85,6 49,u,y
+12-c16-19-r48-88-v2,cell,18,85,,,y
+12-c16-19-r48-88-v2,cell,19,85,—,,y
+12-c16-19-r48-88-v2,label,0,86,aus Dresden-Neustadt …,,y
+12-c16-19-r48-88-v2,cell,16,86,4 41,b,y
+12-c16-19-r48-88-v2,cell,17,86,6 50,u,y
+12-c16-19-r48-88-v2,cell,18,86,,,y
+12-c16-19-r48-88-v2,cell,19,86,—,,y
+12-c16-19-r48-88-v2,label,0,87,181 i. Dresden Wettinerstr.,,n
+12-c16-19-r48-88-v2,cell,16,87,4 44,b,y
+12-c16-19-r48-88-v2,cell,17,87,|,,y
+12-c16-19-r48-88-v2,cell,18,87,,,y
+12-c16-19-r48-88-v2,cell,19,87,—,,y
+12-c16-19-r48-88-v2,label,0,88,198 〃 Dresden Hbf.,,n
+12-c16-19-r48-88-v2,cell,16,88,4 49,b,y
+12-c16-19-r48-88-v2,cell,17,88,6 56,u,y
+12-c16-19-r48-88-v2,cell,18,88,,,y
+12-c16-19-r48-88-v2,cell,19,88,—,,y

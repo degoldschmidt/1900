@@ -1,0 +1,16 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+12-c8-11-r0-40-v2,header,9,0,doubtful,D 53,i,n,D 53,i,n
+12-c8-11-r0-40-v2,header,11,0,doubtful,285,,n,285,,n
+12-c8-11-r0-40-v2,label,0,1,illegible,? Dresd. Wettinerstr.,,x,? Dresd. Wettinerstr.,,x
+12-c8-11-r0-40-v2,label,0,2,illegible,? i. Dresden-Neustadt,,x,4 i. Dresden-Neustadt,,n
+12-c8-11-r0-40-v2,label,0,3,illegible,? a. Dresden-Neustadt,,x,a. Dresden-Neustadt,,n
+12-c8-11-r0-40-v2,label,0,40,typography,198 i.Berlin Anh.Bf.312,,n,198 i. Berlin Anh. Bf. 312,,n
+12-c8-11-r0-40-v2,cell,9,0,text,7 15,u,n,7 13,u,n
+12-c8-11-r0-40-v2,cell,11,0,typography,9 54,u,y,9 54,b;u,y
+12-c8-11-r0-40-v2,cell,9,1,doubtful,|,,y,|,,n
+12-c8-11-r0-40-v2,cell,11,1,typography,9 59,u,y,9 59,b;u,y
+12-c8-11-r0-40-v2,cell,11,2,typography,10 02,u,y,10 02,b;u,y
+12-c8-11-r0-40-v2,cell,11,3,typography,10 04,u,y,10 04,b;u,y
+12-c8-11-r0-40-v2,cell,8,40,typography,10 21,u,y,10 21,b;u,n
+12-c8-11-r0-40-v2,cell,9,40,marks,10 27,,n,10 27,u,n
+12-c8-11-r0-40-v2,cell,11,40,typography,2 09,u,n,2 09,b;u,y

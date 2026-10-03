@@ -1,0 +1,34 @@
+crop_id,kind,col,row,text_as_printed,marks,sure
+12-c4-7-r0-40-v2,header,4,0,,,y
+12-c4-7-r0-40-v2,header,5,0,295,,y
+12-c4-7-r0-40-v2,header,6,0,283,,n
+12-c4-7-r0-40-v2,header,7,0,D 55,i,y
+12-c4-7-r0-40-v2,header,4,1,,,y
+12-c4-7-r0-40-v2,header,5,1,II-IV,,y
+12-c4-7-r0-40-v2,header,6,1,I-IV,,y
+12-c4-7-r0-40-v2,header,7,1,I.-III,,y
+12-c4-7-r0-40-v2,label,0,0,a. Dresden Hbf.,,y
+12-c4-7-r0-40-v2,cell,4,0,,,y
+12-c4-7-r0-40-v2,cell,5,0,8 28,fn:§,y
+12-c4-7-r0-40-v2,cell,6,0,2 18,b,n
+12-c4-7-r0-40-v2,cell,7,0,4 20,,y
+12-c4-7-r0-40-v2,label,0,1,? Dresd. Wettinerstr.,,x
+12-c4-7-r0-40-v2,cell,4,1,,,y
+12-c4-7-r0-40-v2,cell,5,1,8 33,,y
+12-c4-7-r0-40-v2,cell,6,1,2 23,b,n
+12-c4-7-r0-40-v2,cell,7,1,|,,y
+12-c4-7-r0-40-v2,label,0,2,4 i. Dresden-Neustadt,,n
+12-c4-7-r0-40-v2,cell,4,2,,,y
+12-c4-7-r0-40-v2,cell,5,2,8 36,,y
+12-c4-7-r0-40-v2,cell,6,2,2 26,b,n
+12-c4-7-r0-40-v2,cell,7,2,4 26,,y
+12-c4-7-r0-40-v2,label,0,3,a. Dresden-Neustadt,,n
+12-c4-7-r0-40-v2,cell,4,3,,,y
+12-c4-7-r0-40-v2,cell,5,3,8 39,,y
+12-c4-7-r0-40-v2,cell,6,3,2 30,b,n
+12-c4-7-r0-40-v2,cell,7,3,4 27,,y
+12-c4-7-r0-40-v2,label,0,40,198 i. Berlin Anh. Bf. 312,,n
+12-c4-7-r0-40-v2,cell,4,40,,,y
+12-c4-7-r0-40-v2,cell,5,40,11 30,,y
+12-c4-7-r0-40-v2,cell,6,40,7 52,u;b,n
+12-c4-7-r0-40-v2,cell,7,40,6 51,u,y

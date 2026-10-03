@@ -1,0 +1,4 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+123-cn-p1-c0-4-v2,footnote,0,0,text,• An d. Beneschauer u. Wotitzer Jahrmarktst.,c:1;fn:•,n,• An d. Beneschauer u. Wotlcer Jahrmarktst.,c:1;fn:•,n
+123-cn-p1-c0-4-v2,footnote,0,1,typography,D-Zug Berl.- Prag-Triest,c:0,n,D-Zug Berl.-Prag-Triest,c:0,y
+123-cn-p1-c0-4-v2,footnote,0,4,illegible,§ ab 1. Jun,c:0;fn:§,x,§ ab 1. Jun,c:0;fn:§,x
