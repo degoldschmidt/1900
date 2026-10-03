@@ -157,4 +157,14 @@ No misreading by H1 or H3 was found. Only mismatches are adjudicated, though, so
 - 126 c13 r2 is now `9 20 [b;u]` (resolution B, keyer B's reading). 126.c13 now reaches Tetschen at 21.20 the same evening, and V03's warning is gone.
 - 23 c54 r135 is now empty, as both keyers had it.
 
-**Targeted re-read (H4).** Pending. A fresh blind historian (H4) is re-reading, on one plain contact sheet (`data/review/sample-g2fix.csv`), the six cells in these groups that no reader had verified: the 2 remaining resolver overrides (`other`), the 2 remaining keyer disagreements on an underline, and the other stop of each V03-flagged leg (112 c14, 126 c13). Its result will be added here.
+**Targeted re-read (H4).** A fresh blind historian re-read six cells on one plain contact sheet (`data/review/sample-g2fix.csv`). They are the cells in these groups that no reader had yet verified:
+- the 2 remaining resolver overrides (12 c12 r85 and 23 c2 r0);
+- the 2 remaining keyer disagreements on an underline (12 c9 r40 and 126 c30 r92);
+- the other stop of each V03-flagged leg (112 c14 r47 and 126 c13 r1).
+
+All six agree with the stored values (two differ in bold only). That completes three checks:
+- all 5 overrides: 2 were wrong and are corrected, 3 were right;
+- all 8 keyer disagreements on an underline are verified;
+- both stops of both flagged legs are as printed.
+
+The 112 c14 leg (Bodenbach 22.45 → Prag 18.10 the next day, 4 km/h) is therefore not a reading error. The column holds only those two times and a class line printed part-way down (`II.III`, from the column-notes crop), so it probably carries two trains that the normaliser joined. It is left for the historian's check of the page, with the other structural items. (The score's FAIL line for this file is no verdict: six chosen cells are not a sample.)

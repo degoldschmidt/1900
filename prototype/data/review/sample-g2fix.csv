@@ -1,7 +1,7 @@
 sample_id,source_id,table_ref,page_seq,crop_id,kind,col,row,page_region,rate_permille,reread_text,reread_marks,reread_sure,note
-Sg2fix-0001,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,9,40,"1043,1481,63,31",,,,,
-Sg2fix-0002,sl-rfrkuf_394077458-19140001,23,74,23-c0-6-r0-26,cell,2,0,"473,648,71,28",,,,,
-Sg2fix-0003,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,92,"861,1340,61,30",,,,,
-Sg2fix-0004,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,12,85,"286,1414,63,26",,,,,
-Sg2fix-0005,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,47,"1158,1482,67,32",,,,,
-Sg2fix-0006,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,13,1,"1062,159,55,31",,,,,
+Sg2fix-0001,sl-rfrkuf_394077458-19140001,12,58,12-c8-11-r0-40-v2,cell,9,40,"1043,1481,63,31",,10 27,u,y,heavy bar directly under the raised 27 only (not under 10) = underline; last digit is 7 not 2 (no base stroke; its foot touches the underline; compared with the 2 of 5 29 below); the thinner line about 1 mm lower runs across c8-c10 = row rule not part of the cell; own 8x zoom + pixel dump
+Sg2fix-0002,sl-rfrkuf_394077458-19140001,23,74,23-c0-6-r0-26,cell,2,0,"473,648,71,28",,3 40,u,y,underline under 40 only at the lower edge of the box; heavy frame bars above and on both sides of the column are not part of the cell; nothing before 3 or after 40; pixel dump
+Sg2fix-0003,sl-rfrkuf_394077458-19140001,126,193,126-c30-34-r50-92-v2,cell,30,92,"861,1340,61,30",,6 53,u,y,underline under 53 only (starts right of the 6); the line near the top of the box crosses the column into c31 = row rule not part of the cell; 5 (flag + short stem; open lower left) vs 3 (round top; middle junction) checked on own 8x zoom + pixel dump
+Sg2fix-0004,sl-rfrkuf_394077458-19140001,12,59,12-c12-15-r48-88-v2,cell,12,85,"286,1414,63,26",,7 58,,y,no underline and no sign; 5 (open lower-left bowl) and 8 (two closed loops with waist) checked by pixel dump
+Sg2fix-0005,sl-rfrkuf_394077458-19140001,112,182,112-c8-14-r0-54,cell,14,47,"1158,1482,67,32",,6 10,u,y,underline under 10 only inside the box; the line at the top edge is the underline of 6 04 in the row above; the lighter line lower down crosses the column = rule not part of the cell; pixel dump
+Sg2fix-0006,sl-rfrkuf_394077458-19140001,126,192,126-c11-15-r1-29-v2,cell,13,1,"1062,159,55,31",,6 30,u,y,underline under 30 only at the lower edge of the box; the line below it crosses the column into c14 = rule not part of the cell; pixel dump
