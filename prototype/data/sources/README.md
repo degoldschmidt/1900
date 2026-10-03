@@ -10,12 +10,12 @@ discover → coverage matrix → gate G1 → manifests → fetch → layout → 
 | step | tool | reads | writes |
 |---|---|---|---|
 | 1. Discover | `node tools/discover/run.ts` (`--dry-run` lists the requests) | `tools/discover/search-plan.json` | `data/sources/catalogue.csv` |
-| 2. Find pages | `node tools/discover/run.ts grep <source_id> --stations "Berlin,Eydtkuhnen,…"` | the library's full text (archive.org djvu.txt, Gallica ContentSearch) | page list on stdout |
+| 2. Find pages | `node tools/discover/run.ts grep <source_id> --stations "Berlin,Eydtkuhnen,…"` | the library's full text (archive.org hOCR text, Gallica ContentSearch, SLUB ALTO per page) | page list on stdout |
 | 3. Coverage | edit `coverage.csv`, then `node tools/discover/coverage.ts [--tier-a seg,…]` | `data/sources/coverage.csv` | `data/sources/COVERAGE.md` |
 | 4. Gate G1 (owner) | — | `COVERAGE.md` | decision in `DECISIONS.md` |
 | 5. Manifests | `node tools/fetch/manifest.ts init <source_id> <pages>` | catalogue | `data/sources/manifests/<source_id>.csv` |
 | 6. Fetch | `node tools/fetch/fetch-pages.ts <source_id>` | manifest | `scans/<source_id>/p<seq>.<ext>` (git-ignored); checksums into the manifest |
-| 7. Layout | by hand or by an agent, once per table | the page image | `data/raw/<source_id>/<table_ref>/layout.json` (format in `tools/crops/layout.ts`) |
+| 7. Layout | `node tools/crops/propose-layout.ts propose <source_id> <table_ref> --page <seq> …` proposes a panel from rules, ink profiles and ALTO words; `… overlay …` draws the grid on the page (`build/layout/*.png`) to check and correct by hand, once per table | the page image, ALTO | `data/raw/<source_id>/<table_ref>/layout.json` (format in `tools/crops/layout.ts`) |
 | 8. Crops | `node tools/crops/make-crops.ts <source_id> <table_ref>` | layout, page image | `scans/<source_id>/crops/<table_ref>/*.png`, `data/raw/<source_id>/<table_ref>/crops.csv` |
 | 9. Double keying | two agents, each following `tools/keying/KEYER_BRIEF.md` | one crop image | `data/raw/<source_id>/<table_ref>/<crop_id>.A.csv` and `.B.csv` |
 | 10. Diff | `node tools/keying/diff.ts <source_id> <table_ref>` | A, B, crops, layout | `<crop_id>.diff.csv`; `data/raw/status.csv` (below 950‰ agreement: `rekey`) |
@@ -28,7 +28,7 @@ discover → coverage matrix → gate G1 → manifests → fetch → layout → 
 
 ## Files here
 
-- `catalogue.csv`: one row per digitised volume or issue. `source_id` is derived from the library's identifier (`ia-<archive.org identifier>`, `ht-<HathiTrust htid>`, `ga-<Gallica ark>`; characters outside `[A-Za-z0-9._-]` are written `~XX`), so re-running discovery updates the same row. Discovery refreshes `library`, `library_id`, `url`, `access`, `pages`, `language`; fills `title`, `publisher`, `edition_label`, `issue_date`, `terms_note`, `notes` only when empty; never touches `validity_stated` (read it from the guide's title page and write it by hand); `found_by` collects the search-plan entries that found the row. `access` is `full` (full view anywhere), `pdus` (HathiTrust: full view in the US only) or `none`.
+- `catalogue.csv`: one row per digitised volume or issue. `source_id` is derived from the library's identifier (`ia-<archive.org identifier>`, `ht-<HathiTrust htid>`, `ga-<Gallica ark>`, `sl-<SLUB Dresden Kitodo id>`, `os-<name>` for owner scans; characters outside `[A-Za-z0-9._-]` are written `~XX`), so re-running discovery updates the same row. Discovery refreshes `library`, `library_id`, `url`, `access`, `pages`, `language`; fills `title`, `publisher`, `edition_label`, `issue_date`, `terms_note`, `notes` only when empty; never touches `validity_stated` (read it from the guide's title page and write it by hand); `found_by` collects the search-plan entries that found the row. `access` is `full` (full view anywhere), `pdus` (HathiTrust: full view in the US only) or `none`.
 - `coverage.csv`: one row per (edition, segment) assessed: `edition_id`, `segment_id`, `status` (`full` | `partial` | `missing` | `restricted`), `pages`, `table_refs`, `notes`. `COVERAGE.md` is generated from it.
 - `manifests/`: per-source page lists; see `manifests/README.md`.
 

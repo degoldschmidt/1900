@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mets:mets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xmlns:dv="http://dfg-viewer.de/" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:slub="http://www.slub-dresden.de/namespace" xmlns:slubarchiv="http://slubarchiv.slub-dresden.de/rights1" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/mods.xsd http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/mets.xsd">
+   <mets:metsHdr CREATEDATE="2023-04-28T12:22:49.000+02:00" LASTMODDATE="2024-02-07T10:50:13.007+01:00"/>
+   <mets:dmdSec ID="uuid-76157dfe-172d-3087-9203-6ae6809c2cb5">
+      <mets:mdWrap MDTYPE="MODS">
+         <mets:xmlData>
+            <mods:mods>
+               <mods:name type="corporate">
+                  <mods:displayForm>SLUB Dresden</mods:displayForm>
+                  <mods:role>
+                     <mods:roleTerm authority="marcrelator" type="code">own</mods:roleTerm>
+                  </mods:role>
+                  <mods:role>
+                     <mods:roleTerm authority="marcrelator" type="code">len</mods:roleTerm>
+                  </mods:role>
+               </mods:name>
+               <mods:originInfo eventType="publication">
+                  <mods:dateIssued encoding="iso8601" keyDate="yes">1914</mods:dateIssued>
+                  <mods:displayDate>1914</mods:displayDate>
+               </mods:originInfo>
+               <mods:language>
+                  <mods:languageTerm type="code" authority="rfc3066">ger</mods:languageTerm>
+                  <mods:scriptTerm type="code" authority="iso15924">Latn</mods:scriptTerm>
+               </mods:language>
+               <mods:physicalDescription>
+                  <mods:digitalOrigin>reformatted digital</mods:digitalOrigin>
+               </mods:physicalDescription>
+               <mods:relatedItem type="host">
+                  <mods:recordInfo>
+                     <mods:recordIdentifier source="http://digital.slub-dresden.de/oai/">oai:de:slub-dresden:db:id-394077458</mods:recordIdentifier>
+                  </mods:recordInfo>
+               </mods:relatedItem>
+               <mods:relatedItem type="series">
+                  <mods:titleInfo>
+                     <mods:title lang="ger">Saxonica</mods:title>
+                  </mods:titleInfo>
+               </mods:relatedItem>
+               <mods:identifier type="purl">http://digital.slub-dresden.de/id394077458-19140001</mods:identifier>
+               <mods:identifier type="urn">urn:nbn:de:bsz:14-db-id394077458-191400011</mods:identifier>
+               <mods:identifier type="kitodo">79045</mods:identifier>
+               <mods:location>
+                  <mods:physicalLocation valueURI="https://ld.zdb-services.de/resource/organisations/DE-14">Sächsische Landesbibliothek - Staats- und Universitätsbibliothek Dresden</mods:physicalLocation>
+                  <mods:shelfLocator>Hist.Sax.M.553.y-1913/14</mods:shelfLocator>
+               </mods:location>
+               <mods:accessCondition type="use and reproduction" xlink:href="http://creativecommons.org/publicdomain/mark/1.0/">Public Domain Mark 1.0</mods:accessCondition>
+               <mods:accessCondition type="restriction on access" xlink:href="http://purl.org/coar/access_right/c_abf2" displayLabel="Access Status">Open Access</mods:accessCondition>
+               <mods:accessCondition type="slubRightsRecord">
+                  <slubarchiv:rightsRecord>
+                     <slubarchiv:copyrightStatus>publicdomain</slubarchiv:copyrightStatus>
+                  </slubarchiv:rightsRecord>
+               </mods:accessCondition>
+               <mods:part type="host" order="19140001">
+                  <mods:detail type="volume">
+                     <mods:number>1914,So.</mods:number>
+                  </mods:detail>
+               </mods:part>
+               <mods:extension>
+                  <slub:slub>
+                     <slub:id type="digital">394077458-19140001</slub:id>
+                     <slub:id type="tsl-ats">rfrkuf</slub:id>
+                  </slub:slub>
+               </mods:extension>
+               <mods:recordInfo>
+                  <mods:recordIdentifier source="http://digital.slub-dresden.de/oai/">oai:de:slub-dresden:db:id-394077458-19140001</mods:recordIdentifier>
+               </mods:recordInfo>
+            </mods:mods>
+         </mets:xmlData>
+      </mets:mdWrap>
+   </mets:dmdSec>
+   <mets:amdSec ID="AMD">
+      <mets:rightsMD ID="uuid-10e66609-10b5-3765-9c0d-af372b9f9112">
+         <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVRIGHTS">
+            <mets:xmlData>
+               <dv:rights>
+                  <dv:owner>Sächsische Landesbibliothek - Staats- und Universitätsbibliothek Dresden</dv:owner>
+                  <dv:ownerLogo>https://digital.slub-dresden.de/fileadmin/images/dfgviewer_logo_slub.gif</dv:ownerLogo>
+                  <dv:ownerSiteURL>https://www.slub-dresden.de/</dv:ownerSiteURL>
+                  <dv:ownerContact>mailto:digital@slub-dresden.de</dv:ownerContact>
+                  <dv:license>pdm</dv:license>
+               </dv:rights>
+            </mets:xmlData>
+         </mets:mdWrap>
+      </mets:rightsMD>
+      <mets:digiprovMD ID="uuid-5d7143a0-f94e-368f-b546-82743c6f7826">
+         <mets:mdWrap MDTYPE="OTHER" MIMETYPE="text/xml" OTHERMDTYPE="DVLINKS">
+            <mets:xmlData>
+               <dv:links>
+                  <dv:presentation>https://digital.slub-dresden.de/id394077458-19140001</dv:presentation>
+                  <dv:reference>https://katalog.slub-dresden.de/ppn/394077458</dv:reference>
+               </dv:links>
+            </mets:xmlData>
+         </mets:mdWrap>
+      </mets:digiprovMD>
+   </mets:amdSec>
+   <mets:fileSec>
+      <mets:fileGrp USE="DEFAULT">
+         <mets:file ID="uuid-f20de7d9-5723-41a9-8361-bb3b314c520a" MIMETYPE="image/jpeg">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000001.tif.medium.jpg" LOCTYPE="URL"/>
+         </mets:file>
+         <mets:file ID="uuid-2cb68e17-a1d6-4af8-a787-310b6146a064" MIMETYPE="image/jpeg">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000002.tif.medium.jpg" LOCTYPE="URL"/>
+         </mets:file>
+         <mets:file ID="uuid-a85185a6-2afb-461d-a3a6-3a5edbdfd0d0" MIMETYPE="image/jpeg">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000005.tif.medium.jpg" LOCTYPE="URL"/>
+         </mets:file>
+      </mets:fileGrp>
+      <mets:fileGrp USE="FULLTEXT">
+         <mets:file ID="uuid-a3cd70fe-f1c3-4381-8c0c-9804fbe7bd42" MIMETYPE="text/xml">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_ocr/00000001.xml" LOCTYPE="URL"/>
+         </mets:file>
+         <mets:file ID="uuid-bd1c7318-e2f9-4386-b20d-1883cffc62cf" MIMETYPE="text/xml">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_ocr/00000002.xml" LOCTYPE="URL"/>
+         </mets:file>
+         <mets:file ID="uuid-463bc962-7756-41bb-a2cf-9366276c24b4" MIMETYPE="text/xml">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_ocr/00000005.xml" LOCTYPE="URL"/>
+         </mets:file>
+      </mets:fileGrp>
+      <mets:fileGrp USE="DOWNLOAD">
+         <mets:file ID="uuid-c22a2c9a-310d-44fc-857d-4f53131390cd" MIMETYPE="application/pdf">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000001.tif.pdf" LOCTYPE="URL"/>
+         </mets:file>
+         <mets:file ID="uuid-dcecceb5-3435-41c8-9f0e-0ae3f5e63ac8" MIMETYPE="application/pdf">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000002.tif.pdf" LOCTYPE="URL"/>
+         </mets:file>
+         <mets:file ID="uuid-2ab30b03-9c38-48a8-b1f1-5851ba9cff72" MIMETYPE="application/pdf">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000005.tif.pdf" LOCTYPE="URL"/>
+         </mets:file>
+      <mets:file ID="FULLDOWNLOAD" MIMETYPE="application/pdf"><mets:FLocat LOCTYPE="URL" xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/rfrkuf_394077458-19140001.pdf"/></mets:file></mets:fileGrp>
+      <mets:fileGrp USE="ORIGINAL">
+         <mets:file ID="uuid-b7a345b8-c669-4228-84f1-21d1f4fe8221" MIMETYPE="image/jpeg">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000001.tif.original.jpg" LOCTYPE="URL"/>
+         </mets:file>
+         <mets:file ID="uuid-d0bc7194-5291-4380-9d3b-194974da09ba" MIMETYPE="image/jpeg">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000002.tif.original.jpg" LOCTYPE="URL"/>
+         </mets:file>
+         <mets:file ID="uuid-ca057b91-8bfb-49ce-aeb0-65843b07dff6" MIMETYPE="image/jpeg">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000005.tif.original.jpg" LOCTYPE="URL"/>
+         </mets:file>
+      </mets:fileGrp>
+      <mets:fileGrp USE="THUMBS">
+         <mets:file ID="uuid-67deab6c-b006-4e89-a5ca-778507341caf" MIMETYPE="image/jpeg">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000001.tif.thumbnail.jpg" LOCTYPE="URL"/>
+         </mets:file>
+         <mets:file ID="uuid-eb9e8397-28e3-4de2-a182-8ab5eb6d0ccd" MIMETYPE="image/jpeg">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000002.tif.thumbnail.jpg" LOCTYPE="URL"/>
+         </mets:file>
+         <mets:file ID="uuid-5cb6c906-06e3-4620-a772-92760c1c7c80" MIMETYPE="image/jpeg">
+            <mets:FLocat xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458-19140001/rfrkuf_394077458-19140001_tif/jpegs/00000005.tif.thumbnail.jpg" LOCTYPE="URL"/>
+         </mets:file>
+      </mets:fileGrp>
+   </mets:fileSec>
+   <mets:structMap TYPE="PHYSICAL">
+      <mets:div TYPE="physSequence" ID="PHYS_0000"><mets:fptr FILEID="FULLDOWNLOAD"/>
+         <mets:div ID="PHYS_0001" TYPE="page" ORDER="1" ORDERLABEL=" - ">
+            <mets:fptr FILEID="uuid-b7a345b8-c669-4228-84f1-21d1f4fe8221"/>
+            <mets:fptr FILEID="uuid-67deab6c-b006-4e89-a5ca-778507341caf"/>
+            <mets:fptr FILEID="uuid-a3cd70fe-f1c3-4381-8c0c-9804fbe7bd42"/>
+            <mets:fptr FILEID="uuid-f20de7d9-5723-41a9-8361-bb3b314c520a"/>
+            <mets:fptr FILEID="uuid-c22a2c9a-310d-44fc-857d-4f53131390cd"/>
+         </mets:div>
+         <mets:div ID="PHYS_0002" TYPE="page" ORDER="2" ORDERLABEL=" - ">
+            <mets:fptr FILEID="uuid-d0bc7194-5291-4380-9d3b-194974da09ba"/>
+            <mets:fptr FILEID="uuid-eb9e8397-28e3-4de2-a182-8ab5eb6d0ccd"/>
+            <mets:fptr FILEID="uuid-bd1c7318-e2f9-4386-b20d-1883cffc62cf"/>
+            <mets:fptr FILEID="uuid-2cb68e17-a1d6-4af8-a787-310b6146a064"/>
+            <mets:fptr FILEID="uuid-dcecceb5-3435-41c8-9f0e-0ae3f5e63ac8"/>
+         </mets:div>
+         <mets:div ID="PHYS_0005" TYPE="page" ORDER="5" ORDERLABEL="1">
+            <mets:fptr FILEID="uuid-ca057b91-8bfb-49ce-aeb0-65843b07dff6"/>
+            <mets:fptr FILEID="uuid-5cb6c906-06e3-4620-a772-92760c1c7c80"/>
+            <mets:fptr FILEID="uuid-463bc962-7756-41bb-a2cf-9366276c24b4"/>
+            <mets:fptr FILEID="uuid-a85185a6-2afb-461d-a3a6-3a5edbdfd0d0"/>
+            <mets:fptr FILEID="uuid-2ab30b03-9c38-48a8-b1f1-5851ba9cff72"/>
+         </mets:div>
+      </mets:div>
+   </mets:structMap>
+   <mets:structMap TYPE="LOGICAL">
+      <mets:div ID="uuid-c2626c5c-56a8-4071-8357-76575eed4fd1" TYPE="periodical" ORDERLABEL="R. Fritzsches Kursbuch für Sachsen, das übrige Mitteldeutschland, Böhmen und Schlesien" LABEL="R. Fritzsches Kursbuch für Sachsen, das übrige Mitteldeutschland, Böhmen und Schlesien">
+         <mets:mptr LOCTYPE="URL" xlink:href="https://digital.slub-dresden.de/data/kitodo/rfrkuf_394077458/rfrkuf_394077458_mets.xml"/>
+         <mets:div ID="LOG_0003" LABEL="" ORDERLABEL="" DMDID="uuid-76157dfe-172d-3087-9203-6ae6809c2cb5" ADMID="AMD" TYPE="volume"/>
+      </mets:div>
+   </mets:structMap>
+   <mets:structLink>
+      <mets:smLink xlink:to="PHYS_0001" xlink:from="LOG_0003"/>
+      <mets:smLink xlink:to="PHYS_0002" xlink:from="LOG_0003"/>
+      <mets:smLink xlink:to="PHYS_0005" xlink:from="LOG_0003"/>
+   </mets:structLink>
+</mets:mets>

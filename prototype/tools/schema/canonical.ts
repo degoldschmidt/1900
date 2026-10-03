@@ -46,7 +46,7 @@ type ValueOf<C extends ColSpec> =
 export type RowOf<Cs extends readonly ColSpec[]> = { -readonly [C in Cs[number] as C['name']]: ValueOf<C> } & { line: number };
 
 export const ACCESS = ['full', 'pdus', 'search-only', 'none'] as const;
-export const PAGE_CONTENT = ['table', 'handbook', 'index', 'notation', 'footnotes', 'ads'] as const;
+export const PAGE_CONTENT = ['title', 'table', 'handbook', 'index', 'notation', 'footnotes', 'ads'] as const;
 export const TIERS = ['A', 'B', 'C', 'W'] as const;
 export const GAMES = ['c07', 'c01', 'c04'] as const;
 export const MODES = ['rail', 'steamer', 'ferry'] as const;

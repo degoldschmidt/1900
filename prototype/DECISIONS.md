@@ -315,3 +315,31 @@ If the field accepts wildcards: `*.europeana.eu`, `*.deutsche-digitale-bibliothe
 - 19 screens were captured at 1280×800 and 390×844 in light and dark, with no horizontal scroll.
 
 **Follow-up.** The release bundle's JavaScript includes the preview scenario files, because `scenarios.ts` imports them. The data block stays clean, but the scenarios should be loaded only in the preview build. This is to be fixed before the 1914 release.
+
+## 2026-10-03 15:00 — D2 pilot preparation on Fritzsche Summer 1914 (Event P-E014)
+
+**Source.** `sl-rfrkuf_394077458-19140001`, *R. Fritzsches Kursbuch*, Sommer-Ausgabe 1914, valid 1 May – 30 September 1914, from SLUB Dresden. SLUB is now a discovery and fetch library (`tools/discover/slub.ts`): it reads the METS, uses ALTO OCR to locate pages, and fetches 300 dpi JPEGs.
+
+**Tables, in both directions:**
+- 12 Dresden–Röderau–Berlin (pp. 54–55)
+- 13 Dresden–Elsterwerda–Berlin (pp. 56–57)
+- 23 Dresden–Bodenbach/Tetschen (pp. 70–75)
+- 112 Bodenbach–Prague–Vienna, StEG (pp. 178–179)
+- 123 Prague–Gmünd–Vienna (p. 185, printed sideways)
+- 126 Tetschen–Vienna, Nordwestbahn (pp. 188–189)
+
+Also the explanation of signs (p. 5) and the title page. In all, 18 pages, fetched with a sha256 for each.
+
+**Crops.** 69: 33 grid crops (1,247 cells: 802 times, 318 header, 127 label), 31 column-notes crops and 5 footnote crops.
+
+**Layout proposer.** `tools/crops/propose-layout.ts` proposes grids from ALTO word boxes. Every one of the 17 panels needed hand correction (columns were right first time on 4 of 15). On 6 pages the OCR coordinates are rotated, and table 123 was drawn by hand. Layout effort is a real cost for the G2 volume estimate.
+
+**Notation draft.** `data/canonical/notation/FKB1914-SO.json`, cited to pp. 3 and 5. Underlined minutes mean night times (6.00 p.m. – 5.59 a.m.). Twelve items are flagged for the historian.
+
+**Normaliser work before stage 3:**
+- arrival/departure markers printed before the station name;
+- table 123's reverse half, read bottom to top;
+- column notes;
+- "ab"/"Ank." words and braced times.
+
+**Known hard spots:** the lower section of p. 192; p. 75's last column partly in the binding; braced shared times in table 112.

@@ -5,6 +5,7 @@
  *   archive.org  ia-<identifier>      (identifiers are already [A-Za-z0-9._-])
  *   HathiTrust   ht-<htid>            (e.g. ht-mdp.39015012345678)
  *   Gallica      ga-<ark name>        (the part after ark:/12148/, e.g. ga-bpt6k1234567x)
+ *   SLUB Dresden sl-<Kitodo id>       (e.g. sl-rfrkuf_394077458-19140001)
  * Characters outside [A-Za-z0-9._-] are written as ~XX (UTF-8 hex), so the mapping is reversible and
  * the id is safe as a file name (htids such as uc1.$b123456 or uc2.ark:/13960/t0abc become
  * ht-uc1.~24b123456 and ht-uc2.ark~3a~2f13960~2ft0abc).
@@ -22,12 +23,12 @@ export const CATALOGUE_COLUMNS = [
 ] as const;
 
 /** owner-scan: pages photographed by the owner from a printed copy (imported by tools/fetch/import-scans.ts). */
-export type Library = 'archive.org' | 'hathitrust' | 'gallica' | 'owner-scan';
+export type Library = 'archive.org' | 'hathitrust' | 'gallica' | 'slub' | 'owner-scan';
 export type Access = 'full' | 'pdus' | 'none' | '';
 
 export type CatalogueRow = Record<(typeof CATALOGUE_COLUMNS)[number], string>;
 
-const PREFIX: Record<Library, string> = { 'archive.org': 'ia', hathitrust: 'ht', gallica: 'ga', 'owner-scan': 'os' };
+const PREFIX: Record<Library, string> = { 'archive.org': 'ia', hathitrust: 'ht', gallica: 'ga', slub: 'sl', 'owner-scan': 'os' };
 
 export function encodeIdPart(s: string): string {
   let out = '';
@@ -60,8 +61,8 @@ export function sourceIdFor(library: Library, libraryId: string): string {
 }
 
 export function parseSourceId(sourceId: string): { library: Library; libraryId: string } {
-  const m = /^(ia|ht|ga|os)-(.+)$/.exec(sourceId);
-  if (!m) throw new Error(`source_id "${sourceId}" does not start with ia-, ht-, ga- or os-`);
+  const m = /^(ia|ht|ga|sl|os)-(.+)$/.exec(sourceId);
+  if (!m) throw new Error(`source_id "${sourceId}" does not start with ia-, ht-, ga-, sl- or os-`);
   const library = (Object.keys(PREFIX) as Library[]).find((l) => PREFIX[l] === m[1])!;
   return { library, libraryId: decodeIdPart(m[2]!) };
 }

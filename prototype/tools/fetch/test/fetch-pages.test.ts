@@ -132,7 +132,7 @@ describe('manifest', () => {
     expect(rows.map((r) => r.page_seq)).toEqual([1]);
     expect(errors).toEqual([
       'manifest row 3: duplicate page_seq 1',
-      'manifest row 4: content "map" is not one of table|handbook|index|notation|footnotes|ads',
+      'manifest row 4: content "map" is not one of title|table|handbook|index|notation|footnotes|ads',
       'manifest row 5: url must be http(s), or owner:<file> for an owner scan',
       'manifest row 6: sha256 is not 64 hex digits',
     ]);

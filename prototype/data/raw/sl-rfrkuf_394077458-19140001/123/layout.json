@@ -1,0 +1,39 @@
+{
+  "layout_version": 1,
+  "source_id": "sl-rfrkuf_394077458-19140001",
+  "table_ref": "123",
+  "table_kind": "timetable",
+  "title": "Prag – Wesell-Mez. – (Budweis – Salzburg) – Gmünd – Wien und zurück",
+  "panels": [
+    {
+      "panel": "p1",
+      "page_seq": 189,
+      "deskew_deg": 91.3,
+      "table_bbox": [290, 85, 1380, 575],
+      "label_bbox": [852, 94, 238, 576],
+      "header_bbox": [298, 162, 552, 26],
+      "col_x": [298, 359, 413, 466, 528, 580, 634, 683, 747, 796, 850],
+      "row_y": [94, 128, 156, 188, 218, 638, 670],
+      "first_col": 0,
+      "first_row": 0,
+      "header_lines": 1,
+      "skip_rows": [2, 4],
+      "notes_bbox": [298, 85, 552, 570]
+    },
+    {
+      "panel": "p2",
+      "page_seq": 189,
+      "deskew_deg": 91.3,
+      "table_bbox": [290, 85, 1380, 575],
+      "label_bbox": [852, 94, 238, 576],
+      "header_bbox": [1092, 162, 564, 26],
+      "col_x": [1092, 1156, 1209, 1260, 1321, 1380, 1439, 1494, 1551, 1600, 1656],
+      "row_y": [94, 128, 156, 188, 218, 638, 670],
+      "first_col": 10,
+      "first_row": 0,
+      "header_lines": 1,
+      "skip_rows": [2, 4],
+      "notes_bbox": [1092, 85, 564, 570]
+    }
+  ]
+}

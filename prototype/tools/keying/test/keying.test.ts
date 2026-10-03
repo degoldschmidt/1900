@@ -43,6 +43,11 @@ describe('long format', () => {
     expect(errors.some((e) => e.includes('crop_id "Y"'))).toBe(true);
     expect(errors.some((e) => e.includes('ASCII quote'))).toBe(true);
     expect(canonicalMarks('fn:b;u;fn:a;b;u')).toEqual(['b', 'u', 'fn:a', 'fn:b']);
+    // A column note names its column with c:<n> (column-notes crops).
+    const note = parseLong('crop_id,kind,col,row,text_as_printed,marks,sure\nN,footnote,0,0,Schlafwagen Berlin-Karlsbad,c:12;c:11,y\nN,footnote,0,1,x,c:a,y\n', { cropId: 'N' });
+    expect(note.cells[0]!.marks).toEqual(['c:11', 'c:12']);
+    expect(note.errors).toHaveLength(1);
+    expect(note.errors[0]).toMatch(/unknown mark "c:a" .*c:<column> on a column note/);
     expect(normText(' 1  2 ')).toBe('1 2');
     expect(cellRef({ kind: 'header', col: 3, row: 1 })).toBe('h1c3');
     expect(cellRef({ kind: 'label', col: 0, row: 7 })).toBe('l0r7');

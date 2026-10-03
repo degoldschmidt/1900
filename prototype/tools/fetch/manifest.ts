@@ -1,9 +1,10 @@
 /**
  * Page manifests: data/sources/manifests/<source_id>.csv lists the only pages that may be fetched.
  *
- *   page_seq      1-based image sequence in the library's viewer (archive.org leaf + 1, HathiTrust seq, Gallica f<n>)
+ *   page_seq      1-based image sequence in the library's viewer (archive.org leaf + 1, HathiTrust seq, Gallica f<n>,
+ *                 SLUB METS physical ORDER)
  *   printed_page  the page number printed on the page, as printed ("412", "xiv", "" if none)
- *   content       table | handbook | index | notation | footnotes | ads
+ *   content       title | table | handbook | index | notation | footnotes | ads
  *   table_refs    semicolon list of the guide's table numbers on the page ("57;60")
  *   url           the image URL (IIIF or image endpoint; see pageUrlFor)
  *   sha256, width, height, retrieved_at   filled by tools/fetch/fetch-pages.ts
@@ -17,9 +18,10 @@ import { parseSourceId } from '../discover/catalogue.ts';
 import * as ia from '../discover/archive-org.ts';
 import * as ht from '../discover/hathitrust.ts';
 import * as ga from '../discover/gallica.ts';
+import * as sl from '../discover/slub.ts';
 
 export const MANIFEST_COLUMNS = ['page_seq', 'printed_page', 'content', 'table_refs', 'url', 'sha256', 'width', 'height', 'retrieved_at'] as const;
-export const CONTENT = ['table', 'handbook', 'index', 'notation', 'footnotes', 'ads'] as const;
+export const CONTENT = ['title', 'table', 'handbook', 'index', 'notation', 'footnotes', 'ads'] as const;
 export type Content = (typeof CONTENT)[number];
 
 export interface ManifestRow {
@@ -73,6 +75,7 @@ export function pageUrlFor(sourceId: string, seq: number): string {
   const { library, libraryId } = parseSourceId(sourceId);
   if (library === 'archive.org') return ia.pageImageUrl(libraryId, seq);
   if (library === 'hathitrust') return ht.pageImageUrl(libraryId, seq);
+  if (library === 'slub') return sl.pageImageUrl(libraryId, seq);
   if (library === 'owner-scan') throw new Error(`${sourceId} is an owner scan: add its pages with tools/fetch/import-scans.ts, not manifest init`);
   return ga.iiifImageUrl(libraryId, seq);
 }

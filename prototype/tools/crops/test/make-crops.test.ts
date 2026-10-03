@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import sharp from 'sharp';
-import { expectedKeys, keyBox, keyInCrop, parseCropsCsv, parseLayout, validateLayout, type Layout } from '../layout.ts';
+import { expectedKeys, keyBox, keyInCrop, parseCropsCsv, parseLayout, validateLayout, writeCropsCsv, type Layout } from '../layout.ts';
 import { loadPage, makeCrops, planCrops, RULER, splitEven, zoomKey } from '../make-crops.ts';
 import { roots, type Roots } from '../../keying/paths.ts';
 
@@ -194,6 +194,82 @@ describe('deskew', () => {
     const turned = await loadPage(join(r.scans, 'ia-testbook', 'p3.png'), 1.5);
     expect(turned.width).toBeGreaterThan(straight.width);
     expect(turned.height).toBeGreaterThan(straight.height);
-    expect(validateLayout({ ...LAYOUT, panels: [{ ...LAYOUT.panels[0]!, deskew_deg: 12 }] })).toEqual(['panel 0 (p1): deskew_deg must be a number within ±10']);
+    expect(validateLayout({ ...LAYOUT, panels: [{ ...LAYOUT.panels[0]!, deskew_deg: 12 }] })).toEqual(['panel 0 (p1): deskew_deg must be within ±10 of 0, 90, 180 or 270 (a table printed sideways is turned a quarter turn first)']);
+    expect(validateLayout({ ...LAYOUT, panels: [{ ...LAYOUT.panels[0]!, deskew_deg: 91.3 }] })).toEqual([]);
+    expect(validateLayout({ ...LAYOUT, panels: [{ ...LAYOUT.panels[0]!, deskew_deg: 45 }] })).toHaveLength(1);
+    const quarter = await loadPage(join(r.scans, 'ia-testbook', 'p3.png'), 90);
+    expect([quarter.width, quarter.height]).toEqual([straight.height, straight.width]);
+  });
+});
+
+/** The test layout keeping only rows r0–r2, r9 and r15–r16 (node-only rule), with column notes over all columns. */
+const SKIPPING: Layout = {
+  ...LAYOUT,
+  panels: [{ ...LAYOUT.panels[0]!, skip_rows: [3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 17, 18, 19], notes_bbox: [230, 40, 720, 560] }],
+};
+
+describe('skip_rows (node-only rule)', () => {
+  it('validates skip_rows, and lets the header band lie within skipped rows', () => {
+    expect(validateLayout(SKIPPING)).toEqual([]);
+    const bad = (skip: number[]) => validateLayout({ ...LAYOUT, panels: [{ ...LAYOUT.panels[0]!, skip_rows: skip }] });
+    expect(bad([3, 3])).toEqual(['panel 0 (p1): skip_rows lists a row twice']);
+    expect(bad([25])[0]).toMatch(/outside the panel's rows r0-r19/);
+    expect(bad(Array.from({ length: 20 }, (_, i) => i))).toEqual(['panel 0 (p1): skip_rows leaves no row to key']);
+    // A header band printed over rows r5–r6, both skipped, is accepted; over a kept row it is not.
+    const mid = (skip: number[]) => validateLayout({ ...LAYOUT, panels: [{ ...LAYOUT.panels[0]!, header_bbox: [230, 226, 720, 48], header_y: undefined, skip_rows: skip }] });
+    expect(mid([5, 6])).toEqual([]);
+    expect(mid([5])[0]).toMatch(/header_bbox overlaps body row r6/);
+  });
+
+  it('plans crops over kept rows only, stacking their runs with a gap', () => {
+    const crops = planCrops(SKIPPING).filter((c) => !c.footnotes);
+    expect(crops.map((c) => c.crop_id)).toEqual(['T57-c0-5-r0-16', 'T57-c6-11-r0-16']);
+    const g = crops[0]!.geometry;
+    expect(g.runs.map((u) => u.rows)).toEqual([[0, 2], [9, 9], [15, 16]]);
+    // Runs are drawn one gap apart, each as tall as its rows.
+    expect(g.runs[1]!.outY).toBe(g.runs[0]!.outY + g.runs[0]!.outH + RULER.gap);
+    expect(g.runs[0]!.outH).toBe(Math.round(75 * g.scale));
+    const keys = expectedKeys(SKIPPING, crops[0]!);
+    expect(keys.filter((k) => k.kind === 'cell').map((k) => k.row).filter((v, i, a) => a.indexOf(v) === i)).toEqual([0, 1, 2, 9, 15, 16]);
+    expect(keyInCrop(SKIPPING, crops[0]!, { kind: 'cell', col: 0, row: 5 })).toBe(false);
+  });
+
+  it('renders the stitched runs with the right rows in place', async () => {
+    const other = roots({ root: mkdtempSync(join(tmpdir(), 'p1900-crops3-')) });
+    mkdirSync(join(other.scans, 'ia-testbook'), { recursive: true });
+    writeFileSync(join(other.scans, 'ia-testbook', 'p3.png'), await pageImage());
+    const lay = { ...SKIPPING, panels: [{ ...SKIPPING.panels[0]!, skip_rows: [3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 17, 18, 19] }] };
+    mkdirSync(join(other.data, 'raw', 'ia-testbook', 'T57'), { recursive: true });
+    writeFileSync(join(other.data, 'raw', 'ia-testbook', 'T57', 'layout.json'), JSON.stringify(lay));
+    const res = await makeCrops(other, 'ia-testbook', 'T57');
+    const crop = res.crops.find((c) => c.crop_id === 'T57-c6-11-r0-16')!;
+    const { data, info } = await sharp(join(other.scans, 'ia-testbook', 'crops', 'T57', `${crop.crop_id}.png`)).raw().toBuffer({ resolveWithObject: true });
+    const run = crop.geometry.runs.find((u) => u.rows[0] === 12)!;
+    const g = crop.geometry;
+    // The black block of c7 r12 lies in the run of r12, at its own place.
+    expect(grey(data, info.width, info.channels, g.out.body.x + (COL_X[7]! + 30 - g.page.body[0]) * g.scale, run.outY + 12 * g.scale)).toBeLessThan(60);
+  });
+});
+
+describe('column notes', () => {
+  it('cuts one notes crop per block of grid columns, halves side by side, keyed as footnote lines', () => {
+    const all = planCrops(SKIPPING);
+    const notes = all.filter((c) => c.crop_id.includes('-cn-'));
+    expect(notes.map((c) => c.crop_id)).toEqual(['T57-cn-p1-c0-5', 'T57-cn-p1-c6-11']);
+    const n = notes[1]!;
+    expect(n.footnotes).toBe(true);
+    expect(n.body).toEqual([590, 40, 360, 560]);
+    expect(n.geometry.tiles!.map((t) => t.box)).toEqual([[590, 40, 360, 310], [590, 290, 360, 310]]);
+    expect(Math.max(n.geometry.width, n.geometry.height)).toBeLessThanOrEqual(1500);
+    expect(expectedKeys(SKIPPING, n)).toEqual([]);
+    expect(keyInCrop(SKIPPING, n, { kind: 'footnote', col: 0, row: 4 })).toBe(true);
+    expect(keyBox(SKIPPING, n, { kind: 'footnote', col: 0, row: 0 })).toEqual(n.body);
+    // The ordinary footnote crop still finds its own box.
+    const fn = all.find((c) => c.crop_id === 'T57-fn-p1')!;
+    expect(keyBox(SKIPPING, fn, { kind: 'footnote', col: 0, row: 0 })).toEqual([20, 610, 930, 40]);
+    // The round trip through crops.csv keeps it a footnote-type crop of the same panel.
+    const back = parseCropsCsv(writeCropsCsv(all)).find((c) => c.crop_id === n.crop_id)!;
+    expect(back.footnotes).toBe(true);
+    expect(keyBox(SKIPPING, back, { kind: 'footnote', col: 0, row: 0 })).toEqual(n.body);
   });
 });

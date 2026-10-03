@@ -2,18 +2,20 @@
  * Discovery runner.
  *
  *   NODE_USE_ENV_PROXY=1 node tools/discover/run.ts [--plan tools/discover/search-plan.json]
- *        [--only <entry,…>] [--library ia,ht,ga] [--max-results 200] [--no-metadata] [--offline] [--dry-run]
+ *        [--only <entry,…>] [--library ia,ht,ga,sl] [--max-results 200] [--no-metadata] [--offline] [--dry-run]
  *   NODE_USE_ENV_PROXY=1 node tools/discover/run.ts grep <source_id> --stations "Berlin,Köln|Cologne,…" [--min 2] [--out file.csv]
  *
  * (The tools re-run themselves with NODE_USE_ENV_PROXY=1 when HTTPS_PROXY is set; see http.ts.)
  *
  * The first form runs every query of the search plan against archive.org, the HathiTrust Bib API
- * and Gallica, then merges the results into data/sources/catalogue.csv (deterministic: same inputs,
+ * and Gallica, reads the METS of every SLUB Dresden issue the plan lists (slub.ids), then merges the results into data/sources/catalogue.csv (deterministic: same inputs,
  * same bytes). --dry-run prints the first request of every query without touching the network.
  * --offline answers only from the HTTP cache (build/cache/http/).
  *
  * The grep form finds pages that mention the given stations: archive.org items through their
  * djvu.txt full text, Gallica documents through ContentSearch (one request per station).
+ * SLUB issues through the ALTO OCR of every page listed in their METS (page_seq = METS physical
+ * ORDER, printed page = ORDERLABEL; about 500 requests per issue, cached under build/cache/http/).
  * HathiTrust has no full-text API; the search-inside links are printed instead.
  *
  * A host refused by the environment's egress proxy is reported once ("host blocked by environment
@@ -26,11 +28,12 @@ import { BlockedHostError, createHttp, ensureProxyEnv, type Http } from './http.
 import * as ia from './archive-org.ts';
 import * as ht from './hathitrust.ts';
 import * as ga from './gallica.ts';
+import * as sl from './slub.ts';
 import { mergeCatalogue, parseSourceId, readCatalogue, writeCatalogue, type CatalogueRow } from './catalogue.ts';
 import { catalogueCsv, httpCacheDir, roots, type Roots } from '../keying/paths.ts';
 import { cmpStr, writeCsv, writeTextFile } from '../keying/csv.ts';
 
-export type LibKey = 'ia' | 'ht' | 'ga';
+export type LibKey = 'ia' | 'ht' | 'ga' | 'sl';
 
 export interface PlanEntry {
   id: string;
@@ -40,6 +43,8 @@ export interface PlanEntry {
   archive_org?: { queries?: string[] };
   hathitrust?: { catalog_search?: string; oclc?: string[]; recordnumber?: string[]; htid?: string[] };
   gallica?: { queries?: string[]; issues?: boolean };
+  /** SLUB Dresden Kitodo ids of issues to catalogue (no search API is reachable; ids are listed by hand). */
+  slub?: { ids?: string[] };
   notes?: string;
 }
 
@@ -200,9 +205,19 @@ async function discoverGa(http: Http, e: PlanEntry, years: [number, number], o: 
   rep.counts.push({ entry: e.id, library: 'ga', kept, dropped });
 }
 
+async function discoverSl(http: Http, e: PlanEntry, rep: RunReport) {
+  let kept = 0;
+  for (const id of e.slub?.ids ?? []) {
+    const mets = sl.parseMets((await http.get(sl.metsUrl(id), { accept: 'application/xml' })).text());
+    if (mets.id !== id) throw new Error(`SLUB METS for ${id} names its files under ${mets.id || 'no id'}`);
+    rep.rows.push(sl.slubCatalogueRow(mets, `${e.id}:sl`)); kept++;
+  }
+  rep.counts.push({ entry: e.id, library: 'sl', kept, dropped: 0 });
+}
+
 /** Runs the plan; a blocked host stops that library for the rest of the run. */
 export async function runDiscovery(plan: SearchPlan, http: Http, o: RunOptions = {}): Promise<RunReport> {
-  const libs = o.libraries ?? ['ia', 'ht', 'ga'];
+  const libs = o.libraries ?? ['ia', 'ht', 'ga', 'sl'];
   const opts = { maxResults: o.maxResults ?? 200, metadata: o.metadata ?? true };
   const log = o.log ?? (() => {});
   const rep: RunReport = { rows: [], blocked: [], errors: [], counts: [] };
@@ -214,6 +229,7 @@ export async function runDiscovery(plan: SearchPlan, http: Http, o: RunOptions =
       try {
         if (lib === 'ia') await discoverIa(http, e, plan.years, opts, rep);
         else if (lib === 'ht') await discoverHt(http, e, plan.years, rep);
+        else if (lib === 'sl') await discoverSl(http, e, rep);
         else await discoverGa(http, e, plan.years, opts, rep);
       } catch (err) {
         if (err instanceof BlockedHostError) {
@@ -231,7 +247,7 @@ export async function runDiscovery(plan: SearchPlan, http: Http, o: RunOptions =
 }
 
 /** The first request of every query, for --dry-run. */
-export function plannedRequests(plan: SearchPlan, libs: readonly LibKey[] = ['ia', 'ht', 'ga']): string[] {
+export function plannedRequests(plan: SearchPlan, libs: readonly LibKey[] = ['ia', 'ht', 'ga', 'sl']): string[] {
   const out: string[] = [];
   for (const e of plan.entries) {
     if (libs.includes('ia')) for (const q of e.archive_org?.queries ?? []) out.push(`${e.id} ia  ${ia.advancedSearchUrl(`(${q}) AND mediatype:texts`, { rows: 100, page: 1 })}`);
@@ -241,6 +257,7 @@ export function plannedRequests(plan: SearchPlan, libs: readonly LibKey[] = ['ia
       for (const [t, list] of [['oclc', h.oclc], ['recordnumber', h.recordnumber], ['htid', h.htid]] as const) for (const v of list ?? []) out.push(`${e.id} ht  ${ht.bibApiUrl('full', t, v)}`);
     }
     if (libs.includes('ga')) for (const q of e.gallica?.queries ?? []) out.push(`${e.id} ga  ${ga.sruUrl(q, { maximumRecords: 50, startRecord: 1 })}`);
+    if (libs.includes('sl')) for (const id of e.slub?.ids ?? []) out.push(`${e.id} sl  ${sl.metsUrl(id)}`);
   }
   return out;
 }
@@ -257,8 +274,29 @@ export function mergeIntoCatalogue(r: Roots, found: readonly CatalogueRow[]): st
 
 export interface GrepRow { page_seq: number; stations: string[]; printed?: string }
 
-export async function grepSource(http: Http, sourceId: string, stations: readonly string[], minStations: number): Promise<{ rows: GrepRow[]; links: string[] }> {
+/** Every ALTO page of a SLUB issue as plain text, indexed by page_seq - 1 ("" for pages without ALTO). */
+export async function slubPageTexts(http: Http, id: string, log: (m: string) => void = () => {}): Promise<{ texts: string[]; printed: Map<number, string> }> {
+  const mets = sl.parseMets((await http.get(sl.metsUrl(id), { accept: 'application/xml' })).text());
+  const last = mets.pages.at(-1)?.seq ?? 0;
+  const texts = new Array<string>(last).fill('');
+  const printed = new Map<number, string>();
+  for (const p of mets.pages) {
+    if (p.label) printed.set(p.seq, p.label);
+    if (!p.alto) continue;
+    texts[p.seq - 1] = sl.altoText(sl.parseAlto((await http.get(p.alto, { accept: 'application/xml' })).text()));
+    if (p.seq % 50 === 0) log(`${id}: ALTO ${p.seq}/${last}`);
+  }
+  return { texts, printed };
+}
+
+export async function grepSource(http: Http, sourceId: string, stations: readonly string[], minStations: number, log?: (m: string) => void): Promise<{ rows: GrepRow[]; links: string[] }> {
   const { library, libraryId } = parseSourceId(sourceId);
+  if (library === 'slub') {
+    const { texts, printed } = await slubPageTexts(http, libraryId, log);
+    const rows = ia.grepPages(texts, stations, minStations).map((h) => (printed.has(h.page_seq) ? { ...h, printed: printed.get(h.page_seq)! } : h));
+    return { rows, links: [] };
+  }
+  if (library === 'owner-scan') throw new Error(`${sourceId} is an owner scan: it has no full text to search`);
   if (library === 'archive.org') {
     const item = ia.parseMetadata((await http.get(ia.metadataUrl(libraryId), { accept: 'application/json' })).json());
     if (!item) throw new Error(`archive.org has no item ${libraryId}`);
@@ -307,7 +345,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       const source = args[1];
       const stations = (opt('--stations') ?? '').split(',').map((s) => s.trim()).filter(Boolean);
       if (!source || stations.length === 0) throw new Error('usage: run.ts grep <source_id> --stations "A,B|B2,…" [--min 2] [--out file.csv]');
-      const res = await grepSource(http, source, stations, Number(opt('--min') ?? '1'));
+      const res = await grepSource(http, source, stations, Number(opt('--min') ?? '1'), (m) => console.error(m));
       const csv = writeCsv(['page_seq', 'printed_page', 'n_stations', 'stations'], res.rows.map((x) => ({ page_seq: String(x.page_seq), printed_page: x.printed ?? '', n_stations: String(x.stations.length), stations: x.stations.join(';') })));
       const out = opt('--out');
       if (out) writeTextFile(out, csv); else process.stdout.write(csv);
@@ -315,7 +353,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       return 0;
     }
     const plan = parsePlan(readFileSync(opt('--plan') ?? join(r.root, 'tools', 'discover', 'search-plan.json'), 'utf8'));
-    const libs = (opt('--library')?.split(',') ?? ['ia', 'ht', 'ga']) as LibKey[];
+    const libs = (opt('--library')?.split(',') ?? ['ia', 'ht', 'ga', 'sl']) as LibKey[];
     if (dryRun) { for (const l of plannedRequests(plan, libs)) console.log(l); return 0; }
     const rep = await runDiscovery(plan, http, {
       libraries: libs, ...(opt('--only') ? { only: opt('--only')!.split(',') } : {}),

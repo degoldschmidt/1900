@@ -25,6 +25,8 @@ describe('source_id', () => {
   it('round-trips through parseSourceId', () => {
     expect(parseSourceId('ht-uc2.ark~3a~2f13960~2ft3bz6xk1m')).toEqual({ library: 'hathitrust', libraryId: 'uc2.ark:/13960/t3bz6xk1m' });
     expect(parseSourceId('ga-bpt6k5800152b')).toEqual({ library: 'gallica', libraryId: 'bpt6k5800152b' });
+    expect(sourceIdFor('slub', 'rfrkuf_394077458-19140001')).toBe('sl-rfrkuf_394077458-19140001');
+    expect(parseSourceId('sl-rfrkuf_394077458-19140001')).toEqual({ library: 'slub', libraryId: 'rfrkuf_394077458-19140001' });
     expect(() => parseSourceId('xx-1')).toThrow();
   });
 

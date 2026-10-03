@@ -4,11 +4,11 @@ One file per source, `<source_id>.csv` (the `source_id` of `data/sources/catalog
 
 | column | filled by | meaning |
 |---|---|---|
-| `page_seq` | you | 1-based image sequence in the library's viewer: archive.org leaf + 1 (BookReader `n0` is page_seq 1), HathiTrust `seq`, Gallica view `f<n>`. Not the printed page number. |
+| `page_seq` | you | 1-based image sequence in the library's viewer: archive.org leaf + 1 (BookReader `n0` is page_seq 1), HathiTrust `seq`, Gallica view `f<n>`, SLUB METS physical `ORDER`. Not the printed page number. |
 | `printed_page` | you | the page number printed on the page, as printed (`412`, `xiv`), empty if none |
-| `content` | you | `table` (timetable or fare table), `handbook` (Baedeker text), `index`, `notation` (the guide's explanation of its signs: needed for every edition), `footnotes` (a page of general notes), `ads` |
+| `content` | you | `title` (the title page, which states the edition and its validity), `table` (timetable or fare table), `handbook` (Baedeker text), `index`, `notation` (the guide's explanation of its signs: needed for every edition), `footnotes` (a page of general notes), `ads` |
 | `table_refs` | you | the guide's own table numbers on the page, separated by `;` (`57;60`) |
-| `url` | `manifest.ts init`, or you | the image URL: archive.org `https://archive.org/download/<id>/page/n<leaf>.jpg`, HathiTrust `https://babel.hathitrust.org/cgi/imgsrv/image?id=<htid>&seq=<n>&size=full`, Gallica IIIF `https://gallica.bnf.fr/iiif/ark:/12148/<ark>/f<n>/full/full/0/native.jpg` |
+| `url` | `manifest.ts init`, or you | the image URL: archive.org `https://archive.org/download/<id>/page/n<leaf>.jpg`, HathiTrust `https://babel.hathitrust.org/cgi/imgsrv/image?id=<htid>&seq=<n>&size=full`, Gallica IIIF `https://gallica.bnf.fr/iiif/ark:/12148/<ark>/f<n>/full/full/0/native.jpg`, SLUB `https://digital.slub-dresden.de/data/kitodo/<id>/<id>_tif/jpegs/<00000NNN>.tif.original.jpg` |
 | `sha256` | fetch-pages | checksum of the downloaded file; a later download or a changed local file that differs is an error |
 | `width`, `height` | fetch-pages | pixel size (sharp metadata) |
 | `retrieved_at` | fetch-pages | UTC time of the download, `2026-10-03T10:00:00Z` |

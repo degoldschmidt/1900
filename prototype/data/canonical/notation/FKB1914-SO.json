@@ -1,0 +1,102 @@
+{
+  "edition_id": "FKB1914-SO",
+  "src": "sl-rfrkuf_394077458-19140001:p9:-:-:-",
+  "clock": "12h",
+  "timeSeparators": [" ", "."],
+  "meridian": {
+    "mode": "night-type",
+    "marks": ["u"],
+    "amMarkers": [],
+    "pmMarkers": [],
+    "initial": null
+  },
+  "literals": {},
+  "ditto": ["〃"],
+  "dittoInTimes": false,
+  "passThrough": ["|"],
+  "notServed": ["—", "…"],
+  "arrMarkers": ["in", "i.", "an"],
+  "depMarkers": ["a.", "aus", "ab"],
+  "singleTime": "dep",
+  "unmarkedRunning": "daily",
+  "symbolFlags": {
+    "×": "request",
+    "(e)": "dep_only",
+    "(a)": "arr_only"
+  },
+  "sleeperMarkers": ["Schlafwagen", "Schlafw.", "Schlafwag."],
+  "maxLegHours": 20,
+  "headerLines": ["train_no", "classes"],
+  "tables": {
+    "12": {
+      "operator": "Kgl. Sächs. Staatseisenbahnen (Dresden – Röderau); Kgl. Preuß. Staatseisenbahnen (Röderau – Berlin)",
+      "mode": "rail",
+      "segments": ["S-DRE-BER-ROD"]
+    },
+    "13": {
+      "operator": "Kgl. Sächs. Staatseisenbahnen (Dresden – Elsterwerda); Kgl. Preuß. Staatseisenbahnen (Elsterwerda – Berlin)",
+      "mode": "rail",
+      "segments": ["S-DRE-BER-ELS"]
+    },
+    "23": {
+      "operator": "Kgl. Sächs. Staatseisenbahnen",
+      "mode": "rail",
+      "segments": ["S-DRE-BOD"]
+    },
+    "112": {
+      "operator": "K. k. Direktion für die Linien der Staatseisenbahn-Gesellschaft",
+      "mode": "rail",
+      "segments": ["S-BOD-PRG", "S-PRG-WIE-STEG"],
+      "headerLines": ["classes"]
+    },
+    "123": {
+      "operator": "K. k. österreichische Staatsbahnen",
+      "mode": "rail",
+      "segments": ["S-PRG-WIE-FJB"],
+      "headerLines": ["classes"]
+    },
+    "126": {
+      "operator": "K. k. Nordwestbahn-Direktion",
+      "mode": "rail",
+      "segments": ["S-TET-WIE-NWB"],
+      "headerLines": ["classes"]
+    }
+  },
+  "_draft": {
+    "status": "DRAFT for the historian (D2 pilot). Not yet named by data/canonical/editions.csv; the normaliser will not use it until an editions row FKB1914-SO points to it.",
+    "citations": {
+      "validity": "sl-rfrkuf_394077458-19140001:p3:-:-:- (title page: 'Sommer-Ausgabe 1914 (1. Mai bis 30. September.)')",
+      "signs": "sl-rfrkuf_394077458-19140001:p9:-:-:- (printed p. 5, 'Zeichenerklärung und allgemeine Bemerkungen, I. Zu den Fahrplänen', items 1–12 and the notes below them)"
+    },
+    "read_from_p9": {
+      "1 ×": "Zug hält nur nach Bedarf (request stop; passengers must report to staff 5 minutes before the scheduled departure) → symbolFlags × = request",
+      "2 (e)": "Zug hält nur zum Einsteigen von Reisenden → dep_only",
+      "3 (a)": "Zug hält nur zum Aussteigen von Reisenden → arr_only",
+      "4 L and italic figures": "Luxuszug with express and special supplement",
+      "5 D": "D-Zug (mostly corridor coaches) with express supplement (Schnellzugszuschlag)",
+      "6 italic figures without further sign": "Schnellzug with express supplement — keyers mark italic as i; it is typography for the times but identifies the train category",
+      "7 E": "Eilzug without express supplement",
+      "8 ||||| at the head of a train": "carries a Reichspost van (no guarantee)",
+      "9 O.G.": "no registered luggage or express parcels carried",
+      "10 underlined minutes (6 50)": "night time from 6.00 in the evening to 5.59 in the morning → meridian night-type, marks [u]",
+      "11 figures left of stations": "distance in km from the start of the line (keyed as part of the label; the alias table must include them, or the label must be normalised before alias lookup)",
+      "12 figures right of stations": "number of the connecting table (as above)",
+      "connections": "In Chemnitz Hbf. and Dresden Hbf. only trains with at least 5 minutes between them count as connections; in Leipzig Hbf. 14 minutes between trains of different numbers, exceptions shown in the tables (candidate min_change rows, cited p9)",
+      "Sunday trains": "Sonn- und Festtagszüge run on Sundays and on the holidays Himmelfahrtstag (21 May) and Pfingstmontag (1 June) → running-rule input for footnotes 'An Sonn- u. Festtagen'"
+    },
+    "uncertain_for_historian": [
+      "Night-type reading: the page says underlined MINUTES mean 6.00 p.m.–5.59 a.m.; keyers mark the whole time cell u when its minutes are underlined. Confirm that no table uses underlining for anything else (some crops show underlined hours too, e.g. boxed or ruled times).",
+      "Noon and midnight: 12 00–12 59 unmarked is read as 12.00–12.59 p.m. (day) and underlined as 0.00–0.59 a.m. (night) by the normaliser's night-type rule; confirm on a train crossing midnight (e.g. table 12 '12 24' in the night after Sundays).",
+      "Arrival and departure markers are PREFIXES in this guide ('a. Dresden Hbf.', 'aus Bodenbach', 'in Bodenbach', 'i. Dresden-Neustadt', '〃 Bodenb.'); the normaliser reads markers only from label sub-column 1 or as a SUFFIX. It needs prefix support (or alias rows per prefixed form) before these tables can be normalised. In table 123 the label carries two markers, one for each direction ('a. Dresd. Hbf. 23 i.').",
+      "'a.' = ab (departure) and 'i.'/'in' = in (arrival) are inferred from usage, not stated on p9. 'an'/'Ank.' (arrival) and 'ab' also appear as words in time cells (tables 112, 126, 123: e.g. 'ab' above a time, 'Ank.' below the last time of a train); their reading must be decided per table.",
+      "Table 123 is printed both ways around a central station column: its right half (c10–c19) reads from bottom to top (Wien → Prag, marked by the up arrow). The normaliser reads every column top to bottom; it needs a per-column direction before table 123 can be normalised.",
+      "Times printed once across two columns under a brace (table 112, Kolin–Wien rows of the two Bodenbach–Prag trains that join) are keyed in the leftmost column only; the historian decides whether the other train shares them.",
+      "Running days are printed as sideways notes inside the train columns (keyed from the column-notes crops with c:<n>) and as table footnotes ('• Nur Sonn- und Festtags vom 31. Mai bis mit 30. August und am 2. Juni'); the normaliser does not yet read column notes. unmarkedRunning 'daily' is assumed for columns without any note.",
+      "Sleeping cars: no sign on p9; sleeping cars are named in sideways notes ('Schlafwagen Berlin–Karlsbad', 'Schlafw.'), not header markers. sleeperMarkers lists those words for the column notes; the normaliser reads sleeperMarkers only from header cells.",
+      "Classes: printed as a header line ('I-IV', 'II. III', 'I.-III.'), the class line is h1 in tables 12, 13, 23 and h0 in 112, 123, 126 (no train numbers printed there; 126 p1/p2 header band is empty).",
+      "Operators and segment ids are proposals: segments.csv is empty; the ids S-DRE-BER-ROD, S-DRE-BER-ELS, S-DRE-BOD, S-BOD-PRG, S-PRG-WIE-STEG, S-PRG-WIE-FJB and S-TET-WIE-NWB must be created (or renamed here) at normalisation.",
+      "Clock zone: the guide states no zone. Saxony, Prussia and Austria (Bohemia) all kept Central European Time (MEZ) for railways in 1914; to be confirmed from a cited source before zones.csv rows are written.",
+      "The '□' sign means customs examination in tables 23 ('In Tetschen u. Bodenbach Zollabfertigung') but other things elsewhere (table 123: Sunday trains), so it is a per-table footnote, not a guide-wide symbolFlag."
+    ]
+  }
+}

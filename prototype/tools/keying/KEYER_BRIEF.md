@@ -24,7 +24,9 @@ The crop is a composite, magnified 2–3×, with red rulers that are **not** par
 
 - `c<n>` above each train column, `r<n>` beside each body row, `h<n>` beside each header line, `L<n>` above each label sub-column. These numbers are **absolute** positions in the printed table, so use them exactly as shown, even when they do not start at 0.
 - The orange lines only mark where the label column, the header band and the body block were joined. Text never continues across them.
+- **Row numbers may jump.** Only the rows a game needs are keyed (stations such as Dresden, Bodenbach, Prague); the rows between them are left out of the crop, and an orange line marks each place where rows were left out. Key exactly the `r<n>` shown.
 - A **footnote crop** (its id ends in `-fn-<panel>`) shows only the footnotes printed under the table; see "Footnote crops" below.
+- A **column-notes crop** (its id contains `-cn-`) shows the train columns at full height; see "Column-notes crops" below.
 
 ## What you write
 
@@ -50,7 +52,7 @@ Quote a field with double quotes if it contains a comma (`"Köln (Cologne), Hbf.
 
 ## Writing what is printed
 
-**Characters.** Copy letters, digits and punctuation as printed, including old spellings, accents and capitals: `Cöln`, `Eydtkuhnen`, `Wirballen`, `ST. PETERSBURG`. Keep the separator between hours and minutes exactly as printed: `8 15`, `8.15`, `8·15`. Several spaces count as one. Do not add a separator that is not printed (`815` stays `815`).
+**Characters.** Copy letters, digits and punctuation as printed, including old spellings, accents and capitals: `Cöln`, `Eydtkuhnen`, `Wirballen`, `ST. PETERSBURG`. Keep the separator between hours and minutes exactly as printed: `8 15`, `8.15`, `8·15`. Several spaces count as one. Do not add a separator that is not printed (`815` stays `815`). The one exception: minutes printed **raised and smaller** than the hour figures (`8⁵⁰`, as in the German Kursbücher) are written after one space, `8 50`; the raised position is their separator.
 
 **Signs: use these tokens.**
 
@@ -64,7 +66,11 @@ Quote a field with double quotes if it contains a comma (`"Köln (Cologne), Hbf.
 
 **Two things in one cell.** Write them in reading order (left to right, then top to bottom) with one space between: a small `aft` printed above `1 15` → `aft 1 15`.
 
-**A heading spanning several columns** (for example `Sleeping Car` printed across c14 and c15): write it once, in the leftmost column it covers, and leave the other columns' lines for that header line empty.
+**A heading spanning several columns** (for example `Sleeping Car` printed across c14 and c15): write it once, in the leftmost column it covers, and leave the other columns' lines for that header line empty. The same holds for a time printed once across two columns (often under a brace joining them): write it in the leftmost column it covers, leave the others empty, and mark it `sure=n` so the resolver checks the span.
+
+**Notes printed sideways or in boxes inside the train columns** (`Schlafwagen Berlin–Karlsbad`, `Nur Sonn- u. Festtags`, `Vom 15. Juni bis 15. September`) are not the content of the cells they run through. Key such a cell empty with `sure=y` unless a time or sign is also printed in it; the notes are keyed from the column-notes crop.
+
+**Words in time cells** such as `ab`, `an`, `Ank.` or `Abf.` are written as printed, like any other word.
 
 **A station name broken over two rows** (`Eydtkuh-` / `nen`): write each part on its own row, as printed, including the hyphen.
 
@@ -76,7 +82,7 @@ Quote a field with double quotes if it contains a comma (`"Köln (Cologne), Hbf.
 |---|---|
 | `b` | the cell's figures or words are in **bold/heavy** type (many guides print p.m. times in heavy type: this matters) |
 | `i` | italic |
-| `u` | underlined |
+| `u` | underlined (German Kursbücher underline the minutes of night times, 6.00 p.m.–5.59 a.m.: this matters as much as bold) |
 | `sc` | small capitals |
 | `fn:<symbol>` | a footnote reference mark printed with the cell, e.g. `fn:*`, `fn:†`, `fn:‡`, `fn:§`, `fn:a`, `fn:b`, `fn:1` |
 
@@ -97,6 +103,16 @@ Quote a field with double quotes if it contains a comma (`"Köln (Cologne), Hbf.
 ## Footnote crops
 
 A footnote crop shows the footnotes under the table. Key each footnote as one line of kind `footnote`, `col` 0, `row` 0, 1, 2 … from the top (left column first if they are printed in columns). The text is the whole footnote including its leading symbol, as printed; a footnote that wraps onto a second printed line is still one row, with the parts joined by one space. Put the footnote's own symbol in marks as `fn:<symbol>`.
+
+## Column-notes crops
+
+A column-notes crop (id `<table>-cn-<panel>-c<a>-<b>`) shows columns c<a>–c<b> over the whole height of the table, cut in two: the **left part is the upper half, the right part the lower half**; they overlap a little, and an orange bar separates them. The red ruler names the columns over each part.
+
+Key only the notes printed inside the train columns, not the times:
+- text printed sideways or in a box (`Speisewagen Berlin–Prag`, `Nur Sonn- u. Festtags`, `§ Über Riesa m. Umsteigen daselbst`);
+- a train number or class printed part-way down a column, for a train that starts below the top of the table (`293` above `II-IV`), or a word such as `Ank.`, `ab`, `an` standing alone above or below a block of times only if it is part of such a note.
+
+Write one line per note: kind `footnote`, `col` 0, `row` 0, 1, 2 … (left part top to bottom, then right part), the text as printed (lines of a note joined by one space; a train number with its class line as `293 II-IV`), and in `marks` the column it stands in as `c:<n>` (a note spanning two columns: `c:3;c:4`), plus `fn:<symbol>` if the note begins with a footnote symbol. A note cut by the split between the halves is keyed once, from the part where it is whole (the overlap is there for that); if neither part shows it whole, join the two pieces with one space. A sideways note that also contains a time (`In der Nacht nach Sonn- u. Festtagen: 12 24`) is keyed whole, time included.
 
 ## Before you save
 

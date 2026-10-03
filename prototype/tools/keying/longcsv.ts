@@ -72,7 +72,7 @@ export function normText(s: string): string {
 }
 
 export function isMark(m: string): boolean {
-  return TYPO_ORDER.includes(m) || /^fn:[^\s;]+$/.test(m);
+  return TYPO_ORDER.includes(m) || /^fn:[^\s;]+$/.test(m) || /^c:\d+$/.test(m);
 }
 
 /** Parses a marks field into a canonical list: unique, typographic marks first (b,u,i,sc), then fn:* sorted. */
@@ -114,7 +114,7 @@ function parseCommon(r: CsvRow, where: string, errors: string[]): KeyedCell | nu
   if (col === null) { errors.push(`${where}: col "${r.col ?? ''}" is not a non-negative integer`); ok = false; }
   if (row === null) { errors.push(`${where}: row "${r.row ?? ''}" is not a non-negative integer`); ok = false; }
   const rawMarks = (r.marks ?? '').split(';').map((m) => m.trim()).filter(Boolean);
-  for (const m of rawMarks) if (!isMark(m)) { errors.push(`${where}: unknown mark "${m}" (use b|u|i|sc|fn:<symbol>)`); ok = false; }
+  for (const m of rawMarks) if (!isMark(m)) { errors.push(`${where}: unknown mark "${m}" (use b|u|i|sc|fn:<symbol>, or c:<column> on a column note)`); ok = false; }
   const text = normText(r.text_as_printed ?? '');
   if (/["]/.test(text) && kind !== 'footnote') errors.push(`${where}: ASCII quote in text; key printed ditto marks as ${TOKENS.ditto}`);
   if (!ok) return null;

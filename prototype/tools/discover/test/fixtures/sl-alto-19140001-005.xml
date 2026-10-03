@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<alto xmlns="http://www.loc.gov/standards/alto/ns-v2#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/standards/alto/ns-v2# http://www.loc.gov/standards/alto/alto-v2.0.xsd">
+<Description>
+<MeasurementUnit>pixel</MeasurementUnit>
+<OCRProcessing ID="IdOcr"><ocrProcessingStep><processingDateTime>2013-10-22</processingDateTime><processingSoftware><softwareCreator>ABBYY</softwareCreator><softwareName>ABBYY Recognition Server</softwareName><softwareVersion>4.0</softwareVersion></processingSoftware></ocrProcessingStep></OCRProcessing>
+</Description>
+<Styles><TextStyle ID="font0" FONTFAMILY="Arial" FONTSIZE="5"/><TextStyle ID="font1" FONTFAMILY="Arial" FONTSIZE="8"/><TextStyle ID="font2" FONTFAMILY="Arial" FONTSIZE="11"/><TextStyle ID="font3" FONTFAMILY="Arial" FONTSIZE="28"/><TextStyle ID="font4" FONTFAMILY="Arial" FONTSIZE="30"/>
+<ParagraphStyle ID="StyleId-FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF-" ALIGN="Left" LEFT="0" RIGHT="0" FIRSTLINE="0"/>
+<ParagraphStyle ID="StyleId-3D78251E-74FD-4BBD-A36C-795267E490F7-" ALIGN="Left" LEFT="0" RIGHT="0" FIRSTLINE="-151"/>
+<ParagraphStyle ID="StyleId-BCDA5E2A-D558-409B-A678-952D21617147-" ALIGN="Block" LEFT="0" RIGHT="0" FIRSTLINE="0"/>
+<ParagraphStyle ID="StyleId-08CCF048-4F0F-4182-9CE5-E6C62B4D77E6-" ALIGN="Center" LEFT="0" RIGHT="0" FIRSTLINE="0"/>
+<ParagraphStyle ID="StyleId-0FD8BA32-0018-4F21-A6CF-8717A0016449-" ALIGN="Center" LEFT="0" RIGHT="0" FIRSTLINE="0"/>
+<ParagraphStyle ID="StyleId-B35CC514-9753-4C26-BCFB-864D09382159-" ALIGN="Center" LEFT="0" RIGHT="0" FIRSTLINE="0"/>
+<ParagraphStyle ID="StyleId-B435A730-ED7A-47D4-8320-7F3E84062CC2-" ALIGN="Center" LEFT="0" RIGHT="0" FIRSTLINE="0"/>
+<ParagraphStyle ID="StyleId-1DF599E2-1977-47AC-ABBC-8F4AB19B0AE4-" ALIGN="Center" LEFT="0" RIGHT="0" FIRSTLINE="0"/>
+</Styles>
+<Layout>
+<Page ID="Page1" PHYSICAL_IMG_NR="1">
+<PrintSpace HEIGHT="1842" WIDTH="1299" VPOS="0" HPOS="0">
+<TextBlock ID="fixture">
+<TextLine HEIGHT="118" WIDTH="660" VPOS="227" HPOS="213"><String STYLE="bold" CONTENT="Hamburg-«Amerika" HEIGHT="118" WIDTH="660" VPOS="227" HPOS="213"/></TextLine>
+<TextLine HEIGHT="106" WIDTH="148" VPOS="343" HPOS="837"><String STYLE="bold" STYLEREFS="font4" CONTENT="ßme" HEIGHT="106" WIDTH="148" VPOS="343" HPOS="837"/></TextLine>
+<TextLine HEIGHT="29" WIDTH="770" VPOS="787" HPOS="213" STYLEREFS="StyleId-B35CC514-9753-4C26-BCFB-864D09382159- font0"><String STYLE="bold" CONTENT="Personen-" HEIGHT="22" WIDTH="123" VPOS="787" HPOS="213"/><SP WIDTH="13" VPOS="796" HPOS="337"/><String STYLE="bold" CONTENT="und" HEIGHT="21" WIDTH="42" VPOS="789" HPOS="351"/><SP WIDTH="14" VPOS="789" HPOS="394"/><String STYLE="bold" CONTENT="Güterbeförderung" HEIGHT="27" WIDTH="213" VPOS="789" HPOS="409"/><SP WIDTH="15" VPOS="796" HPOS="623"/><String STYLE="bold" CONTENT="nach" HEIGHT="20" WIDTH="54" VPOS="791" HPOS="639"/><SP WIDTH="14" VPOS="791" HPOS="694"/><String STYLE="bold" CONTENT="allen" HEIGHT="21" WIDTH="55" VPOS="790" HPOS="709"/><SP WIDTH="13" VPOS="790" HPOS="765"/><String STYLE="bold" CONTENT="Teilen" HEIGHT="21" WIDTH="71" VPOS="790" HPOS="779"/><SP WIDTH="15" VPOS="792" HPOS="851"/><String STYLE="bold" CONTENT="der" HEIGHT="20" WIDTH="37" VPOS="792" HPOS="867"/><SP WIDTH="12" VPOS="792" HPOS="905"/><String STYLE="bold" CONTENT="Welt." HEIGHT="21" WIDTH="65" VPOS="792" HPOS="918"/></TextLine>
+</TextBlock>
+</PrintSpace>
+</Page>
+</Layout>
+</alto>

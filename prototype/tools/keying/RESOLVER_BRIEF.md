@@ -10,6 +10,8 @@ Two keyers transcribed the same crop independently (`tools/keying/KEYER_BRIEF.md
 - `zoom-<kind>-c<col>-r<row>.png`: the cell cut from the page scan with a margin, magnified 4×, the cell's box outlined in translucent red (the outline sits on the cell boundary; it is not a printed rule);
 - `R.template.csv`: one line per disputed cell, for you to fill.
 
+For a column-notes crop (`-cn-`), the zoom of a note shows the whole crop part; read the note in the crop itself. A column-notes line keyed by one keyer only (`missing-A`/`missing-B`) is resolved like any other: keep it if the note is printed in that column, otherwise choose `other` with empty text.
+
 Look at the whole crop first (to learn the type: how this guide's 3, 5, 6, 8 and 9 look, how heavy its p.m. type is, what its ditto marks look like), then at each zoom.
 
 ## Deciding

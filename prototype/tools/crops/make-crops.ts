@@ -9,13 +9,18 @@
  * column on its left and the header band on top (the top-left corner is the label column's own
  * heading). A red ruler shows ABSOLUTE indices: c<n> over each train column, r<n> beside each row,
  * h<n> beside header lines and L<n> over label sub-columns; nothing is drawn over the scan itself.
- * A thin orange gap marks where the parts were stitched together.
+ * A thin orange gap marks where the parts were stitched together, and where rows listed in the
+ * panel's skip_rows (node-only rule) were left out between kept rows.
  *
- * Block size: 6–8 columns × 12–18 rows, the largest that can be magnified at least 2× (at most 3×)
+ * Block size: 6–8 columns × 12–18 kept rows, the largest that can be magnified at least 2× (at most 3×)
  * with the long side ≤ 1500 px. A very high-resolution scan may get less than 2× (warned).
  *
  * A panel with a footnote_bbox also gets a footnote crop <table_ref>-fn-<panel> (the box alone,
- * magnified up to 3×, under a caption), keyed as kind=footnote lines.
+ * magnified up to 3×, under a caption), keyed as kind=footnote lines. A panel with a notes_bbox gets a
+ * column-notes crop <table_ref>-cn-<panel> (the box under a ruler of absolute column numbers), keyed
+ * the same way with a c:<n> mark per note. Column notes are cut per block of grid columns, and the
+ * block's top and bottom halves (overlapping by NOTES_OVERLAP px) are set side by side, so the long
+ * sideways notes are magnified about 2×.
  *
  * Output: scans/<source_id>/crops/<table_ref>/<crop_id>.png and data/raw/<source_id>/<table_ref>/crops.csv
  * (crop_id, page_seq, table_ref, x, y, w, h = body block in page pixels, header_bbox, label_bbox,
@@ -26,7 +31,7 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 import type { OverlayOptions } from 'sharp';
 import {
-  colRange, cropRowToCsv, headerLines, keyBox, labelCols, loadCropsCsv, loadLayout, nCols, nRows, panelForCrop, rowRange,
+  colRange, cropRowToCsv, headerLines, isSkippedRow, keptRows, keyBox, labelCols, loadCropsCsv, loadLayout, nCols, panelForCrop, rowRange,
   writeCropsCsv, type Box, type CellKey, type CropRow, type Layout, type Panel,
 } from './layout.ts';
 import { cropImage, cropsCsv, keyingCsv, layoutJson, roots, scansDir, type Roots } from '../keying/paths.ts';
@@ -48,18 +53,27 @@ export const RULER = { left: 52, top: 26, gap: 6 } as const;
 
 export interface Rect { x: number; y: number; w: number; h: number }
 
+/** A run of consecutive kept rows: its page y-range and where it is drawn (output y). */
+export interface RowRun { rows: [number, number]; pageY: number; pageH: number; outY: number; outH: number }
+
 export interface Geometry {
   scale: number;
+  /** Column-notes crops: the page boxes and output rectangles of their side-by-side parts. */
+  tiles?: Array<{ box: Box; rect: Rect }>;
   width: number;
   height: number;
-  /** Page boxes of the four parts. */
+  /** Page boxes of the four parts (label and body span every row of the block, kept or not). */
   page: { corner: Box; header: Box; label: Box; body: Box };
   /** Output rectangles of the four parts. */
   out: { corner: Rect; header: Rect; label: Rect; body: Rect };
+  /** The kept-row runs stacked in the label and body parts, top to bottom (one run without skip_rows). */
+  runs: RowRun[];
 }
 
 export interface PlannedCrop extends CropRow {
   panel: string;
+  /** A column-notes crop (notes_bbox): drawn under a column ruler. */
+  colNotes?: boolean;
   geometry: Geometry;
   warnings: string[];
 }
@@ -92,20 +106,51 @@ function pageBoxes(p: Panel, cols: [number, number], rows: [number, number]) {
   };
 }
 
-/** The scale that fits the composite in maxLong, capped at maxScale (floored to 1/100). */
-export function fitScale(labelW: number, bodyW: number, headerH: number, bodyH: number, o: { maxLong: number; maxScale: number }): number {
+/** The scale that fits the composite in maxLong, capped at maxScale (floored to 1/100). `gapsH` is fixed output height (row-run gaps). */
+export function fitScale(labelW: number, bodyW: number, headerH: number, bodyH: number, o: { maxLong: number; maxScale: number }, gapsH = 0): number {
   const sw = (o.maxLong - RULER.left - RULER.gap) / (labelW + bodyW);
-  const sh = (o.maxLong - RULER.top - RULER.gap) / (headerH + bodyH);
+  const sh = (o.maxLong - RULER.top - RULER.gap - gapsH) / (headerH + bodyH);
   return Math.floor(Math.min(o.maxScale, sw, sh) * 100) / 100;
+}
+
+/** Runs of consecutive kept rows within the absolute range `rows` (page y-ranges). */
+export function rowRuns(p: Panel, rows: [number, number]): Array<{ rows: [number, number]; pageY: number; pageH: number }> {
+  const out: Array<{ rows: [number, number]; pageY: number; pageH: number }> = [];
+  for (let r = rows[0]; r <= rows[1]; r++) {
+    if (isSkippedRow(p, r)) continue;
+    const last = out[out.length - 1];
+    if (last && last.rows[1] === r - 1) last.rows[1] = r;
+    else out.push({ rows: [r, r], pageY: 0, pageH: 0 });
+  }
+  for (const run of out) {
+    const y0 = p.row_y[run.rows[0] - p.first_row]!; const y1 = p.row_y[run.rows[1] - p.first_row + 1]!;
+    run.pageY = y0; run.pageH = y1 - y0;
+  }
+  return out;
+}
+
+/** Page height of the kept rows and the output height of the gaps between their runs. */
+function keptHeight(p: Panel, rows: [number, number]): { pageH: number; gapsH: number } {
+  const runs = rowRuns(p, rows);
+  return { pageH: runs.reduce((a, r) => a + r.pageH, 0), gapsH: Math.max(0, runs.length - 1) * RULER.gap };
 }
 
 export function geometry(p: Panel, cols: [number, number], rows: [number, number], scale: number): Geometry {
   const b = pageBoxes(p, cols, rows);
   const s = scale;
   const Lw = Math.round(b.label[2] * s); const Bw = Math.round(b.body[2] * s);
-  const Hh = Math.round(b.header[3] * s); const Bh = Math.round(b.body[3] * s);
+  const Hh = Math.round(b.header[3] * s);
   const x0 = RULER.left; const x1 = x0 + Lw + RULER.gap;
   const y0 = RULER.top; const y1 = y0 + Hh + RULER.gap;
+  const runs: RowRun[] = [];
+  let y = y1;
+  for (const r of rowRuns(p, rows)) {
+    if (runs.length) y += RULER.gap;
+    const outH = Math.max(1, Math.round(r.pageH * s));
+    runs.push({ ...r, outY: y, outH });
+    y += outH;
+  }
+  const Bh = y - y1;
   return {
     scale: s,
     width: x1 + Bw,
@@ -117,6 +162,7 @@ export function geometry(p: Panel, cols: [number, number], rows: [number, number
       label: { x: x0, y: y1, w: Lw, h: Bh },
       body: { x: x1, y: y1, w: Bw, h: Bh },
     },
+    runs,
   };
 }
 
@@ -125,7 +171,9 @@ export function planCrops(layout: Layout, opts: CropOptions = {}): PlannedCrop[]
   const o = { ...DEFAULTS, ...opts };
   const out: PlannedCrop[] = [];
   for (const p of layout.panels) {
-    const n = nCols(p); const m = nRows(p);
+    const n = nCols(p); const kept = keptRows(p); const m = kept.length;
+    /** Kept-row block [i, j] (indices into `kept`) → absolute row range. */
+    const absRows = (rr: [number, number]): [number, number] => [kept[rr[0]]!, kept[rr[1]]!];
     const colChoices = p.cols_per_crop ? [p.cols_per_crop] : range(o.cols[1], o.cols[0]);
     const rowChoices = p.rows_per_crop ? [p.rows_per_crop] : range(o.rows[1], o.rows[0]);
     const combos: Array<[number, number]> = [];
@@ -136,8 +184,10 @@ export function planCrops(layout: Layout, opts: CropOptions = {}): PlannedCrop[]
       const cb = splitEven(n, c); const rb = splitEven(m, r);
       let minS = Infinity;
       for (const rr of rb) for (const cc of cb) {
-        const b = pageBoxes(p, [cc[0] + p.first_col, cc[1] + p.first_col], [rr[0] + p.first_row, rr[1] + p.first_row]);
-        minS = Math.min(minS, fitScale(b.label[2], b.body[2], b.header[3], b.body[3], o));
+        const ar = absRows(rr);
+        const b = pageBoxes(p, [cc[0] + p.first_col, cc[1] + p.first_col], ar);
+        const kh = keptHeight(p, ar);
+        minS = Math.min(minS, fitScale(b.label[2], b.body[2], b.header[3], kh.pageH, o, kh.gapsH));
       }
       if (!best || minS > best.minS + 1e-9) best = { cb, rb, minS };
       if (minS >= o.minScale) { best = { cb, rb, minS }; break; }
@@ -145,9 +195,10 @@ export function planCrops(layout: Layout, opts: CropOptions = {}): PlannedCrop[]
     const { cb, rb } = best!;
     for (const rr of rb) for (const cc of cb) {
       const cols: [number, number] = [cc[0] + p.first_col, cc[1] + p.first_col];
-      const rows: [number, number] = [rr[0] + p.first_row, rr[1] + p.first_row];
+      const rows = absRows(rr);
       const b = pageBoxes(p, cols, rows);
-      const s = fitScale(b.label[2], b.body[2], b.header[3], b.body[3], o);
+      const kh = keptHeight(p, rows);
+      const s = fitScale(b.label[2], b.body[2], b.header[3], kh.pageH, o, kh.gapsH);
       const warnings: string[] = [];
       if (s < o.minScale) warnings.push(`magnification ${s}× is below ${o.minScale}× (the scan is large or the block cannot shrink further)`);
       if (s <= 0) throw new Error(`panel ${p.panel}: crop cannot fit in ${o.maxLong} px`);
@@ -159,6 +210,10 @@ export function planCrops(layout: Layout, opts: CropOptions = {}): PlannedCrop[]
       });
     }
     if (p.footnote_bbox) out.push(planFootnoteCrop(layout, p, o));
+    if (p.notes_bbox) for (const cc of cb) {
+      const nc = planNotesCrop(layout, p, [cc[0] + p.first_col, cc[1] + p.first_col], o);
+      if (nc) out.push(nc);
+    }
   }
   return out;
 }
@@ -167,8 +222,8 @@ const ZERO: Rect = { x: 0, y: 0, w: 0, h: 0 };
 const NO_BOX: Box = [0, 0, 0, 0];
 
 /** The footnote box of a panel as its own crop, under a one-line caption. */
-function planFootnoteCrop(layout: Layout, p: Panel, o: { maxLong: number; maxScale: number }): PlannedCrop {
-  const fb = p.footnote_bbox!;
+function planFootnoteCrop(layout: Layout, p: Panel, o: { maxLong: number; maxScale: number }, box?: Box): PlannedCrop {
+  const fb = box ?? p.footnote_bbox!;
   const s = Math.floor(Math.min(o.maxScale, o.maxLong / fb[2], (o.maxLong - RULER.top) / fb[3]) * 100) / 100;
   const w = Math.round(fb[2] * s); const h = Math.round(fb[3] * s);
   return {
@@ -178,6 +233,34 @@ function planFootnoteCrop(layout: Layout, p: Panel, o: { maxLong: number; maxSca
       scale: s, width: Math.max(w, 420), height: RULER.top + h,
       page: { corner: NO_BOX, header: NO_BOX, label: NO_BOX, body: fb },
       out: { corner: ZERO, header: ZERO, label: ZERO, body: { x: 0, y: RULER.top, w, h } },
+      runs: [],
+    },
+  };
+}
+
+/** Overlap (page px) of the top and bottom halves of a column-notes crop. */
+export const NOTES_OVERLAP = 30;
+
+/** A column-notes crop for one block of columns: the notes box cut to those columns, halves side by side. */
+function planNotesCrop(layout: Layout, p: Panel, cols: [number, number], o: { maxLong: number; maxScale: number }): PlannedCrop | null {
+  const nb = p.notes_bbox!;
+  const x0 = Math.max(nb[0], p.col_x[cols[0] - p.first_col]!); const x1 = Math.min(nb[0] + nb[2], p.col_x[cols[1] - p.first_col + 1]!);
+  if (x1 - x0 < 4) return null;
+  const w = x1 - x0; const half = Math.ceil(nb[3] / 2);
+  const top: Box = [x0, nb[1], w, Math.min(nb[3], half + NOTES_OVERLAP)];
+  const bottom: Box = [x0, nb[1] + half - NOTES_OVERLAP, w, nb[3] - half + NOTES_OVERLAP];
+  const gap = 4 * RULER.gap;
+  const s = Math.floor(Math.min(o.maxScale, (o.maxLong - gap) / (2 * w), (o.maxLong - RULER.top) / Math.max(top[3], bottom[3])) * 100) / 100;
+  const W = Math.round(w * s);
+  const tiles = [top, bottom].map((box, i) => ({ box, rect: { x: i * (W + gap), y: RULER.top, w: W, h: Math.round(box[3] * s) } }));
+  const body: Box = [x0, nb[1], w, nb[3]];
+  return {
+    crop_id: `${layout.table_ref}-cn-${p.panel}-c${cols[0]}-${cols[1]}`, page_seq: p.page_seq, table_ref: layout.table_ref,
+    body, header: NO_BOX, label: NO_BOX, cols: [0, -1], rows: [0, -1], footnotes: true, colNotes: true, panel: p.panel,
+    warnings: s < 1.5 ? [`column notes magnified only ${s}×`] : [],
+    geometry: {
+      scale: s, width: 2 * W + gap, height: RULER.top + Math.max(...tiles.map((t) => t.rect.h)),
+      page: { corner: NO_BOX, header: NO_BOX, label: NO_BOX, body }, out: { corner: ZERO, header: ZERO, label: ZERO, body: ZERO }, runs: [], tiles,
     },
   };
 }
@@ -240,14 +323,16 @@ export function rulerSvg(p: Panel, crop: Pick<CropRow, 'cols' | 'rows'>, g: Geom
     tick(xa, RULER.top - 7, xa, RULER.top - 1);
     if (c === crop.cols[1]) tick(xb, RULER.top - 7, xb, RULER.top - 1);
   }
-  // Row indices left of the label column.
-  for (let r = crop.rows[0]; r <= crop.rows[1]; r++) {
-    const i = r - p.first_row;
-    const ya = ob.y + (p.row_y[i]! - pb[1]) * s; const yb = ob.y + (p.row_y[i + 1]! - pb[1]) * s;
-    const size = Math.max(8, Math.min(14, (yb - ya) * 0.6));
-    parts.push(svgText(RULER.left - 6, (ya + yb) / 2, `r${r}`, size, 'end'));
-    tick(RULER.left - 4, ya, RULER.left - 1, ya);
-    if (r === crop.rows[1]) tick(RULER.left - 4, yb, RULER.left - 1, yb);
+  // Row indices left of the label column (kept rows only; numbers jump across a run gap).
+  for (const run of g.runs) {
+    for (let r = run.rows[0]; r <= run.rows[1]; r++) {
+      const i = r - p.first_row;
+      const ya = run.outY + (p.row_y[i]! - run.pageY) * s; const yb = run.outY + (p.row_y[i + 1]! - run.pageY) * s;
+      const size = Math.max(8, Math.min(14, (yb - ya) * 0.6));
+      parts.push(svgText(RULER.left - 6, (ya + yb) / 2, `r${r}`, size, 'end'));
+      tick(RULER.left - 4, ya, RULER.left - 1, ya);
+      if (r === run.rows[1]) tick(RULER.left - 4, yb, RULER.left - 1, yb);
+    }
   }
   // Header lines.
   const oh = g.out.header; const hb = p.header_bbox;
@@ -273,6 +358,7 @@ export function rulerSvg(p: Panel, crop: Pick<CropRow, 'cols' | 'rows'>, g: Geom
   const gap = (x: number, y: number, w: number, h: number) => parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#f0a030" opacity="0.8"/>`);
   gap(g.out.label.x + g.out.label.w, RULER.top, RULER.gap, g.height - RULER.top);
   gap(RULER.left, g.out.header.y + g.out.header.h, g.width - RULER.left, RULER.gap);
+  for (let k = 1; k < g.runs.length; k++) gap(RULER.left, g.runs[k]!.outY - RULER.gap, g.width - RULER.left, RULER.gap);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${g.width}" height="${g.height}">${parts.join('')}</svg>`;
 }
 
@@ -280,17 +366,44 @@ function footnoteCaptionSvg(g: Geometry): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${g.width}" height="${g.height}">${svgText(6, RULER.top / 2, 'footnotes: key each line as kind=footnote, col 0, row 0, 1, 2 … top to bottom', 12, 'start')}</svg>`;
 }
 
+/** Column ruler over each part of a column-notes crop (c<n> over each train column), and the gap between the parts. */
+export function notesRulerSvg(p: Panel, g: Geometry): string {
+  const s = g.scale; const parts: string[] = [];
+  for (const [k, t] of (g.tiles ?? []).entries()) {
+    for (let i = 0; i < p.col_x.length - 1; i++) {
+      const xa = t.rect.x + (p.col_x[i]! - t.box[0]) * s; const xb = t.rect.x + (p.col_x[i + 1]! - t.box[0]) * s;
+      if (xb <= t.rect.x + 1 || xa >= t.rect.x + t.rect.w - 1) continue;
+      const ca = Math.max(xa, t.rect.x); const cb = Math.min(xb, t.rect.x + t.rect.w);
+      parts.push(svgText((ca + cb) / 2, RULER.top / 2, `c${p.first_col + i}`, Math.max(9, Math.min(13, (cb - ca) * 0.35))));
+      parts.push(`<line x1="${ca.toFixed(1)}" y1="${RULER.top - 7}" x2="${ca.toFixed(1)}" y2="${RULER.top - 1}" stroke="${RED}" stroke-width="1"/>`);
+    }
+    if (k > 0) parts.push(`<rect x="${t.rect.x - 4 * RULER.gap}" y="0" width="${4 * RULER.gap}" height="${g.height}" fill="#f0a030" opacity="0.8"/>`);
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${g.width}" height="${g.height}">${parts.join('')}</svg>`;
+}
+
 /** Renders one planned crop to PNG. */
 export async function renderCrop(page: PageRaw, p: Panel, crop: PlannedCrop): Promise<Buffer> {
   const g = crop.geometry;
   const layers: OverlayOptions[] = [];
-  for (const part of ['corner', 'header', 'label', 'body'] as const) {
-    const r = g.out[part];
-    if (r.w <= 0 || r.h <= 0) continue;
-    const img = await cutScaled(page, g.page[part], g.scale, r.w, r.h);
-    layers.push({ input: img.data, raw: { width: img.width, height: img.height, channels: 3 }, left: r.x, top: r.y });
+  const parts: Array<{ box: Box; rect: Rect }> = [];
+  for (const part of ['corner', 'header'] as const) parts.push({ box: g.page[part], rect: g.out[part] });
+  if (g.tiles) parts.push(...g.tiles);
+  else if (crop.footnotes) parts.push({ box: g.page.body, rect: g.out.body });
+  else {
+    for (const run of g.runs) {
+      for (const part of ['label', 'body'] as const) {
+        const pb = g.page[part];
+        parts.push({ box: [pb[0], run.pageY, pb[2], run.pageH], rect: { x: g.out[part].x, y: run.outY, w: g.out[part].w, h: run.outH } });
+      }
+    }
   }
-  layers.push({ input: Buffer.from(crop.footnotes ? footnoteCaptionSvg(g) : rulerSvg(p, crop, g)), left: 0, top: 0 });
+  for (const { box, rect } of parts) {
+    if (rect.w <= 0 || rect.h <= 0) continue;
+    const img = await cutScaled(page, box, g.scale, rect.w, rect.h);
+    layers.push({ input: img.data, raw: { width: img.width, height: img.height, channels: 3 }, left: rect.x, top: rect.y });
+  }
+  layers.push({ input: Buffer.from(crop.colNotes ? notesRulerSvg(p, g) : crop.footnotes ? footnoteCaptionSvg(g) : rulerSvg(p, crop, g)), left: 0, top: 0 });
   return sharp({ create: { width: g.width, height: g.height, channels: 3, background: WHITE } })
     .composite(layers).png({ compressionLevel: 9 }).toBuffer();
 }

@@ -551,6 +551,19 @@
     ]
    },
    "notes": "C04 (and C07): registration deadlines for lodgers and residents, the Abmeldung with forwarding address, who files the slip (landlord or lodger). Prussian collections of police ordinances are also candidates."
+  },
+  {
+   "id": "fritzsche-kursbuch",
+   "title": "R. Fritzsches Kursbuch für Sachsen, das übrige Mitteldeutschland, Böhmen und Schlesien",
+   "kind": "guide",
+   "slub": {
+    "ids": [
+     "rfrkuf_394077458-19130002",
+     "rfrkuf_394077458-19140001",
+     "rfrkuf_394077458-19140002"
+    ]
+   },
+   "notes": "SLUB Dresden (P-E012, P-009): Winter 1913/14, Summer 1914 (the D2 pilot anchor for Berlin – Dresden – Bodenbach – Prague – Vienna) and Winter 1914/15. SLUB's search pages have a bot check, so issue ids are listed by hand; the series runs from summer 1911 (…-19110001) to winter 1915/16 (…-19150002)."
   }
  ]
 }

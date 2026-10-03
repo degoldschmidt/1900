@@ -77,7 +77,7 @@ bundle uses is listed in the bundle and on the game's About screen.
 | File | Key | Holds |
 |---|---|---|
 | `sources.csv` | source_id | A physical source (one digitised volume): library, title, access (`full`, `pdus`, `search-only`, `none`), terms |
-| `pages.csv` | source_id, page_seq | Pages we use: printed page number, content (`table`, `handbook`, `index`, `notation`, `footnotes`, `ads`), tables on it, image sha256 |
+| `pages.csv` | source_id, page_seq | Pages we use: printed page number, content (`title`, `table`, `handbook`, `index`, `notation`, `footnotes`, `ads`), tables on it, image sha256 |
 | `editions.csv` | edition_id | A timetable issue: its source, family (e.g. Bradshaw's Continental), validity, notation file, gap flag. Editions of one family never overlap (V07) |
 | `segments.csv` | segment_id | A stretch of line a game needs: end stations, tier (`A`, `B`, `C`, `W` wartime), games |
 | `segment_sources.csv` | segment_id, edition_id, date_from | Which edition is the truth (rank 1) or a cross-check (rank > 1) for a segment, when |
