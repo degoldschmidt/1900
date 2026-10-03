@@ -45,7 +45,7 @@ export function analyzeSave(save: SaveCode<Command>, mod: AnyModule, raw: GameBu
       simDays: Math.floor((sim.now - sim.scenario.start) / 86_400),
       finished: sim.queue.peek() === undefined || sim.queue.peek()!.at > sim.scenario.end,
       hash: sim.hash(),
-      ...(mod.metrics ? mod.metrics(sim) : {}),
+      ...(mod.metrics ? mod.metrics(sim, save.answers ?? {}) : {}),
     };
     return { ...base, ok: true, metrics };
   } catch (err) {

@@ -24,7 +24,7 @@ export interface CitationRef {
 }
 
 const CITE_RE = /^([^:\s]+):p(\d+):([^:\s]+):([^:\s]+):([^:\s]+)$/;
-const DV_RE = /^DV-\d{3,}$/;
+const DV_RE = /^DV-(?:C\d{2}-)?\d{3,}$/;
 
 export const isDvId = (s: string): boolean => DV_RE.test(s);
 

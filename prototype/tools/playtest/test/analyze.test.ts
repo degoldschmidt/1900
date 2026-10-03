@@ -31,6 +31,7 @@ describe('playtest analysis', () => {
     expect(a.metrics['SYN-1.moves']).toBe(2);
     expect(a.metrics.simDays).toBe(6);
     expect(a.answers).toEqual({ fair: 4 });
+    expect(a.metrics['SYN-1.fair']).toBe(4);
   });
 
   it('refuses a save made on other data', () => {

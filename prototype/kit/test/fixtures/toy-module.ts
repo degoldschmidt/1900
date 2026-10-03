@@ -13,5 +13,5 @@ export const toyModule: GameModule<ToyState, ToyCmd, ToyBundle> = {
     if (id !== 'toy-1') throw new Error(`No scenario ${id}`);
     return toyScenario(seed ?? 7);
   },
-  metrics: (sim) => ({ 'SYN-1.moves': sim.state.moves, 'SYN-1.deliveries': sim.state.delivered.length }),
+  metrics: (sim, answers) => ({ 'SYN-1.moves': sim.state.moves, 'SYN-1.deliveries': sim.state.delivered.length, 'SYN-1.fair': answers.fair ?? null }),
 };

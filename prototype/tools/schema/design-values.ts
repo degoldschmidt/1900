@@ -27,7 +27,7 @@ export interface DesignValue {
   line: number;
 }
 
-const HEAD_RE = /^##\s+(DV-\d{3,})\s+[—–-]\s+(.+?)\s*$/;
+const HEAD_RE = /^##\s+(DV-(?:C\d{2}-)?\d{3,})\s+[—–-]\s+(.+?)\s*$/;
 const FIELD_RE = /^[-*]\s+([a-z-]+):\s*(.*)$/;
 const FIELDS = ['value', 'unit', 'rationale', 'used-by'];
 

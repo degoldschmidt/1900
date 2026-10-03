@@ -15,6 +15,9 @@ export interface GameModule<S, C extends Command, B> {
   bundleFrom(raw: GameBundle): B;
   /** Builds a scenario; `seed` replaces the scenario's default seed (save codes record it). */
   scenario(bundle: B, id: string, seed?: number): Scenario;
-  /** Hypothesis metrics read from a replayed game, keyed by metric id (e.g. "H07-1.verbsPerStay"). */
-  metrics?(sim: Sim<S, C, B>): Record<string, Metric>;
+  /**
+   * Hypothesis metrics read from a replayed game, keyed by metric id (e.g. "H07-1.verbsPerStay").
+   * `answers` are the end-of-scenario questionnaire answers the save code carries.
+   */
+  metrics?(sim: Sim<S, C, B>, answers: Readonly<Record<string, string | number>>): Record<string, Metric>;
 }

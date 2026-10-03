@@ -55,6 +55,8 @@ export interface Ctx<S> {
   draw(purpose: string, ...ids: KeyPart[]): number;
   below(n: number, purpose: string, ...ids: KeyPart[]): number;
   chance(permille: number, purpose: string, ...ids: KeyPart[]): boolean;
+  /** Index drawn from a cumulative integer table (see rng/draw.ts `pickCdf`). */
+  pick(cdf: readonly number[], purpose: string, ...ids: KeyPart[]): number;
   /** Test and analysis trace; not part of state. */
   trace(kind: string, data?: unknown): void;
 }
@@ -156,6 +158,7 @@ export class Sim<S, C extends Command, B = unknown> {
       draw: (p, ...ids) => sim.rng.u32(p, ...ids),
       below: (n, p, ...ids) => sim.rng.below(n, p, ...ids),
       chance: (pm, p, ...ids) => sim.rng.chance(pm, p, ...ids),
+      pick: (cdf, p, ...ids) => sim.rng.pick(cdf, p, ...ids),
       trace: (kind, data = null) => { sim.trace.push({ k: sim.processed, at: sim.now, kind, data }); },
     };
   }

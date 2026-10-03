@@ -74,6 +74,8 @@ describe('citations', () => {
   it('recognises design-value ids', () => {
     expect(isDvId('DV-001')).toBe(true);
     expect(isDvId('DV-1')).toBe(false);
+    expect(isDvId('DV-C07-001')).toBe(true); // game-rule constants
+    expect(isDvId('DV-C7-001')).toBe(false);
     expect(isDvId('dv-001')).toBe(false);
   });
   it('parses cell references and range coverage', () => {
