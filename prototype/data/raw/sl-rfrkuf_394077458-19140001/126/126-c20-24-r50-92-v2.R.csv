@@ -31,6 +31,6 @@ crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
 126-c20-24-r50-92-v2,cell,24,91,11 40,b,y,B,thick heavy upright figures
 126-c20-24-r50-92-v2,cell,20,92,5 26,u,y,agree,
 126-c20-24-r50-92-v2,cell,21,92,7 08,,y,agree,
-126-c20-24-r50-92-v2,cell,22,92,9 39 10 48,fn:!,n,A,! before italic 9 39; upright 10 48 follows and runs over the c22/c23 rule
+126-c20-24-r50-92-v2,cell,22,92,10 48,,y,other,"G2 census adjudication P-E022 case 5: below r91 the print has six columns under the grid's five; this grid cell lies mainly on printed column 4 (10 48, under c22's 7 39). The ! 9 39 belongs to printed column 3, which has no grid column in r92-r93: a layout gap, left open"
 126-c20-24-r50-92-v2,cell,23,92,—,,n,A,a dash right of the overrunning 48
 126-c20-24-r50-92-v2,cell,24,92,1 48,b,y,B,thick heavy upright figures

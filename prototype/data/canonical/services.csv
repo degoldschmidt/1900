@@ -15,6 +15,7 @@ FKB1914-SO.112.c16.r55,FKB1914-SO,112,AT-T112-c16,,,K. k. Direktion für die Lin
 FKB1914-SO.112.c16.r56,FKB1914-SO,112,AT-T112-c16,,,K. k. Direktion für die Linien der Staatseisenbahn-Gesellschaft,rail,1;2;3,n,,daily,S-BOD-PRG;S-PRG-WIE-STEG,sl-rfrkuf_394077458-19140001:p183:112:112-c15-22-r55-61:h0c16,Schnellzug
 FKB1914-SO.112.c17.r55,FKB1914-SO,112,AT-T112-c17,,,K. k. Direktion für die Linien der Staatseisenbahn-Gesellschaft,rail,1;2;3,n,,daily,S-BOD-PRG;S-PRG-WIE-STEG,sl-rfrkuf_394077458-19140001:p183:112:112-c15-22-r55-61:h0c17,
 FKB1914-SO.112.c17.r56,FKB1914-SO,112,AT-T112-c17,,,K. k. Direktion für die Linien der Staatseisenbahn-Gesellschaft,rail,1;2;3,n,,daily,S-BOD-PRG;S-PRG-WIE-STEG,sl-rfrkuf_394077458-19140001:p183:112:112-c15-22-r55-61:h0c17,
+FKB1914-SO.112.c18,FKB1914-SO,112,AT-T112-c18,,,K. k. Direktion für die Linien der Staatseisenbahn-Gesellschaft,rail,2;3,n,,daily,S-BOD-PRG;S-PRG-WIE-STEG,sl-rfrkuf_394077458-19140001:p183:112:112-c15-22-r55-61:h0c18,
 FKB1914-SO.112.c2,FKB1914-SO,112,AT-T112-c2,,,K. k. Direktion für die Linien der Staatseisenbahn-Gesellschaft,rail,2;3,n,,daily,S-BOD-PRG;S-PRG-WIE-STEG,sl-rfrkuf_394077458-19140001:p182:112:112-c0-7-r0-54:h0c2,
 FKB1914-SO.112.c20,FKB1914-SO,112,AT-T112-c20,,,K. k. Direktion für die Linien der Staatseisenbahn-Gesellschaft,rail,1;2;3,n,,daily,S-BOD-PRG;S-PRG-WIE-STEG,sl-rfrkuf_394077458-19140001:p183:112:112-c15-22-r55-61:h0c20,D-Zug
 FKB1914-SO.112.c23.r55,FKB1914-SO,112,AT-T112-c23,,,K. k. Direktion für die Linien der Staatseisenbahn-Gesellschaft,rail,1;2;3,n,,daily,S-BOD-PRG;S-PRG-WIE-STEG,sl-rfrkuf_394077458-19140001:p183:112:112-c23-29-r55-61:h0c23,Schnellzug
@@ -76,6 +77,9 @@ FKB1914-SO.126.c20.r50,FKB1914-SO,126,AT-T126-c20,,,K. k. Nordwestbahn-Direktion
 FKB1914-SO.126.c20.r64,FKB1914-SO,126,AT-T126-c20,,,K. k. Nordwestbahn-Direktion,rail,1;2;3,y,,daily,S-TET-WIE-NWB,sl-rfrkuf_394077458-19140001:p193:126:126-c20-24-r50-92-v2:h0c20,Schnellzug
 FKB1914-SO.126.c21.r50,FKB1914-SO,126,AT-T126-c21,,,K. k. Nordwestbahn-Direktion,rail,1;2;3,y,,daily,S-TET-WIE-NWB,sl-rfrkuf_394077458-19140001:p193:126:126-c20-24-r50-92-v2:h0c21,Schnellzug
 FKB1914-SO.126.c21.r62,FKB1914-SO,126,AT-T126-c21,,,K. k. Nordwestbahn-Direktion,rail,1;2;3,y,,daily,S-TET-WIE-NWB,sl-rfrkuf_394077458-19140001:p193:126:126-c20-24-r50-92-v2:h0c21,Schnellzug
+FKB1914-SO.126.c22.r50,FKB1914-SO,126,AT-T126-c22,,,K. k. Nordwestbahn-Direktion,rail,1;2;3,n,,daily,S-TET-WIE-NWB,sl-rfrkuf_394077458-19140001:p193:126:126-c20-24-r50-92-v2:h0c22,D-Zug
+FKB1914-SO.126.c22.r62,FKB1914-SO,126,AT-T126-c22,,,K. k. Nordwestbahn-Direktion,rail,1;2;3,n,,daily,S-TET-WIE-NWB,sl-rfrkuf_394077458-19140001:p193:126:126-c20-24-r50-92-v2:h0c22,D-Zug
+FKB1914-SO.126.c22.r64,FKB1914-SO,126,AT-T126-c22,,,K. k. Nordwestbahn-Direktion,rail,1;2;3,n,,daily,S-TET-WIE-NWB,sl-rfrkuf_394077458-19140001:p193:126:126-c20-24-r50-92-v2:h0c22,D-Zug
 FKB1914-SO.126.c24.r50,FKB1914-SO,126,AT-T126-c24,,,K. k. Nordwestbahn-Direktion,rail,1;2;3,n,,daily,S-TET-WIE-NWB,sl-rfrkuf_394077458-19140001:p193:126:126-c20-24-r50-92-v2:h0c24,
 FKB1914-SO.126.c24.r62,FKB1914-SO,126,AT-T126-c24,,,K. k. Nordwestbahn-Direktion,rail,1;2;3,n,,daily,S-TET-WIE-NWB,sl-rfrkuf_394077458-19140001:p193:126:126-c20-24-r50-92-v2:h0c24,
 FKB1914-SO.126.c24.r64,FKB1914-SO,126,AT-T126-c24,,,K. k. Nordwestbahn-Direktion,rail,1;2;3,n,,daily,S-TET-WIE-NWB,sl-rfrkuf_394077458-19140001:p193:126:126-c20-24-r50-92-v2:h0c24,

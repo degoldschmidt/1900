@@ -13,7 +13,7 @@ crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
 123-c0-4-r0-5-v2,cell,2,0,—,,y,agree,
 123-c0-4-r0-5-v2,cell,3,0,2 30,u,y,agree,
 123-c0-4-r0-5-v2,cell,4,0,2 30,u,y,A,italic light figures identical to c3 2 30
-123-c0-4-r0-5-v2,cell,0,1,11 15,u,y,agree,
+123-c0-4-r0-5-v2,cell,0,1,11 15,u;fn:!,y,other,"G2 census adjudication P-E022 case 4: an upright ! printed level with and just before 11 15 at the cell's left edge, where there is no column rule (as before 9 55 in r0); both keyers missed it, probably washed pale in the crop's left margin"
 123-c0-4-r0-5-v2,cell,1,1,,,y,agree,
 123-c0-4-r0-5-v2,cell,2,1,—,,y,agree,
 123-c0-4-r0-5-v2,cell,3,1,4 05,u,y,agree,

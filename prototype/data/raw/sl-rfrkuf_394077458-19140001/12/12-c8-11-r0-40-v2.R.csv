@@ -13,7 +13,7 @@ crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note
 12-c8-11-r0-40-v2,label,0,3,a. Dresden-Neustadt,,n,B,only a dot before a.; no figure printed
 12-c8-11-r0-40-v2,label,0,40,198 i.Berlin Anh.Bf.312,,n,A,printed tight: i.Berlin Anh.Bf.312 (no space after the stops)
 12-c8-11-r0-40-v2,cell,8,0,,,y,agree,
-12-c8-11-r0-40-v2,cell,9,0,7 13,u,n,B,last figure has a rounded top (no flat bar of a 5): 3; lower part merges with the underline
+12-c8-11-r0-40-v2,cell,9,0,7 15,u,y,A,"G2 census adjudication P-E022 case 3: the minute figure, fused with the underline, matches this column's italic 5s (11 15, 8 45), not its 3s (10 13, 7 23); keyer A's reading"
 12-c8-11-r0-40-v2,cell,10,0,,,y,agree,
 12-c8-11-r0-40-v2,cell,11,0,9 54,b;u,y,B,heavy face like header 285; minutes underlined
 12-c8-11-r0-40-v2,cell,8,1,,,y,agree,
