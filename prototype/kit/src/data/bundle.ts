@@ -1,8 +1,12 @@
 /**
- * Game data bundles. A bundle is compiled from the canonical CSVs by tools/compile and inlined into
- * each game's HTML as <script type="application/json" id="game-data">. Placeholder builds carry a
- * bundle whose status is "awaiting-data".
+ * Game data bundles (schema 1). A bundle is compiled from the canonical CSVs by
+ * tools/compile/compile-bundles.ts and inlined into each game's HTML as
+ * <script type="application/json" id="game-data">. Placeholder builds carry only `meta`
+ * with status "awaiting-data".
  */
+import type { ParamRow, WorldEventRow, InstitutionRow } from '../params/types.ts';
+import type { TimetableData } from '../timetable/types.ts';
+
 export type BundleStatus = 'awaiting-data' | 'ready';
 
 export interface BundleMeta {
@@ -12,6 +16,35 @@ export interface BundleMeta {
   synthetic: boolean;
   dataHash: string;
   freezeTag?: string;
+  schema?: 1;
+  /** Day-number window the game may simulate: [fromDay, toDay] inclusive. */
+  window?: [number, number];
+}
+
+/** Where a historical value was read: a page of a source, and the table on it. */
+export interface Citation {
+  source: string;
+  sourceTitle: string;
+  edition: string | null;
+  pageSeq: number;
+  printedPage: string;
+  tableRef: string | null;
+}
+
+export interface DesignValueRow {
+  id: string;
+  value: unknown;
+  unit: string;
+  rationale: string;
+}
+
+export interface ReadyBundle extends TimetableData {
+  meta: BundleMeta & { status: 'ready'; schema: 1; window: [number, number] };
+  citations: Citation[];
+  params: ParamRow[];
+  calendar: WorldEventRow[];
+  institutions: InstitutionRow[];
+  designValues: DesignValueRow[];
 }
 
 export interface GameBundle {
@@ -30,6 +63,10 @@ export function decodeBundle(json: string): GameBundle {
     throw new Error('Game data meta section is malformed.');
   }
   return bundle;
+}
+
+export function isReady(b: GameBundle): b is GameBundle & ReadyBundle {
+  return b.meta.status === 'ready';
 }
 
 /** Reads the inlined bundle. Release builds reject synthetic data. */

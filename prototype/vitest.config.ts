@@ -5,7 +5,7 @@ export default defineConfig({
     __DEBUG__: 'true',
     __BUILD_ID__: JSON.stringify('test'),
   },
-  esbuild: { jsx: 'automatic', jsxImportSource: 'preact' },
+  oxc: { jsx: { runtime: 'automatic', importSource: 'preact' } },
   test: {
     environment: 'node',
     include: ['kit/test/**/*.test.ts', 'tools/**/test/**/*.test.ts', 'games/*/test/**/*.test.ts'],
