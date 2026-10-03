@@ -68,6 +68,47 @@ describe('normaliser: the tricky synthetic table end to end', () => {
   });
 });
 
+describe('normaliser: only resolved crops are read', () => {
+  const CROPS = 'SYN_SRC_9/SYN_T9/crops.csv';
+  const OLD = 'SYN_SRC_9/SYN_T9/SYN_K1-old.R.csv';
+  /** A superseded copy of SYN_K1 with one time misread, still listed in crops.csv. */
+  const withOldCrop = (status: string | null): RawDataset => {
+    const raw = tricky();
+    const k1 = raw.rawTexts.get('SYN_SRC_9/SYN_T9/crops.csv')!.split('\n').find((l) => l.startsWith('SYN_K1,'))!;
+    raw.rawTexts.set(CROPS, `${raw.rawTexts.get(CROPS)!.trimEnd()}\n${k1.replace('SYN_K1,', 'SYN_K1-old,')}\n`);
+    raw.rawTexts.set(OLD, raw.rawTexts.get(R1)!.replaceAll('SYN_K1,', 'SYN_K1-old,').replace('9 30', '9 50'));
+    raw.rawFiles.push(OLD);
+    if (status !== null) raw.rawTexts.set('status.csv', `${raw.rawTexts.get('status.csv')!}SYN_SRC_9,SYN_T9,SYN_K1-old,${status},880,superseded by -v2 crops (test)\n`);
+    return raw;
+  };
+  const inputOf = (raw: RawDataset) => inputFromDataset(parseDataset(raw), 'SYN_E9', 'SYN_T9');
+  it('leaves out a skipped (superseded) crop: the result is that of the resolved crops alone', () => {
+    const inp = inputOf(withOldCrop('skipped'));
+    if ('error' in inp) throw new Error(inp.error);
+    expect(inp.crops.map((c) => c.crop_id)).toEqual(['SYN_K1', 'SYN_K2']);
+    expect(inp.skippedCrops).toEqual(['SYN_K1-old']);
+    expect(inp.cells.has('SYN_K1-old')).toBe(false);
+    const res = normalizeTable(inp);
+    expect(res.issues).toEqual([]);
+    expect(csv(res, 'stops')).toBe(readFileSync(join(TRICKY, 'expected', 'stops.csv'), 'utf8'));
+  });
+  it('the same crop at status resolved would be read (and here contradicts SYN_K1)', () => {
+    const inp = inputOf(withOldCrop('resolved'));
+    if ('error' in inp) throw new Error(inp.error);
+    expect(inp.crops.map((c) => c.crop_id)).toContain('SYN_K1-old');
+    expect(errors(normalizeTable(inp)).join('\n')).toMatch(/SYN_K1-old/);
+  });
+  it('refuses a crop that is not yet resolved, or has no status row', () => {
+    expect(inputOf(withOldCrop('diffed'))).toEqual({ error: 'crop SYN_K1-old is at status diffed; only resolved crops are normalised' });
+    expect(inputOf(withOldCrop(null))).toEqual({ error: 'crop SYN_K1-old is not in raw/status.csv; only resolved crops are normalised' });
+  });
+  it('a table whose every crop is skipped has nothing to normalise', () => {
+    const raw = tricky();
+    raw.rawTexts.set('status.csv', raw.rawTexts.get('status.csv')!.replaceAll(',resolved,1000,', ',skipped,1000,superseded (test)'));
+    expect(inputOf(raw)).toEqual({ error: 'no resolved crops for raw/SYN_SRC_9/SYN_T9 (2 skipped)' });
+  });
+});
+
 describe('normaliser: the synthetic world', () => {
   it('reproduces the canonical rows of SYN_E1 table SYN_T1 byte for byte', () => {
     const ds = parseDataset(loadRaw(WORLD));

@@ -53,6 +53,16 @@ describe('V10 every page double-keyed', () => {
     expect(e).toMatch(/SYN_SRC_S p15 table SYN_T3U: no crops in raw\/SYN_SRC_S\/SYN_T3U\/crops.csv and no skip reason/);
     expect(e).toMatch(/raw\/status.csv:10: SYN_SRC_K SYN_K7 \*: a skip needs a reason in note/);
   });
+  it('does not report a skipped crop (e.g. superseded by a -v2 re-key) as unkeyed or below the re-key line', () => {
+    const raw = world();
+    raw.rawTexts.set('SYN_SRC_S/SYN_T2/crops.csv', `${raw.rawTexts.get('SYN_SRC_S/SYN_T2/crops.csv')!.trimEnd()}\nSYN_CR3-old,11,SYN_T2,0,0,1000,800,,,c0-c1,r0-r5\n`);
+    raw.rawTexts.set('status.csv', `${raw.rawTexts.get('status.csv')!}SYN_SRC_S,SYN_T2,SYN_CR3-old,resolved,700,\n`);
+    const before = run(raw, 'V10');
+    expect(errs(before).join('\n')).toMatch(/crop SYN_CR3-old: keying A and B missing/);
+    expect(warns(before).join('\n')).toMatch(/SYN_CR3-old: agreement 700‰ is below 950‰/);
+    raw.rawTexts.set('status.csv', raw.rawTexts.get('status.csv')!.replace('SYN_CR3-old,resolved,700,', 'SYN_CR3-old,skipped,700,superseded by -v2 crops'));
+    expect(run(raw, 'V10')).toEqual([]);
+  });
   it('warns about low agreement and table pages without table_refs; ignores out-of-scope sources', () => {
     const raw = world();
     raw.rawTexts.set('status.csv', raw.rawTexts.get('status.csv')!.replace('SYN_CR1,resolved,972', 'SYN_CR1,resolved,940'));
@@ -97,6 +107,18 @@ describe('V11 nothing unresolved', () => {
     expect(warns(issues)).toEqual(['raw/SYN_SRC_S/SYN_T9/SYN_CR9.R.csv:2: cell c0r0 is illegible and has no waiver']);
     addRow(raw, 'waivers', { waiver_id: 'SYN_W2', src: 'SYN_SRC_S:p10:SYN_T1:SYN_CR1:c1r3', note: 'SYN: accepted', historian: 'SYN historian', reviewed_on: '1914-01-01' });
     expect(errs(run(raw, 'V11'))).toEqual(['raw/SYN_SRC_S/SYN_T1/SYN_CR1.R.csv:5: header h1c1 is unresolved and has no waiver']);
+  });
+  it('ignores the resolved file of a skipped crop (superseded crops stay on disk as the record)', () => {
+    const raw = world();
+    const old = 'SYN_SRC_S/SYN_T1/SYN_CR1-old.R.csv';
+    raw.rawTexts.set(old, 'crop_id,kind,col,row,text_as_printed,marks,sure,resolution,note\nSYN_CR1-old,cell,0,0,9 0,,x,illegible,\nSYN_CR1-old,cell,1,0,9 5,,y,,\n');
+    raw.rawTexts.set('status.csv', `${raw.rawTexts.get('status.csv')!}SYN_SRC_S,SYN_T1,SYN_CR1-old,resolved,900,\n`);
+    expect(errs(run(raw, 'V11'))).toEqual([
+      'raw/SYN_SRC_S/SYN_T1/SYN_CR1-old.R.csv:2: cell c0r0 is illegible and has no waiver (crop not in crops.csv)',
+      'raw/SYN_SRC_S/SYN_T1/SYN_CR1-old.R.csv:3: cell c1r0 is unresolved and has no waiver (crop not in crops.csv)',
+    ]);
+    raw.rawTexts.set('status.csv', raw.rawTexts.get('status.csv')!.replace('SYN_CR1-old,resolved,900,', 'SYN_CR1-old,skipped,900,superseded by -v2 crops'));
+    expect(run(raw, 'V11')).toEqual([]);
   });
   it('warns about a waiver that matches nothing', () => {
     const raw = world();

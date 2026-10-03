@@ -5,7 +5,7 @@ import { parseCsv, writeCsv } from '../csv.ts';
 import { runDiff } from '../diff.ts';
 import { mergeCrop } from '../merge.ts';
 import { applyScore, collectPopulation, drawSample, runDraw, SAMPLE_COLUMNS, scoreMarkdown, scoreSample } from '../sample.ts';
-import { readStatus } from '../status.ts';
+import { readStatus, updateStatusFile } from '../status.ts';
 import { FN, GRID, setupTable, SOURCE, truthFootnotes, truthGrid, writeKeyer } from './fixture.ts';
 import type { Roots } from '../paths.ts';
 
@@ -47,6 +47,21 @@ describe('historian sample', () => {
     expect((await runDraw(r, 'pilot', { seed: '1914' })).csv).toBe(res.csv);
   });
 
+  it('draws only from resolved crops: a skipped (superseded) or not-yet-resolved crop is never sampled', async () => {
+    const r = await resolvedTables();
+    const status = join(r.data, 'raw', 'status.csv');
+    const crops = (pop: ReturnType<typeof collectPopulation>) => [...new Set(pop.map((p) => p.crop.crop_id))].sort();
+    expect(crops(collectPopulation(r))).toEqual(['T10-c0-3-r0-2', 'T9-c0-3-r0-2']);
+    const set = (crop: string, table: string, st: 'skipped' | 'diffed' | 'resolved') =>
+      updateStatusFile(status, [{ source_id: SOURCE, table_ref: table, crop_id: crop, status: st, agreement_permille: '', note: st === 'skipped' ? 'superseded by -v2 crops (test)' : '' }]);
+    set('T10-c0-3-r0-2', 'T10', 'skipped');
+    expect(crops(collectPopulation(r))).toEqual(['T9-c0-3-r0-2']);
+    set('T10-c0-3-r0-2', 'T10', 'diffed'); // an R.csv exists, but the crop is not resolved
+    expect(crops(collectPopulation(r))).toEqual(['T9-c0-3-r0-2']);
+    set('T10-c0-3-r0-2', 'T10', 'resolved');
+    expect(crops(collectPopulation(r))).toEqual(['T10-c0-3-r0-2', 'T9-c0-3-r0-2']);
+  });
+
   it('scores the re-reading and marks failing tables for re-keying above 0.5%', async () => {
     const r = await resolvedTables();
     await runDraw(r, 'g2', { seed: '7' });
@@ -73,5 +88,9 @@ describe('historian sample', () => {
     const st = readStatus(join(r.data, 'raw', 'status.csv'));
     expect(st.find((s) => s.crop_id === 'T10-c0-3-r0-2')!.status).toBe('rekey');
     expect(st.find((s) => s.crop_id === 'T9-c0-3-r0-2')!.status).toBe('resolved');
+    // A skipped crop of a failing table stays skipped.
+    updateStatusFile(join(r.data, 'raw', 'status.csv'), [{ source_id: SOURCE, table_ref: 'T10', crop_id: 'T10-fn-p1', status: 'skipped', agreement_permille: '', note: 'superseded (test)' }]);
+    expect(applyScore(r, bad, 'g2').map((u) => u.crop_id)).toEqual(['T10-c0-3-r0-2']);
+    expect(readStatus(join(r.data, 'raw', 'status.csv')).find((s) => s.crop_id === 'T10-fn-p1')!.status).toBe('skipped');
   });
 });

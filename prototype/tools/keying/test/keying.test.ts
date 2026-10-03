@@ -6,7 +6,7 @@ import { parseCsv, parseCsvRecords, writeCsv } from '../csv.ts';
 import { diffReadings, runDiff } from '../diff.ts';
 import { mergeCrop, mergeResolved } from '../merge.ts';
 import { buildPacket } from '../resolve-support.ts';
-import { readStatus, upsertStatus } from '../status.ts';
+import { cropIsResolved, cropIsSkipped, cropStatusRow, readStatus, upsertStatus } from '../status.ts';
 import { expectedKeys } from '../../crops/layout.ts';
 import { edit, FN, GRID, layout, setupTable, SOURCE, TABLE, truthFootnotes, truthGrid, writeKeyer } from './fixture.ts';
 import { planCrops } from '../../crops/make-crops.ts';
@@ -218,6 +218,20 @@ describe('status', () => {
     const row = (crop: string, status: 'keyed' | 'diffed') => ({ source_id: 's', table_ref: 't', crop_id: crop, status, agreement_permille: '', note: '' });
     const rows = upsertStatus([row('b', 'keyed'), row('a', 'keyed')], [row('b', 'diffed'), row('c', 'keyed')]);
     expect(rows.map((r) => `${r.crop_id}:${r.status}`)).toEqual(['a:keyed', 'b:diffed', 'c:keyed']);
+  });
+  it('finds the status that governs a crop: its own row, else the table\'s "*" row; skipped is never resolved', () => {
+    const row = (table: string, crop: string, status: string) => ({ source_id: 's', table_ref: table, crop_id: crop, status });
+    const rows = [row('t', 'a', 'resolved'), row('t', 'a-old', 'skipped'), row('u', '*', 'skip'), row('u', 'b', 'resolved'), row('t', 'c', 'diffed')];
+    expect(cropStatusRow(rows, 's', 't', 'a')?.status).toBe('resolved');
+    expect(cropStatusRow(rows, 's', 'u', 'x')?.status).toBe('skip');
+    expect(cropStatusRow(rows, 's', 't', 'x')).toBeUndefined();
+    expect([cropIsResolved(rows, 's', 't', 'a'), cropIsSkipped(rows, 's', 't', 'a')]).toEqual([true, false]);
+    expect([cropIsResolved(rows, 's', 't', 'a-old'), cropIsSkipped(rows, 's', 't', 'a-old')]).toEqual([false, true]);
+    expect([cropIsResolved(rows, 's', 'u', 'b'), cropIsSkipped(rows, 's', 'u', 'b')]).toEqual([true, false]);
+    expect([cropIsResolved(rows, 's', 'u', 'z'), cropIsSkipped(rows, 's', 'u', 'z')]).toEqual([false, true]);
+    expect([cropIsResolved(rows, 's', 't', 'c'), cropIsSkipped(rows, 's', 't', 'c')]).toEqual([false, false]);
+    expect(cropIsResolved(rows, 's', 't', 'none')).toBe(false);
+    expect(cropStatusRow([...rows, row('t', 'a', 'skipped')], 's', 't', 'a')?.status).toBe('skipped'); // the last row wins
   });
 });
 

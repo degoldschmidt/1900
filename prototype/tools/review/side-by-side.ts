@@ -7,13 +7,15 @@
  * data URI) beside a grid of its cells, read from <crop_id>.R.csv, or from .A.csv while the crop is
  * not yet resolved. Cells settled by the resolver (A, B or other) are tinted amber, doubtful cells
  * (sure=n) orange and illegible ones (sure=x) red; hovering shows both keyers' readings and the
- * resolver's note. One self-contained file for the owner and the historian; nothing is fetched.
+ * resolver's note. Crops whose status.csv status is skipped (e.g. superseded by re-keyed "-v2"
+ * crops) are left out; their files stay on disk as the record. One self-contained file for the
+ * owner and the historian; nothing is fetched.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { writeTextFile } from '../keying/csv.ts';
 import { cellKey, marksString, type KeyedCell, type ResolvedCell } from '../keying/longcsv.ts';
 import { cropImage, reviewHtml, roots, statusCsv, type Roots } from '../keying/paths.ts';
-import { readStatus } from '../keying/status.ts';
+import { cropIsSkipped, cropStatusRow, readStatus } from '../keying/status.ts';
 import { loadTable, readKeyer, readResolvedFile } from '../keying/crop-files.ts';
 import { headerLines, labelCols, panelForCrop, type CropRow, type Layout } from '../crops/layout.ts';
 
@@ -124,7 +126,7 @@ ${sections}
 export function buildViews(r: Roots, source: string, table: string): { layout: Layout; views: CropView[] } {
   const t = loadTable(r, source, table);
   const status = existsSync(statusCsv(r)) ? readStatus(statusCsv(r)) : [];
-  const views = t.crops.map((crop): CropView => {
+  const views = t.crops.filter((crop) => !cropIsSkipped(status, source, table, crop.crop_id)).map((crop): CropView => {
     const img = cropImage(r, source, table, crop.crop_id);
     const A = readKeyer(r, source, table, crop.crop_id, 'A');
     const B = readKeyer(r, source, table, crop.crop_id, 'B');
@@ -133,7 +135,7 @@ export function buildViews(r: Roots, source: string, table: string): { layout: L
     let src: CropView['source'] = 'none';
     if (R && R.cells.length) { for (const c of R.cells) cells.set(cellKey(c), c); src = 'R'; }
     else if (A) { for (const c of A.cells) cells.set(cellKey(c), c); src = 'A'; }
-    const st = status.find((s) => s.source_id === source && s.table_ref === table && s.crop_id === crop.crop_id);
+    const st = cropStatusRow(status, source, table, crop.crop_id);
     return {
       crop, source: src, cells,
       imageDataUri: existsSync(img) ? `data:image/png;base64,${readFileSync(img).toString('base64')}` : null,

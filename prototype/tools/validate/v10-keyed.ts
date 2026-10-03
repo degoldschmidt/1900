@@ -6,7 +6,9 @@
  * lists, data/raw/<source_id>/<table_ref>/crops.csv must list the crops on that page, and each
  * crop needs both keyings, <crop_id>.A.csv and <crop_id>.B.csv, unless data/raw/status.csv has a
  * row for it (source_id, table_ref, crop_id) whose status starts with "skip" and whose note gives
- * the reason. A whole table (or a page with no crops yet) may be skipped with crop_id "*".
+ * the reason. A whole table (or a page with no crops yet) may be skipped with crop_id "*". A
+ * skipped crop (e.g. one superseded by a re-keyed "-v2" crop) is never reported as unkeyed or as
+ * below the re-key line.
  *
  * Errors: a missing keying or crops list without a skip reason; a skip row without a note.
  * Warnings: an in-scope table page that lists no table_refs; a crop with agreement_permille
@@ -15,6 +17,7 @@
 import type { Dataset } from '../schema/dataset.ts';
 import { cmpStr } from '../schema/csv.ts';
 import { issue, type Issue } from '../schema/issues.ts';
+import { cropIsSkipped, isSkipStatus } from '../keying/status.ts';
 
 export function v10(ds: Dataset): Issue[] {
   const out: Issue[] = [];
@@ -23,11 +26,10 @@ export function v10(ds: Dataset): Issue[] {
   const files = new Set(ds.raw.rawFiles);
   const covered = new Set(ds.t.segment_sources.map((r) => r.edition_id));
   const sourcesInScope = new Set(ds.t.editions.filter((e) => covered.has(e.edition_id)).map((e) => e.source_id));
-  const skip = (source: string, table: string, crop: string) => ds.status.find((s) =>
-    s.source_id === source && s.table_ref === table && (s.crop_id === crop || s.crop_id === '*') && s.status.startsWith('skip'));
+  const skip = (source: string, table: string, crop: string) => cropIsSkipped(ds.status, source, table, crop);
   for (const s of ds.status) {
-    if (s.status.startsWith('skip') && !s.note) E(`raw/status.csv:${s.line}`, `${s.source_id} ${s.table_ref} ${s.crop_id}: a skip needs a reason in note`);
-    if (s.agreement_permille !== null && s.agreement_permille < 950 && s.status !== 'rekeyed' && !s.status.startsWith('skip')) {
+    if (isSkipStatus(s.status) && !s.note) E(`raw/status.csv:${s.line}`, `${s.source_id} ${s.table_ref} ${s.crop_id}: a skip needs a reason in note`);
+    if (s.agreement_permille !== null && s.agreement_permille < 950 && s.status !== 'rekeyed' && !skip(s.source_id, s.table_ref, s.crop_id)) {
       W(`raw/status.csv:${s.line}`, `${s.source_id} ${s.table_ref} ${s.crop_id}: agreement ${s.agreement_permille}‰ is below 950‰; re-key the crop`);
     }
   }

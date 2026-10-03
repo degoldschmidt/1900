@@ -12,6 +12,8 @@
  *    and column, and a row within the stop's rows);
  *  - a resolved cell (raw/<source>/<table>/<crop>.R.csv) with an empty resolution (unresolved) or
  *    resolution "illegible" and no waiver, in a table that already has services in services.csv.
+ *    A crop whose raw/status.csv status is skipped (e.g. superseded by a re-keyed "-v2" crop) is
+ *    not read: its files stay as the record, and its cells are neither unresolved nor illegible.
  * Warnings: such cells in tables not yet normalised (keying in progress); a waiver that matches
  * no stop and no cell.
  */
@@ -19,6 +21,7 @@ import type { Dataset } from '../schema/dataset.ts';
 import { citationCovers, formatCitation } from '../schema/citation.ts';
 import { cmpStr } from '../schema/csv.ts';
 import { issue, type Issue } from '../schema/issues.ts';
+import { cropIsSkipped } from '../keying/status.ts';
 
 const REF: Record<string, (col: number, row: number) => string> = {
   cell: (c, r) => `c${c}r${r}`, header: (c, r) => `h${r}c${c}`, label: (c, r) => `l${c}r${r}`, footnote: (_c, r) => `f${r}`,
@@ -42,6 +45,7 @@ export function v11(ds: Dataset): Issue[] {
   const normalised = new Set(ds.t.services.map((s) => `${sourceOfEdition.get(s.edition_id) ?? ''}/${s.table_ref}`));
   for (const key of [...ds.resolved.keys()].sort(cmpStr)) {
     const [source, table, crop] = key.split('/') as [string, string, string];
+    if (cropIsSkipped(ds.status, source, table, crop)) continue;
     const page = (ds.crops.get(`${source}/${table}`) ?? []).find((c) => c.crop_id === crop)?.page_seq;
     for (const c of ds.resolved.get(key)!) {
       if (c.resolution !== '' && c.resolution !== 'illegible') continue;

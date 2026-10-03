@@ -4,8 +4,10 @@
  *   node tools/normalize/normalize.ts --edition <edition_id> --table <table_ref> [--data <root>] [--check] [--partial]
  *
  * Reads data/raw/<source_id>/<table_ref>/crops.csv and each <crop_id>.R.csv (the resolved long
- * format of tools/keying/longcsv.ts: col/row are absolute grid indices, so crops stitch), the
- * edition's notation file (tools/schema/notation.ts), station_aliases.csv (the edition's family),
+ * format of tools/keying/longcsv.ts: col/row are absolute grid indices, so crops stitch) of the
+ * crops whose data/raw/status.csv status is "resolved"; a skipped crop (e.g. one superseded by a
+ * re-keyed "-v2" crop) is left out, and a crop at any other status (or none) stops the table. It
+ * also reads the edition's notation file (tools/schema/notation.ts), station_aliases.csv (the edition's family),
  * stations, zones and station_zones (to order times across clock zones), running_rules.csv and
  * waivers.csv. Without --check it replaces that table's rows in data/canonical/services.csv,
  * stops.csv and footnotes.csv. Any error (unknown station label, unreadable time, missing
@@ -90,6 +92,7 @@ import { hmOfSec, zoneLookup, type ZoneLookup } from '../schema/derive.ts';
 import { issue, errorsOf, formatIssue, type Issue } from '../schema/issues.ts';
 import type { HeaderField, Notation, StopFlag, TableNotation } from '../schema/notation.ts';
 import type { CellRow, CropRow } from '../schema/raw-keying.ts';
+import { cropStatusRow, isSkipStatus } from '../keying/status.ts';
 import type { RunningRuleRow, WaiverRow } from '../schema/canonical.ts';
 import { parseRule } from '../schema/running-rule.ts';
 
@@ -113,6 +116,8 @@ export interface NormalizeInput {
   refDay: number;
   runningRules: readonly RunningRuleRow[];
   waivers: readonly WaiverRow[];
+  /** Crops of crops.csv left out because status.csv says skipped (informational). */
+  skippedCrops?: readonly string[];
 }
 
 export interface NormalizeOptions {
@@ -207,6 +212,8 @@ export interface LabelParts {
   post: string | null;
   /** The distance figure before the name has unreadable digits ("?"). */
   kmIllegible: boolean;
+  /** A connecting-table number after the name has unreadable digits ("?"); only with labelTableRefs. */
+  refsIllegible?: boolean;
 }
 
 /**
@@ -235,15 +242,18 @@ export function parseLabelText(text: string, n: Notation, twoWay: boolean): Labe
     const m = /^(.*\S)\s+(\S+)$/.exec(t);
     if (m && (markers.includes(m[2]!) || n.ditto.includes(m[2]!))) { post = m[2]!; t = m[1]!; }
   }
+  let refsIllegible = false;
   if (n.labelTableRefs) {
-    const re = /(?:\s+|(?<=\.))[\d?]+[a-z]?(?:[.,]\s?[\d?]+[a-z]?)*[.,]?$/u;
+    // Table numbers follow the name after a space, or tight after its last "." or ")" ("Prag(F.J.B.)1").
+    const re = /(?:\s+|(?<=[.)]))[\d?]+[a-z]?(?:[.,]\s?[\d?]+[a-z]?)*[.,]?$/u;
     for (;;) {
       const m = re.exec(t);
       if (!m || m.index === 0) break;
+      if (m[0].includes('?')) refsIllegible = true;
       t = t.slice(0, m.index).trimEnd();
     }
   }
-  return { name: t.trim(), pre, post, kmIllegible };
+  return { name: t.trim(), pre, post, kmIllegible, ...(refsIllegible ? { refsIllegible } : {}) };
 }
 
 const ROMAN: Record<string, number> = { I: 1, II: 2, III: 3, IV: 4 };
@@ -309,9 +319,17 @@ export function normalizeTable(inp: NormalizeInput, opts: NormalizeOptions = {})
       if (r.kind === 'footnote') { footCells.push(cell); continue; }
       const k = `${r.kind}:${r.col}:${r.row}`;
       const prev = grid.get(k);
-      if (!prev) grid.set(k, cell);
-      else if (prev.text !== cell.text || prev.marks.join(';') !== cell.marks.join(';')) {
-        E(cellRef(r), `crops ${prev.crop} and ${cropId} disagree on ${cellRef(r)}: "${prev.text}" vs "${cell.text}"`);
+      if (!prev) { grid.set(k, cell); continue; }
+      const catMarks = Object.keys(n.category?.marks ?? {});
+      const sameBut = (ignore: readonly string[]) => prev.marks.filter((m) => !ignore.includes(m)).join(';') === cell.marks.filter((m) => !ignore.includes(m)).join(';');
+      if (r.kind === 'header' && prev.text === cell.text && !sameBut([]) && sameBut(catMarks)) {
+        // A header shared by crops of one column (sections of a long table): each keyer marks the
+        // train's category from the times in its own crop (P-013), so one reader's mark stands for the column.
+        const marks = [...new Set([...prev.marks, ...cell.marks])].sort(cmpStr);
+        Wn(cellRef(r), `crops ${prev.crop} and ${cropId} differ on the category mark of ${cellRef(r)} ([${prev.marks.join(';')}] vs [${cell.marks.join(';')}]); read as [${marks.join(';')}]`);
+        grid.set(k, { ...prev, marks });
+      } else if (prev.text !== cell.text || prev.marks.join(';') !== cell.marks.join(';')) {
+        E(cellRef(r), `crops ${prev.crop} and ${cropId} disagree on ${cellRef(r)}: "${prev.text}"${prev.marks.length ? ` [${prev.marks.join(';')}]` : ''} vs "${cell.text}"${cell.marks.length ? ` [${cell.marks.join(';')}]` : ''}`);
       }
     }
   }
@@ -426,8 +444,9 @@ export function normalizeTable(inp: NormalizeInput, opts: NormalizeOptions = {})
     if (n.labelMarkers === 'prefix') {
       const p = parseLabelText(text, n, twoWay);
       if (PENDING(name.status)) {
-        if (!partial || !p.kmIllegible || p.name.includes('?')) { blocked(name, 'label'); continue; }
-        Wn(`l0r${row}`, `pending: label "${name.text}" (${name.crop}) is ${name.status}; only its distance figure is unreadable, so the station is read without it`);
+        if (!partial || !(p.kmIllegible || p.refsIllegible) || p.name.includes('?')) { blocked(name, 'label'); continue; }
+        const what = p.kmIllegible && p.refsIllegible ? 'distance and table figures are' : p.kmIllegible ? 'distance figure is' : 'table figure is';
+        Wn(`l0r${row}`, `pending: label "${name.text}" (${name.crop}) is ${name.status}; only its ${what} unreadable, so the station is read without it`);
       }
       const side = (m: string | null, which: 'pre' | 'post'): Line | null => {
         if (m === null) return 'single';
@@ -888,13 +907,21 @@ export function inputFromDataset(ds: Dataset, editionId: string, tableRef: strin
   const crops = ds.crops.get(key);
   if (!crops) return { error: `no crops for raw/${key}/crops.csv` };
   const cells = new Map<string, CellRow[]>();
+  const used: CropRow[] = [];
+  const skippedCrops: string[] = [];
   for (const c of crops) {
+    // Only resolved crops are read; skipped ones (superseded, out of scope) stay on disk as the record.
+    const st = cropStatusRow(ds.status, ed.source_id, tableRef, c.crop_id);
+    if (st && isSkipStatus(st.status)) { skippedCrops.push(c.crop_id); continue; }
+    if (st?.status !== 'resolved') return { error: `crop ${c.crop_id} is ${st ? `at status ${st.status}` : 'not in raw/status.csv'}; only resolved crops are normalised` };
+    used.push(c);
     const rows = ds.resolved.get(`${key}/${c.crop_id}`);
     if (!rows) return { error: `crop ${c.crop_id} has no resolved file raw/${key}/${c.crop_id}.R.csv` };
     cells.set(c.crop_id, rows);
   }
+  if (used.length === 0) return { error: `no resolved crops for raw/${key} (${skippedCrops.length} skipped)` };
   return {
-    editionId, sourceId: ed.source_id, family: ed.family, tableRef, notation, crops, cells,
+    editionId, sourceId: ed.source_id, family: ed.family, tableRef, notation, crops: used, cells, skippedCrops,
     aliases: new Map(ds.t.station_aliases.filter((a) => a.family === ed.family).map((a) => [a.alias_as_printed, a.station_id])),
     zones: zoneLookup(ds), refDay: ed.valid_from, runningRules: ds.t.running_rules, waivers: ds.t.waivers,
   };
@@ -942,6 +969,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const ds = loadDataset(data);
   const inp = inputFromDataset(ds, edition, table);
   if ('error' in inp) { console.error(`normalize: ${inp.error}`); process.exit(1); }
+  if (inp.skippedCrops?.length) console.log(`normalize ${edition} ${table}: ${inp.skippedCrops.length} skipped crop(s) left out (${inp.skippedCrops.join(', ')})`);
   const res = normalizeTable(inp, { partial });
   for (const i of res.issues) (i.level === 'error' ? console.error : console.log)(formatIssue(i));
   const nErr = errorsOf(res.issues).length;

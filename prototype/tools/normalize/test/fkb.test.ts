@@ -92,6 +92,11 @@ describe('labels as Fritzsche prints them', () => {
     expect(p('a. Prag (F.J.B.) 1 718', true)).toEqual({ name: 'Prag (F.J.B.)', pre: 'a.', post: null, kmIllegible: false });
     expect(p('850 i. Wien F.J.B. 150 a.', true)).toEqual({ name: 'Wien F.J.B.', pre: 'i.', post: 'a.', kmIllegible: false });
   });
+  it('a table number printed tight after a bracket is dropped; an unreadable table number is noticed (G2 re-keying)', () => {
+    expect(p('a. Prag(F.J.B.)1 7 18', true)).toEqual({ name: 'Prag(F.J.B.)', pre: 'a.', post: null, kmIllegible: false });
+    expect(p('a. Tetschen N.W.B. 131 14?')).toEqual({ name: 'Tetschen N.W.B.', pre: 'a.', post: null, kmIllegible: false, refsIllegible: true });
+    expect(p('4?7 i. Wien N W.Bf 12?')).toMatchObject({ name: 'Wien N W.Bf', kmIllegible: true, refsIllegible: true });
+  });
   it('class lines, with ranges and fourth class dropped', () => {
     const c = (t: string) => { const s = parseClasses(t); return s ? [...s].sort().join(';') : null; };
     expect(c('I-IV')).toBe('1;2;3');
@@ -355,5 +360,35 @@ describe('table 126 (Tetschen–Wien Nordwestbahn), pp. 188–189: "ab", "Ank." 
     expect(stops(res, '126.c24.r50')).toEqual(['WIE-NWB /20:48', 'TETSCHEN 11:40+1/', 'DRE-HBF 13:48+1/']);
     expect(stops(res, '126.c24.r64')).toEqual(['PRG-FJB /07:50', 'TETSCHEN 11:40/', 'DRE-HBF 13:48/']);
     expect(res.services.some((s) => s.service_id.includes('.c26'))).toBe(false);
+  });
+});
+
+describe('-v2 re-keying of table 126: shared headers and unreadable table numbers', () => {
+  const tn = { trainKeyPrefix: 'AT', unnumbered: true, altRows: [[29, 31, 43]], dittoMarkers: { 1: 'a.' }, headerLines: ['classes' as const] };
+  const crops = (lowerHeader: R): Record<string, { page: number; rows: R[] }> => ({
+    '126-c1-5-r1-29-v2': { page: 192, rows: [
+      ['label', 0, 1, 'a. Dresden Hbf. 23'], ['label', 0, 2, 'a. Tetschen N.W.B. 131 14?', '', 'illegible'], ['label', 0, 29, 'in Prag F. J. B. 122'],
+      ['header', 4, 0, ''], ['cell', 4, 1, '—'], ['cell', 4, 2, '6 05'], ['cell', 4, 29, '9 51'],
+    ] },
+    '126-c0-5-r31-43-v2': { page: 192, rows: [
+      ['label', 0, 31, 'in Prag Ö. N. W. B.'], ['label', 0, 43, 'i. Wien N W. Bf'],
+      lowerHeader, ['cell', 4, 31, '9 55'], ['cell', 4, 43, '3 00'],
+    ] },
+  });
+  it('a header keyed in two crops of one column with the category mark in one only is read with the mark, and reported', () => {
+    const res = normalizeTable(input('126', tn, crops(['header', 4, 0, '', 'i'])), { partial: true });
+    expect(errs(res)).toEqual([]);
+    expect(warns(res)).toContain('FKB1914-SO 126 h0c4: crops 126-c0-5-r31-43-v2 and 126-c1-5-r1-29-v2 differ on the category mark of h0c4 ([i] vs []); read as [i]');
+    expect(res.services.filter((s) => s.service_id.startsWith('FKB1914-SO.126.c4')).map((s) => s.category)).toEqual(['Schnellzug', 'Schnellzug', 'Schnellzug']);
+  });
+  it('any other difference between two crops on one header is still an error, naming the marks', () => {
+    const res = normalizeTable(input('126', tn, crops(['header', 4, 0, '', 'b'])), { partial: true });
+    expect(errs(res)).toContain('FKB1914-SO 126 h0c4: crops 126-c0-5-r31-43-v2 and 126-c1-5-r1-29-v2 disagree on h0c4: "" [b] vs ""');
+  });
+  it('a label whose only unreadable part is a table number: strict refuses it, partial reads the station', () => {
+    expect(errs(normalizeTable(input('126', tn, crops(['header', 4, 0, '']))))).toContain('FKB1914-SO 126 l0r2: label l0r2 (126-c1-5-r1-29-v2) is illegible and has no waiver');
+    const res = normalizeTable(input('126', tn, crops(['header', 4, 0, ''])), { partial: true });
+    expect(warns(res)).toContain('FKB1914-SO 126 l0r2: pending: label "a. Tetschen N.W.B. 131 14?" (126-c1-5-r1-29-v2) is illegible; only its table figure is unreadable, so the station is read without it');
+    expect(stops(res, '126.c4.r29')).toEqual(['TETSCHEN /06:05', 'PRG-FJB 09:51/']);
   });
 });

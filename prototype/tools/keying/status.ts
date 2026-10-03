@@ -7,7 +7,10 @@
  * diffed    A and B diffed with agreement ≥ 950‰; the resolver packet can be built
  * resolved  <crop_id>.R.csv is complete (tools/keying/merge.ts)
  * rekey     agreement < 950‰, a keyer file is malformed, or the historian's sample failed
- * skipped   set by hand (e.g. a crop with nothing on the needed corridor); never changed by the tools
+ * skipped   set by hand (e.g. a crop with nothing on the needed corridor, or one superseded by a
+ *           re-keyed "-v2" crop); never changed by the tools. Its files stay on disk as the record,
+ *           but nothing downstream reads them: the normaliser and the historian's sample take only
+ *           resolved crops, the review page and V10/V11 leave skipped crops out.
  */
 import { cmpStr, readCsvFileOr, writeCsv, writeTextFile } from './csv.ts';
 
@@ -42,6 +45,31 @@ export function readStatus(path: string): StatusRow[] {
 
 export function findStatus(rows: readonly StatusRow[], source: string, table: string, crop: string): StatusRow | undefined {
   return rows.find((r) => r.source_id === source && r.table_ref === table && r.crop_id === crop);
+}
+
+type StatusLike = { source_id: string; table_ref: string; crop_id: string; status: string };
+
+/**
+ * The status row that governs one crop: its own row, else the table's crop_id "*" row (a whole
+ * table skipped by hand); of several rows for the same key the last wins. Works on both this
+ * module's rows and the validator's (tools/schema).
+ */
+export function cropStatusRow<T extends StatusLike>(rows: readonly T[], source: string, table: string, crop: string): T | undefined {
+  const mine = rows.filter((r) => r.source_id === source && r.table_ref === table).reverse();
+  return mine.find((r) => r.crop_id === crop) ?? mine.find((r) => r.crop_id === '*');
+}
+
+/** "skipped" (or a hand-written "skip…"): the crop is set aside, e.g. superseded by a re-keyed crop; no tool reads it. */
+export const isSkipStatus = (status: string): boolean => status.startsWith('skip');
+
+/** Only a crop whose governing status is exactly "resolved" feeds the normaliser and the historian's sample. */
+export function cropIsResolved(rows: readonly StatusLike[], source: string, table: string, crop: string): boolean {
+  return cropStatusRow(rows, source, table, crop)?.status === 'resolved';
+}
+
+export function cropIsSkipped(rows: readonly StatusLike[], source: string, table: string, crop: string): boolean {
+  const s = cropStatusRow(rows, source, table, crop);
+  return s !== undefined && isSkipStatus(s.status);
 }
 
 /** Inserts or replaces rows by (source_id, table_ref, crop_id); returns rows in a stable order. */

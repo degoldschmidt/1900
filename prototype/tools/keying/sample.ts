@@ -4,8 +4,9 @@
  *   node tools/keying/sample.ts draw --seed 1914 [--label pilot] [--stop-permille 50] [--fare-permille 100] [--sources a,b]
  *   node tools/keying/sample.ts score --label pilot [--apply]
  *
- * draw: over every resolved crop (<crop_id>.R.csv) under data/raw/, takes body cells that carry a
- * printed sign (non-blank, not illegible), stratified by (source_id, table_ref): 5% of timetable
+ * draw: over every resolved crop under data/raw/ (status.csv says resolved and <crop_id>.R.csv
+ * exists; skipped crops, e.g. ones superseded by re-keyed "-v2" crops, are never drawn), takes
+ * body cells that carry a printed sign (non-blank, not illegible), stratified by (source_id, table_ref): 5% of timetable
  * cells and 10% of fare cells (layout.json table_kind "fares"), at least one per stratum. The choice
  * is deterministic: cells are ordered by sha256("<seed>|<source>|<table>|<kind>|<col>|<row>") and the
  * first n taken, so the same seed and data give the same sample. Writes
@@ -14,7 +15,8 @@
  *
  * score: compares the historian's re-reading (reread_text, reread_marks) with the resolved cells.
  * A source whose error rate exceeds 0.5% (5‰) fails: its tables with at least one error are listed
- * for re-keying; --apply marks all their crops rekey in data/raw/status.csv. The report is printed
+ * for re-keying; --apply marks all their crops rekey in data/raw/status.csv (skipped crops are left
+ * as they are). The report is printed
  * and written to build/review/sample-<label>.score.md.
  */
 import { createHash } from 'node:crypto';
@@ -23,7 +25,7 @@ import { join } from 'node:path';
 import { cmpStr, readCsvFile, writeCsv, writeTextFile } from './csv.ts';
 import { canonicalMarks, cellKey, marksString, normText, parseResolved, type ResolvedCell } from './longcsv.ts';
 import { assertSafeId, layoutJson, roots, statusCsv, type Roots } from './paths.ts';
-import { updateStatusFile, type StatusRow } from './status.ts';
+import { cropIsResolved, cropIsSkipped, readStatus, updateStatusFile, type StatusRow } from './status.ts';
 import { loadTable } from './crop-files.ts';
 import { keyBox, loadLayout, panelForCrop, type CropRow } from '../crops/layout.ts';
 import { findPageImage, loadPage, zoomKey, type PageRaw } from '../crops/make-crops.ts';
@@ -43,6 +45,7 @@ export function collectPopulation(r: Roots, sources?: readonly string[]): Popula
   const raw = join(r.data, 'raw');
   if (!existsSync(raw)) return [];
   const out: PopulationCell[] = [];
+  const status = existsSync(statusCsv(r)) ? readStatus(statusCsv(r)) : [];
   for (const source of readdirSync(raw).sort(cmpStr)) {
     if (sources && !sources.includes(source)) continue;
     const sdir = join(raw, source);
@@ -54,6 +57,7 @@ export function collectPopulation(r: Roots, sources?: readonly string[]): Popula
       const t = loadTable(r, source, table);
       const fares = t.layout.table_kind === 'fares';
       for (const crop of t.crops) {
+        if (!cropIsResolved(status, source, table, crop.crop_id)) continue;
         const p = join(sdir, table, `${crop.crop_id}.R.csv`);
         if (!existsSync(p)) continue;
         const parsed = parseResolved(readFileSync(p, 'utf8'), { file: p, cropId: crop.crop_id });
@@ -178,12 +182,14 @@ export function scoreMarkdown(label: string, s: ScoreResult): string {
   return L.join('\n') + '\n';
 }
 
-/** Marks every crop of each failing table rekey. */
+/** Marks every crop of each failing table rekey (a skipped crop stays skipped). */
 export function applyScore(r: Roots, s: ScoreResult, label: string): StatusRow[] {
   const updates: StatusRow[] = [];
+  const status = existsSync(statusCsv(r)) ? readStatus(statusCsv(r)) : [];
   for (const b of s.bySource.filter((x) => x.fail)) {
     for (const table of b.tables) {
       for (const crop of loadTable(r, b.source_id, table).crops) {
+        if (cropIsSkipped(status, b.source_id, table, crop.crop_id)) continue;
         updates.push({ source_id: b.source_id, table_ref: table, crop_id: crop.crop_id, status: 'rekey', agreement_permille: '', note: `historian sample ${label}: ${b.permille}‰ errors in ${b.source_id}` });
       }
     }
