@@ -7,10 +7,14 @@
  *        [--region x,y,w,h] [--body y0,y1] [--header-lines 2] [--first-col 0] [--first-row 0]
  *        [--keep "Dresden,Bodenbach|Tetschen,…"] [--skip 3-7,12] [--footnote y0,y1] [--rotate 90] [--no-alto] [--print]
  *   node tools/crops/propose-layout.ts overlay <source_id> <table_ref> [--panel p1] [--zoom x,y,w,h] [--out file.png]
+ *   node tools/crops/propose-layout.ts check <source_id> <table_ref> [--panel p1]
  *
  * propose writes (or replaces, by panel name) the panel in data/raw/<source_id>/<table_ref>/layout.json,
  * or prints it with --print. overlay writes build/layout/<source_id>-<table_ref>-<panel>.png. The
  * proposal is a starting point: check every grid on its overlay and correct the layout by hand.
+ * check reads a layout (it writes nothing) and reports every kept row whose line of times touches
+ * a row line or leaves too little room below it for an underline, and every kept row holding two
+ * lines of times (a missing row line); run it after each hand correction of row_y.
  *
  * How the proposal is made (all coordinates are page pixels, after deskew):
  * - deskew: the slope of the long vertical rules (ink centroid in the upper vs lower half); applied
@@ -20,9 +24,15 @@
  *   right (gaps under 12 px are double rules). Time-shaped ALTO tokens ("8 15", "815", "1022") are
  *   clustered by x and split a gap that holds two clusters; a gap much wider than the others is only
  *   reported (it is usually one train with a vertical note beside its times);
- * - rows: text-line bands of the label column's ink profile (ALTO line baselines in the label column
- *   when the ALTO is upright), with boundaries at the midpoints, moved onto a horizontal rule when one
- *   lies between two rows;
+ * - rows: one per text line of the label column (its ALTO words when the ALTO is upright, else its ink
+ *   profile), each then moved onto the line of times it stands for, with boundaries at the midpoints,
+ *   moved onto a horizontal rule when one lies between two rows. The lines of times come from the
+ *   time-shaped ALTO tokens inside the train columns, else from each train column's ink profile (bands
+ *   much shorter or taller than a line of type dropped), joined across columns. A row with no times
+ *   is shifted like its neighbours. The label column's lines can sit several pixels off the times (in
+ *   the summer table 126 about 8 px above them, so underlines fell on a cell's lower edge and a
+ *   resolver read one away: decision P-E021); the offset is measured per panel and a warning given
+ *   when it exceeds ROW_OFFSET_WARN_PX;
  * - header band: the `--header-lines` text lines directly above the first body row;
  * - skip_rows: with --keep, rows whose ALTO label matches none of the names (node-only rule);
  *   with --skip, the listed rows. OCR text only selects rows; no value is ever taken from it.
@@ -43,7 +53,7 @@ import { writeTextFile } from '../keying/csv.ts';
 import { httpCacheDir, layoutJson, roots, type Roots } from '../keying/paths.ts';
 import { parsePageList } from '../fetch/manifest.ts';
 import { findPageImage } from './make-crops.ts';
-import { validateLayout, keptRows, type Box, type Layout, type Panel } from './layout.ts';
+import { isSkippedRow, keptRows, loadLayout, validateLayout, type Box, type Layout, type Panel } from './layout.ts';
 
 export interface Gray { width: number; height: number; data: Uint8Array }
 
@@ -68,7 +78,8 @@ export interface ProposeOptions {
   threshold?: number;
 }
 
-export interface Proposal { panel: Panel; notes: string[] }
+/** A proposed panel, with notes on how it was found and warnings for what to check first on the overlay. */
+export interface Proposal { panel: Panel; notes: string[]; warnings: string[] }
 
 // ---------------------------------------------------------------- image helpers
 
@@ -265,11 +276,113 @@ export function rotatePoint(x: number, y: number, deg: number, w: number, h: num
   return [W / 2 + dx * c - dy * s, H / 2 + dx * s + dy * c];
 }
 
+// ---------------------------------------------------------------- rows on the line of times
+
+/** A panel whose label column's lines sit further than this (px) from the gaps between its lines of times gets a warning. */
+export const ROW_OFFSET_WARN_PX = 3;
+
+/** A column shows a line of times where its ink reaches this many pixels per scanline. */
+export const MIN_LINE_INK = 6;
+
+/** Each train column's ink per scanline of [y0, y1) (3 px inside its rules), smoothed over 3 px. */
+export interface ColumnInk { y0: number; cols: number[][] }
+
+export function columnInk(img: Gray, thr: number, colX: readonly number[], y0: number, y1: number): ColumnInk {
+  const cols: number[][] = [];
+  for (let i = 0; i + 1 < colX.length; i++) {
+    const a = Math.max(0, colX[i]! + 3); const b = Math.min(img.width, colX[i + 1]! - 3);
+    const raw: number[] = [];
+    for (let y = y0; y < y1; y++) {
+      let n = 0;
+      if (y >= 0 && y < img.height) for (let x = a; x < b; x++) if (img.data[y * img.width + x]! < thr) n++;
+      raw.push(n);
+    }
+    cols.push(raw.map((v, k) => ((raw[k - 1] ?? v) + v + (raw[k + 1] ?? v)) / 3));
+  }
+  return { y0, cols };
+}
+
+/**
+ * The gap between two lines of times near `y` (within ±`half` px). In each train column, the runs of
+ * scanlines near the window's lowest ink that have a line of times above and below them in the window
+ * (MIN_LINE_INK, the run at most half as dark) are candidates; the longest wins (ties: the nearest to
+ * `y`), and its middle is that column's vote. The longest run, not the lowest scanline: a hairline gap
+ * between a time and its own underline is no gap between lines. Returns the median vote, or null when
+ * fewer than `minCols` columns vote; a column with a sideways note or a pass-through bar shows no such
+ * pattern, or is outvoted.
+ */
+export function gapNear(ink: ColumnInk, y: number, half: number, minCols = 2): { y: number; cols: number } | null {
+  const votes: number[] = [];
+  for (const S of ink.cols) {
+    const lo = Math.max(0, Math.round(y - half) - ink.y0); const hi = Math.min(S.length - 1, Math.round(y + half) - ink.y0);
+    if (hi - lo < 4) continue;
+    let m = Infinity; let M = 0;
+    for (let z = lo; z <= hi; z++) { m = Math.min(m, S[z]!); M = Math.max(M, S[z]!); }
+    if (M < MIN_LINE_INK) continue;
+    const tol = m + 0.15 * (M - m);
+    let best: [number, number] | null = null;
+    for (let z = lo; z <= hi; z++) {
+      if (S[z]! > tol) continue;
+      let e = z; while (e < hi && S[e + 1]! <= tol) e++;
+      let up = 0; let dn = 0;
+      for (let k = lo; k < z; k++) up = Math.max(up, S[k]!);
+      for (let k = e + 1; k <= hi; k++) dn = Math.max(dn, S[k]!);
+      const peak = Math.min(up, dn);
+      const c = (z + e) / 2 + ink.y0;
+      const better = !best || e - z > best[1] - best[0] || (e - z === best[1] - best[0] && Math.abs(c - y) < Math.abs((best[0] + best[1]) / 2 + ink.y0 - y));
+      if (peak >= MIN_LINE_INK && m <= 0.5 * peak && better) best = [z, e];
+      z = e;
+    }
+    if (best) votes.push(ink.y0 + Math.round((best[0] + best[1]) / 2));
+  }
+  return votes.length >= minCols ? { y: median(votes), cols: votes.length } : null;
+}
+
+export interface RowShift {
+  /** The row lines, moved onto the gaps between the lines of times. */
+  rowY: number[];
+  /** Per row line: its gap minus its old position, px; null where no gap was measured (on a rule, or no column voted). */
+  offsets: Array<number | null>;
+  measured: number;
+  /** Median of the measured offsets, px (positive: the old lines sat above the gaps). */
+  offset: number;
+}
+
+/**
+ * Moves row lines (found from the label column) onto the gaps between the lines of times in the train
+ * columns. A first pass (gapNear within ±0.6 pitch) estimates the panel's offset; the second places
+ * each line on the gap within ±0.3 pitch of its position moved by that offset (else on the first pass's
+ * gap, if it found one). A line on a horizontal
+ * rule stays on the rule. A line without a gap moves like its neighbours (linear between the nearest
+ * measured lines above and below).
+ */
+export function shiftRowsOntoTimes(rowY: readonly number[], ink: ColumnInk, pitch: number, ruleYs: readonly number[] = []): RowShift {
+  const onRule = (y: number) => ruleYs.some((r) => Math.abs(r - y) <= 1);
+  const first = rowY.map((y) => (onRule(y) ? null : gapNear(ink, y, 0.6 * pitch)));
+  const loose = first.flatMap((g, k) => (g ? [g.y - rowY[k]!] : []));
+  const est = loose.length ? median(loose) : 0;
+  // The second pass settles which gap is meant; where it finds none (the first or last row line, whose
+  // gap lies between the times and a header or rule), the first pass's gap stands.
+  const offsets = rowY.map((y, k) => { if (onRule(y)) return null; const g = gapNear(ink, y + est, 0.3 * pitch) ?? first[k]; return g ? g.y - y : null; });
+  const known: Array<[number, number]> = [];
+  offsets.forEach((d, k) => { if (d !== null) known.push([k, d]); });
+  const shiftAt = (k: number): number => {
+    let a: [number, number] | undefined; let b: [number, number] | undefined;
+    for (const x of known) { if (x[0] < k) a = x; else if (x[0] > k && !b) b = x; }
+    if (a && b) return a[1] + ((b[1] - a[1]) * (k - a[0])) / (b[0] - a[0]);
+    return (a ?? b)?.[1] ?? 0;
+  };
+  const out = rowY.map((y, k) => (onRule(y) ? y : y + Math.round(offsets[k] ?? shiftAt(k))));
+  for (let k = 1; k < out.length; k++) if (out[k]! <= out[k - 1]!) out[k] = out[k - 1]! + 1;
+  return { rowY: out, offsets, measured: known.length, offset: known.length ? Math.round(median(known.map((x) => x[1]))) : 0 };
+}
+
 // ---------------------------------------------------------------- proposal
 
 /** Proposes one panel from a (deskewed) page image and optional upright ALTO words. */
 export function proposePanel(img: Gray, words: readonly Word[] | null, o: ProposeOptions): Proposal {
   const notes: string[] = [];
+  const warnings: string[] = [];
   const region = clampBox(img, o.region ?? [Math.round(img.width * 0.04), Math.round(img.height * 0.05), Math.round(img.width * 0.92), Math.round(img.height * 0.9)]);
   const thr = o.threshold ?? Math.min(150, otsu(img, region));
   const [rx, ry, rw, rh] = region;
@@ -351,7 +464,25 @@ export function proposePanel(img: Gray, words: readonly Word[] | null, o: Propos
     bands = bands.filter((x) => x[1] - x[0] >= hMin);
     if (words) notes.push('few ALTO words in the label column: rows from the image profile only');
   }
-  const rowY = rowBoundaries(bands, hr, [body[0], body[1]]);
+  // The label column's rows select stations (--keep); the grid's row lines then move onto the gaps
+  // between the lines of times (decision P-E021).
+  const labelRowY = rowBoundaries(bands, hr, [body[0], body[1]]);
+  const pitch = median(bands.slice(1).map((x, i) => x[0] - bands[i]![0]).filter((d) => d > 0)) || 2 * median(bands.map((x) => x[1] - x[0])) || 24;
+  const ink = columnInk(img, thr, colX, Math.max(0, body[0] - Math.round(pitch)), Math.min(img.height, body[1] + Math.round(pitch)));
+  const sh = shiftRowsOntoTimes(labelRowY, ink, pitch, hr);
+  let rowY = labelRowY;
+  if (labelRowY.length > 1 && sh.measured >= Math.min(3, labelRowY.length - 1)) {
+    rowY = sh.rowY.map((y, k) => (k === 0 ? Math.max(body[0], y) : k === sh.rowY.length - 1 ? Math.min(body[1], y) : y));
+    for (let k = 1; k < rowY.length; k++) if (rowY[k]! <= rowY[k - 1]!) rowY[k] = rowY[k - 1]! + 1;
+    const known = sh.offsets.filter((d): d is number => d !== null);
+    const where = sh.offset === 0 ? 'on them' : `${Math.abs(sh.offset)} px ${sh.offset > 0 ? 'above' : 'below'} them`;
+    const msg = `row lines follow the gaps between the lines of times (${sh.measured} of ${labelRowY.length} measured in the train columns' ink); the label column's lines sit ${where}`;
+    if (Math.abs(sh.offset) > ROW_OFFSET_WARN_PX) warnings.push(`${msg}: check the rows on the overlay`); else notes.push(msg);
+    const lo = Math.min(...known); const hi = Math.max(...known);
+    if (hi - lo > 2 * ROW_OFFSET_WARN_PX) notes.push(`the offset varies from ${lo} to ${hi} px down the panel (a curved or skewed page?): each row line follows its own gap`);
+  } else if (labelRowY.length > 1) {
+    warnings.push(`only ${sh.measured} row line(s) found a gap between lines of times: rows follow the label column; check them against the times on the overlay`);
+  }
 
   // Header: the N text lines directly above the first body row.
   const nH = o.headerLines ?? 2;
@@ -380,8 +511,9 @@ export function proposePanel(img: Gray, words: readonly Word[] | null, o: Propos
     if (labelWords.length === 0) notes.push('--keep needs upright ALTO words in the label column; set skip_rows by hand');
     else {
       const pats = o.keep.map((k) => k.split('|').map((v) => ` ${foldForMatch(v)} `));
-      for (let i = 0; i < rowY.length - 1; i++) {
-        const text = ` ${foldForMatch(labelWords.filter((w) => w.y + w.h / 2 >= rowY[i]! && w.y + w.h / 2 < rowY[i + 1]!).map((w) => w.text).join(' '))} `;
+      // Label words belong to the row of their own line (labelRowY: the same rows, before they moved onto the times).
+      for (let i = 0; i < labelRowY.length - 1; i++) {
+        const text = ` ${foldForMatch(labelWords.filter((w) => w.y + w.h / 2 >= labelRowY[i]! && w.y + w.h / 2 < labelRowY[i + 1]!).map((w) => w.text).join(' '))} `;
         if (!pats.some((vs) => vs.some((v) => text.includes(v)))) skip.add(firstRow + i);
       }
     }
@@ -403,7 +535,56 @@ export function proposePanel(img: Gray, words: readonly Word[] | null, o: Propos
   if (sk.length) panel.skip_rows = sk;
   if (o.footnote) panel.footnote_bbox = [rx, o.footnote[0], rw, o.footnote[1] - o.footnote[0]];
   notes.push(`threshold ${thr}; ${vr.length} vertical rules, ${hr.length} horizontal rules; ${colX.length - 1} columns, ${rowY.length - 1} rows (${keptRows(panel).length} kept)`);
-  return { panel, notes };
+  return { panel, notes, warnings };
+}
+
+// ---------------------------------------------------------------- checking a layout's rows
+
+export interface RowCheck {
+  panel: string;
+  /** Row lines of kept rows measured against a gap between lines of times. */
+  measured: number;
+  /** Median of (row line − gap) over the measured row lines, px (negative: the rows sit above the times). */
+  offset: number;
+  /** The largest |row line − gap|, px (0 when none was measured). */
+  worst: number;
+  problems: string[];
+}
+
+/**
+ * Checks a panel's kept rows against the lines of times on its (deskewed) page (gapNear in the train
+ * columns' ink): a row line of a kept row with a gap between lines of times within ±0.6 pitch must lie
+ * within ROW_OFFSET_WARN_PX of it, and a kept row taller than 1.5 pitches must not hold such a gap in
+ * its middle (a missing row line). Row lines on a horizontal rule, or with no gap near them (blank
+ * paper), pass. Nothing is written.
+ */
+export function checkRows(img: Gray, p: Panel): RowCheck {
+  const thr = Math.min(150, otsu(img, clampBox(img, p.table_bbox)));
+  const kept = keptRows(p).map((r) => r - p.first_row);
+  const pitch = median(kept.map((i) => p.row_y[i + 1]! - p.row_y[i]!)) || 24;
+  const top = Math.max(0, p.row_y[0]! - Math.round(pitch)); const bottom = Math.min(img.height, p.row_y[p.row_y.length - 1]! + Math.round(pitch));
+  const xL = Math.min(p.label_bbox[0], p.col_x[0]!); const xR = Math.max(p.col_x[p.col_x.length - 1]!, p.label_bbox[0] + p.label_bbox[2]);
+  const hr = horizontalRules(img, thr, clampBox(img, [xL, top, xR - xL, bottom - top]), 0.5);
+  const ink = columnInk(img, thr, p.col_x, top, bottom);
+  const problems: string[] = [];
+  const offs: number[] = [];
+  const name = (k: number) => (k === 0 || isSkippedRow(p, p.first_row + k - 1) ? `the top of r${p.first_row + k}`
+    : k === p.row_y.length - 1 || isSkippedRow(p, p.first_row + k) ? `the bottom of r${p.first_row + k - 1}` : `the line between r${p.first_row + k - 1} and r${p.first_row + k}`);
+  for (const k of [...new Set(kept.flatMap((i) => [i, i + 1]))].sort((a, b) => a - b)) {
+    const y = p.row_y[k]!;
+    if (hr.some((r) => Math.abs(r - y) <= 3)) continue;
+    const g = gapNear(ink, y, 0.6 * pitch);
+    if (!g) continue;
+    offs.push(y - g.y);
+    if (Math.abs(y - g.y) > ROW_OFFSET_WARN_PX) problems.push(`${name(k)} (y ${y}) sits ${Math.abs(y - g.y)} px ${y < g.y ? 'above' : 'below'} the gap between the lines of times (y ${g.y}, ${g.cols} columns)`);
+  }
+  for (const i of kept) {
+    const y0 = p.row_y[i]!; const y1 = p.row_y[i + 1]!;
+    if (y1 - y0 <= 1.5 * pitch) continue;
+    const g = gapNear(ink, (y0 + y1) / 2, (y1 - y0) / 2 - 0.3 * pitch);
+    if (g && g.y > y0 + 0.3 * pitch && g.y < y1 - 0.3 * pitch) problems.push(`r${p.first_row + i} (y ${y0}–${y1}) holds a gap between two lines of times at y ${g.y} (${g.cols} columns): a row line is missing?`);
+  }
+  return { panel: p.panel, measured: offs.length, offset: offs.length ? median(offs) : 0, worst: offs.reduce((a, d) => Math.max(a, Math.abs(d)), 0), problems };
 }
 
 // ---------------------------------------------------------------- files and overlay
@@ -509,8 +690,22 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const r = roots();
   const main = async () => {
     const [cmd, source, table] = pos;
-    if (!cmd || !source || !table || !['propose', 'overlay'].includes(cmd)) throw new Error('usage: propose-layout.ts propose|overlay <source_id> <table_ref> … (see the file header)');
+    if (!cmd || !source || !table || !['propose', 'overlay', 'check'].includes(cmd)) throw new Error('usage: propose-layout.ts propose|overlay|check <source_id> <table_ref> … (see the file header)');
     const lPath = layoutJson(r, source, table);
+    if (cmd === 'check') {
+      const l = loadLayout(lPath);
+      const panels = opt('--panel') ? l.panels.filter((p) => p.panel === opt('--panel')) : l.panels;
+      if (panels.length === 0) throw new Error(`no panel ${opt('--panel')} in ${lPath}`);
+      let bad = 0;
+      for (const p of panels) {
+        const c = checkRows(await loadGray(findPageImage(r, source, p.page_seq), p.deskew_deg ?? 0), p);
+        console.log(`${table} ${p.panel} (p${p.page_seq}): ${c.measured} row line(s) measured against the gaps between lines of times; median offset ${c.offset} px, worst ${c.worst} px; ${c.problems.length ? `${c.problems.length} problem(s)` : 'ok'}`);
+        for (const pr of c.problems) console.log(`  ${pr}`);
+        bad += c.problems.length;
+      }
+      if (bad) process.exitCode = 1;
+      return;
+    }
     if (cmd === 'overlay') {
       const l = readLayoutOr(lPath, source, table);
       const names = opt('--panel') ? [opt('--panel')!] : l.panels.map((p) => p.panel);
@@ -556,6 +751,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const prop = proposePanel(img, wordsUsed, o);
     if (deskew) prop.panel.deskew_deg = deskew;
     for (const n of prop.notes) console.error(`note: ${n}`);
+    for (const w of prop.warnings) console.error(`warning: ${w}`);
     if (deskew) console.error(`note: deskew ${deskew}° (page coordinates are after rotation)`);
     if (args.includes('--print')) { console.log(formatLayout({ layout_version: 1, source_id: source, table_ref: table, panels: [prop.panel] })); return; }
     const l = upsertPanel(readLayoutOr(lPath, source, table), prop.panel);
