@@ -25,7 +25,7 @@ const STATIONS = ['Dresden', 'Pirna', 'Rathen', 'Schandau', 'Krippen', 'Schöna'
  * `labelDy`: the station names are printed this many px above their times (the summer table 126 had
  * about 8: decision P-E021). `underline`: cells whose time is underlined (a 2 px bar 2 px under it).
  */
-interface PageOptions { labelDy?: number; underline?: (r: number, c: number) => boolean }
+interface PageOptions { labelDy?: number; underline?: (r: number, c: number) => boolean; colDy?: { col: number; dy: number } }
 
 function page(o: PageOptions = {}): { svg: string; words: Word[] } {
   const parts: string[] = [`<rect width="${W}" height="${H}" fill="#f4ead8"/>`];
@@ -47,9 +47,10 @@ function page(o: PageOptions = {}): { svg: string; words: Word[] } {
     for (let c = 0; c < TRUE_COLS.length - 1; c++) {
       if (c === 3 && r >= 3) continue; // the pass-through bar runs here
       const cx = (TRUE_COLS[c]! + TRUE_COLS[c + 1]!) / 2;
-      parts.push(`<rect x="${cx - 18}" y="${y}" width="36" height="14" fill="#333"/>`);
-      if (o.underline?.(r, c)) parts.push(`<rect x="${cx - 18}" y="${y + 16}" width="36" height="2" fill="#333"/>`);
-      words.push({ text: `${(r % 11) + 1}${String(10 + 3 * c).padStart(2, '0')}`, x: cx - 18, y, w: 36, h: 14 });
+      const ty = y + (o.colDy?.col === c ? o.colDy.dy : 0);
+      parts.push(`<rect x="${cx - 18}" y="${ty}" width="36" height="14" fill="#333"/>`);
+      if (o.underline?.(r, c)) parts.push(`<rect x="${cx - 18}" y="${ty + 16}" width="36" height="2" fill="#333"/>`);
+      words.push({ text: `${(r % 11) + 1}${String(10 + 3 * c).padStart(2, '0')}`, x: cx - 18, y: ty, w: 36, h: 14 });
     }
   }
   return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${parts.join('')}</svg>`, words };
@@ -234,6 +235,19 @@ describe('rows on the line of times (P-E021)', () => {
     // A missing row line (two rows merged) is flagged too.
     const merged: Panel = { ...panel, row_y: panel.row_y.filter((_, k) => k !== 5) };
     expect(checkRows(offImg, merged).problems.some((p) => /a row line is missing/.test(p))).toBe(true);
+  });
+
+  it('checkRows names a column printed lower than its neighbours (a train set as a block of its own)', async () => {
+    const low = page({ colDy: { col: 5, dy: 8 } });
+    const f = join(mkdtempSync(join(tmpdir(), 'p1900-col-')), 'p6.png');
+    writeFileSync(f, await sharp(Buffer.from(low.svg)).png().toBuffer());
+    const lowImg = await loadGray(f);
+    const { panel } = proposePanel(lowImg, low.words, { pageSeq: 6, region: [30, 55, 720, 590], body: [122, 640], headerLines: 2 });
+    const c = checkRows(lowImg, panel);
+    // Column 5 (x 520–590) is the only one off the panel's rows.
+    const flagged = c.problems.filter((p) => /printed off the line of its neighbours/.test(p));
+    expect(flagged.length).toBe(1);
+    expect(flagged[0]).toMatch(/^c5: \d+ row lines .* above this column's own gaps/);
   });
 });
 

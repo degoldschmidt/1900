@@ -555,9 +555,35 @@ export interface RowCheck {
  * Checks a panel's kept rows against the lines of times on its (deskewed) page (gapNear in the train
  * columns' ink): a row line of a kept row with a gap between lines of times within ±0.6 pitch must lie
  * within ROW_OFFSET_WARN_PX of it, and a kept row taller than 1.5 pitches must not hold such a gap in
- * its middle (a missing row line). Row lines on a horizontal rule, or with no gap near them (blank
- * paper), pass. Nothing is written.
+ * its middle (a missing row line). Then column by column: row lines that miss a column's own gaps by
+ * more than ROW_OFFSET_WARN_PX are reported (a column printed off
+ * the line of its neighbours, e.g. a train set as a separate block; a sideways note can also trip
+ * it), when three or more consecutive row lines, kept rows among them, miss that column's own gaps
+ * the same way. Row lines on a printed rule (horizontalRules, or ruleAcross for a slanted one), or
+ * with no gap near them (blank paper), pass. Nothing is written.
  */
+/**
+ * True when a printed rule runs along `y` (±`tol` px): in at least half the train columns some
+ * scanline there is dark across 80% of the column's inner width (sideways notes and note boxes
+ * interrupt rules in the others). An underline, under the minutes or the time (about 70% of a column
+ * at most), never fills a column, so a row line drawn on an underline is not taken for a line on a
+ * rule; a slightly slanted rule, which horizontalRules (one scanline over half the width) misses, is found.
+ */
+export function ruleAcross(img: Gray, thr: number, colX: readonly number[], y: number, tol = 3): boolean {
+  let n = 0; let full = 0;
+  for (let i = 0; i + 1 < colX.length; i++) {
+    const a = Math.max(0, colX[i]! + 3); const b = Math.min(img.width, colX[i + 1]! - 3);
+    if (b - a < 8) continue;
+    n++;
+    for (let yy = Math.max(0, Math.round(y) - tol); yy <= Math.min(img.height - 1, Math.round(y) + tol); yy++) {
+      let k = 0;
+      for (let x = a; x < b; x++) if (img.data[yy * img.width + x]! < thr) k++;
+      if (k >= 0.8 * (b - a)) { full++; break; }
+    }
+  }
+  return n > 0 && full >= 0.5 * n;
+}
+
 export function checkRows(img: Gray, p: Panel): RowCheck {
   const thr = Math.min(150, otsu(img, clampBox(img, p.table_bbox)));
   const kept = keptRows(p).map((r) => r - p.first_row);
@@ -570,10 +596,12 @@ export function checkRows(img: Gray, p: Panel): RowCheck {
   const offs: number[] = [];
   const name = (k: number) => (k === 0 || isSkippedRow(p, p.first_row + k - 1) ? `the top of r${p.first_row + k}`
     : k === p.row_y.length - 1 || isSkippedRow(p, p.first_row + k) ? `the bottom of r${p.first_row + k - 1}` : `the line between r${p.first_row + k - 1} and r${p.first_row + k}`);
-  for (const k of [...new Set(kept.flatMap((i) => [i, i + 1]))].sort((a, b) => a - b)) {
+  const minCols = Math.min(2, ink.cols.length);
+  const onRule = (y: number) => hr.some((r) => Math.abs(r - y) <= 3) || ruleAcross(img, thr, p.col_x, y);
+  const lines = [...new Set(kept.flatMap((i) => [i, i + 1]))].sort((a, b) => a - b).filter((k) => !onRule(p.row_y[k]!));
+  for (const k of lines) {
     const y = p.row_y[k]!;
-    if (hr.some((r) => Math.abs(r - y) <= 3)) continue;
-    const g = gapNear(ink, y, 0.6 * pitch);
+    const g = gapNear(ink, y, 0.6 * pitch, minCols);
     if (!g) continue;
     offs.push(y - g.y);
     if (Math.abs(y - g.y) > ROW_OFFSET_WARN_PX) problems.push(`${name(k)} (y ${y}) sits ${Math.abs(y - g.y)} px ${y < g.y ? 'above' : 'below'} the gap between the lines of times (y ${g.y}, ${g.cols} columns)`);
@@ -581,8 +609,30 @@ export function checkRows(img: Gray, p: Panel): RowCheck {
   for (const i of kept) {
     const y0 = p.row_y[i]!; const y1 = p.row_y[i + 1]!;
     if (y1 - y0 <= 1.5 * pitch) continue;
-    const g = gapNear(ink, (y0 + y1) / 2, (y1 - y0) / 2 - 0.3 * pitch);
+    const g = gapNear(ink, (y0 + y1) / 2, (y1 - y0) / 2 - 0.3 * pitch, minCols);
     if (g && g.y > y0 + 0.3 * pitch && g.y < y1 - 0.3 * pitch) problems.push(`r${p.first_row + i} (y ${y0}–${y1}) holds a gap between two lines of times at y ${g.y} (${g.cols} columns): a row line is missing?`);
+  }
+  if (ink.cols.length > 1) {
+    // Every row line, kept or not, measured in each column alone: a run of three or more consecutive
+    // lines that all miss the column's own gaps the same way is a column printed off the line.
+    const all = p.row_y.map((_, k) => k).filter((k) => !onRule(p.row_y[k]!));
+    const keptLine = new Set(lines);
+    ink.cols.forEach((S, i) => {
+      const one: ColumnInk = { y0: ink.y0, cols: [S] };
+      const d = all.map((k) => { const g = gapNear(one, p.row_y[k]!, 0.6 * pitch, 1); return g ? g.y - p.row_y[k]! : null; });
+      for (let a = 0; a < d.length;) {
+        const sign = Math.sign(d[a] ?? 0);
+        if (d[a] === null || Math.abs(d[a]!) <= ROW_OFFSET_WARN_PX) { a++; continue; }
+        let b = a;
+        while (b + 1 < d.length && d[b + 1] !== null && Math.abs(d[b + 1]!) > ROW_OFFSET_WARN_PX && Math.sign(d[b + 1]!) === sign) b++;
+        const run = all.slice(a, b + 1);
+        if (run.length >= 3 && run.some((k) => keptLine.has(k))) {
+          const ds = d.slice(a, b + 1) as number[];
+          problems.push(`c${p.first_col + i}: ${run.length} row lines from y ${p.row_y[run[0]!]} to ${p.row_y[run[run.length - 1]!]} (rows r${p.first_row + run[0]!}–r${p.first_row + run[run.length - 1]!}) all sit ${Math.min(...ds.map(Math.abs))}–${Math.max(...ds.map(Math.abs))} px ${sign > 0 ? 'above' : 'below'} this column's own gaps, kept rows among them: a column printed off the line of its neighbours (or a long sideways note)?`);
+        }
+        a = b + 1;
+      }
+    });
   }
   return { panel: p.panel, measured: offs.length, offset: offs.length ? median(offs) : 0, worst: offs.reduce((a, d) => Math.max(a, Math.abs(d)), 0), problems };
 }

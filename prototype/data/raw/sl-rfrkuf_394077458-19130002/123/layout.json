@@ -1,0 +1,42 @@
+{
+  "layout_version": 1,
+  "source_id": "sl-rfrkuf_394077458-19130002",
+  "table_ref": "123",
+  "table_kind": "timetable",
+  "title": "Prag – Weseli-Mez. – (Budweis – Salzburg) – Gmünd – Wien und zurück (Auszugsweise)",
+  "panels": [
+    {
+      "panel": "p1",
+      "page_seq": 183,
+      "deskew_deg": 90.5,
+      "table_bbox": [115, 85, 1630, 600],
+      "label_bbox": [810, 110, 239, 566],
+      "header_bbox": [220, 172, 590, 25],
+      "col_x": [220, 320, 373, 427, 488, 539, 594, 643, 705, 755, 810],
+      "row_y": [110, 138, 170, 197, 227, 648, 676],
+      "first_col": 0,
+      "first_row": 0,
+      "header_lines": 1,
+      "skip_rows": [2, 4],
+      "footnote_bbox": [115, 85, 104, 1095],
+      "notes_bbox": [220, 110, 590, 566]
+    },
+    {
+      "panel": "p2",
+      "page_seq": 183,
+      "deskew_deg": 90.5,
+      "table_bbox": [115, 85, 1630, 600],
+      "label_bbox": [810, 110, 239, 563],
+      "header_bbox": [1049, 170, 572, 25],
+      "col_x": [1049, 1114, 1167, 1218, 1278, 1343, 1405, 1457, 1514, 1569, 1621],
+      "row_y": [110, 137, 168, 195, 225, 645, 673],
+      "first_col": 10,
+      "first_row": 0,
+      "header_lines": 1,
+      "skip_rows": [2, 4],
+      "footnote_bbox": [1621, 85, 125, 600],
+      "notes_bbox": [1049, 110, 572, 563]
+    }
+  ],
+  "notes": "Winter 1913/14, p. 179 (page_seq 183), printed sideways: turned a quarter turn plus 0.5 deg (the rules are then straight within 1 px). As in the summer layout, one station column in the middle: p1 holds the ten down columns left of it (c0-c9, read top to bottom), p2 the ten up columns right of it (c10-c19, read bottom to top). c0 includes the strip with the sideways note \"D-Zug Berlin-Prag-Triest (Speisewagen Prag-Wien)\" beside that train's times, so a note keyed c:0 belongs to that train. Rows: r0 a. Dresd. Hbf., r1 Bodenb., r2 the classes line and \"D-Zug Triest-Prag-Berl.\" (header band, skipped), r3 a. Prag (F.J.B.), r4 the stations Nusle to Gmünd (skipped), r5 Wien F.J.B.; each panel's row lines follow its own times (the right half sits 3-5 px higher). Footnote boxes: p1 the left margin (the \"Ausserdem mit II. u. III. Kl.\" Prag-Beneschau-Tabor trains and the note \"§ Nur Dienstag, Samstag, Sonn- und Festtag.\" printed beside table 124), p2 the right margin (\"Ausserdem\" Beneschau-Prag trains and \"◗ Über Wschetat-Priwor-Tetschen.\"). Table 124 (lower half of the page) is not laid out."
+}

@@ -1,0 +1,55 @@
+{
+  "layout_version": 1,
+  "source_id": "sl-rfrkuf_394077458-19130002",
+  "table_ref": "126",
+  "table_kind": "timetable",
+  "title": "Tetschen Nordwestbf. (– Prag) – Wien Nordwestbf. und zurück (Auszugsweise)",
+  "panels": [
+    {
+      "panel": "p1",
+      "page_seq": 186,
+      "deskew_deg": 0.45,
+      "table_bbox": [130, 100, 1115, 1290],
+      "label_bbox": [135, 148, 257, 858],
+      "header_bbox": [392, 136, 846, 12],
+      "col_x": [392, 442, 493, 543, 601, 651, 710, 768, 828, 887, 948, 1010, 1066, 1126, 1185, 1238],
+      "row_y": [148, 175, 208, 239, 263, 289, 319, 346, 373, 399, 426, 454, 478, 506, 538, 570, 597, 625, 661, 684, 709, 738, 765, 792, 818, 846, 872, 899, 927, 953, 980, 1006],
+      "first_col": 1,
+      "first_row": 0,
+      "header_lines": 1,
+      "skip_rows": [0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30],
+      "notes_bbox": [392, 140, 846, 866]
+    },
+    {
+      "panel": "p2",
+      "page_seq": 186,
+      "deskew_deg": 0.27,
+      "table_bbox": [130, 100, 1115, 1290],
+      "label_bbox": [135, 1006, 202, 363],
+      "header_bbox": [337, 136, 900, 12],
+      "col_x": [337, 391, 441, 491, 541, 600, 650, 706, 770, 826, 885, 946, 1009, 1065, 1125, 1184, 1237],
+      "row_y": [1006, 1031, 1058, 1086, 1120, 1147, 1174, 1208, 1236, 1262, 1289, 1315, 1342, 1369],
+      "first_col": 0,
+      "first_row": 31,
+      "header_lines": 1,
+      "skip_rows": [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42],
+      "notes_bbox": [337, 1006, 900, 363]
+    },
+    {
+      "panel": "p3",
+      "page_seq": 187,
+      "deskew_deg": 0.45,
+      "table_bbox": [50, 120, 1110, 1300],
+      "label_bbox": [56, 197, 233, 1218],
+      "header_bbox": [289, 171, 865, 26],
+      "col_x": [289, 352, 415, 479, 543, 598, 652, 705, 759, 822, 883, 930, 984, 1047, 1101, 1154],
+      "row_y": [197, 226, 251, 277, 306, 332, 368, 396, 424, 449, 479, 512, 544, 568, 595, 622, 648, 674, 700, 728, 754, 781, 808, 835, 861, 888, 915, 944, 977, 1005, 1033, 1066, 1094, 1121, 1146, 1174, 1200, 1226, 1252, 1280, 1308, 1334, 1363, 1396, 1415],
+      "first_col": 16,
+      "first_row": 50,
+      "header_lines": 1,
+      "skip_rows": [51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 93],
+      "notes_bbox": [289, 171, 865, 1244]
+    }
+  ],
+  "notes": "Winter 1913/14, pp. 182-183 (extract; tables 127 and 128 printed under it are not laid out). As in the summer layout, p182 is two panels: p1 the upper section (rows 0-30, label column to x 392, c1-c15) and p2 the lower section from \"in Prag Ö.N.W.B.\" (rows 31-43), where the label column narrows and a further train column c0 appears (c0-c15); p3 is p183 (rows 50-93, c16-c30; its label column ends at the rule at x 289, with a train column before the next rule at 352). Kept rows are the summer ones and keep their numbers: r1 Dresden Hbf. 23, r2 a. Tetschen N.W.B., r29 in Prag F.J.B., r31 in Prag Ö.N.W.B., r43 i. Wien N.W.Bf.; r50 aus Wien N.W.Bf., r62 a. Prag Ö.N.W.B., r64 a. Prag F.J.B., r91 i. Tetsch. N.W.B., r92 in Dresd. Hbf. 23 - so the summer altRows [[29,31,43],[50,62,64]] and dittoMarkers {\"1\": \"a.\"} still point at the same stations. The table prints no train numbers: the header band of p1/p2 is the strip with the table's top rule (as in summer); p3's is its classes line. Each section has its own notes box. Deskew by hand: p1 0.45, p2 0.27 (its lines of times slope differently), p3 0.45 deg. Hard spot: below r91 on p183 the connection rows \"in Dresd. Hbf. 23\" (r92, kept) and \"Leipz. Hbf.\" are printed in narrower sub-columns: five values under c16-c19 (c18's train has two Dresden connections, \"!9 39\" printed mostly over c17 and \"10 48\"); from c20 on they line up with the grid. The summer page has the same arrangement (its G2 census note on 126 c22 r92)."
+}
