@@ -374,3 +374,22 @@ With P-010, grid agreement per crop rose: table 12 to 81–100%, 13 to 89–98%,
 - 4 missing.
 
 The historian's blind sample then measures whether resolution alone reaches the target. The re-key threshold for the full run is a G2 decision, informed by that sample.
+
+## 2026-10-03 16:40 — First playtest of the C07 preview: map-first redesign (Event P-E016; Decision P-012)
+
+**Owner's playtest verdict.** "Not good at all": most game elements were confusing and not motivating. Asked what failed, the owner chose all four options:
+- too many screens (Diary, Plan, Board, Town, Pocket, Ledger);
+- an unclear goal;
+- the slack/diary idea felt like admin, not play;
+- dry numbers (per-mille odds, cost vectors, citations, guide editions).
+
+**Reading.** This is evidence against H07-1 in its diary form. Filling the slack before a booked departure, presented as a diary to manage, did not motivate. The routing, timetable, hunt and save engine is not in question; the presentation and the shape of the player's choices are.
+
+**Decision P-012.** Rebuild the preview around a map, in the manner of *80 Days* (inkle). No assets, names or art are taken from that game.
+- **The map is the home screen.** It shows the player's position, railways and sea routes, and the goal pinned on it.
+- **One clear goal** sits at the top, with its deadline and pay.
+- **A city sheet** lists departures in plain words and offers two or three quick things to do in town, with a visible countdown to the train.
+- **Journeys play on the map:** the train moves along the line while the clock runs, and short event cards appear (frontier check, delay, a train missing from an out-of-date guide).
+- **At most three screens**, numbers shown as words and icons, and a guided tutorial.
+
+The rules engine, data model, save codes and metrics stay. H07-1 is restated for the map: "players use time in town for optional acts before departures". The metric remains verbs per stay and the waiting share.
