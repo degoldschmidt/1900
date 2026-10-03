@@ -31,8 +31,9 @@ Rules:
 2. **Marks count.** A reading with the right digits but missing bold (`b`) or a footnote mark is not right: use `other` with the full reading.
 3. **A missing reading** (`missing-A` / `missing-B`): if the one reading given is right, choose that keyer; if the cell is blank on the page, choose `other` with empty text and `sure=y` (or the keyer who wrote it blank).
 4. **Both keyers wrote `sure=x`** (`illegible` reason): try the zoom. If you can read it, `other`; if not, `illegible`.
-5. **`doubtful`**: both keyers gave the same reading but at least one marked it `sure=n`. Do not assume agreement makes it right: two keyers can share a misreading of a blurred digit, separator or footnote symbol. Read the zoom afresh; choose `A` (the shared reading) only if the print shows it, otherwise `other` or `illegible`.
-6. Do not change, add or remove lines for cells that are not disputed.
+5. **Separators and footnote symbols.** If only the separator between figures is in doubt, choose the shared or most likely reading with `sure=n`; do not make the cell `illegible` for a separator, since it does not change the time. A footnote symbol you cannot identify stays `illegible` (`fn:?`), whatever the keyers guessed; in calibration every guessed symbol on a blurred page was wrong.
+6. **`doubtful`**: both keyers gave the same reading but at least one marked it `sure=n`. Do not assume agreement makes it right: two keyers can share a misreading of a blurred digit, separator or footnote symbol. Read the zoom afresh; choose `A` (the shared reading) only if the print shows it, otherwise `other` or `illegible`.
+7. Do not change, add or remove lines for cells that are not disputed.
 
 An `illegible` cell blocks compilation of the table until the historian waives it (`data/canonical/waivers.csv`) or the page is re-read from a better scan.
 
