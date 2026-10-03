@@ -432,3 +432,14 @@ The normaliser produced 175 services (127 trains), 487 stops, 189 footnotes and 
 **Pilot cost:** about 3.0M tokens for 18 pages, about 100k per page recurring.
 
 The full report is `data/review/PILOT_REPORT.md`. **Verdict: times are reliable, marks fail the 0.5% target (3.8%).** Five fixes are proposed and await the owner's G2 decision.
+
+## 2026-10-03 19:10 — Gate G2: fix the method, then re-check (Decision P-013)
+
+**Owner decision.** Apply the pilot report's five fixes. Re-key tables 12, 123 and 126 under the new brief. A fresh 20% blind sample must pass the 0.5% target before more transcription. After that, the first new volume is Fritzsche Winter 1913/14 (`rfrkuf_394077458-19130002`) for the same Berlin–Vienna corridor. Paired with Summer 1914, it gives C07 the real 1 May 1914 changeover.
+
+**How the fixes are applied:**
+1. **Train category is read per column.** Keyers mark italic once on the column's train-number header cell. In body cells italic becomes typography (FKB1914-SO `valueMarks` becomes `["u"]`), and the normaliser takes the category from the header.
+2. **The guide's own signs go into the keyer brief,** with zoomed examples from the pilot scans (kept in `build/`, as scans are not committed) and a token for doubled signs.
+3. **Crop margins are wider,** and there is a rule for sideways notes interrupted by times.
+4. **Failed image loads are caught.** Agents stop and report any image read that fails. A post-check (`ocr-check`) compares keyed header train numbers with the page OCR, as a signal only, never as values, and flags crops a keyer may not have seen.
+5. **Tables 12, 123 and 126 are re-keyed in full** by fresh blind keyers, then resolved, then sampled at 20% across all six tables.
