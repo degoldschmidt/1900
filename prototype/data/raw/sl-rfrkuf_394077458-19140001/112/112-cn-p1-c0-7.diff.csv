@@ -1,0 +1,8 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+112-cn-p1-c0-7,footnote,0,0,illegible,An Sonn- und Festtagen vom 31. Mai bis mit 30. August sowie am 2. Juni.,c:3;fn:□,n,An Sonn- und Festtagen vom 31. Mai bis mit 30. August sowie am 2. Juni.,c:3;fn:?,x
+112-cn-p1-c0-7,footnote,0,1,doubtful,"Ausserdem mit I.-III. Kl. bez. II. III. Kl. ab Prag Stbhf. 5 25, 6 42, 12 00, in Kolin 7 19, 8 45, 1 55",c:2,n,"Ausserdem mit I.-III. Kl. bez. II. III. Kl. ab Prag Stbhf. 5 25, 6 42, 12 00, in Kolin 7 19, 8 45, 1 55",c:2,n
+112-cn-p1-c0-7,footnote,0,2,doubtful,Ausserdem: ab Chotzen 6 41 in Böhmisch-Trübau 7 37 I.-III. Kl.,c:6,y,Ausserdem: ab Chotzen 6 41 in Böhmisch-Trübau 7 37 I.-III. Kl.,c:6,n
+112-cn-p1-c0-7,footnote,0,4,doubtful,Ausserdem: ab Rostok * 6 42 8 20 in Prag * 7 14 8 50,c:6,n,Ausserdem: ab Rostok * 6 42 8 20 in Prag * 7 14 8 50,c:6,n
+112-cn-p1-c0-7,footnote,0,5,doubtful,• Verkehrt an den Jahrmarkttagen in Raudnitz.,c:3;fn:•,y,• Verkehrt an den Jahrmarkttagen in Raudnitz.,c:3;fn:•,n
+112-cn-p1-c0-7,footnote,0,7,typography,II. III,c:6,y,II.III,c:6,y
+112-cn-p1-c0-7,footnote,0,10,doubtful,• Abfahrt Prag Franz Josef Bf.,c:3;fn:•,y,• Abfahrt Prag Franz Josef Bf.,c:3;fn:•,n

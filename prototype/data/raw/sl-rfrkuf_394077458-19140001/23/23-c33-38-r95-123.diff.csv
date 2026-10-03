@@ -1,7 +1,7 @@
 crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
 23-c33-38-r95-123,header,33,0,doubtful,D 2,,y,D 2,,n
-23-c33-38-r95-123,label,0,95,text+marks,a. Tetschen □. .,,y,a. Tetschen,fn:□,y
-23-c33-38-r95-123,label,0,109,text+marks,aus Bodenbach □.,,y,aus Bodenbach,fn:□,y
+23-c33-38-r95-123,label,0,95,typography,a. Tetschen □. .,,y,a. Tetschen,fn:□,y
+23-c33-38-r95-123,label,0,109,typography,aus Bodenbach □.,,y,aus Bodenbach,fn:□,y
 23-c33-38-r95-123,cell,34,109,doubtful,|,,y,|,,n
 23-c33-38-r95-123,cell,35,109,doubtful,5 15,b;u,n,5 15,b;u,n
 23-c33-38-r95-123,cell,36,109,text,|,,n,,,n

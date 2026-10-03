@@ -2,7 +2,7 @@ crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
 13-cn-p1-c0-6,footnote,0,0,doubtful,■ ab Elsterw. E.-D Halle. ab Zossen E.-D Berlin.,c:0;fn:■,n,■ ab Elsterw. E.-D Halle. ab Zossen E.-D Berlin.,c:0;fn:■,n
 13-cn-p1-c0-6,footnote,0,1,doubtful,● Vorortszüge Wünsdorf-Berlin siehe Nr. 15.,c:0;fn:●,n,● Vorortszüge Wünsdorf-Berlin siehe Nr. 15.,c:0;fn:●,y
 13-cn-p1-c0-6,footnote,0,2,text,üb. Dresd. F. Cossebaude,c:3,n,üb. Dresd.-F. Cossebaude,c:3,n
-13-cn-p1-c0-6,footnote,0,3,text,Schlafwagen Wien - Berlin.,c:1,n,Schlafwagen Wien-Berlin.,c:1,n
+13-cn-p1-c0-6,footnote,0,3,typography,Schlafwagen Wien - Berlin.,c:1,n,Schlafwagen Wien-Berlin.,c:1,n
 13-cn-p1-c0-6,footnote,0,5,doubtful,317 II-IV,c:0,n,317 II-IV,c:0,n
-13-cn-p1-c0-6,footnote,0,6,text+marks,● Nur am 29. u. 30. Mai u. vom 15. Juni bis 15. Septbr.,c:3;fn:●,y,■ Nur am 30. Mai u. 1. Juni u. v. 15. Juni bis 15. Sept.,c:3;fn:■,n
-13-cn-p1-c0-6,footnote,0,7,text+marks,■ Nur am 30. Mai u. 1. Juni u. v. 15. Juni bis 15. Sept.,c:3;fn:■,y,● Nur am 29. u. 30. Mai u. vom 15. Juni bis 15. Septbr.,c:3;fn:●,n
+13-cn-p1-c0-6,footnote,0,6,doubtful,● Nur am 29. u. 30. Mai u. vom 15. Juni bis 15. Septbr.,c:3;fn:●,y,● Nur am 29. u. 30. Mai u. vom 15. Juni bis 15. Septbr.,c:3;fn:●,n
+13-cn-p1-c0-6,footnote,0,7,doubtful,■ Nur am 30. Mai u. 1. Juni u. v. 15. Juni bis 15. Sept.,c:3;fn:■,y,■ Nur am 30. Mai u. 1. Juni u. v. 15. Juni bis 15. Sept.,c:3;fn:■,n

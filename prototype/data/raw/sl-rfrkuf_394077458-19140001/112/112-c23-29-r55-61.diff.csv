@@ -1,0 +1,24 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+112-c23-29-r55-61,header,29,0,typography,II. III.,,y,II.III.,,y
+112-c23-29-r55-61,label,0,55,typography,a. Wien Staatsb. …,b,y,a. Wien Staatsb. …,,y
+112-c23-29-r55-61,label,0,56,typography,Wien Nordb. …,b,y,Wien Nordb. …,,y
+112-c23-29-r55-61,label,0,58,typography,410 a. Prag Stbf. 122.123.126,b,n,410 a. Prag Stbf. 122.123.126,,y
+112-c23-29-r55-61,label,0,60,typography,540 i.Bodenb. 121.145.147,b,n,540 i.Bodenb. 121.145.147,,y
+112-c23-29-r55-61,label,0,61,typography,i. Dresd. Hbf. 23,b,y,i. Dresd. Hbf. 23,,y
+112-c23-29-r55-61,cell,25,55,typography,11 35,b,y,11 35,,y
+112-c23-29-r55-61,cell,28,55,typography,11 35,b,n,11 35,,y
+112-c23-29-r55-61,cell,25,56,typography,2 25,b,n,2 25,,n
+112-c23-29-r55-61,cell,28,56,typography,2 25,b,n,2 25,,n
+112-c23-29-r55-61,cell,25,58,typography,6 18,b;u,y,6 18,u,y
+112-c23-29-r55-61,cell,26,58,typography,6 55,b;u,y,6 55,u,y
+112-c23-29-r55-61,cell,27,58,typography,8 10,b;u,y,8 10,u,y
+112-c23-29-r55-61,cell,29,58,typography,11 47,b;u,y,11 47,u,y
+112-c23-29-r55-61,cell,24,60,typography,7 55,b;u,n,7 55,u,y
+112-c23-29-r55-61,cell,25,60,doubtful,,,y,,,n
+112-c23-29-r55-61,cell,26,60,typography,10 10,b;u,y,10 10,u,y
+112-c23-29-r55-61,cell,27,60,typography,12 06,b;u,y,12 06,u,y
+112-c23-29-r55-61,cell,28,60,doubtful,12 58,u;i,y,12 58,u;i,n
+112-c23-29-r55-61,cell,24,61,doubtful,9 47,u;i,n,9 47,u;i,y
+112-c23-29-r55-61,cell,26,61,typography,12 09,b,n,12 09,,y
+112-c23-29-r55-61,cell,27,61,typography,2 25,b;u,n,2 25,u,y
+112-c23-29-r55-61,cell,28,61,typography,2 25,b;u,n,2 25,u,y

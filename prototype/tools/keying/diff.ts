@@ -4,9 +4,16 @@
  *   node tools/keying/diff.ts <source_id> <table_ref> [crop_id …] [--force]
  *
  * For every crop in crops.csv (or those named) with both <crop_id>.A.csv and .B.csv, aligns the two
- * readings by (kind, col, row) and compares text_as_printed and marks. A cell agrees when both
- * keyers read the same text and marks and neither marked it illegible (sure=x). Cells the crop
- * requires but a keyer left out, and footnote lines only one keyer gave, are disagreements.
+ * readings by (kind, col, row) and compares text_as_printed and marks. Notes (kind footnote, in
+ * footnote and column-notes crops) are first matched by content (tools/keying/align.ts), since
+ * their row is only a position in each keyer's list. A cell agrees when both keyers read the same
+ * text and marks and neither marked it illegible (sure=x). Cells the crop requires but a keyer left
+ * out, and notes only one keyer gave, are disagreements.
+ *
+ * Readings that differ only in typography (tools/keying/value.ts: separators, italic, bold off the
+ * body, leader dots, a sign after a station name keyed in the text rather than as fn:) get reason
+ * `typography`. They go to the resolver, who decides the exact print, but like `doubtful` cells
+ * they count as concordant in the agreement figure.
  *
  * Writes <crop_id>.diff.csv (the disagreements) and updates data/raw/status.csv with the agreement
  * in per mille of all compared cells: below 950‰ the crop is marked rekey, otherwise diffed.
@@ -20,8 +27,13 @@ import { diffCsv, roots, statusCsv, type Roots } from './paths.ts';
 import { findStatus, readStatus, REKEY_BELOW_PERMILLE, updateStatusFile, type StatusRow } from './status.ts';
 import { cropOf, loadTable, outsideCrop, readKeyer } from './crop-files.ts';
 import { expectedKeys, type CellKey } from '../crops/layout.ts';
+import { alignNotes } from './align.ts';
+import { valueParts, rulesFromNotation, DEFAULT_RULES, type ValueRules } from './value.ts';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
-export type Reason = 'text' | 'marks' | 'text+marks' | 'missing-A' | 'missing-B' | 'illegible' | 'doubtful';
+export type Reason = 'text' | 'marks' | 'text+marks' | 'typography' | 'missing-A' | 'missing-B' | 'illegible' | 'doubtful';
+export const REASONS: readonly Reason[] = ['text', 'marks', 'text+marks', 'typography', 'missing-A', 'missing-B', 'illegible', 'doubtful'];
 
 export interface Disagreement {
   kind: Kind;
@@ -38,16 +50,37 @@ export interface DiffResult {
   agreed: number;
   /** Cells both read the same way but at least one marked sure=n; they go to the resolver. */
   doubtful: number;
-  /** Keyer concordance: (agreed + doubtful + identical abstentions) per mille of all cells. */
+  /** Cells whose readings differ only in typography (same value); they go to the resolver. */
+  typography: number;
+  /** Keyer concordance: (agreed + doubtful + typography + identical abstentions) per mille of all cells. */
   permille: number;
   disagreements: Disagreement[];
   agreedKeys: string[];
+  /** B's cells as compared: its notes re-numbered to match A's (align.ts); other cells unchanged. */
+  b: KeyedCell[];
 }
 
 export const DIFF_COLUMNS = ['crop_id', 'kind', 'col', 'row', 'reason', 'a_text', 'a_marks', 'a_sure', 'b_text', 'b_marks', 'b_sure'] as const;
 
-/** Compares two readings over expected ∪ A ∪ B. */
-export function diffReadings(a: readonly KeyedCell[], b: readonly KeyedCell[], expected: readonly CellKey[] = []): DiffResult {
+/** Compares two readings over expected ∪ A ∪ B, after matching B's notes to A's by content. */
+/**
+ * Value rules for a source: from the notation file in data/canonical/notation/ whose `src` cites this
+ * source (decision P-010), or the default rules when the guide has none yet.
+ */
+export function valueRulesFor(r: Roots, source: string): ValueRules {
+  const dir = join(r.data, 'canonical', 'notation');
+  if (!existsSync(dir)) return DEFAULT_RULES;
+  for (const f of readdirSync(dir).filter((x) => x.endsWith('.json')).sort()) {
+    try {
+      const n = JSON.parse(readFileSync(join(dir, f), 'utf8')) as { src?: string; valueMarks?: string[] };
+      if (typeof n.src === 'string' && n.src.startsWith(`${source}:`)) return rulesFromNotation(n);
+    } catch { /* an unreadable notation file is reported by the validators */ }
+  }
+  return DEFAULT_RULES;
+}
+
+export function diffReadings(a: readonly KeyedCell[], bRaw: readonly KeyedCell[], expected: readonly CellKey[] = [], rules: ValueRules = DEFAULT_RULES): DiffResult {
+  const b = alignNotes(a, bRaw);
   const A = new Map(a.map((c) => [cellKey(c), c]));
   const B = new Map(b.map((c) => [cellKey(c), c]));
   const keys = new Map<string, CellKey>();
@@ -55,6 +88,7 @@ export function diffReadings(a: readonly KeyedCell[], b: readonly KeyedCell[], e
   const dis: Disagreement[] = [];
   const agreedKeys: string[] = [];
   let doubtful = 0;
+  let typography = 0;
   let bothIllegible = 0;
   for (const [k, ck] of keys) {
     const ca = A.get(k) ?? null; const cb = B.get(k) ?? null;
@@ -67,8 +101,11 @@ export function diffReadings(a: readonly KeyedCell[], b: readonly KeyedCell[], e
       if (ca.sure === 'x' && cb.sure === 'x' && sameReading(ca, cb)) bothIllegible++;
     }
     else if (!sameReading(ca, cb)) {
-      const t = ca.text !== cb.text; const m = marksString(ca.marks) !== marksString(cb.marks);
-      reason = t && m ? 'text+marks' : t ? 'text' : 'marks';
+      // Classified by value: a difference in typography alone is not a difference in text or marks.
+      const va = valueParts(ca, ck.kind, rules); const vb = valueParts(cb, ck.kind, rules);
+      const t = va.text !== vb.text; const m = va.marks !== vb.marks;
+      reason = t && m ? 'text+marks' : t ? 'text' : m ? 'marks' : 'typography';
+      if (reason === 'typography') typography++;
     } else if (ca.sure === 'n' || cb.sure === 'n') {
       // Same reading, but a keyer doubted it. Two keyers can share a misreading (calibration round 1
       // found every residual error was shared), so doubted cells go to the resolver's zoom too.
@@ -80,9 +117,9 @@ export function diffReadings(a: readonly KeyedCell[], b: readonly KeyedCell[], e
   }
   const total = keys.size;
   // Agreement measures concordance between keyers: a doubted but identical reading counts as agreed,
-  // and so does the same abstention by both.
-  const concordant = agreedKeys.length + doubtful + bothIllegible;
-  return { total, agreed: agreedKeys.length, doubtful, permille: total ? Math.floor((concordant * 1000) / total) : 0, disagreements: sortCells(dis), agreedKeys };
+  // and so do readings with the same value in different typography, and the same abstention by both.
+  const concordant = agreedKeys.length + doubtful + typography + bothIllegible;
+  return { total, agreed: agreedKeys.length, doubtful, typography, permille: total ? Math.floor((concordant * 1000) / total) : 0, disagreements: sortCells(dis), agreedKeys, b };
 }
 
 export function writeDiff(cropId: string, d: DiffResult): string {
@@ -114,10 +151,10 @@ export function diffCrop(r: Roots, source: string, table: string, cropId: string
     const who = [...new Set(problems.map((p) => p[0]))].join('+');
     return { crop_id: cropId, diff: null, problems, status: { ...base, status: 'rekey', agreement_permille: '', note: `malformed keyer file (${who}): ${problems.length} problem(s); first: ${problems[0]!.slice(0, 160)}` } };
   }
-  const d = diffReadings(A.cells, B.cells, expectedKeys(t.layout, crop));
+  const d = diffReadings(A.cells, B.cells, expectedKeys(t.layout, crop), valueRulesFor(r, source));
   writeTextFile(diffCsv(r, source, table, cropId), writeDiff(cropId, d));
   const rekey = d.permille < REKEY_BELOW_PERMILLE;
-  const note = `${d.disagreements.length - d.doubtful} of ${d.total} cells disagree, ${d.doubtful} doubted${rekey ? ` (below ${REKEY_BELOW_PERMILLE}‰: re-key)` : ''}`;
+  const note = `${d.disagreements.length - d.doubtful - d.typography} of ${d.total} cells disagree, ${d.typography} in typography only, ${d.doubtful} doubted${rekey ? ` (below ${REKEY_BELOW_PERMILLE}‰: re-key)` : ''}`;
   return { crop_id: cropId, diff: d, problems, status: { ...base, status: rekey ? 'rekey' : 'diffed', agreement_permille: String(d.permille), note } };
 }
 

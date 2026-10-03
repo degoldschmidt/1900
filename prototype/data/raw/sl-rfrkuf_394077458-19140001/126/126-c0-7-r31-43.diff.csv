@@ -1,0 +1,9 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-c0-7-r31-43,label,0,31,typography,in Prag Ö. N. W. B.,b,n,in Prag Ö. N. W. B.,,n
+126-c0-7-r31-43,label,0,43,illegible,4?? i. Wien N W. Bf.,b,x,488 i. Wien N. W. Bf,,n
+126-c0-7-r31-43,cell,6,31,typography,1 57,b,y,1 57,,y
+126-c0-7-r31-43,cell,0,43,typography,2 13,b,n,2 13,,y
+126-c0-7-r31-43,cell,3,43,typography,8 24,b,n,8 24,,y
+126-c0-7-r31-43,cell,5,43,typography,7 19,b;u,y,7 19,u,y
+126-c0-7-r31-43,cell,6,43,typography,10 30,b;u,y,10 30,u,y
+126-c0-7-r31-43,cell,7,43,doubtful,4 06,u;fn:°,n,4 06,u;fn:°,n

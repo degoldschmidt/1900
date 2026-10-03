@@ -72,6 +72,11 @@ Quote a field with double quotes if it contains a comma (`"Köln (Cologne), Hbf.
 
 **Words in time cells** such as `ab`, `an`, `Ank.` or `Abf.` are written as printed, like any other word.
 
+**Station names (label column L0).** Three conventions, the same for every keyer:
+- A sign printed after the name (`□`, `●`, `†`, `*` …) is a footnote mark: it goes into `marks` as `fn:<sign>`, never into the text. `in Bodenbach □ . .` → text `in Bodenbach`, marks `fn:□`.
+- Leader dots after the name (`.`, `. .`, `....`) are written as one `…` after a space: `aus Dresden-Neustadt …`. An abbreviation's own full stop stays (`Dresden Hbf. …`).
+- A number printed before the name (the number of a connecting table, or a kilometre figure) is part of the text, as printed: `62 in Tetschen`, `3 Dresd. Wettinerstr. …`. Do not drop it.
+
 **A station name broken over two rows** (`Eydtkuh-` / `nen`): write each part on its own row, as printed, including the hyphen.
 
 **Small capitals** (`Berlin` printed in small caps): type the letters as they read (capital first letter, the rest lower case) and add the mark `sc`.

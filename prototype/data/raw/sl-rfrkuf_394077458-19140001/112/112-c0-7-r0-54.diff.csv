@@ -1,0 +1,20 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+112-c0-7-r0-54,header,0,0,doubtful,I,,n,I,,n
+112-c0-7-r0-54,header,4,0,doubtful,(I. II),,y,(I. II),,n
+112-c0-7-r0-54,header,7,0,doubtful,(I. III,,n,(I. III,,n
+112-c0-7-r0-54,label,0,0,typography,a. Bodenbach K.K.,b,y,a. Bodenbach K.K.,,n
+112-c0-7-r0-54,label,0,47,text,"180 i.Prag Stbhf. 122,123",b,n,150 i.Prag Stbhf. 122.123,,n
+112-c0-7-r0-54,label,0,53,typography,528 Wien Nordb.,b,n,528 Wien Nordb.,,n
+112-c0-7-r0-54,label,0,54,text,540 Wien Staatsb.,b,n,540 Wien Staatsb,,n
+112-c0-7-r0-54,cell,4,0,doubtful,5 45,b;u,y,5 45,b;u,n
+112-c0-7-r0-54,cell,7,0,typography,10 20,b,y,10 20,,y
+112-c0-7-r0-54,cell,3,47,typography,8 55,b,y,8 55,,y
+112-c0-7-r0-54,cell,4,47,doubtful,10 19,b,y,10 19,b,n
+112-c0-7-r0-54,cell,6,47,typography,1 46,b,y,1 46,,y
+112-c0-7-r0-54,cell,7,47,typography,4 02,b,y,4 02,,y
+112-c0-7-r0-54,cell,4,53,marks,6 28,u;i,n,6 28,u,n
+112-c0-7-r0-54,cell,5,53,doubtful,,,n,,,n
+112-c0-7-r0-54,cell,7,53,typography,7 48,b,y,7 48,,y
+112-c0-7-r0-54,cell,4,54,doubtful,10 00,u,n,10 00,u,n
+112-c0-7-r0-54,cell,5,54,doubtful,,,n,,,n
+112-c0-7-r0-54,cell,7,54,typography,6 35,b,y,6 35,,y

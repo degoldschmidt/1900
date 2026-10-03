@@ -14,14 +14,14 @@
  * tools/keying/merge.ts. Crops with no disagreement need no packet: merge.ts resolves them directly.
  */
 import { existsSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { isAbsolute, join, relative } from 'node:path';
 import { writeCsv, writeTextFile } from './csv.ts';
 import { cellRef, marksString, RESOLVED_COLUMNS } from './longcsv.ts';
 import { cropImage, keyingCsv, resolvePacketDir, roots, statusCsv, type Roots } from './paths.ts';
 import { readStatus } from './status.ts';
 import { cropOf, loadTable, readKeyer } from './crop-files.ts';
-import { diffReadings, type Disagreement } from './diff.ts';
-import { expectedKeys, panelForCrop } from '../crops/layout.ts';
+import { diffReadings, valueRulesFor, type Disagreement } from './diff.ts';
+import { expectedKeys, isNotesCrop, panelForCrop } from '../crops/layout.ts';
 import { findPageImage, loadPage, zoomKey } from '../crops/make-crops.ts';
 
 export interface PacketItem {
@@ -57,7 +57,7 @@ export function packetMarkdown(p: Packet, dir: string): string {
     L.push('');
     L.push(`- A: ${show(it.a)}`);
     L.push(`- B: ${show(it.b)}`);
-    L.push(`- zoom: \`${relative(dir, it.zoom) || it.zoom}\``);
+    L.push(`- zoom: ${isAbsolute(it.zoom) ? `\`${relative(dir, it.zoom) || it.zoom}\`` : it.zoom}`);
     L.push('');
   }
   return L.join('\n');
@@ -70,7 +70,7 @@ export async function buildPacket(r: Roots, source: string, table: string, cropI
   const B = readKeyer(r, source, table, cropId, 'B');
   if (!A || !B) throw new Error(`${cropId}: both A and B keyings are needed`);
   if (A.errors.length || B.errors.length) throw new Error(`${cropId}: malformed keyer file(s); run diff.ts for details`);
-  const d = diffReadings(A.cells, B.cells, expectedKeys(t.layout, crop));
+  const d = diffReadings(A.cells, B.cells, expectedKeys(t.layout, crop), valueRulesFor(r, source));
   if (d.disagreements.length === 0) return null;
   const dir = resolvePacketDir(r, source, table, cropId);
   const panel = panelForCrop(t.layout, crop);
@@ -78,7 +78,7 @@ export async function buildPacket(r: Roots, source: string, table: string, cropI
   const items: PacketItem[] = [];
   for (const x of d.disagreements) {
     const zoom = join(dir, `zoom-${x.kind}-c${x.col}-r${x.row}.png`);
-    if (x.kind === 'footnote' && !panel.footnote_bbox) {
+    if (x.kind === 'footnote' && !panel.footnote_bbox && !isNotesCrop(panel, crop)) {
       // Footnote lines without a footnote box: the resolver reads them from the crop image.
       items.push({ kind: x.kind, col: x.col, row: x.row, ref: cellRef(x), reason: x.reason, a: reading(x.a), b: reading(x.b), zoom: '(see crop image)' });
       continue;
@@ -101,13 +101,15 @@ export async function buildPacket(r: Roots, source: string, table: string, cropI
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
   const [source, table, ...ids] = args.filter((a) => !a.startsWith('--'));
-  if (!source || !table) { console.error('usage: resolve-support.ts <source_id> <table_ref> [crop_id …]'); process.exit(1); }
+  if (!source || !table) { console.error('usage: resolve-support.ts <source_id> <table_ref> [crop_id …] [--include-rekey]'); process.exit(1); }
+  // --include-rekey: also crops below the re-key threshold (the D2 pilot resolves every crop, decision P-011).
+  const wanted = new Set(args.includes('--include-rekey') ? ['diffed', 'rekey'] : ['diffed']);
   const r = roots();
   const run = async () => {
     const t = loadTable(r, source, table);
     const st = existsSync(statusCsv(r)) ? readStatus(statusCsv(r)) : [];
-    const crops = ids.length ? ids : t.crops.map((c) => c.crop_id)
-      .filter((id) => st.find((s) => s.source_id === source && s.table_ref === table && s.crop_id === id)?.status === 'diffed');
+    const statusOf = (id: string) => st.find((s) => s.source_id === source && s.table_ref === table && s.crop_id === id)?.status ?? '';
+    const crops = ids.length ? ids : t.crops.map((c) => c.crop_id).filter((id) => wanted.has(statusOf(id)));
     for (const id of crops) {
       if (existsSync(keyingCsv(r, source, table, id, 'R'))) console.log(`${id}: note: an R.csv already exists`);
       const p = await buildPacket(r, source, table, id);

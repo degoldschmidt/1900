@@ -1,0 +1,10 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-cn-p1-c1-8,footnote,0,0,doubtful,✤ Zollrevision des nach Wien N. W. Bf. bezw. Triest aufgegebenen Gepäcks kann auf Wunsch der Reisenden in Wien bezw. Triest erfolgen.,c:1;fn:✤,n,✤ Zollrevision des nach Wien N. W. Bf. bezw. Triest aufgegebenen Gepäcks kann auf Wunsch der Reisenden in Wien bezw. Triest erfolgen.,c:1;fn:✤,n
+126-cn-p1-c1-8,footnote,0,1,typography,D-Zug Reichenberg-Wien N.W.B. über Nimburg und Brüx-Aussig- Teplitzer Bhf.-Wien N.W.B. über Prag K.F.J.B.-Kolin.,c:2,n,D-Zug Reichenberg-Wien N. W. B. über Nimburg und Brüx-Aussig- Teplitzer Bhf.-Wien N. W. B. über Prag K. F. J. B.-Kolin.,c:2,n
+126-cn-p1-c1-8,footnote,0,2,text,"Ausserd.: ab Nimb. 5 10, i. Gr.-Wosek 5 38, i. Kolin 5 53 u. III. Kl.",c:5,n,"Ausserd.: ab Nimb. 5 10, i. Gr.-Wosek 5 38, i. Kolin 5 53 II. III. Kl.",c:5,n
+126-cn-p1-c1-8,footnote,0,3,doubtful,"* Nur werktags vor Sonn- u. Festtagen, II. u. III. Kl.",c:5;fn:*,y,"* Nur werktags vor Sonn- u. Festtagen, II. u. III. Kl.",c:5;fn:*,n
+126-cn-p1-c1-8,footnote,0,4,typography,Spw. Dresd.-Wien F.J.Bf. D Zug Berl.-Wien F.J.Bf.,c:7,n,Spw. Dresd.-Wien F. J. Bf. D Zug Berl.-Wien F. J. Bf.,c:7,y
+126-cn-p1-c1-8,footnote,0,5,doubtful,über Wschetat. Pr. Prag F. J. Bhf.,c:7,n,über Wschetat. Pr. Prag F. J. Bhf.,c:7,n
+126-cn-p1-c1-8,footnote,0,6,typography,: D-Zug Stuttgart- Furth i. W.-König- grätz über Prag F.J.B.-Wysocan.,c:3;c:4;c:5;fn::,n,: D-Zug Stuttgart-Furth i. W.-König- grätz über Prag F. J. B.-Wysocan.,c:3;c:4;c:5;fn::,n
+126-cn-p1-c1-8,footnote,0,7,text,! über Döbeln,c:7;fn:!,n,! über Döbeln.,c:7;fn:!,n
+126-cn-p1-c1-8,footnote,0,8,doubtful,■ Am Werktage vor Sonn- u. Festtagen.,c:2;fn:■,n,■ Am Werktage vor Sonn- u. Festtagen.,c:2;fn:■,n

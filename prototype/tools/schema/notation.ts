@@ -95,6 +95,8 @@ export interface Notation {
   maxLegHours: number;
   headerLines: HeaderField[];
   tables: Record<string, TableNotation>;
+  /** Type styles (b, i, u, sc) that carry meaning in this guide's tables (decision P-010); absent = default rules. */
+  valueMarks?: string[];
 }
 
 type Obj = Record<string, unknown>;
@@ -183,5 +185,11 @@ export function parseNotation(text: string, file: string): { notation: Notation 
     singleTime: singleTime === 'both' ? 'both' : 'dep', unmarkedRunning, symbolFlags: symbolFlags as Record<string, StopFlag>,
     sleeperMarkers: arr('sleeperMarkers', []), maxLegHours: typeof maxLegHours === 'number' ? maxLegHours : 20, headerLines, tables,
   };
+  if (j.valueMarks !== undefined) {
+    const vm = arr('valueMarks');
+    const badMark = vm.find((m) => !['b', 'i', 'u', 'sc'].includes(m));
+    if (badMark !== undefined) bad(`valueMarks may list only b, i, u, sc (found "${badMark}")`);
+    else notation.valueMarks = vm;
+  }
   return { notation: issues.length ? null : notation, issues };
 }

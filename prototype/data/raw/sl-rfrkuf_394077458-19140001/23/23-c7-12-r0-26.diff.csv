@@ -5,8 +5,8 @@ crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
 23-c7-12-r0-26,header,12,0,doubtful,D 68,,n,D 68,,n
 23-c7-12-r0-26,header,8,1,doubtful,I-III,,y,I-III,,n
 23-c7-12-r0-26,label,0,0,doubtful,us Dresden Hbf. 4,,n,us Dresden Hbf. 4,,n
-23-c7-12-r0-26,label,0,14,text+marks,in Bodenbach □.,,n,in Bodenbach,fn:□,n
-23-c7-12-r0-26,label,0,26,text+marks,2 in Tetschen □ .,,n,in Tetschen,fn:□,n
+23-c7-12-r0-26,label,0,14,typography,in Bodenbach □.,,n,in Bodenbach,fn:□,n
+23-c7-12-r0-26,label,0,26,text,2 in Tetschen □ .,,n,in Tetschen,fn:□,n
 23-c7-12-r0-26,cell,8,0,doubtful,7 10,i,n,7 10,i,n
 23-c7-12-r0-26,cell,10,0,doubtful,8 30,b,n,8 30,b,n
 23-c7-12-r0-26,cell,9,14,doubtful,|,,n,|,,n

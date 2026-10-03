@@ -1,0 +1,9 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+112-cn-p1-c8-14,footnote,0,2,typography,II. III *,c:9,n,II.III *,c:9,n
+112-cn-p1-c8-14,footnote,0,3,doubtful,II. III.,c:11,n,II. III.,c:11,n
+112-cn-p1-c8-14,footnote,0,4,doubtful,Nur Werktags.,c:11,y,Nur Werktags.,c:11,n
+112-cn-p1-c8-14,footnote,0,7,typography,II. III,c:14,y,II.III,c:14,y
+112-cn-p1-c8-14,footnote,0,8,typography,II. III :,c:9,n,II.III :,c:9,n
+112-cn-p1-c8-14,footnote,0,9,doubtful,Speisewagen Dresd. Prag Staatsbhf,c:13,n,Speisewagen Dresd. Prag Staatsbhf,c:13,n
+112-cn-p1-c8-14,footnote,0,11,text+marks,• ab Prag I.-III. Kl.,c:9;fn:•,n,! ab Prag I.-III. Kl.,c:9;fn:!,n
+112-cn-p1-c8-14,footnote,0,13,illegible,-III. Ab,c:11,x,?-III. Ab,c:11;c:12,x

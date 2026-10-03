@@ -1,0 +1,4 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+123-cn-p1-c0-4,footnote,0,0,illegible,• An d. Beneschauer u. Wot?cer Jahrmarktst.,c:1;fn:•,x,* An d. Beneschauer u. Woticer Jahrmarktst.,c:1;fn:*,n
+123-cn-p1-c0-4,footnote,0,4,illegible,§ ab 1. Jun,c:0;fn:§,x,I. Jun,c:0,x
+123-cn-p1-c0-4,footnote,0,5,missing-A,,,,§ ab,c:1;fn:§,x

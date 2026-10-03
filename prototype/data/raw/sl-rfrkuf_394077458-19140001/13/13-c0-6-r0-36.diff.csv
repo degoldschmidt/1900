@@ -1,20 +1,20 @@
 crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
-13-c0-6-r0-36,header,1,0,marks,D 67,b,y,D 67,,n
-13-c0-6-r0-36,header,2,0,marks,311,b;fn:□,n,311,fn:□,n
-13-c0-6-r0-36,header,3,0,marks,323,b,y,323,,n
-13-c0-6-r0-36,header,4,0,marks,D 61,b,y,D 61,,n
-13-c0-6-r0-36,header,5,0,marks,329,b,y,329,,n
-13-c0-6-r0-36,header,6,0,marks,E 63,b,y,E 63,,n
-13-c0-6-r0-36,header,1,1,marks,I.-III,b,y,I.-III,,y
-13-c0-6-r0-36,header,2,1,marks,I-IV,b,y,I-IV,,y
-13-c0-6-r0-36,header,3,1,marks,I-IV,b,y,I-IV,,y
-13-c0-6-r0-36,header,4,1,marks,I-III.,b,y,I-III.,,n
-13-c0-6-r0-36,header,5,1,marks,II-IV,b,y,II-IV,,y
-13-c0-6-r0-36,header,6,1,marks,I.-III,b,y,I.-III,,y
-13-c0-6-r0-36,label,0,1,text,3 Dresd. Wettinerstr. .,,n,3 Dresd. Wettinerstr. …,,n
+13-c0-6-r0-36,header,1,0,typography,D 67,b,y,D 67,,n
+13-c0-6-r0-36,header,2,0,typography,311,b;fn:□,n,311,fn:□,n
+13-c0-6-r0-36,header,3,0,typography,323,b,y,323,,n
+13-c0-6-r0-36,header,4,0,typography,D 61,b,y,D 61,,n
+13-c0-6-r0-36,header,5,0,typography,329,b,y,329,,n
+13-c0-6-r0-36,header,6,0,typography,E 63,b,y,E 63,,n
+13-c0-6-r0-36,header,1,1,typography,I.-III,b,y,I.-III,,y
+13-c0-6-r0-36,header,2,1,typography,I-IV,b,y,I-IV,,y
+13-c0-6-r0-36,header,3,1,typography,I-IV,b,y,I-IV,,y
+13-c0-6-r0-36,header,4,1,typography,I-III.,b,y,I-III.,,n
+13-c0-6-r0-36,header,5,1,typography,II-IV,b,y,II-IV,,y
+13-c0-6-r0-36,header,6,1,typography,I.-III,b,y,I.-III,,y
+13-c0-6-r0-36,label,0,1,typography,3 Dresd. Wettinerstr. .,,n,3 Dresd. Wettinerstr. …,,n
 13-c0-6-r0-36,label,0,2,doubtful,4 i. Dresden-Neustadt,,y,4 i. Dresden-Neustadt,,n
-13-c0-6-r0-36,label,0,3,text,a. Dresden-Neustadt .,,y,a. Dresden-Neustadt …,,n
-13-c0-6-r0-36,label,0,36,text+marks,180 i.BerlinAnh-Bf.312 ●,,n,180 i.Berlin Anh.-Bf. 312,fn:●,n
+13-c0-6-r0-36,label,0,3,typography,a. Dresden-Neustadt .,,y,a. Dresden-Neustadt …,,n
+13-c0-6-r0-36,label,0,36,text,180 i.BerlinAnh-Bf.312 ●,,n,180 i.Berlin Anh.-Bf. 312,fn:●,n
 13-c0-6-r0-36,cell,1,0,doubtful,5 36,u;i,y,5 36,u;i,n
 13-c0-6-r0-36,cell,4,0,doubtful,10 00,i,y,10 00,i,n
 13-c0-6-r0-36,cell,6,0,doubtful,2 12,i,y,2 12,i,n

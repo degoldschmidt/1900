@@ -6,7 +6,10 @@
  * The resolver (RESOLVER_BRIEF.md) writes <crop_id>.R.csv with rows for the disputed cells only.
  * This tool re-diffs A and B, copies every agreed cell with resolution=agree, merges the resolver's
  * decisions and rewrites <crop_id>.R.csv complete (every cell of the crop, sorted). It is idempotent:
- * running it on a merged file gives the same file.
+ * running it on a merged file gives the same file. Notes (footnote and column-notes crops) are keyed
+ * by A's rows: diff.ts matches B's notes to A's by content and numbers notes only B gave after A's
+ * last, so the merged notes follow keyer A's order. Cells disputed only in typography need a
+ * decision like any other dispute.
  *
  * Checks (any failure leaves the files untouched and reports the problems):
  * - every disputed cell has a decision A | B | other | illegible (agree is not a decision);
@@ -22,16 +25,18 @@ import { cellKey, marksString, sameReading, writeResolved, type KeyedCell, type 
 import { keyingCsv, roots, statusCsv, type Roots } from './paths.ts';
 import { findStatus, readStatus, updateStatusFile, type StatusRow } from './status.ts';
 import { cropOf, loadTable, outsideCrop, readKeyer, readResolvedFile } from './crop-files.ts';
-import { diffReadings } from './diff.ts';
+import { diffReadings, valueRulesFor } from './diff.ts';
+import { DEFAULT_RULES, type ValueRules } from './value.ts';
 import { expectedKeys, type CellKey } from '../crops/layout.ts';
 
 export interface MergeResult { cells: ResolvedCell[]; errors: string[]; counts: Record<string, number> }
 
 /** Pure merge of A, B and the resolver's rows over the crop's expected keys. */
-export function mergeResolved(a: readonly KeyedCell[], b: readonly KeyedCell[], resolver: readonly ResolvedCell[], expected: readonly CellKey[], cropId: string): MergeResult {
-  const d = diffReadings(a, b, expected);
+export function mergeResolved(a: readonly KeyedCell[], b: readonly KeyedCell[], resolver: readonly ResolvedCell[], expected: readonly CellKey[], cropId: string, rules: ValueRules = DEFAULT_RULES): MergeResult {
+  const d = diffReadings(a, b, expected, rules);
   const A = new Map(a.map((c) => [cellKey(c), c]));
-  const B = new Map(b.map((c) => [cellKey(c), c]));
+  // B as compared: notes re-numbered to A's rows (align.ts), so resolver rows use A's numbering.
+  const B = new Map(d.b.map((c) => [cellKey(c), c]));
   const R = new Map(resolver.map((c) => [cellKey(c), c]));
   const disputed = new Map(d.disagreements.map((x) => [cellKey(x), x]));
   const errors: string[] = [];
@@ -86,11 +91,11 @@ export function mergeCrop(r: Roots, source: string, table: string, cropId: strin
   const R = readResolvedFile(r, source, table, cropId);
   const pre = [...A.errors, ...B.errors, ...(R?.errors ?? []), ...outsideCrop(A.cells, t.layout, crop), ...outsideCrop(B.cells, t.layout, crop), ...outsideCrop(R?.cells ?? [], t.layout, crop)];
   if (pre.length) return { crop_id: cropId, ok: false, errors: pre, status: null };
-  const m = mergeResolved(A.cells, B.cells, R?.cells ?? [], expectedKeys(t.layout, crop), cropId);
+  const m = mergeResolved(A.cells, B.cells, R?.cells ?? [], expectedKeys(t.layout, crop), cropId, valueRulesFor(r, source));
   if (m.errors.length) return { crop_id: cropId, ok: false, errors: m.errors, status: null };
   writeTextFile(keyingCsv(r, source, table, cropId, 'R'), writeResolved(m.cells));
   const note = (['A', 'B', 'other', 'illegible'] as const).filter((k) => m.counts[k]).map((k) => `${k} ${m.counts[k]}`).join(', ');
-  const agreePermille = st?.agreement_permille ?? String(diffReadings(A.cells, B.cells, expectedKeys(t.layout, crop)).permille);
+  const agreePermille = st?.agreement_permille ?? String(diffReadings(A.cells, B.cells, expectedKeys(t.layout, crop), valueRulesFor(r, source)).permille);
   const status: StatusRow = {
     source_id: source, table_ref: table, crop_id: cropId, status: 'resolved', agreement_permille: agreePermille,
     note: `${m.cells.length} cells; ${note || 'all agreed'}${m.counts.illegible ? ' — illegible cells block compilation unless waived' : ''}`,

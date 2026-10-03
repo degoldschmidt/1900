@@ -6,11 +6,13 @@ Two keyers transcribed the same crop independently (`tools/keying/KEYER_BRIEF.md
 
 `node tools/keying/resolve-support.ts <source_id> <table_ref> <crop_id>` writes `build/resolve/<source_id>/<table_ref>/<crop_id>/`:
 
-- `packet.md`: the crop image's path, then one section per disputed cell: its key (kind, col, row), the reason (`text`, `marks`, `text+marks`, `missing-A`, `missing-B`, `illegible`, `doubtful`), keyer A's and keyer B's readings, and its zoom;
+- `packet.md`: the crop image's path, then one section per disputed cell: its key (kind, col, row), the reason (`text`, `marks`, `text+marks`, `typography`, `missing-A`, `missing-B`, `illegible`, `doubtful`), keyer A's and keyer B's readings, and its zoom;
 - `zoom-<kind>-c<col>-r<row>.png`: the cell cut from the page scan with a margin, magnified 4×, the cell's box outlined in translucent red (the outline sits on the cell boundary; it is not a printed rule);
 - `R.template.csv`: one line per disputed cell, for you to fill.
 
 For a column-notes crop (`-cn-`), the zoom of a note shows the whole crop part; read the note in the crop itself. A column-notes line keyed by one keyer only (`missing-A`/`missing-B`) is resolved like any other: keep it if the note is printed in that column, otherwise choose `other` with empty text.
+
+**Notes are matched by content.** In footnote and column-notes crops the two keyers' notes are paired by column mark (`c:<n>`) and text similarity, not by their order, and the row numbers are keyer A's. A note only B gave is numbered after A's last note and shows as `missing-A`; a note one keyer split in two and the other joined shows as one `text` dispute plus one `missing-…` line. Choose `other` with empty text for a line whose note is already wholly in another line.
 
 Look at the whole crop first (to learn the type: how this guide's 3, 5, 6, 8 and 9 look, how heavy its p.m. type is, what its ditto marks look like), then at each zoom.
 
@@ -35,8 +37,10 @@ Rules:
 4. **Both keyers wrote `sure=x`** (`illegible` reason): try the zoom. If you can read it, `other`; if not, `illegible`.
 5. **Separators and footnote symbols.** If only the separator between figures is in doubt, choose the shared or most likely reading with `sure=n`; do not make the cell `illegible` for a separator, since it does not change the time. A footnote symbol you cannot identify stays `illegible` (`fn:?`), whatever the keyers guessed; in calibration every guessed symbol on a blurred page was wrong.
 6. **Confusable digits.** On a blurred or speckled print, 3/8, 5/6, 6/8, 0/8, 3/5 and 8/9 are told apart only by one stroke: the open left side of a 3 or 5, the closed lower bowl of a 6, the waist of an 8. Choose a reading only if that stroke is visible in the zoom; otherwise `illegible`, with the context reading in the note. This applies to train numbers in the header as much as to times: in calibration the one value error that survived resolution was a header `108` accepted as `106`.
-7. **`doubtful`**: both keyers gave the same reading but at least one marked it `sure=n`. Do not assume agreement makes it right: two keyers can share a misreading of a blurred digit, separator or footnote symbol. Read the zoom afresh; choose `A` (the shared reading) only if the print shows it, otherwise `other` or `illegible`.
-8. Do not change, add or remove lines for cells that are not disputed.
+7. **`typography`**: the two readings have the same value and differ only in print detail: the separator, italic, bold on a station name or train number, leader dots, or a sign after a station name written in the text by one keyer and as `fn:` by the other. Choose the reading that matches the print and the conventions below; such a cell is never `illegible`.
+8. **Station-name conventions** (as in the keyer brief): a sign after the name goes into `marks` as `fn:<sign>`, not the text; leader dots are one `…` after a space (an abbreviation's own stop stays); a number printed before the name (connecting table or km) stays in the text as printed. If neither keyer followed them, use `other`.
+9. **`doubtful`**: both keyers gave the same reading but at least one marked it `sure=n`. Do not assume agreement makes it right: two keyers can share a misreading of a blurred digit, separator or footnote symbol. Read the zoom afresh; choose `A` (the shared reading) only if the print shows it, otherwise `other` or `illegible`.
+10. Do not change, add or remove lines for cells that are not disputed.
 
 An `illegible` cell blocks compilation of the table until the historian waives it (`data/canonical/waivers.csv`) or the page is re-read from a better scan.
 

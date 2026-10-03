@@ -1,0 +1,27 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+112-c8-14-r0-54,header,8,0,doubtful,I III,,n,I III,,n
+112-c8-14-r0-54,header,9,0,doubtful,I III,,n,I III,,n
+112-c8-14-r0-54,header,10,0,doubtful,I III,,n,I III,,n
+112-c8-14-r0-54,label,0,0,typography,a. Bodenbach K.K.,b,y,a. Bodenbach K.K.,,n
+112-c8-14-r0-54,label,0,47,text,"180 i.Prag Stbhf. 122,123",b,n,150 i.Prag Stbhf. 122.123,,n
+112-c8-14-r0-54,label,0,53,typography,528 Wien Nordb.,b,n,528 Wien Nordb.,,n
+112-c8-14-r0-54,label,0,54,text,540 Wien Staatsb.,b,n,540 Wien Staatsb,,n
+112-c8-14-r0-54,cell,8,0,doubtful,1 02,i,y,1 02,i,n
+112-c8-14-r0-54,cell,10,0,typography,3 12,b,n,3 12,,y
+112-c8-14-r0-54,cell,12,0,doubtful,6 33,b;u,y,6 33,b;u,n
+112-c8-14-r0-54,cell,13,0,marks,8 28,u;i,y,8 28,i,y
+112-c8-14-r0-54,cell,14,0,marks,10 45,b;u,y,10 45,,y
+112-c8-14-r0-54,cell,9,47,doubtful,5 29,i;fn:•,n,5 29,i;fn:•,n
+112-c8-14-r0-54,cell,10,47,typography,6 50,b;u,n,6 50,u,y
+112-c8-14-r0-54,cell,11,47,typography,7 25,b;u,y,7 25,u,y
+112-c8-14-r0-54,cell,12,47,doubtful,10 30,b;u,y,10 30,b;u,n
+112-c8-14-r0-54,cell,9,53,typography,4 45,b;u,n,4 45,u,y
+112-c8-14-r0-54,cell,10,53,typography,7 48,b,n,7 48,,y
+112-c8-14-r0-54,cell,11,53,doubtful,9 55,i,n,9 55,i,n
+112-c8-14-r0-54,cell,12,53,text,7 48,,n,,,n
+112-c8-14-r0-54,cell,13,53,text,,,n,7 48,,y
+112-c8-14-r0-54,cell,10,54,typography,8 35,b,n,8 35,,y
+112-c8-14-r0-54,cell,11,54,typography,11 15,b,n,11 15,,n
+112-c8-14-r0-54,cell,12,54,text+marks,6 55,i,n,,,n
+112-c8-14-r0-54,cell,13,54,text+marks,,,n,6 55,i,y
+112-c8-14-r0-54,cell,14,54,doubtful,—,,y,—,,n

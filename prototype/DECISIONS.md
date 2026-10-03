@@ -343,3 +343,34 @@ Also the explanation of signs (p. 5) and the title page. In all, 18 pages, fetch
 - "ab"/"Ank." words and braced times.
 
 **Known hard spots:** the lower section of p. 192; p. 75's last column partly in the binding; braced shared times in table 112.
+
+## 2026-10-03 16:10 — D2 pilot keying and diff; value rules per guide (Event P-E015; Decisions P-010, P-011)
+
+**Keying.** Six blind keyer agents, two per batch: about 900,000 tokens for 69 crops on 18 pages. Two keyers made small blindness breaches; neither touched its partner's file. Keyer A of batch X listed its own empty output folder. Keyer B of batch Z ran a self-check over other B files after its keying was done.
+
+**First diff.** Grid agreement was 70–95% and the notes much lower. The causes:
+- bold on header train numbers, 78 of about 106 real disagreements in tables 12 and 13;
+- label conventions: leader dots, and signs printed after names;
+- notes listed in a different order by the two keyers;
+- in tables 112, 123 and 126, bold on body times, 107 disputes.
+
+On the times themselves, A and B disagreed on 10 of about 600 cells in tables 12 and 13.
+
+**Tool changes** (pilot stage 3a and this session):
+- `tools/keying/value.ts` holds the shared value function (diff and scorer);
+- a new `typography` dispute reason, counted as concordant;
+- column notes are aligned by content (`align.ts`);
+- the label conventions are spelled out in both briefs;
+- column-notes crops get real zooms;
+- `resolve-support.ts --include-rekey` builds packets for crops below the re-key line.
+
+**Decision P-010 (value rules per guide).** Which type styles carry meaning on body cells is a property of the guide. A guide's notation file may declare it as `valueMarks`; without one, the P-005 default applies (bold and underline are value; italic and small capitals are typography). Fritzsches Kursbuch 1914 declares `["u", "i"]`. Its signs page (p. 5, items 4, 6 and 10) gives meaning to italic figures (luxury and express trains) and underlined minutes (night) and none to bold.
+
+With P-010, grid agreement per crop rose: table 12 to 81–100%, 13 to 89–98%, 112 to 79–94%, and 126 to 85–100%.
+
+**Decision P-011 (pilot resolves every crop).** The plan's rule re-keys any crop under 950‰. In the pilot, every crop goes to resolution instead (67 packets, 711 disputed cells):
+- 311 doubtful and 282 typography;
+- 44 text, 43 illegible, 15 marks, 12 text and marks;
+- 4 missing.
+
+The historian's blind sample then measures whether resolution alone reaches the target. The re-key threshold for the full run is a G2 decision, informed by that sample.

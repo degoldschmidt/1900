@@ -14,7 +14,7 @@
  * value error rate counts only wrong cells whose difference changes what the data means: the
  *   separator printed between figures (space, point, raised point, colon, comma) and the italic and
  *   small-capital marks are typography, as is bold outside body cells (emphasis on station names and
- *   train numbers); bold on a body time (p.m. in many guides), underlining and footnote marks are not. The targets (PLAN.md, Data workstream 5: single keyer ≤ 1.0%, resolved ≤ 0.1%) apply to the
+ *   train numbers), and so are leader dots after a label (tools/keying/value.ts); bold on a body time (p.m. in many guides), underlining and footnote marks are not. The targets (PLAN.md, Data workstream 5: single keyer ≤ 1.0%, resolved ≤ 0.1%) apply to the
  *   value error rate (decision P-003); the exact rate is reported beside it.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
@@ -22,6 +22,7 @@ import { join } from 'node:path';
 import { cmpStr, writeTextFile } from '../keying/csv.ts';
 import { cellKey, KINDS, marksString, parseLong, parseResolved, type KeyedCell, type Kind } from '../keying/longcsv.ts';
 import { rawDir, roots, type Roots } from '../keying/paths.ts';
+import { valueOf } from '../keying/value.ts';
 import { loadTable } from '../keying/crop-files.ts';
 import { expectedKeys, type CellKey } from '../crops/layout.ts';
 
@@ -43,17 +44,8 @@ const zero = (): Tally => ({ required: 0, wrong: 0, missing: 0, spurious: 0, abs
 export const errorPermille = (t: Tally): number => (t.required ? ((t.wrong + t.missing + t.spurious) * 1000) / t.required : 0);
 export const valuePermille = (t: Tally): number => (t.required ? ((t.valueWrong + t.missing + t.spurious) * 1000) / t.required : 0);
 
-const TYPOGRAPHIC_MARKS = new Set(['i', 'sc']);
-
-/**
- * A reading with typography removed: separators between figures become one space; italic and small
- * capitals dropped; bold dropped except on body cells, where it marks p.m. times.
- */
-export function valueOf(c: Pick<KeyedCell, 'text' | 'marks'>, kind: Kind = 'cell'): string {
-  const text = c.text.replace(/(?<=\d)[\s.·:,]+(?=\d)/g, ' ');
-  const keep = c.marks.filter((m) => !TYPOGRAPHIC_MARKS.has(m) && (m !== 'b' || kind === 'cell'));
-  return `${text}\u0000${marksString(keep)}`;
-}
+/** The value function is shared with the keyer diff (tools/keying/value.ts); re-exported for callers. */
+export { valueOf };
 
 const show = (c: Pick<KeyedCell, 'text' | 'marks'>) => `${c.text}${c.marks.length ? ` [${marksString(c.marks)}]` : ''}`;
 

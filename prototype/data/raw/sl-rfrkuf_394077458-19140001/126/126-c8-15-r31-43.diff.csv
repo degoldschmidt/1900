@@ -1,0 +1,14 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-c8-15-r31-43,header,9,0,doubtful,,,n,,,y
+126-c8-15-r31-43,header,14,0,doubtful,,,n,,,y
+126-c8-15-r31-43,header,15,0,doubtful,,,n,,,y
+126-c8-15-r31-43,label,0,31,typography,in Prag Ö. N. W. B.,b,n,in Prag Ö. N. W. B.,,n
+126-c8-15-r31-43,label,0,43,illegible,4?? i. Wien N W. Bf.,b,x,488 i. Wien N. W. Bf,,n
+126-c8-15-r31-43,cell,8,31,typography,6 15,b;u,y,6 15,u,y
+126-c8-15-r31-43,cell,12,31,typography,10 41,b;u,y,10 41,u,y
+126-c8-15-r31-43,cell,13,31,text+marks,12 28,u,n,—,,n
+126-c8-15-r31-43,cell,14,31,text,|,,n,,,y
+126-c8-15-r31-43,cell,15,31,text,|,,n,,,y
+126-c8-15-r31-43,cell,8,43,typography,9 16,b;u,y,9 16,u,y
+126-c8-15-r31-43,cell,12,43,typography,6 17,b,y,6 17,,y
+126-c8-15-r31-43,cell,14,43,doubtful,7 22,i,y,7 22,i,n

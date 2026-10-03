@@ -1,7 +1,5 @@
 crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
-23-cn-p1-c7-12,footnote,0,0,text+marks,Nur Sonn-u. Festtags sowie am 2. Juni.,c:11,y,Nur Sonn- und Festtags sowie am 2. Juni.,c:7,y
-23-cn-p1-c7-12,footnote,0,1,text+marks,Speisewagen Dresden-Wien Fr. J. Bf.,c:12,n,Nur Sonn- und Festtags.,c:9,y
-23-cn-p1-c7-12,footnote,0,2,text+marks,Nur Sonn- und Festtags.,c:9,y,Nur Sonn-u. Festtags sowie am 2. Juni.,c:11,n
-23-cn-p1-c7-12,footnote,0,3,text+marks,† über Wschetat-Priwor Prag Fr. J. Bf.-Gmünd.,c:11;fn:†,n,Speisewagen Dresden-Wien Fr. J. Bf.,c:12,n
-23-cn-p1-c7-12,footnote,0,4,illegible,Nur Sonn- und Festtags sowie am 2. Juni.,c:7,y,? über Wschetat-Priwor Prag Fr. J. Bf.-Gmünd.,c:11;fn:?,x
+23-cn-p1-c7-12,footnote,0,0,doubtful,Nur Sonn-u. Festtags sowie am 2. Juni.,c:11,y,Nur Sonn-u. Festtags sowie am 2. Juni.,c:11,n
+23-cn-p1-c7-12,footnote,0,1,doubtful,Speisewagen Dresden-Wien Fr. J. Bf.,c:12,n,Speisewagen Dresden-Wien Fr. J. Bf.,c:12,n
+23-cn-p1-c7-12,footnote,0,3,illegible,† über Wschetat-Priwor Prag Fr. J. Bf.-Gmünd.,c:11;fn:†,n,? über Wschetat-Priwor Prag Fr. J. Bf.-Gmünd.,c:11;fn:?,x
 23-cn-p1-c7-12,footnote,0,5,doubtful,! Ank. Wien Fr. J. Bf.,c:11;fn:!,n,! Ank. Wien Fr. J. Bf.,c:11;fn:!,n

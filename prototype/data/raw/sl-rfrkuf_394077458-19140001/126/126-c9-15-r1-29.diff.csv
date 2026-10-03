@@ -1,0 +1,15 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-c9-15-r1-29,header,14,0,doubtful,,,n,,,y
+126-c9-15-r1-29,header,15,0,doubtful,,,n,,,n
+126-c9-15-r1-29,label,0,1,typography,〃 Dresden Hbf. 23,b,n,〃 Dresden Hbf. 23,,n
+126-c9-15-r1-29,label,0,2,typography,a. Tetschen N.W.B. 121 147,b,n,a. Tetschen N. W. B. 121 147,,n
+126-c9-15-r1-29,label,0,29,typography,in Prag F. J. B. 122,b,n,in Prag F. J. B. 122,,n
+126-c9-15-r1-29,cell,11,1,typography,2 22,b,y,2 22,,y
+126-c9-15-r1-29,cell,12,1,typography,2 22,b,y,2 22,,y
+126-c9-15-r1-29,cell,13,1,typography,6 30,b;u,y,6 30,u,y
+126-c9-15-r1-29,cell,11,2,typography,4 52,b,y,4 52,,y
+126-c9-15-r1-29,cell,12,2,marks,5 05,b,y,5 05,u,y
+126-c9-15-r1-29,cell,13,2,typography,9 20,b;u,y,9 20,u,y
+126-c9-15-r1-29,cell,12,29,typography,9 05,b;u,n,9 05,u,y
+126-c9-15-r1-29,cell,13,29,doubtful,ab,,y,ab,,n
+126-c9-15-r1-29,cell,15,29,typography,2 40,b;u,n,2 40,u,y

@@ -1,12 +1,12 @@
 crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
-12-c0-5-r0-40,header,0,0,marks,281,b,y,281,,n
-12-c0-5-r0-40,header,1,0,marks,289,b,n,289,,n
-12-c0-5-r0-40,header,2,0,marks,D 51,b,y,D 51,,n
-12-c0-5-r0-40,header,5,0,marks,295,b,y,295,,n
-12-c0-5-r0-40,header,0,1,marks,I-IV,b,y,I-IV,,y
-12-c0-5-r0-40,header,1,1,marks,II.-IV,b,n,II.-IV,,n
-12-c0-5-r0-40,header,2,1,marks,I-III,b,y,I-III,,y
-12-c0-5-r0-40,header,5,1,marks,II-IV,b,y,II-IV,,y
+12-c0-5-r0-40,header,0,0,typography,281,b,y,281,,n
+12-c0-5-r0-40,header,1,0,typography,289,b,n,289,,n
+12-c0-5-r0-40,header,2,0,typography,D 51,b,y,D 51,,n
+12-c0-5-r0-40,header,5,0,typography,295,b,y,295,,n
+12-c0-5-r0-40,header,0,1,typography,I-IV,b,y,I-IV,,y
+12-c0-5-r0-40,header,1,1,typography,II.-IV,b,n,II.-IV,,n
+12-c0-5-r0-40,header,2,1,typography,I-III,b,y,I-III,,y
+12-c0-5-r0-40,header,5,1,typography,II-IV,b,y,II-IV,,y
 12-c0-5-r0-40,label,0,1,text,3 Dresd. Wettinerstr.,,n,Dresd. Wettinerstr.,,n
 12-c0-5-r0-40,label,0,2,text,4 i. Dresden-Neustadt,,n,i. Dresden-Neustadt,,n
 12-c0-5-r0-40,label,0,40,doubtful,198 i.Berlin Anh.Bf.312,,n,198 i.Berlin Anh.Bf.312,,n

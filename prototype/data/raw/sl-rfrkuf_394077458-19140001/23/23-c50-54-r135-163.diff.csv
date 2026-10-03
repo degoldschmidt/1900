@@ -1,6 +1,6 @@
 crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
-23-c50-54-r135-163,label,0,135,text+marks,a. Tetschen □. .,,y,a. Tetschen,fn:□,y
-23-c50-54-r135-163,label,0,149,text+marks,us Bodenbach □.,,n,us Bodenbach,fn:□,n
+23-c50-54-r135-163,label,0,135,typography,a. Tetschen □. .,,y,a. Tetschen,fn:□,y
+23-c50-54-r135-163,label,0,149,typography,us Bodenbach □.,,n,us Bodenbach,fn:□,n
 23-c50-54-r135-163,label,0,163,doubtful,in Dresden Hbf.,,n,in Dresden Hbf.,,n
 23-c50-54-r135-163,cell,53,135,doubtful,7 04,b;u,n,7 04,b;u,n
 23-c50-54-r135-163,cell,54,135,doubtful,,,n,,,y

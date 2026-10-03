@@ -1,16 +1,16 @@
 crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
-12-c12-17-r48-88,header,13,0,marks,804,b,y,804,,n
-12-c12-17-r48-88,header,14,0,marks,D 68,b,n,D 68,,n
-12-c12-17-r48-88,header,15,0,marks,282,b,y,282,,n
-12-c12-17-r48-88,header,16,0,marks,284,b,y,284,,n
-12-c12-17-r48-88,header,17,0,marks,D 56,b,y,D 56,,n
-12-c12-17-r48-88,header,13,1,marks,II-IV,b,y,II-IV,,y
-12-c12-17-r48-88,header,14,1,marks,I-III.,b,y,I-III.,,y
-12-c12-17-r48-88,header,15,1,marks,I-IV.,b,y,I-IV.,,y
-12-c12-17-r48-88,header,16,1,marks,I-IV.,b,y,I-IV.,,y
-12-c12-17-r48-88,header,17,1,marks,I.-III.,b,y,I.-III.,,y
+12-c12-17-r48-88,header,13,0,typography,804,b,y,804,,n
+12-c12-17-r48-88,header,14,0,typography,D 68,b,n,D 68,,n
+12-c12-17-r48-88,header,15,0,typography,282,b,y,282,,n
+12-c12-17-r48-88,header,16,0,typography,284,b,y,284,,n
+12-c12-17-r48-88,header,17,0,typography,D 56,b,y,D 56,,n
+12-c12-17-r48-88,header,13,1,typography,II-IV,b,y,II-IV,,y
+12-c12-17-r48-88,header,14,1,typography,I-III.,b,y,I-III.,,y
+12-c12-17-r48-88,header,15,1,typography,I-IV.,b,y,I-IV.,,y
+12-c12-17-r48-88,header,16,1,typography,I-IV.,b,y,I-IV.,,y
+12-c12-17-r48-88,header,17,1,typography,I.-III.,b,y,I.-III.,,y
 12-c12-17-r48-88,label,0,85,doubtful,189 in Dresden-Neustadt,,n,189 in Dresden-Neustadt,,n
-12-c12-17-r48-88,label,0,86,text,aus Dresden-Neustadt .,,y,aus Dresden-Neustadt …,,n
+12-c12-17-r48-88,label,0,86,typography,aus Dresden-Neustadt .,,y,aus Dresden-Neustadt …,,n
 12-c12-17-r48-88,label,0,87,doubtful,191 i. Dresden Wettinerstr.,,y,191 i. Dresden Wettinerstr.,,n
 12-c12-17-r48-88,label,0,88,doubtful,198 〃 Dresden Hbf.,,n,198 〃 Dresden Hbf.,,n
 12-c12-17-r48-88,cell,12,48,doubtful,,,y,,,n

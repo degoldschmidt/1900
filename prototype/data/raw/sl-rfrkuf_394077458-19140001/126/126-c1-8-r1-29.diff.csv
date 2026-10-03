@@ -1,0 +1,11 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-c1-8-r1-29,label,0,1,typography,〃 Dresden Hbf. 23,b,n,〃 Dresden Hbf. 23,,n
+126-c1-8-r1-29,label,0,2,typography,a. Tetschen N.W.B. 121 147,b,n,a. Tetschen N. W. B. 121 147,,n
+126-c1-8-r1-29,label,0,29,typography,in Prag F. J. B. 122,b,n,in Prag F. J. B. 122,,n
+126-c1-8-r1-29,cell,8,1,typography,10 06,b,y,10 06,,y
+126-c1-8-r1-29,cell,4,2,typography,6 05,b,y,6 05,,y
+126-c1-8-r1-29,cell,6,2,typography,8 44,b,n,8 44,,y
+126-c1-8-r1-29,cell,8,2,typography,2 22,b,y,2 22,,y
+126-c1-8-r1-29,cell,5,29,doubtful,ab,,n,ab,,n
+126-c1-8-r1-29,cell,6,29,typography,12 40,b,y,12 40,,y
+126-c1-8-r1-29,cell,8,29,typography,4 40,b,y,4 40,,y

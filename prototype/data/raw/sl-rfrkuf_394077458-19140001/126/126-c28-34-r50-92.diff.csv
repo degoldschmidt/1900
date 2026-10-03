@@ -1,0 +1,17 @@
+crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
+126-c28-34-r50-92,label,0,50,illegible,?s Wien N.W.Bf.,b,x,?s Wien N. W. Bf.,,x
+126-c28-34-r50-92,label,0,62,typography,a. Prag Ö. N. W. B.,b,n,a. Prag Ö. N. W. B.,,n
+126-c28-34-r50-92,label,0,64,typography,a. Prag F. J. B. 122,b,y,a. Prag F. J. B. 122,,y
+126-c28-34-r50-92,label,0,91,typography,i. Tetsch. N.W.B. 121 147,b,n,i. Tetsch. N. W. B. 121 147,,y
+126-c28-34-r50-92,label,0,92,illegible,? Dresd. Hbf. 23,b,x,?n Dresd. Hbf. 23,,x
+126-c28-34-r50-92,cell,32,50,doubtful,7 10,,n,7 10,,y
+126-c28-34-r50-92,cell,34,50,typography,11 15,b,y,11 15,,y
+126-c28-34-r50-92,cell,28,62,typography,10 48,b,y,10 48,,y
+126-c28-34-r50-92,cell,32,62,typography,4 40,b,n,4 40,,y
+126-c28-34-r50-92,cell,28,64,typography,11 30,b,y,11 30,,y
+126-c28-34-r50-92,cell,31,64,typography,5 55,b,n,5 55,,y
+126-c28-34-r50-92,cell,28,91,typography,4 14,b,y,4 14,,y
+126-c28-34-r50-92,cell,31,91,typography,8 20,b;u,y,8 20,u,y
+126-c28-34-r50-92,cell,32,91,typography,10 04,b;u,y,10 04,u,y
+126-c28-34-r50-92,cell,28,92,typography,6 23,b;u,y,6 23,u,y
+126-c28-34-r50-92,cell,32,92,typography,12 09,b;u,y,12 09,u,y

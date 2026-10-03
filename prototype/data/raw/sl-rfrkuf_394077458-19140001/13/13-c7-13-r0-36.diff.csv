@@ -1,20 +1,20 @@
 crop_id,kind,col,row,reason,a_text,a_marks,a_sure,b_text,b_marks,b_sure
-13-c7-13-r0-36,header,7,0,marks,313,b,y,313,,n
-13-c7-13-r0-36,header,8,0,marks,325,b,n,325,,n
-13-c7-13-r0-36,header,9,0,marks,D 65,b,y,D 65,,n
-13-c7-13-r0-36,header,10,0,marks,315,b,n,315,,n
-13-c7-13-r0-36,header,11,0,marks,D195,b,n,D195,,n
-13-c7-13-r0-36,header,12,0,marks,361,b,y,361,,y
-13-c7-13-r0-36,header,7,1,marks,I.-IV,b,y,I.-IV,,y
-13-c7-13-r0-36,header,8,1,marks,II-IV,b,y,II-IV,,y
-13-c7-13-r0-36,header,9,1,marks,I-III,b,y,I-III,,y
-13-c7-13-r0-36,header,10,1,marks,I-IV,b,y,I-IV,,n
-13-c7-13-r0-36,header,11,1,marks,I.-III,b,y,I.-III,,y
-13-c7-13-r0-36,header,12,1,marks,II-IV,b,y,II-IV,,y
-13-c7-13-r0-36,label,0,1,text,3 Dresd. Wettinerstr. .,,n,3 Dresd. Wettinerstr. …,,n
+13-c7-13-r0-36,header,7,0,typography,313,b,y,313,,n
+13-c7-13-r0-36,header,8,0,typography,325,b,n,325,,n
+13-c7-13-r0-36,header,9,0,typography,D 65,b,y,D 65,,n
+13-c7-13-r0-36,header,10,0,typography,315,b,n,315,,n
+13-c7-13-r0-36,header,11,0,typography,D195,b,n,D195,,n
+13-c7-13-r0-36,header,12,0,typography,361,b,y,361,,y
+13-c7-13-r0-36,header,7,1,typography,I.-IV,b,y,I.-IV,,y
+13-c7-13-r0-36,header,8,1,typography,II-IV,b,y,II-IV,,y
+13-c7-13-r0-36,header,9,1,typography,I-III,b,y,I-III,,y
+13-c7-13-r0-36,header,10,1,typography,I-IV,b,y,I-IV,,n
+13-c7-13-r0-36,header,11,1,typography,I.-III,b,y,I.-III,,y
+13-c7-13-r0-36,header,12,1,typography,II-IV,b,y,II-IV,,y
+13-c7-13-r0-36,label,0,1,typography,3 Dresd. Wettinerstr. .,,n,3 Dresd. Wettinerstr. …,,n
 13-c7-13-r0-36,label,0,2,doubtful,4 i. Dresden-Neustadt,,y,4 i. Dresden-Neustadt,,n
-13-c7-13-r0-36,label,0,3,text,a. Dresden-Neustadt .,,y,a. Dresden-Neustadt …,,n
-13-c7-13-r0-36,label,0,36,text+marks,180 i.BerlinAnh-Bf.312 ●,,n,180 i.Berlin Anh.-Bf. 312,fn:●,n
+13-c7-13-r0-36,label,0,3,typography,a. Dresden-Neustadt .,,y,a. Dresden-Neustadt …,,n
+13-c7-13-r0-36,label,0,36,text,180 i.BerlinAnh-Bf.312 ●,,n,180 i.Berlin Anh.-Bf. 312,fn:●,n
 13-c7-13-r0-36,cell,9,0,doubtful,5 14,i,y,5 14,i,n
 13-c7-13-r0-36,cell,11,0,doubtful,10 23,u;i,y,10 23,u;i,n
 13-c7-13-r0-36,cell,10,1,illegible,7 3?,u,x,7 3?,u,x
