@@ -185,3 +185,15 @@ Two new blind keyers worked from the revised briefs, then one resolver.
 ## 2026-10-03 11:15 — Access re-check after the owner's change (Event P-E009)
 
 The owner reported opening the four library domains. All four still get "403 to CONNECT" from the environment proxy, both in this session's container and in a fresh throwaway session started in the same environment at 11:05 (since archived). The environment is still listed as "Default - trusted network access", so the change has not reached its policy. The owner will re-check and save Network access: Custom, with the four domains and the package-manager defaults. The D0 run-book is in `PLAN.md` (addendum of 3 October).
+
+## 2026-10-03 11:25 — C07 mechanics preview on invented data (Decision P-006); PR #1 merged
+
+**Owner decision.** Build a playable C07 mechanics preview now, on an invented railway, instead of waiting for transcribed 1914 data. This reverses scope choice 5 ("no game-rule code before that game's data freeze") for C07 only. The owner chose it over waiting for library access or supplying scans.
+
+**Rules of the preview:**
+1. **The rules code is the real C07 code** (`games/c07-departure/src/`), written to `design/RULES.md`. When the transcribed 1914 data is frozen, it replaces the invented world without changing the rules, and balance values are revisited at that point.
+2. **The invented world is kept apart.** It lives only in `games/c07-departure/preview/`: invented towns, countries, guides, timetables, fares and dates, under `SYN_` ids with invented display names. It never enters `data/`, and the release build still refuses synthetic bundles.
+3. **The preview is its own page** (`dist/c07-departure.preview.html`). It carries a permanent banner, "Mechanics preview: an invented railway, not history", and its About screen says the same. No historical events are simulated.
+4. **Its playtest results answer the mechanics hypotheses only** (H07-1 to H07-6, for the loop). Historical texture is judged again on the 1914 build.
+
+**PR #1 merged** into `master` (merge commit `1a11e5c`) at the owner's request. The working branch was not reset to the new `master`, because the reset was refused by the session's permission check. Further commits continue on the same branch from the merged head, so a later PR will show only new work.
