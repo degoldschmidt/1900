@@ -62,3 +62,37 @@ Both halves of the data tooling are built, reviewed and committed; 288 tests pas
 - Three agents are drafting each game's rules specification and data-needs list, a design document, not rule code, so discovery knows which non-timetable facts to look for.
 
 Keyer calibration on synthetic pages, the last D1 exit criterion, is under way: three pages, nine crops, two blind keyers, then resolution and scoring against hidden ground truth.
+
+## 2026-10-03 12:00 — Keyer calibration, round 1 (Event P-E006; Decision P-003)
+
+**Set-up.** Three synthetic period-style pages with sealed ground truth, nine crops, 724 cells per keyer:
+- seed 7: light degradation, the realism target;
+- seed 11: heavy blur, mrn/aft style;
+- seed 23: heavy blur and halftone noise, 12 trains.
+
+Two blind keyer agents worked from the crop images only, then a diff, then two resolver agents with 4× zooms, then a merge, then a score against the sealed truth.
+
+**Results**
+
+| | cells | value errors | exact errors | illegible |
+|---|---|---|---|---|
+| single keyers (A+B) | 1,248 | 5 (0.40%) | 14 (1.12%) | 3 |
+| resolved | 624 | 1 (0.16%) | 6 (0.96%) | 24 (3.8%) |
+
+- **Page 7:** no value errors, no illegible cells.
+- **Pages 11 and 23:** all 24 illegible cells are here. Each resolver note gave the correct context reading, which supports historian waivers.
+- **Remaining value error:** a blurred header train number printed `108`, which both keyers and the resolver read as `106`.
+- The single-keyer target is met; the resolved target (0.1%) is met on pages 7 and 11 but not on page 23.
+
+**Findings and changes**
+1. **Agent keyers share their misreadings.** Every residual error was identical in A and B, so the diff never saw it. Cells the keyers agree on but either marked doubtful now go to the resolver as well (reason `doubtful`). This does not lower the agreement figure.
+2. **Value versus typography (Decision P-003).** The calibration targets apply to the **value** error rate. The printed separator between figures, italics and small capitals are typography. Bold (p.m.), underlining and footnote marks are value. The exact rate is still reported.
+3. **Brief rules added:**
+   - an uncertain separator alone never makes a cell illegible;
+   - footnote symbols are never guessed (on the blurred page every guessed symbol was wrong);
+   - confusable digits (3/8, 5/6, 6/8, 0/8, 3/5, 8/9) count as read only when the telling stroke is visible, header train numbers included.
+4. **Ground-truth fix.** The synthetic ground truth lacked the italic that the page prints on arr./dep. The keyers were right and the generator was wrong; the generator is fixed.
+
+**Implications for real pages.** Scan quality, not keying, sets the abstention rate. Real scans should be fetched at the highest resolution the library offers, so crops resemble page 7 rather than pages 11 and 23. Validator V04 (the same train agreeing across tables) gives a second check on train numbers.
+
+**Next.** Round 2 on three fresh pages with the revised briefs, to confirm the resolved target before D1 is closed.

@@ -90,6 +90,7 @@ Quote a field with double quotes if it contains a comma (`"Köln (Cologne), Hbf.
 - `y`: you can read every character and mark.
 - `n`: you can read it, but one character or mark is doubtful (a 3 that might be an 8, bold you are not sure of). Give your best reading.
 - `x`: you cannot read it. Write the characters you can read with `?` for each one you cannot (`1? 15`), or leave the text empty if nothing is readable. Do not choose between two candidates: that is the resolver's job, with a sharper zoom.
+- **Confusable digits.** If a digit could be one of 3/8, 5/6, 6/8, 0/8, 3/5 or 8/9 and you cannot see the stroke that tells them apart, give your best reading with `sure=n` (header train numbers included), so the cell goes to the resolver's zoom.
 - **An uncertain separator alone is never `x`.** If every figure is clear but you cannot tell whether hours and minutes are separated by a space, a point or a raised point, write the separator you think most likely and mark `sure=n`. The separator does not change the time; an `x` would block the whole table for nothing.
 - **Footnote symbols are never guessed.** If you can see that a small mark follows a time but cannot tell which symbol it is (`†`, `‡`, `§`, `*`, a letter), write the time, put `fn:?` in marks and mark `sure=x`. A wrong symbol silently attaches the wrong running rule to a train; in calibration every guessed symbol on a blurred page was wrong.
 
