@@ -192,3 +192,10 @@ Every lead author applied all three audits in place and appended a *Corrections 
 - Totals: 10 panelists · 120 proposals · 100 nominations over 67 proposals · 50 merge proposals · 46 flags · 20 candidates · 30 amendments proposed, 30 carried, 0 objections · 10 valid ballots, no ties · 5 pitches · 15 audits · 66 audit items applied, 0 declined.
 - Interruptions recorded: a usage-limit pause (13:28–15:27 UTC) and an exhausted-credit cut-off (15:42) — in both cases every file had already been written and nothing was lost or altered.
 - All work is committed locally on `claude/spy-life-sim-game-design-lvtgcg`; pushing was deferred at the owner's instruction (and the remote refuses the push until the Claude GitHub App is authorised for the repository).
+
+---
+
+## Prototype phase
+
+### 2026-10-03 09:26 — Prototype plan approved (Decision D-011)
+The owner asked for an implementation plan for first prototypes of the top three ideas and approved it. From here on, prototype decisions and events are logged in `prototype/DECISIONS.md`; the approved plan is `prototype/PLAN.md`. In brief: three separate browser games in TypeScript sharing one transcribed 1912–1914 dataset (plus wartime tables for the legends game), built in ranking order after the data is transcribed and reviewed.
