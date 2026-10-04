@@ -7,7 +7,7 @@ import { coverName, coverLegend, coverData, aff, caseSize, CASE_SIZE, has, act a
 import { currentStep, stepCities } from '../core/ops.js';
 import { when, hm, dayShort, span, T } from '../data/time.js';
 import { HEAT, SUSPECT } from '../core/enemy.js';
-import { vignetteUrl, portraitUrl } from './art.js';
+import { vignetteUrl, portraitUrl, weatherAt } from './art.js';
 import { esc } from './dom.js';
 import { oddsWord } from './cards.js';
 
@@ -59,7 +59,7 @@ export function makeLedger(root, hooks) {
         <p class="dim">Travelling as ${esc(coverName(G))}, ${esc(coverLegend(G))}.</p>`;
     }
     const c = I.city.get(S.city);
-    setTimeout(() => vignetteUrl(S.city, (S.t % 1440) / 60).then((u) => { const im = body.querySelector('.vignette img'); if (!im || im.dataset.city !== S.city) return; if (u) im.src = u; else im.closest('.vignette').hidden = true; }), 0);
+    setTimeout(() => vignetteUrl(S.city, (S.t % 1440) / 60, weatherAt(G, S.city, S.t)).then((u) => { const im = body.querySelector('.vignette img'); if (!im || im.dataset.city !== S.city) return; if (u) im.src = u; else im.closest('.vignette').hidden = true; }), 0);
     const ops = opActions(G);
     const people = contactsHere(G);
     const lodge = S.place === 'safehouse' ? 'a safe house' : S.place === 'rough' ? 'no bed (sleeping rough)' : 'an hotel, under your cover name';
@@ -251,7 +251,7 @@ export function makeLedger(root, hooks) {
     }
     if (sub === 'they') {
       h += `<p class="dim">Your traces, as you reckon them: every register, list and frontier book, and when it will reach the other side. A guess, not a certainty.</p>`;
-      const recs = S.records.filter((r) => r.kind !== 'plan' && !r.planted).slice(-40).reverse();
+      const recs = S.records.filter((r) => !['plan', 'calm'].includes(r.kind) && !r.planted).slice(-40).reverse();
       if (!recs.length) h += `<p class="dim">You have left no trace yet.</p>`;
       for (const r of recs) {
         const arrived = r.arrives <= S.t;
@@ -286,7 +286,8 @@ export function makeLedger(root, hooks) {
     q('[data-tab-go]').forEach((b) => b.addEventListener('click', () => { state.tab = b.dataset.tabGo; hooks.refresh?.(); }));
     q('[data-book]').forEach((b) => b.addEventListener('click', () => {
       const r = book(G, b.dataset.book, Number(b.dataset.cls));
-      if (!r.ok) hooks.toast?.(r.why, true); else { hooks.toast?.('Ticket bought. To the station.'); hooks.booked?.(); }
+      if (!r.ok) hooks.toast?.(r.why, true);
+      else { const bk = G.S.booked; hooks.ticket?.(`${G.I.city.get(bk.dp.from).name} → ${G.I.city.get(bk.dp.to).name}`, `${G.W.service.get(bk.dp.svc).name} · ${['', 'first', 'second', 'third'][bk.cls]} class · £${bk.fare}`, `departs ${when(bk.dp.dep)}`); hooks.booked?.(); }
       after();
     }));
     body.querySelector('[data-dest]')?.addEventListener('change', (e) => { state.dest = e.target.value || null; hooks.refresh?.(); });

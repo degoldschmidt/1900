@@ -218,6 +218,10 @@ button { font: inherit; color: inherit; }
 @media (max-width: 899px) { .toasts { bottom: auto; top: 96px; } }
 .toast { padding: 7px 12px; font-size: 14.5px; animation: rise .3s; border: 1px solid var(--ink); box-shadow: 0 6px 20px rgba(0,0,0,.5); }
 .toast.bad { border-color: var(--blood); color: var(--blood); }
+.toast.ticket { background: #e9d9a8; color: var(--ink); border: 1.5px dashed var(--ink); border-left: 8px solid var(--blood); font-family: var(--font-type); width: fit-content; min-width: 240px; justify-self: center; transform: rotate(-1.2deg); }
+.toast.ticket .tk-h { font-family: var(--font-display); letter-spacing: .3em; font-size: 11px; color: var(--blood); }
+.toast.ticket .tk-r { font-size: 17px; }
+.toast.ticket .tk-s { font-size: 12.5px; }
 
 /* journey bar, bottom left while travelling */
 .journey { position: absolute; z-index: 4; left: 12px; bottom: 14px; width: min(380px, calc(100% - 24px)); padding: 9px 12px; }

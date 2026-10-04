@@ -38,13 +38,27 @@ export function vignetteUrl(city, hour, weather = 'clear') {
   const key = `${city}|${phase(hour)}|${weather}`;
   if (lru.has(key)) { const p = lru.get(key); lru.delete(key); lru.set(key, p); return p; }
   let svg;
-  try { svg = renderScene(v, { hour, weather, uid: city.toLowerCase(), seed: 3 }); } catch { return Promise.resolve(null); }
+  try { svg = renderScene(v, { hour, weather, uid: city.toLowerCase(), seed: skySeed(city) }); } catch { return Promise.resolve(null); }
   const p = rasterise(svg, 640, 240, Math.min(2, (window.devicePixelRatio || 1) * 1.2));
   lru.set(key, p);
   while (lru.size > MAX) { const [k, old] = lru.entries().next().value; lru.delete(k); old.then((u) => u && URL.revokeObjectURL(u)); }
   return p;
 }
 export const hasVignette = (city) => VIG.has(city);
+/** Each city keeps its own sky: clouds and sun placed by its name. */
+export const skySeed = (city) => [...city].reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7) % 997;
+
+/** The weather over a city on a day: fixed per campaign, foggier in the north-west, smoky once the armies move. */
+export function weatherAt(G, city, t) {
+  const day = Math.floor(t / 1440), u = hashU(G.S.seed, city, day);
+  const north = ['LON', 'AMS', 'FLU', 'HAM', 'CPH', 'STO', 'SPB', 'BRU', 'COL'].includes(city);
+  if (G.W.act(t) === 3 && u < .3) return 'smoke';
+  if (u < (north ? .16 : .1)) return 'rain';
+  if (north && u < .26) return 'fog';
+  if (u < .45) return 'cloud';
+  return 'clear';
+}
+function hashU(seed, city, day) { let h = 2166136261 ^ seed; for (const ch of `${city}|${day}`) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return ((h >>> 0) % 10007) / 10007; }
 
 const portraits = new Map();
 /** A portrait image URL for a person's or hunter's portrait parameters. */

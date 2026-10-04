@@ -134,11 +134,12 @@ export function controlOdds(G, x, o = {}) {
   const boost = W.control(x.id, x.into, t) + watchBoost(G, x, t);
   const alert = !!(d?.alerts?.includes(x.into));
   const alien = !!(c && W.alien(c.nation, x.into, t));
-  let papers = N.papers[st] + boost + (svc?.check === 'onboard' ? .1 : 0) + (cls === 3 ? .05 : cls === 1 ? -.05 : 0);
+  const companion = S.case.some((x) => I.item.get(x.id)?.fn === 'companion');
+  let papers = N.papers[st] + boost + (svc?.check === 'onboard' ? .1 : 0) + (cls === 3 ? .05 : cls === 1 ? -.05 : 0) + (companion ? .15 : 0);
   let search = (N.search[st] + boost * .6) * (S.sex === 'f' ? .6 : 1) * (coverId === 'doyle' ? .35 : 1) * (cls === 1 ? .7 : cls === 3 ? 1.2 : 1);
   if (svc?.check === 'none') { papers = 0; search = 0; }
   if (alert || alien) papers = 1;
-  return { papers: Math.max(0, Math.min(1, papers)), search: Math.max(0, Math.min(1, search)), alert, alien, state: st, nation: x.into, boost };
+  return { papers: Math.max(0, Math.min(1, papers)), search: Math.max(0, Math.min(1, search)), alert, alien, state: st, nation: x.into, boost, companion };
 }
 function watchBoost(G, x, t) {
   let b = 0;

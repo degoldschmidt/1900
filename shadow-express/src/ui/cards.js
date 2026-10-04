@@ -2,10 +2,10 @@
 // Each choice shows its stakes; after a roll the card says how it went and what changed.
 
 import { cardView, choose } from '../core/actions.js';
-import { context, text, coverName } from '../core/game.js';
+import { context, text, coverName, aff } from '../core/game.js';
 import { chanceOf } from '../core/storylet.js';
 import { when, longDate, hm } from '../data/time.js';
-import { vignetteUrl, portraitUrl, glyphSvg } from './art.js';
+import { vignetteUrl, portraitUrl, glyphSvg, weatherAt } from './art.js';
 import { esc } from './dom.js';
 
 export const oddsWord = (p) => (p >= .85 ? 'all but certain' : p >= .65 ? 'likely' : p >= .45 ? 'even chances' : p >= .25 ? 'unlikely' : 'a long shot');
@@ -85,7 +85,7 @@ export function makeCards(root, hooks) {
     if (c.type === 'arrive') {
       const city = I.city.get(c.city);
       const late = c.delay > 20 ? ` · ${Math.round(c.delay)} minutes late` : '';
-      setTimeout(() => vignetteUrl(c.city, (S.t % 1440) / 60).then((u) => { const im = card.querySelector('.wide img'); if (!im) return; if (u) im.src = u; else im.closest('.wide').hidden = true; }), 0);
+      setTimeout(() => vignetteUrl(c.city, (S.t % 1440) / 60, weatherAt(G, c.city, S.t)).then((u) => { const im = card.querySelector('.wide img'); if (!im) return; if (u) im.src = u; else im.closest('.wide').hidden = true; }), 0);
       return `<div class="kick">Arrived · ${esc(when(S.t))}${esc(late)}</div><div class="wide"><img alt="${esc(city.name)}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div><h2>${esc(city.name)}</h2><p class="it">${esc(city.line)}</p>`;
     }
     if (c.type === 'debrief') {
@@ -117,9 +117,11 @@ export function makeCards(root, hooks) {
   function choicesHtml(G, v) {
     const ctx = context(G, v.card);
     return `<div class="choices">${v.choices.map((c, i) => {
-      const p = c.std ? c.p : c.roll ? chanceOf(c.roll, ctx) : null;
+      const fit = c.tag ? aff(G, c.tag) : 1;
+      const p = c.std ? c.p : c.roll ? Math.max(.05, chanceOf(c.roll, ctx) - (fit < 0 ? .2 : 0)) : null;
+      const fitNote = fit < 0 ? `implausible for ${coverName(G)}` : fit === 0 ? `odd for ${coverName(G)}` : null;
       const cost = [c.cost?.money ? `£${c.cost.money}` : null, c.cost?.nerve ? `nerve ${c.cost.nerve}` : null, c.cost?.min >= 60 ? `${Math.round(c.cost.min / 60)}h` : c.cost?.min ? `${c.cost.min} min` : null].filter(Boolean).join(' · ');
-      const sub = [c.sub ? text(G, c.sub, v.card) : null, cost && !(c.sub ?? '').includes('£') ? cost : null].filter(Boolean).join(' — ');
+      const sub = [c.sub ? text(G, c.sub, v.card) : null, cost && !(c.sub ?? '').includes('£') ? cost : null, fitNote].filter(Boolean).join(' — ');
       return `<button class="choice" data-i="${i}" ${c.open === false || c.afford === false ? 'disabled' : ''}>${p !== null && p !== undefined ? `<span class="odds">${oddsWord(p)}</span>` : ''}<b>${esc(text(G, c.label, v.card))}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</button>`;
     }).join('')}</div>`;
   }

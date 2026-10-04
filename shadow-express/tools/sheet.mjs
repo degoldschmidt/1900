@@ -34,7 +34,7 @@ window.render = () => {
   const want = ${JSON.stringify(cities)};
   const list = vignettes.filter((v) => !want.length || want.includes(v.id));
   for (const v of list) for (const h of ${JSON.stringify(hours)}) {
-    let svg; try { svg = renderScene(v, { hour: h, weather: ${JSON.stringify(weather)}, uid: v.id + h, seed: 3 }); } catch (e) { svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240"><text x="20" y="120" font-size="20">' + v.id + ': ' + e.message + '</text></svg>'; }
+    let svg; try { svg = renderScene(v, { hour: h, weather: ${JSON.stringify(weather)}, uid: v.id + h, seed: [...v.id].reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7) % 997 }); } catch (e) { svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240"><text x="20" y="120" font-size="20">' + v.id + ': ' + e.message + '</text></svg>'; }
     out.push({ label: v.id + ' · ' + String(h).padStart(2, '0') + '.00 · ' + (svg.length / 1024).toFixed(0) + ' KB', svg, w: 640, h: 240 });
   }` : ''}
   ${mode === 'portraits' ? `for (const p of [...people, ...hunters]) out.push({ label: p.id, svg: portrait(p.portrait, 'p' + p.id), w: 120, h: 150 });` : ''}

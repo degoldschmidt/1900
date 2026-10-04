@@ -29,7 +29,7 @@ export function checkOps(G) {
     if (step.story && here && !st.shown?.[step.id] && !S.queue.length && !early) { (st.shown ??= {})[step.id] = true; S.queue.push({ type: 'story', id: step.story, op: o.id, n: ++S.cardN }); }
     if (!here || early) continue;
     if (step.kind === 'goto') done(G, o.id, step.id);
-    if (step.kind === 'carry' && has(G, step.item)) { done(G, o.id, step.id); const it = G.I.item.get(step.item); if (it && ['doc', 'companion'].includes(it.fn)) applyEffects([['item', `-${step.item}`]], context(G, { op: o.id })); }
+    if (step.kind === 'carry' && has(G, step.item)) { done(G, o.id, step.id); applyEffects([['item', `-${step.item}`]], context(G, { op: o.id })); } // delivered: handed over
     if (step.kind === 'wait') { st.waitMin += dt; if (st.waitMin >= step.min) done(G, o.id, step.id); }
     if (step.kind === 'observe') { st.obsMin += dt; if (st.obsMin >= (step.min ?? 60)) done(G, o.id, step.id); }
     // twists

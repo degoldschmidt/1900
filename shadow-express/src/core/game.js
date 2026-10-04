@@ -206,7 +206,7 @@ function effects(G, card) {
     },
     intel: (o) => { addIntel(G, o); },
     record: (kind, fid) => { leave(G, kind, fid); },
-    susp: (c, n) => { leave(G, 'sighting', Math.abs(n), { cover: c === 'active' ? S.cover : c, heat: n > 0 ? 1 : 0 }); },
+    susp: (c, n) => { const cover = c === 'active' ? S.cover : c; if (n >= 0) leave(G, 'sighting', n, { cover, heat: 1 }); else leave(G, 'calm', -n, { cover }); },
     expose: (id, p) => { if (rand(S) < p) leave(G, 'meeting', 1, { person: id }); S.people[id].exp = Math.min(1, S.people[id].exp + p * .5); },
     plant: (o) => plant(G, o),
     cover: (d) => { const id = d.slice(1); if (!S.covers[id]) S.covers[id] = { papers: I.cover.get(id).papers, carried: true, burned: false, gained: S.t }; },
@@ -270,9 +270,13 @@ export function resolveChoice(G, choice, card = {}) {
   if (choice.cost?.money) S.money = Math.max(0, S.money - choice.cost.money);
   if (choice.cost?.nerve) S.nerve = Math.max(0, S.nerve - choice.cost.nerve);
   if (choice.cost?.min) ctx.effects.min(choice.cost.min);
+  // who you claim to be: an odd act is remarked on; an implausible one is harder and remarked on sharply
+  const fit = choice.tag ? aff(G, choice.tag) : 1;
+  if (fit === 0) leave(G, 'sighting', .3, { heat: .15 });
+  if (fit < 0) leave(G, 'sighting', .6, { heat: .35 });
   let success = true;
   if (choice.roll) {
-    const p = chanceOf(choice.roll, ctx) - (S.nerve <= 1 ? .1 : 0);
+    const p = chanceOf(choice.roll, ctx) - (S.nerve <= 1 ? .1 : 0) - (fit < 0 ? .2 : 0);
     success = rand(S) < Math.max(.05, p);
   }
   applyEffects(success ? choice.ok : choice.fail, ctx);

@@ -419,8 +419,9 @@ function controlChoices(G, card) {
   const papers = S.covers[S.cover]?.papers ?? .5;
   const desc = S.enemy.desc * (I.ground.includes(card.into) ? .3 : .1);
   const out = [];
-  const pPapers = card.alien ? .05 : card.alert ? .1 : Math.max(.05, Math.min(.95, .35 + papers * .6 - desc));
-  if (card.papers || card.search) out.push({ std: 'papers', label: card.papers ? `Show the papers of ${coverName(G)}` : 'Open your case', sub: card.search ? 'They will search the case' : 'Your name goes in their book', p: card.papers ? pPapers : 1, open: true, afford: true });
+  const companion = S.case.some((x) => I.item.get(x.id)?.fn === 'companion');
+  const pPapers = card.alien ? .05 : card.alert ? .1 : Math.max(.05, Math.min(.95, .35 + papers * .6 - desc - (companion ? .12 : 0)));
+  if (card.papers || card.search) out.push({ std: 'papers', label: card.papers ? `Show the papers of ${coverName(G)}` : 'Open your case', sub: card.search ? 'They will search the case' : companion ? 'Two sets of papers to satisfy him' : 'Your name goes in their book', p: card.papers ? pPapers : 1, open: true, afford: true });
   if (card.search && cb.length) out.push({ std: 'declare', label: 'Declare what you carry', sub: `Lose ${cb.map((x) => I.item.get(x.id).name.toLowerCase()).join(', ')}`, open: true, afford: true });
   if (card.search && pouch) out.push({ std: 'pouch', label: 'Claim the diplomatic bag', sub: 'Not searched; but remembered', open: true, afford: true });
   const bribe = 2 + 2 * actOf(G);

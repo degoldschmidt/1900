@@ -41,6 +41,12 @@ const ledger = makeLedger(app, {
   refresh: () => refresh(),
   acted: () => { save(); refresh(); },
   toast: (t, bad) => toast(t, bad),
+  ticket: (a, b, c) => {
+    const t = el('div', 'toast ticket', `<div class="tk-h">Ticket</div><div class="tk-r">${esc(a)}</div><div class="tk-s">${esc(b)}</div><div class="tk-s">${esc(c)}</div>`);
+    toasts.appendChild(t);
+    while (toasts.children.length > 3) toasts.firstChild.remove();
+    setTimeout(() => t.remove(), 5000);
+  },
   layout: () => { globe.invalidate(); dirty = true; },
   booked: () => { ledger.setOpen(innerWidth >= 900); },
   highlight: (to) => { highlightTo = to; dirty = true; },

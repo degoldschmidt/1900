@@ -44,6 +44,7 @@ export function learn(E, records, ctx, t) {
   const { W } = ctx;
   for (const r of records) {
     if (r.planted) { plant(E, r, ctx, t); continue; }
+    if (r.kind === 'calm') { const d = dossier(E, r.cover); if (!d.name) d.susp = Math.max(0, d.susp - r.fid); continue; } // a story that holds
     if (r.kind === 'link') { E.links.push([r.cover, r.other]); note(E, t, `links ${r.cover} and ${r.other}`); continue; }
     if (r.kind === 'plan') { E.plans.push({ op: r.op, city: r.city, conf: r.fid, from: r.t }); note(E, t, `learns of a plan at ${r.city}`); continue; }
     if (r.kind === 'talk') { // an arrested contact gives up a cover or an associate
