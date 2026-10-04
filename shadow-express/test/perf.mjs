@@ -1,4 +1,5 @@
 // Frame times under a 4× CPU throttle: idle, and dragging at high zoom. Budgets: median ≤ 33 ms idle, ≤ 50 ms dragging.
+//   node test/perf.mjs [--release] [--page file.html]
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -8,8 +9,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(path.join(ROOT, '../prototype/package.json'));
 const { chromium } = require('playwright');
 const D3 = fs.readFileSync(process.env.D3_PATH || '/tmp/claude-0/-home-user-1900/405f5ed7-5f5c-5b9f-97be-e5f97113fe9d/scratchpad/game/d3-7.8.5/package/dist/d3.min.js', 'utf8');
-const page = path.join(ROOT, process.argv.includes('--release') ? 'index.html' : 'build/dev.html');
-const wrapped = path.join(ROOT, 'build/perf.html');
+const pageArg = process.argv.indexOf('--page');
+const page = pageArg > 0 ? path.resolve(process.argv[pageArg + 1]) : path.join(ROOT, process.argv.includes('--release') ? 'index.html' : 'build/dev.html');
+const wrapped = page.replace(/\.html$/, '') + '.perf.html';
 fs.writeFileSync(wrapped, `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>${fs.readFileSync(page, 'utf8')}</body></html>`);
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, deviceScaleFactor: 3 });

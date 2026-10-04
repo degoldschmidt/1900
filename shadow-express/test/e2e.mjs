@@ -69,6 +69,21 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
   for (const tab of ['people', 'covers', 'dossier', 'orders', 'case']) { await p.evaluate((t) => window.__shadow.ledger.show(t), tab); await p.waitForTimeout(250); await p.screenshot({ path: path.join(shots, `${name}-7-${tab}.png`) }); }
   const overflow = await p.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
   if (overflow) errors.push('horizontal overflow');
+  // the HUD: the pill, the gear's About page with the run report; then the end card leads back to the title
+  for (let i = 0; i < 6; i++) if (!(await answer(p))) break;
+  if (!(await p.locator('.hpill').isVisible().catch(() => false))) errors.push('no HUD pill');
+  await p.locator('.hgear').click({ timeout: 2000 }).catch(() => errors.push('the gear cannot be pressed'));
+  await p.waitForTimeout(200);
+  if (!(await p.locator('.title [data-report]').isVisible().catch(() => false))) errors.push('About has no run report');
+  await p.screenshot({ path: path.join(shots, `${name}-8-about.png`) });
+  await p.locator('.title [data-close]').click({ timeout: 2000 }).catch(() => {});
+  await p.waitForTimeout(150);
+  await p.evaluate(() => { const G = window.__shadow.G; G.endGame(G, 'recalled'); window.__shadow.refresh(); });
+  await p.waitForTimeout(500);
+  await p.screenshot({ path: path.join(shots, `${name}-9-end.png`) });
+  await p.locator('.veil:not([hidden]) .choice').first().click({ timeout: 2000 }).catch(() => errors.push('no button on the end card'));
+  await p.waitForTimeout(400);
+  if (!(await p.evaluate(() => !window.__shadow.G && !!document.querySelector('.title .card')))) errors.push('the end card did not lead back to the title');
   console.log(`${name}: ${errors.length ? errors.join(' | ') : 'no errors'}`);
   fails.push(...errors);
   await ctx.close();

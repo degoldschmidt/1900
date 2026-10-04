@@ -1,0 +1,114 @@
+/* ---- the HUD over the globe: dark glass, white type, round buttons (hud.js) */
+.hud2 {
+  --hud-ink: rgba(9, 12, 17, .9); --hud-ink-solid: #0b0e13; --hud-line: rgba(255, 255, 255, .16); --hud-text: #ffffff;
+  --hud-dim: rgba(255, 255, 255, .64); --hud-blue: #2d6fb5; --hud-red: #e3342f; --hud-amber: #ffc451; --hud-paper: #f6f3ec;
+  --hud-font: "Oswald", "Arial Narrow", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif;
+  --gr: 0px; --gb: 0px;
+  position: absolute; inset: 0; z-index: 4; pointer-events: none; font-family: var(--hud-font); color: var(--hud-text);
+}
+.hud2 > * { pointer-events: auto; }
+.hud2 button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.hud2 .ic { display: block; width: 100%; height: 100%; }
+
+/* the pill: money | day, with the hour hanging under it | the date */
+.hpill { position: absolute; top: 12px; left: calc((100% - var(--gr)) / 2); transform: translateX(-50%); display: flex; align-items: stretch;
+  background: var(--hud-ink); border-radius: 999px; box-shadow: 0 4px 18px rgba(0, 0, 0, .45); text-transform: uppercase; letter-spacing: .07em;
+  font-size: 15px; line-height: 1; white-space: nowrap; height: 38px; }
+.hpill > span { display: flex; align-items: center; padding: 0 16px; }
+.hpill > span + span { border-left: 1px solid var(--hud-line); }
+.hp-money { font-weight: 500; font-variant-numeric: tabular-nums; }
+.hp-day { position: relative; font-size: 17px; }
+.hp-day b { font-weight: 600; }
+.hp-time { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: var(--hud-ink-solid); padding: 3px 11px 5px; border-radius: 0 0 9px 9px;
+  font-size: 13.5px; font-weight: 500; letter-spacing: .05em; font-variant-numeric: tabular-nums; box-shadow: 0 6px 12px rgba(0, 0, 0, .35); }
+.hp-date { color: var(--hud-dim); font-size: 13.5px; }
+.hp-act { position: absolute; top: 76px; left: calc((100% - var(--gr)) / 2); transform: translateX(-50%); font-size: 11.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: rgba(255, 255, 255, .55); white-space: nowrap; text-shadow: 0 1px 6px rgba(0, 0, 0, .9); pointer-events: none; }
+
+/* round buttons: the gear (top right), the briefcase (bottom left) */
+.rbtn { position: absolute; width: 46px; height: 46px; border-radius: 50%; border: 0; padding: 11px; box-shadow: 0 4px 16px rgba(0, 0, 0, .45); }
+.rbtn.dark { background: var(--hud-ink); color: var(--hud-text); }
+.rbtn.light { background: var(--hud-paper); color: var(--hud-ink-solid); }
+.rbtn:focus-visible, .hcover:focus-visible, .hhero:focus-visible, .co-badge:focus-visible, .hstatus button:focus-visible { outline: 2px solid var(--hud-amber); outline-offset: 2px; }
+.hgear { top: 8px; right: calc(var(--gr) + 12px); width: 44px; height: 44px; padding: 10px; }
+.hcase { left: 16px; bottom: calc(var(--gb) + 16px); width: 58px; height: 58px; padding: 14px; }
+.hcase[aria-pressed="true"] { background: #fffaf0; box-shadow: 0 0 0 3px rgba(255, 255, 255, .25), 0 4px 16px rgba(0, 0, 0, .45); }
+.rbtn:hover { filter: brightness(1.08); }
+
+/* the cover in use */
+.hcover { position: absolute; top: 14px; left: 14px; display: grid; grid-template-columns: auto auto; column-gap: 7px; row-gap: 5px; align-items: baseline;
+  background: var(--hud-ink); border: 0; border-radius: 12px; padding: 8px 13px 9px; text-align: left; box-shadow: 0 4px 16px rgba(0, 0, 0, .4); max-width: 240px; }
+.hc-k { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--hud-dim); }
+.hc-n { font-size: 15.5px; letter-spacing: .04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.hc-heat { grid-column: 1 / -1; display: block; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, .14); overflow: hidden; }
+.hc-heat i { display: block; height: 100%; background: linear-gradient(90deg, #ff9f6e, var(--hud-red)); border-radius: 2px; }
+
+/* the agent, peeking in at the bottom right, with nerve and standing on a white tab */
+.hhero { position: absolute; right: calc(var(--gr) + 0px); bottom: calc(var(--gb) + 0px); width: 92px; height: 120px; border: 0; padding: 0; background: none; }
+.hhero img { position: absolute; right: 0; bottom: 0; width: 92px; height: 115px; object-fit: cover; object-position: top; background: #d9cfbd;
+  border-top-left-radius: 18px; border: 3px solid var(--hud-paper); border-right: 0; border-bottom: 0; box-shadow: -4px -4px 18px rgba(0, 0, 0, .45); }
+.hh-tab { position: absolute; right: 50px; bottom: 100px; z-index: 1; display: flex; gap: 9px; background: var(--hud-paper); color: var(--hud-ink-solid);
+  border-radius: 999px; padding: 5px 11px; font-size: 14px; font-weight: 600; white-space: nowrap; box-shadow: 0 3px 12px rgba(0, 0, 0, .4); }
+.hh-tab > span { display: inline-flex; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
+.hh-tab .ic { width: 14px; height: 14px; }
+.hh-nerve .ic { color: var(--hud-red); }
+.hh-stand .ic { color: #c9962b; }
+.hh-nerve.low b { color: var(--hud-red); }
+
+/* the status bar while the clock runs */
+.hstatus { position: absolute; bottom: calc(var(--gb) + 18px); left: calc((100% - var(--gr)) / 2); transform: translateX(-50%);
+  width: min(460px, calc(100% - var(--gr) - 270px)); display: flex; gap: 10px; align-items: center; background: var(--hud-ink); border-radius: 14px;
+  padding: 10px 10px 10px 15px; box-shadow: 0 6px 22px rgba(0, 0, 0, .5); }
+.hs-main { flex: 1; min-width: 0; }
+.hs-l { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; letter-spacing: .03em; }
+.hs-l b { font-weight: 500; font-size: 14.5px; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.hs-l span { white-space: nowrap; }
+.hs-l.dim { color: var(--hud-dim); }
+.hs-bar { position: relative; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, .16); margin: 7px 0 6px; }
+.hs-bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: #ff8a5c; }
+.hs-bar s { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: #fff; text-decoration: none; border-radius: 1px; }
+.hs-ctl { display: flex; gap: 6px; flex: none; }
+.hs-ctl button { width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .12); font-size: 14px; letter-spacing: -.05em; }
+.hs-ctl button[aria-pressed="true"] { background: var(--hud-paper); color: var(--hud-ink-solid); }
+
+/* the callout over the city you are in: its name, a badge with its trains, the soonest, the next deadline */
+.callout { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none !important; }
+.co-box { position: absolute; left: 0; bottom: 20px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 3px; white-space: nowrap; }
+.callout.below .co-box { bottom: auto; top: 20px; flex-direction: column-reverse; }
+.co-name { font-size: 15px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; text-shadow: 0 0 4px rgba(3, 12, 24, .9), 0 1px 3px rgba(3, 12, 24, .9); }
+.co-badge { position: relative; pointer-events: auto; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; background: var(--hud-blue); padding: 8px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .5); }
+.co-badge b { position: absolute; left: 31px; bottom: -3px; background: #fff; color: var(--hud-ink-solid); border-radius: 999px; padding: 1px 6px; font-size: 12px; font-weight: 600;
+  line-height: 15px; box-shadow: 0 2px 6px rgba(0, 0, 0, .4); }
+.co-badge.none { background: #5d6673; }
+.co-sub, .co-due { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; text-shadow: 0 0 4px rgba(3, 12, 24, .95), 0 1px 3px rgba(3, 12, 24, .95); }
+.co-sub { margin-top: 2px; }
+.co-due { color: var(--hud-amber); }
+.co-stem { position: absolute; left: -.75px; bottom: 7px; width: 1.5px; height: 13px; background: rgba(255, 255, 255, .85); }
+.callout.below .co-stem { bottom: auto; top: 7px; }
+
+/* toasts, dark */
+.toasts { top: 70px; bottom: auto; }
+@media (min-width: 900px) { .toasts { top: 100px; bottom: auto; } }
+.toast:not(.ticket) { background: rgba(9, 12, 17, .92); color: #fff; border: 0; border-radius: 12px; padding: 9px 14px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, .5); }
+.toast.bad:not(.ticket) { color: #ffb3a6; box-shadow: inset 3px 0 0 #e3342f, 0 6px 22px rgba(0, 0, 0, .5); }
+
+/* phones: the ledger is a sheet from the bottom; the briefcase gives way to it, and the bottom row hides when it opens */
+@media (max-width: 899px) {
+  .hpill { left: calc(50% - 22px); font-size: 14px; height: 36px; }
+  .hpill > span { padding: 0 12px; }
+  .hp-day { font-size: 15.5px; }
+  .hp-act { display: none; }
+  .hgear { top: 8px; right: 8px; width: 40px; height: 40px; padding: 9px; }
+  .hcase { display: none; }
+  .hcover { top: auto; left: 10px; bottom: calc(var(--gb) + 12px); max-width: calc(100% - 120px); padding: 7px 11px 8px; }
+  .hhero { width: 72px; height: 96px; }
+  .hhero img { width: 72px; height: 90px; border-top-left-radius: 14px; }
+  .hh-tab { right: 34px; bottom: 80px; font-size: 13px; padding: 4px 9px; gap: 7px; }
+  .hstatus { left: 10px; right: 10px; width: auto; transform: none; bottom: calc(var(--gb) + 10px); }
+  .hud2.sheet .hcover, .hud2.sheet .hhero, .hud2.moving .hcover, .hud2.moving .hhero { display: none; }
+  .toasts { top: 64px; }
+}
+@media (max-width: 380px) { .hp-date { display: none !important; } }
+@media (prefers-reduced-motion: reduce) { .hud2 * { transition: none !important; } }

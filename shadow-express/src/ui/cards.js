@@ -4,9 +4,11 @@
 import { cardView, choose } from '../core/actions.js';
 import { context, text, coverName, aff } from '../core/game.js';
 import { chanceOf } from '../core/storylet.js';
+import { postmortem } from '../core/postmortem.js';
 import { when, longDate, hm, span } from '../data/time.js';
 import { vignetteUrl, portraitUrl, glyphSvg, weatherAt } from './art.js';
 import { esc } from './dom.js';
+import { copyRunReport } from './report-ui.js';
 
 export const oddsWord = (p) => (p >= .85 ? 'all but certain' : p >= .65 ? 'likely' : p >= .45 ? 'even chances' : p >= .25 ? 'unlikely' : 'a long shot');
 
@@ -127,13 +129,17 @@ export function makeCards(root, hooks) {
       const fitNote = fit < 0 ? `implausible for ${coverName(G)}` : fit === 0 ? `odd for ${coverName(G)}` : null;
       const cost = [c.cost?.money ? `£${c.cost.money}` : null, c.cost?.nerve ? `nerve ${c.cost.nerve}` : null, c.cost?.min >= 60 ? `${Math.round(c.cost.min / 60)}h` : c.cost?.min ? `${c.cost.min} min` : null].filter(Boolean).join(' · ');
       const sub = [c.sub ? text(G, c.sub, v.card) : null, cost && !(c.sub ?? '').includes('£') ? cost : null, fitNote].filter(Boolean).join(' — ');
+      if (v.card.type === 'end') return `<button class="choice" data-i="${i}"><b>Begin a new campaign</b><span>another agent, another summer</span></button>`;
       return `<button class="choice" data-i="${i}" ${c.open === false || c.afford === false ? 'disabled' : ''}>${p !== null && p !== undefined ? `<span class="odds">${oddsWord(p)}</span>` : ''}<b>${esc(text(G, c.label, v.card))}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</button>`;
     }).join('')}</div>`;
   }
 
   function wire(G, v) {
+    const report = card.querySelector('[data-copy-report]'); // the end card only; the answer shows on the button, since a toast would sit under the veil
+    report?.addEventListener('click', () => copyRunReport(G).then((m) => { const s = report.querySelector('span'); if (s) { s.textContent = m; s.setAttribute('role', 'status'); } }));
     card.querySelectorAll('.choice').forEach((b) => b.addEventListener('click', () => {
       if (resultShown) return;
+      if (v.card.type === 'end') { hooks.newCampaign?.(); return; } // the summer is over: the only way on is a new one
       const c = v.choices[Number(b.dataset.i)];
       const before = snap(G.S);
       const res = choose(G, Number(b.dataset.i));
@@ -154,24 +160,62 @@ export function makeCards(root, hooks) {
     }));
   }
 
-  function endText(G, c) {
-    const { S, I } = G;
-    const why = {
-      home: 'You came home before the lamps went out.', stranded: 'The last boat sailed without you.', time: 'The war overtook you on the road.',
-      arrested: 'Arrested.', captured: 'Taken.', exposed: 'Every name you had is known to them.', recalled: 'The Bureau has recalled you.',
-    }[c.why] ?? 'The end.';
-    const won = Object.values(S.ops).filter((o) => o.status === 'won').length;
-    const people = G.D.people.filter((p) => S.people[p.id].st !== 'unknown').map((p) => {
-      const st = S.people[p.id];
-      const fate = { recruited: 'stood by you to the end', cultivated: 'remembers you kindly', met: 'never quite knew who you were', compromised: 'lives under watch', arrested: 'was taken, and talked', dead: 'is dead', turned: 'works for the other side now' }[st.st] ?? st.st;
-      return `<p><b class="sc">${esc(p.name)}</b> ${esc(fate)}.</p>`;
-    }).join('');
-    const verdict = c.why !== 'home' ? '' : S.standing >= 70 ? 'Ashby puts your name forward for a decoration that will never be gazetted. You have done very well.'
-      : S.standing >= 50 ? 'Ashby shakes your hand and says the Bureau will want you again. From him, it is a great deal.'
-      : S.standing >= 30 ? 'Ashby thanks you, coolly. You are home, and alive, and not much else can be said for the summer.'
-      : 'Ashby does not come down to meet the boat. A clerk takes your papers and your key to the Bureau door.';
-    return `<div class="kick">${esc(longDate(S.t))} · ${esc(hm(S.t))}</div><h1>${esc(why)}</h1><div class="rule"></div>${verdict ? `<p>${esc(verdict)}</p>` : ''}<p>Operations accomplished: ${won} of ${G.D.ops.filter((o) => !o.side).length}. Standing with the Bureau: ${S.standing}.</p>${people}`;
-  }
-
   return { render, isOpen: () => !veil.hidden, el: veil };
+}
+
+// ---------- the end card ----------
+/** The end card: how it ended, the Bureau's verdict, the contacts' fates, and what the other side held on you. */
+export function endText(G, c) {
+  const { S } = G;
+  const why = {
+    home: 'You came home before the lamps went out.', stranded: 'The last boat sailed without you.', time: 'The war overtook you on the road.',
+    arrested: 'Arrested.', captured: 'Taken.', exposed: 'Every name you had is known to them.', recalled: 'The Bureau has recalled you.',
+  }[c.why] ?? 'The end.';
+  const mains = G.D.ops.filter((o) => !o.side);
+  const won = mains.filter((o) => S.ops[o.id].status === 'won').length;
+  const people = G.D.people.filter((p) => S.people[p.id].st !== 'unknown').map((p) => {
+    const st = S.people[p.id];
+    const fate = { recruited: 'stood by you to the end', cultivated: 'remembers you kindly', met: 'never quite knew who you were', compromised: 'lives under watch', arrested: 'was taken, and talked', dead: 'is dead', turned: 'works for the other side now' }[st.st] ?? st.st;
+    return `<p><b class="sc">${esc(p.name)}</b> ${esc(fate)}.</p>`;
+  }).join('');
+  const verdict = c.why !== 'home' ? '' : S.standing >= 70 ? 'Ashby puts your name forward for a decoration that will never be gazetted. You have done very well.'
+    : S.standing >= 50 ? 'Ashby shakes your hand and says the Bureau will want you again. From him, it is a great deal.'
+    : S.standing >= 30 ? 'Ashby thanks you, coolly. You are home, and alive, and not much else can be said for the summer.'
+    : 'Ashby does not come down to meet the boat. A clerk takes your papers and your key to the Bureau door.';
+  let file = '';
+  try { file = pmHtml(postmortem(G)); } catch (e) { console.error(e); } // a fault in the file must never cost the player the end card
+  return `<div class="kick">${esc(longDate(S.t))} · ${esc(hm(S.t))}</div><h1>${esc(why)}</h1><div class="rule"></div>${verdict ? `<p>${esc(verdict)}</p>` : ''}<p>Operations accomplished: ${won} of ${mains.length}. Standing with the Bureau: ${S.standing}.</p>${people}${file}<button type="button" class="pm-copy" data-copy-report><b>Copy run report</b><span>a plain account of this campaign, to paste to the developer</span></button>`;
+}
+
+/** The post-mortem as a collapsible page of short paragraphs and lists. Every string is escaped. */
+export function pmHtml(pm) {
+  const list = (items) => `<ul class="pm-list">${items.join('')}</ul>`;
+  const more = (items, label, shown) => (items.length > shown
+    ? `${list(items.slice(0, shown))}<details class="pm-more"><summary>${esc(label(items.length - shown))}</summary>${list(items.slice(shown))}</details>`
+    : list(items));
+
+  const seen = pm.covers.filter((x) => x.status !== 'clean');
+  const never = pm.covers.filter((x) => x.status === 'clean').map((x) => (x.own ? 'your own name' : x.name));
+  const stamps = (x) => [x.posted && 'POSTED', x.burned && 'BURNED', x.status === 'suspect' && 'SUSPECTED'].filter(Boolean).map((w) => `<span class="stamp">${w}</span>`).join('');
+  const names = seen.map((x) => `<div class="pm-cover pm-${esc(x.status)}${x.burned ? ' pm-burned' : ''}"><div class="pm-top"><b class="pm-name">${esc(x.name)}</b>${x.own ? '<span class="dim"> · your own name</span>' : ''}<span class="pm-stamps">${stamps(x)}</span></div>`
+    + `<p>${esc(x.summary)}</p>`
+    + (['posted', 'burned', 'suspect'].includes(x.status) && x.because.length
+      ? `<div class="pm-sub">What weighed most, heaviest first</div>${list(x.because.map((b) => `<li><span class="pm-when">${esc(when(b.t))}</span>${esc(b.label)}</li>`))}` : '')
+    + '</div>').join('');
+
+  const wrong = pm.falseTips.filter((t) => !t.stale), cold = pm.falseTips.filter((t) => t.stale);
+  const LOOK = (p) => (p >= .85 ? 'all but certain' : p >= .65 ? 'likely' : p >= .45 ? 'as likely as not' : p >= .25 ? 'unlikely' : 'a long shot');
+  const tip = (t) => `<li>${esc(t.text)}<div class="pm-src">${esc(when(t.learned))} · it looked ${esc(LOOK(t.rel))}${t.heard > 1 ? ` · heard ${t.heard} times` : ''}</div></li>`;
+  const told = wrong.length || cold.length
+    ? `<h3>Told you, and not so</h3>${wrong.length ? more(wrong.map(tip), (n) => `and ${n} more`, 4) : '<p class="dim">Nothing you were told was proved false.</p>'}`
+      + (cold.length ? `<details class="pm-more"><summary>${esc(`${cold.length} more were so when you heard them, and cold when you looked`)}</summary>${list(cold.map(tip))}</details>` : '')
+      + (pm.sources.length ? `<p class="dim">How your informants fared: ${esc(pm.sources.map((s) => `${s.name}, wrong ${s.wrong} of ${s.right + s.wrong}`).join('; '))}.</p>` : '') : '';
+
+  const truths = pm.truths.length ? `<h3>True all along</h3>${more(pm.truths.map((t) => `<li>${esc(t)}</li>`), (n) => `and ${n} more`, 5)}` : '';
+  const cost = pm.costliest.length || pm.nearMisses
+    ? `<h3>What it cost you</h3>${pm.costliest.length ? list(pm.costliest.map((t) => `<li>${esc(t)}</li>`)) : ''}${pm.nearMisses ? `<p class="dim">Near things: ${pm.nearMisses === 1 ? 'once' : `${pm.nearMisses} times`} a hunter was close, and did not know you.</p>` : ''}` : '';
+
+  return `<details open class="pm"><summary>Their file on you</summary><p class="pm-lead">${esc(pm.headline)}</p>`
+    + (seen.length ? `<h3>The names they held</h3>${names}` : '') + (never.length ? `<p class="dim">Never traced: ${esc(never.join(', '))}.</p>` : '')
+    + told + truths + cost + '</details>';
 }
