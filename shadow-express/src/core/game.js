@@ -100,6 +100,8 @@ export function aff(G, tag, id = G.S.cover) {
 }
 export const has = (G, id) => G.S.case.some((x) => x.id === id);
 export const caseSize = (G) => G.S.case.reduce((a, x) => a + (G.I.item.get(x.id)?.size ?? 1), 0);
+/** Pronouns for a hunter or person by their portrait: he/him/his or she/her/her, capitalised on request. */
+export function pro(x, k = 'he', capital = false) { const f = x?.portrait?.sex === 'f'; const w = { he: f ? 'she' : 'he', him: f ? 'her' : 'him', his: f ? 'her' : 'his' }[k]; return capital ? w[0].toUpperCase() + w.slice(1) : w; }
 export const carriedCovers = (G) => Object.entries(G.S.covers).filter(([, c]) => c.carried && !c.burned).map(([id]) => id);
 export const hasUse = (G, use) => G.S.case.some((x) => G.I.item.get(x.id)?.tags.includes(`use:${use}`));
 export const contraband = (G) => G.S.case.filter((x) => G.I.item.get(x.id)?.tags.includes('contraband'));

@@ -9,7 +9,7 @@ import { moveHunters } from './hunters.js';
 import { crossings, delayOf, cancelled } from './timetable.js';
 import { all, eligible, pick } from './storylet.js';
 import { END } from './world.js';
-import { context, leave, note, log, has, coverData, addIntel, nationNow, personHere, caseSize } from './game.js';
+import { context, leave, note, log, has, coverData, addIntel, nationNow, personHere, caseSize, pro } from './game.js';
 import { checkOps } from './ops.js';
 import { dailyTurn, watchEvents, completeActivity, watchOf, shadowed, addWatch, legendOf, LODGINGS, needsRegistration, stayDays, watchLevel } from './residence.js';
 import { skill, has as trait, tongue } from './hero.js';
@@ -89,6 +89,7 @@ function depart(G) {
   const delay = delayOf(W, b.dp);
   const nCross = crossings(W, b.dp, delay);
   if (S.expelled?.city === b.dp.from) { (S.banned ??= {})[b.dp.from] = S.cover; S.expelled = null; }
+  if (!S.trip || S.trip.i === 0) S.lastLeft = { city: b.dp.from, t: S.t, lodging: S.lodging?.city === b.dp.from ? S.lodging.kind : null };
   S.city = null;
   S.journey = { key: b.dp.key, svc: s.id, line: s.line, kind: s.kind, cls: b.cls, from: b.dp.from, to: b.dp.to, dep: b.dp.dep, sched: b.dp.arr, arr: b.dp.arr + delay, delay,
     crossings: nCross.map((x) => ({ ...x, done: false })), eventAt: null, eventDone: false };
@@ -242,7 +243,7 @@ function enemyStep(G) {
   }
   const after = E.belief ? `${E.belief.city}|${E.belief.t}` : '';
   const need = before !== after || D.hunters.some((h) => { const st = E.hunters[h.id]; return W.hunterActive(h, S.t) && h.id !== S.tailedBy && (st.leg ? S.t >= st.leg.arr : S.t >= st.idleUntil); });
-  if (need && S.t % TICK === 0) moveHunters(E, W, S.t);
+  if (need && S.t % TICK === 0) { moveHunters(E, W, S.t); missedYou(G); }
   // a hunter who reaches a planted place and finds nothing grows sceptical
   for (const h of D.hunters) { const st = E.hunters[h.id]; if (!st.leg) emptyHunt(E, st.city, S.t); }
   // hunters' voices: a letter as the net closes on the active cover
@@ -256,6 +257,23 @@ function enemyStep(G) {
       const story = I.story.get(h.voice[n]);
       if (story && all(story.if, context(G, { hunter: h.id }))) S.queue.push({ type: 'story', id: story.id, hunter: h.id, n: ++S.cardN });
     }
+  }
+}
+/** A hunter reaches the city you left only hours before: whoever you lodged with lets you know he called. */
+function missedYou(G) {
+  const { S, D, I } = G;
+  const L = S.lastLeft;
+  if (!L || S.city === L.city || S.t - L.t > 24 * HOUR) return;
+  for (const h of D.hunters) {
+    const st = S.enemy.hunters[h.id];
+    if (st.arrived !== S.t || st.city !== L.city || L.told?.includes(h.id)) continue;
+    (L.told ??= []).push(h.id);
+    S.stats.nearMisses++;
+    const who = { hotel: 'The hotel porter', pension: 'Your landlady', rooms: 'The concierge' }[L.lodging];
+    if (!who) continue;
+    addIntel(G, { subj: `hunter:${h.id}`, claim: { at: L.city }, src: 'rumour', rel: .8, truth: true });
+    const gap = Math.max(1, Math.round((S.t - L.t) / HOUR));
+    note(G, `Called for you in ${I.city.get(L.city).name}`, `${who} in ${I.city.get(L.city).name} sends a line after you: ${h.look}, asking for you by name, ${gap === 1 ? 'an hour' : `${gap} hours`} after you had gone. ${who === 'Your landlady' ? `She told ${pro(h, 'him')} nothing, she says.` : `${pro(h, 'he', true)} was told you had left, and for where; it is the sort of thing porters say.`}`);
   }
 }
 const hereOrNear = (G, st) => !st.leg && (st.city === G.S.city || st.city === G.S.journey?.to);
@@ -291,6 +309,12 @@ export function findOdds(G, h) {
   if (S.lyingLow) day *= .35;
   return { day: Math.min(.95, day), registers: named && lodge === 'hotel' };
 }
+/** Out in the city, a watchful agent may see the hunter first: a warning, and a day's grace to act on it. */
+export function spotOdds(G) {
+  const { S } = G;
+  const out = S.activity ? S.activity.id !== 'rest' : S.place !== 'rooms';
+  return Math.min(.9, (.3 + .08 * skill(S.hero, 'observation')) * (out ? 1 : .25));
+}
 function encounters(G) {
   const { S, W, D } = G;
   if (S.t % TICK !== 0 || S.queue.length || !S.city) return;
@@ -299,6 +323,14 @@ function encounters(G) {
   for (const h of D.hunters) {
     if (!W.hunterActive(h, S.t) || h.id === S.tailedBy) continue;
     if (hunterAt(G, h.id).city !== S.city) continue;
+    S.spotted ??= {};
+    if (!night && S.t - (S.spotted[h.id] ?? -DAY) > 12 * HOUR && rand(S) < 1 - Math.pow(1 - spotOdds(G), TICK / DAY)) {
+      S.spotted[h.id] = S.t;
+      S.stats.nearMisses++;
+      addIntel(G, { subj: `hunter:${h.id}`, claim: { at: S.city }, src: 'seen', rel: .95, truth: true });
+      note(G, 'A face you know', `${cap(h.look)}, at a café table across the square, reading the same page of ${pro(h, 'his')} newspaper for a quarter of an hour. ${pro(h, 'he', true)} has not seen you. You are almost sure of it.`);
+      continue;
+    }
     const { day, registers } = findOdds(G, h);
     const p = (1 - Math.pow(1 - day, TICK / DAY)) * (night ? (registers ? 1.5 : .4) : 1);
     if (rand(S) >= p) continue;
@@ -332,7 +364,7 @@ function meet(G, h, where) {
   S.stats.nearMisses++;
   if (rand(S) < .55) {
     addIntel(G, { subj: `hunter:${h.id}`, claim: { at: S.city ?? S.journey.to }, src: 'seen', rel: .9, truth: true });
-    if (!S.lastGlimpse || S.t - S.lastGlimpse > 8 * HOUR) { S.lastGlimpse = S.t; note(G, 'A face you know', `${cap(h.look)}. ${where === 'train' ? 'Two carriages down.' : 'Across the street, then gone.'} Did he see you?`); }
+    if (!S.lastGlimpse || S.t - S.lastGlimpse > 8 * HOUR) { S.lastGlimpse = S.t; note(G, 'A face you know', `${cap(h.look)}. ${where === 'train' ? 'Two carriages down.' : 'Across the street, then gone.'} Did ${pro(h)} see you?`); }
   }
 }
 const cap = (s) => s[0].toUpperCase() + s.slice(1);

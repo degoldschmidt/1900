@@ -6,7 +6,7 @@ import { departuresFrom, earliest, route, crossings, cancelled, delayOf, CHANGE 
 import { controlOdds, pickStory, advance, confront, knowDisruption, endGame, TICK, startActivity, takeLodging } from './sim.js';
 import { skill, has as trait, tongue } from './hero.js';
 import { activities, watchOf, shadowed, addWatch, legendOf, SHADOWED, LODGINGS } from './residence.js';
-import { context, storyChoices, resolveChoice, leave, note, log, has, hasUse, contraband, coverData, coverName, aff, caseSize, CASE_SIZE, personHere, addIntel, carriedCovers, nationNow, act as actOf } from './game.js';
+import { context, storyChoices, resolveChoice, leave, note, log, has, hasUse, contraband, coverData, coverName, aff, caseSize, CASE_SIZE, personHere, addIntel, carriedCovers, nationNow, pro, act as actOf } from './game.js';
 import { currentStep, stepCities, finishOp, activeOps } from './ops.js';
 import { apply as applyEffects, all, chanceOf } from './storylet.js';
 import { SUSPECT } from './enemy.js';
@@ -674,13 +674,13 @@ function encounterOutcome(G, card, c) {
   const h = I.hunter.get(card.hunter), st = S.enemy.hunters[card.hunter];
   const onGround = h.ground.includes(nationNow(G));
   const caught = () => {
-    if (W.act(S.t) === 3 && onGround) { note(G, 'Taken', `${h.name} does not raise his voice. He does not need to.`); endGame(G, 'captured'); return { success: false }; }
+    if (W.act(S.t) === 3 && onGround) { note(G, 'Taken', `${h.name} does not raise ${pro(h, 'his')} voice. ${pro(h, 'he', true)} does not need to.`); endGame(G, 'captured'); return { success: false }; }
     if (!onGround) { // he cannot hold you here; he can look at you, long and well
       leave(G, 'photo', .7, { heat: .6 });
       S.nerve = Math.max(0, S.nerve - 2);
       S.busyUntil = Math.max(S.busyUntil, S.t) + 3 * HOUR;
       st.idleUntil = S.t + 3 * HOUR;
-      note(G, 'A long look', `${h.name} cannot arrest you here, and knows it. He walks beside you for a street, studying your face as if to learn it by heart. A man with a camera waits at the corner.`);
+      note(G, 'A long look', `${h.name} cannot arrest you here, and knows it. ${pro(h, 'he', true)} walks beside you for a street, studying your face as if to learn it by heart. A man with a camera waits at the corner.`);
       return { success: false };
     }
     return detainedByHunter(G, h, onGround);

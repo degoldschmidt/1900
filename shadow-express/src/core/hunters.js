@@ -50,7 +50,7 @@ export function moveHunters(E, W, t) {
   }
   for (const h of active) {
     const st = E.hunters[h.id];
-    if (st.leg && t >= st.leg.arr) { st.city = st.leg.to; st.leg = null; st.idleUntil = t + 3 * HOUR; }
+    if (st.leg && t >= st.leg.arr) { st.city = st.leg.to; st.leg = null; st.idleUntil = t + 3 * HOUR; st.arrived = t; }
     if (st.leg) continue;
     if (t < st.idleUntil) continue;
     let goal = h.start, role = 'watch';
