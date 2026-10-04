@@ -107,7 +107,7 @@ export function portrait(p = {}, uid = 'p') {
   const old = age === 'old', young = age === 'young';
   const nun = hat === 'veil' && collar === 'cassock';
   const { F, G, T, S, UL, ST, LL, SL, PG, ME, J, UJ, CP, NF, NB, NP, BK, OC, BT, CR, V, E, EY } = g;
-  const ink = k.ink, paper = k.paper, grey = '#6b5640';
+  const ink = k.ink, paper = k.paper, grey = k.sepia;
   const clip = (id) => `clip-path="url(#${id}-${uid})"`;
   const tone = (darkest) => (old ? 'paper' : young ? darkest : 'dark');
 

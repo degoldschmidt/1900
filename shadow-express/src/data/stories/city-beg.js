@@ -69,7 +69,7 @@ export default [
         ok: [["intel", { subj: "city:BEG", claim: { note: "Officers at the Golden Sturgeon boast that the Sarajevo pistols came from Serbian army stores." }, src: "rumour", rel: 0.5, truth: true }], ["standing", 2]],
         fail: [["watch", 0.15], ["record", "sighting", 0.5], ["later", 10, "ev.then.sturgeon-callers"]] },
       { label: "Buy the students a round", sub: "£1; students talk more than officers", cost: { money: 1 },
-        roll: { p: 0.5 }, ok: [["legend", 0.05], ["standing", 1]], fail: [["watch", 0.1]] },
+        roll: { p: 0.5, mods: [[["skill", "slavic", ">=", 1], 0.15]] }, ok: [["legend", 0.05], ["standing", 1]], fail: [["watch", 0.1]] },
       { label: "Leave before the major looks up", sub: "Some rooms are better left", ok: [["nerve", -1]] },
     ] },
 
@@ -127,7 +127,7 @@ export default [
       { label: "Refer him to the Ministry of War", sub: "Your captain of engineers wants his lenses", if: [["flag", "ev-beg-patron"]],
         ok: [["watch", -0.2]] },
       { label: "Hint you are no friend of Vienna", sub: "True, but is it true of your cover?",
-        roll: { p: 0.5, mods: [[["cover", "vessey"], -0.4], [["cover", "marchand"], 0.2]] },
+        roll: { p: 0.5, mods: [[["cover", "vessey"], -0.4], [["cover", "marchand"], 0.2], [["skill", "slavic", ">=", 1], 0.1]] },
         ok: [["watch", -0.1]], fail: [["watch", 0.2]] },
     ] },
 
@@ -146,7 +146,7 @@ export default [
         fail: [["watch", 0.2]] },
       { label: "Stroll with the couples, admiring the view", sub: "A foreigner at leisure is no spy", ok: [["legend", 0.05], ["nerve", 1]] },
     ] },
-  { id: "ev.city.beg-note-in-streets", at: "city", if: [["city", "BEG"], ["act", 2], ["state", "RS", "tension"]], w: 5,
+  { id: "ev.city.beg-note-in-streets", at: "city", if: [["city", "BEG"], ["act", 2], ["state", "RS", "tension"]], w: 5, once: true,
     title: "The Note Is in the Streets",
     text: "By nine the text of the Austrian note is everywhere: read aloud in the kafanas, torn from special editions, shouted from the steps of the Moskva. Forty-eight hours. Men who argued about pigs yesterday argue about rifles. A student climbs a lamp-post on the Terazije and asks the crowd whether Serbia is a nation of servants.",
     choices: [
@@ -159,7 +159,7 @@ export default [
         ok: [["legend", 0.1]], fail: [["watch", 0.15], ["record", "sighting", 0.5]] },
       { label: "Go back to your lodging", sub: "Foreigners on the Terazije are noticed tonight", ok: [["watch", -0.05], ["nerve", -1]] },
     ] },
-  { id: "ev.city.beg-nis", at: "city", if: [["city", "BEG"], ["act", 3], ["not", ["war", "AH", "RS"]]], w: 5,
+  { id: "ev.city.beg-nis", at: "city", if: [["city", "BEG"], ["act", 3], ["not", ["war", "AH", "RS"]]], w: 5, once: true,
     title: "The Government Has Gone to Niš",
     text: "The government left for Niš in the night, with the treasury in a goods van. This morning the banks are shut, the Austrian legation is shuttered, and reservists queue at the depot with bread under their arms. Foreigners are leaving by the Salonika line. The booking clerk says there may be seats tomorrow. Belgrade waits for the first shell.",
     choices: [
@@ -171,7 +171,7 @@ export default [
       { label: "Help your landlady pack her silver", sub: "She asked who would tell her the truth", if: [["flag", "ev-beg-landlady"]],
         ok: [["unflag", "ev-beg-landlady"], ["legend", 0.1], ["watch", -0.1], ["nerve", 1]] },
     ] },
-  { id: "ev.city.beg-shelling", at: "city", if: [["city", "BEG"], ["war", "AH", "RS"]], w: 6,
+  { id: "ev.city.beg-shelling", at: "city", if: [["city", "BEG"], ["war", "AH", "RS"]], w: 6, once: true,
     title: "Shells from the River",
     text: "In the night the Serbs blew the Sava bridge, and at dawn the Austrian monitors began to shell the city from the river. Plaster falls from your ceiling. The street empties, then fills with people running for the cellars of the big houses and the casemates of Kalemegdan. Somebody is shouting for you from the stairs.",
     choices: [
@@ -198,7 +198,7 @@ export default [
         ok: [["intel", { subj: "line:BUD-BEG", claim: { note: "Danube shippers say the Austrians are holding Serbian barges at Semlin on any pretext." }, src: "rumour", rel: 0.7, truth: true }], ["legend", 0.05]],
         fail: [["watch", 0.05]] },
       { label: "Drink their plum brandy, glass for glass", sub: "Merchants trust a man who drinks with them",
-        roll: { p: 0.6 }, ok: [["legend", 0.1], ["nerve", 1]], fail: [["nerve", -1], ["record", "sighting", 0.3]] },
+        roll: { p: 0.6, mods: [[["skill", "commerce", ">=", 1], 0.1], [["skill", "slavic", ">=", 1], 0.1]] }, ok: [["legend", 0.1], ["nerve", 1]], fail: [["nerve", -1], ["record", "sighting", 0.3]] },
     ] },
   { id: "ev.then.prunes-shipped", at: "then", title: "Prunes by Salonika",
     text: "A wire from the merchant with the gold tooth: your prunes have gone south in a sealed wagon, insured, with a bill of lading in the name of your house. In three weeks a Bristol warehouse will receive a cargo it never ordered. No forger in Europe could have made you a better legend.",

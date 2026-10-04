@@ -164,7 +164,7 @@ export default [
     ] },
 
   { id: 'kessel.doubt', at: 'then', speaker: 'kessel', if: [MISMATCH],
-    title: 'On the Munich train you were…',
+    title: 'On the train, you said…',
     text: "His smile stays where it is; his eyes do not. 'Wait. On the train you told me something else. A different name, or a different trade, or both.' He taps his temple. 'I never forget. A Rittmeister's memory is his only capital.' Two Feldgendarmen are drinking coffee at the next stall.",
     choices: [
       { label: 'Laugh: a second trade, for wartime', sub: 'He wants to believe you; does he?',

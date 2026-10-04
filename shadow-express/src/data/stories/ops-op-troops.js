@@ -14,6 +14,8 @@ export default [
         ok: [['record', 'register', 0.3], ['flag', 'op-troops-window']] },
       { label: 'Sleep in the crowd, if at all', sub: 'Cheer with the rest; no register',
         ok: [['nerve', -2], ['record', 'sighting', 0.3]] },
+      { label: 'Pass for a Rhinelander', sub: 'Your German against a city of Germans', if: [['skill', 'german', '>=', 2]],
+        roll: { p: 0.7 }, ok: [['legend', 0.2], ['flag', 'op-troops-window']], fail: [['watch', 0.3], ['record', 'sighting', 0.6]] },
     ] },
 
   { id: 'op-troops.watch', at: 'op', if: [['city', 'COL']],
@@ -23,7 +25,8 @@ export default [
       { label: 'Count from your window', sub: 'Every train, every hour, in a notebook', if: [['flag', 'op-troops-window']],
         ok: [['standing', 2], ['record', 'sighting', 0.1]] },
       { label: 'Count from the crowd', sub: 'Cheering, watching, writing nothing down',
-        ok: [['nerve', -1], ['record', 'sighting', 0.3]] },
+        roll: { p: 0.6, mods: [[['skill', 'observation', '>=', 2], 0.25]] },
+        ok: [['standing', 1], ['record', 'sighting', 0.3]], fail: [['nerve', -1], ['record', 'sighting', 0.5]] },
       { label: 'Read the regiments through glasses', sub: 'Better figures; glasses at a bridge are noticed', if: [['item', 'field-glasses']],
         roll: { p: 0.6 },
         ok: [['standing', 3], ['record', 'sighting', 0.3]], fail: [['record', 'sighting', 1], ['nerve', -2]] },

@@ -36,8 +36,31 @@ export default [
         ok: [["nerve", -1], ["record", "sighting", 0.6]] },
     ] },
 
+  { id: "ev.encounter.falk-register", at: "encounter", if: [["hunter", "falk", "here"], ["not", ["mode", "rail"]]], w: 2,
+    title: "A Finger Down the Register",
+    text: "At the hotel desk a tall man in a grey ulster is turning the pages of the register, slowly, one finger moving down each column as if he were reading a hymn. He stops at a line. He looks up, not at you but at the clock, and makes a small note in a small book. Then he asks the clerk for a room.",
+    choices: [
+      { label: "Take the back stairs and pack", sub: "Leave the room paid for, and the town",
+        roll: { p: 0.55, mods: [[["skill", "tradecraft", ">=", 2], 0.2]] },
+        ok: [["nerve", -1], ["susp", "active", -0.05]], fail: [["record", "sighting", 0.9], ["nerve", -2]] },
+      { label: "Take the room beside his", sub: "Know where he sleeps; he will know you know",
+        roll: { p: 0.35, mods: [[["skill", "composure", ">=", 2], 0.2], [["skill", "observation", ">=", 2], 0.1]] },
+        ok: [["nerve", 1], ["intel", { subj: "hunter:falk", claim: { note: "Falk reads the hotel registers himself, column by column, before he takes a room." }, src: "seen", rel: 0.9, truth: true }]],
+        fail: [["susp", "active", 0.15], ["record", "register", 1]] },
+    ] },
+  { id: "ev.encounter.falk-tram", at: "encounter", if: [["hunter", "falk", "here"], ["not", ["mode", "rail"]], ["act", ">=", 2]], w: 2,
+    title: "The Same Tram, Unhurried",
+    text: "You take the tram to lose a tail, and at the second stop a tall man in a grey ulster climbs aboard, pays his fare in exact coins, and sits three rows behind you with his hands folded on his umbrella. He does not look at you. He has never needed to hurry, and he does not mean to start now.",
+    choices: [
+      { label: "Jump off while it is moving", sub: "A twisted ankle, or freedom",
+        roll: { p: 0.5, mods: [[["skill", "streetwise", ">=", 2], 0.15], [["nerve", ">=", 6], 0.1]] },
+        ok: [["nerve", -1]], fail: [["nerve", -2], ["record", "sighting", 0.8]] },
+      { label: "Ride to the terminus with him", sub: "Make him show his hand, at the end of the line",
+        ok: [["record", "sighting", 0.7], ["intel", { subj: "hunter:falk", claim: { note: "Falk follows in person now; he no longer trusts the local police with you." }, src: "seen", rel: 0.8, truth: true }]] },
+    ] },
+
   // ---------- Heller: cake, a scar, an unlit cigar ----------
-  { id: "ev.encounter.heller-torte", at: "encounter", if: [["hunter", "heller", "here"], ["city", "VIE"]], w: 3,
+  { id: "ev.encounter.heller-torte", at: "encounter", if: [["hunter", "heller", "here"], ["city", "VIE"]], w: 2,
     title: "Two Coffees and a Sachertorte",
     text: "A stout man with a duelling scar settles into the chair opposite yours with a sigh of real pleasure, orders two coffees and a slice of Sachertorte, and lays an unlit cigar beside his plate. ‘Do not get up,’ he says. ‘In Vienna one does not hurry. Tell me about your business here. Slowly. I adore detail.’",
     choices: [
@@ -46,6 +69,18 @@ export default [
         ok: [["nerve", 1], ["susp", "active", -0.05]], fail: [["susp", "active", 0.2], ["record", "meeting", 1]] },
       { label: "Let him pay, and excuse yourself", sub: "He lets you go; he does not let you out",
         ok: [["record", "sighting", 0.8], ["nerve", -1]] },
+    ] },
+  { id: "ev.encounter.heller-prater", at: "encounter", if: [["hunter", "heller", "here"], ["city", "VIE"]], w: 2,
+    title: "Sparrows in the Prater",
+    text: "On a bench in the Prater a stout man with a duelling scar is feeding the sparrows from a paper bag, his unlit cigar wagging as he talks to them. He pats the bench beside him. ‘Sit. The sparrows and I have been discussing you. They believe every word of your passport. I think they are very young sparrows.’",
+    choices: [
+      { label: "Sit, and feed the sparrows too", sub: "Play his game, on his bench",
+        roll: { p: 0.4, mods: [[["legend", ">=", 0.5], 0.2], [["skill", "composure", ">=", 2], 0.15], [["skill", "german", ">=", 2], 0.05]] },
+        ok: [["nerve", 1], ["intel", { subj: "cover:active", claim: { knows: "name" }, src: "seen", rel: 0.75, truth: "auto" }]],
+        fail: [["susp", "active", 0.2], ["record", "meeting", 1]] },
+      { label: "Raise your hat and walk on", sub: "Into the crowds at the giant wheel",
+        roll: { p: 0.6, mods: [[["skill", "tradecraft", ">=", 2], 0.15]] },
+        ok: [["nerve", -1]], fail: [["record", "sighting", 0.9], ["nerve", -1]] },
     ] },
   { id: "ev.encounter.heller-door", at: "encounter", if: [["hunter", "heller", "here"], ["not", ["city", "VIE"]], ["not", ["mode", "rail"]]], w: 2,
     title: "Shall We Walk?",
@@ -79,7 +114,7 @@ export default [
         roll: { p: 0.6, mods: [[["skill", "charm", ">=", 2], 0.1]] },
         ok: [["susp", "active", -0.15]], fail: [["susp", "active", 0.1], ["record", "meeting", 1]] },
       { label: "Buy what she knows of you", sub: "£8; she sells honestly, she says", cost: { money: 8 },
-        roll: { p: 0.5 },
+        roll: { p: 0.5, mods: [[["skill", "charm", ">=", 2], 0.15]] },
         ok: [["intel", { subj: "cover:active", claim: { knows: "photo" }, src: "rumour", rel: 0.7, truth: "auto" }], ["intel", { subj: "cover:active", claim: { knows: "name" }, src: "rumour", rel: 0.7, truth: "auto" }]],
         fail: [["record", "meeting", 1], ["intel", { subj: "cover:active", claim: { knows: "photo" }, src: "rumour", rel: 0.7, truth: false }]] },
     ] },
@@ -109,6 +144,17 @@ export default [
       { label: "Tell her a plausible lie", sub: "If she checks, she will know",
         roll: { p: 0.5, mods: [[["skill", "tradecraft", ">=", 2], 0.2]] }, ok: [["susp", "active", -0.05]], fail: [["susp", "active", 0.15]] },
       { label: "Burn it and say nothing", sub: "Debts unpaid are remembered", ok: [["susp", "active", 0.1]] },
+    ] },
+
+  { id: "ev.encounter.orlova-candle", at: "encounter", if: [["hunter", "orlova", "here"], ["not", ["mode", "rail"]]], w: 2,
+    title: "A Candle Lit Beside Yours",
+    text: "In the side chapel where you meant to wait out the afternoon, a small woman in widow's black lights a candle beside yours and kneels, very straight. ‘For my husband,’ she murmurs, ‘who was in your trade, and careless.’ She does not look round. ‘Vienna pays me by the head. I prefer to be paid by the conversation.’",
+    choices: [
+      { label: "Talk, and give her something false", sub: "A conversation she will sell to Vienna",
+        roll: { p: 0.45, mods: [[["skill", "tradecraft", ">=", 2], 0.15], [["skill", "charm", ">=", 2], 0.15]] },
+        ok: [["susp", "active", -0.1], ["nerve", -1]], fail: [["susp", "active", 0.15], ["record", "meeting", 1]] },
+      { label: "Blow out your candle and go", sub: "She has your face; let her keep only that",
+        ok: [["record", "sighting", 0.8], ["nerve", -1]] },
     ] },
 
   // ---------- any hunter ----------

@@ -17,7 +17,7 @@ export default [
     title: 'Consulting rooms in the Alserstrasse',
     text: "Dr Brandl receives you between a colonel's migraine and a countess's melancholy. 'Sit anywhere but the couch; the couch costs extra.' He is fifty, groomed like a diplomat and amused like a cat. 'You are not ill. Nobody who comes recommended is ever ill. They are only curious, which is worse, and harder to cure.'",
     choices: [
-      { label: 'Complain of nerves, as a count would', sub: 'He will enter you in his book as a patient', tag: 'topic:society',
+      { label: 'Complain of nerves, as a {count|countess} would', sub: 'He will enter you in his book as a patient', tag: 'topic:society',
         if: [['aff', 'topic:society', '>=', 1]],
         ok: [['st', 'brandl', 'met'], ['trust', 'brandl', 2], ['flag', 'brandl-patient'], ['legend', 0.1]] },
       { label: 'Ask for a word on the Archduke', sub: 'He despises the press, and loves to be quoted', tag: 'topic:political',

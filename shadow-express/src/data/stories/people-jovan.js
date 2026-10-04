@@ -93,7 +93,7 @@ export default [
 
   { id: 'jovan.cafe', at: 'person', speaker: 'jovan', if: [MET, ['chance', 0.6]], w: 2,
     title: 'The students’ café',
-    text: "The café by the Great School is full of Bosnian students arguing about bombs and Bergson. Jovan is the quietest of them, which is not saying much. When you come in the talk stops, and then starts again in a different language.",
+    text: "The café by the University is full of Bosnian students arguing about bombs and Bergson. Jovan is the quietest of them, which is not saying much. When you come in the talk stops, and then starts again in a different language.",
     choices: [
       { label: 'Buy the table a round', sub: '£1; the police drink here too', cost: { money: 1 },
         ok: [['trust', 'jovan', 1], ['watch', 0.1]] },
@@ -169,7 +169,7 @@ export default [
     choices: [
       { label: 'Hide him with the Franciscans', sub: 'The friars owe you a kindness', if: [['flag', 'jovan-sanctuary']],
         ok: [['st', 'jovan', 'cultivated'], ['trust', 'jovan', 1]] },
-      { label: "Send him to his mother's cousins", sub: 'She trusts you since you carried her letter', if: [['flag', 'jovan-mother']],
+      { label: "Send him to his mother's cousins", sub: 'She trusts you since you carried his letter', if: [['flag', 'jovan-mother']],
         ok: [['st', 'jovan', 'cultivated'], ['trust', 'jovan', 1], ['expose', 'jovan', 0.1]] },
       { label: 'Pay a carter to take him up-country', sub: '£10 and a cart of hay', cost: { money: 10 },
         ok: [['st', 'jovan', 'cultivated'], ['trust', 'jovan', 1]] },
@@ -220,7 +220,7 @@ export default [
       { label: 'Dress him as a seminarian', sub: 'Gendarmes do not search the devout', tag: 'venue:church',
         if: [['aff', 'venue:church', '>=', 1]],
         ok: [['flag', 'jovan-cassock'], ['trust', 'jovan', 1], ['later', 10, 'jovan.frontier']] },
-      { label: 'Make him your valet', sub: 'A count travels with a servant', if: [['cover', 'vessey']],
+      { label: 'Make him your valet', sub: 'A {count|countess} travels with a servant', if: [['cover', 'vessey']],
         ok: [['flag', 'jovan-valet'], ['trust', 'jovan', 1], ['later', 10, 'jovan.frontier']] },
       { label: 'Cut his hair, change his name', sub: '£3 to a barber who asks nothing', cost: { money: 3 },
         ok: [['flag', 'jovan-shorn'], ['later', 10, 'jovan.frontier']] },

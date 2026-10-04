@@ -7,7 +7,7 @@ const sprung = [['op', 'op-brother', 'fail'], ilicSold];
 export default [
   { id: 'op-brother.visit', at: 'op',
     title: 'Confession in a cell',
-    text: "The warder lets you into the hostages' cell with a lantern and a stool. Twelve men in their shirtsleeves; one of them, with Ilić's nose and a schoolmaster's spectacles, is Pavle. The warder waits outside the door, scratching. You have perhaps a quarter of an hour, the authority of your calling, and nothing else.",
+    text: "The warder lets you into the hostages' cell with a lantern and a stool. Twelve men in their shirtsleeves; one of them, a boy of nineteen with Ilić's nose, is Pavle. The warder waits outside the door, scratching. You have perhaps a quarter of an hour, the authority of your calling, and nothing else.",
     choices: [
       { label: 'Walk him out as your server', sub: 'He carries the lantern; you bless the warder',
         roll: { p: 0.55, mods: [[['item', 'blessing-letter'], 0.15], [['skill', 'composure', '>=', 2], 0.1]] },
@@ -50,7 +50,7 @@ export default [
 
   { id: 'op-brother.visegrad', at: 'op',
     title: 'Gendarmes at Višegrad',
-    text: 'The coach stops at the Višegrad bridge, the old Turkish one of eleven arches, and Austrian gendarmes look in with lanterns. Pavle sits beside you in a borrowed coat, his schoolmaster\'s hands folded, pretending to sleep. The sergeant counts heads twice and frowns, because there is one more than on his list.',
+    text: 'The coach stops at the Višegrad bridge, the old Turkish one of eleven arches, and Austrian gendarmes look in with lanterns. Pavle sits beside you in a borrowed coat, hands deep in his pockets, pretending to sleep. The sergeant counts heads twice and frowns, because there is one more than on his list.',
     choices: [
       { label: 'Pay for the extra head', sub: '£3; sergeants can count either way', cost: { money: 3 },
         roll: { p: 0.65 }, ok: [['record', 'bribe', 0.4]], fail: [['record', 'bribe', 1], ['delay', 240]] },
@@ -61,17 +61,17 @@ export default [
         ok: [['delay', 180], ['nerve', -1]] },
     ] },
 
-  { id: 'op-brother.cross', at: 'op', speaker: 'ilic', if: [['city', 'BEG']],
-    title: 'Two brothers on the Kalemegdan',
-    text: "Pavle and Dragan Ilić embrace on the ramparts of the Kalemegdan, above the two rivers, while you look elsewhere. Then the lieutenant turns to you, in tears and in uniform. 'I owe you a brother,' he says. 'Ask me for anything. Ask me now, before they send me to the Drina.'",
+  { id: 'op-brother.barrier', at: 'op', if: [['city', 'BEG']],
+    title: 'Pavle at the Belgrade barrier',
+    text: "At the Belgrade barrier the Serbian police are stopping every Bosnian, because every Bosnian this week is either a hero or an Austrian spy. Pavle has no Serbian papers, only an Austrian prison's discharge he did not earn. He keeps his hands in his pockets. The sergeant asks him, in Serbian, which of the two he is.",
     choices: [
-      { label: 'Ask him about the Drina fords', sub: 'A way out of Serbia, one day',
-        ok: [['trust', 'ilic', 1],
-          ['intel', { subj: 'city:SAR', claim: { note: 'Ilić: the Drina ford below Višegrad is unguarded on moonless nights.' }, src: 'person:ilic', rel: 0.8, truth: true }]] },
-      { label: "Ask for the staff's gossip", sub: 'In a café, where anyone may listen',
-        ok: [['trust', 'ilic', 1], ['record', 'meeting', 0.3],
-          ['intel', { subj: 'hunter:heller', claim: { at: 'SAR' }, src: 'person:ilic', rel: 0.5, truth: 'auto' }]] },
-      { label: 'Ask for nothing', sub: 'A debt is worth more unpaid',
-        ok: [['trust', 'ilic', 2]] },
+      { label: 'Send a boy for Lieutenant Ilić', sub: 'An hour at the barrier, and his loud voice', cost: { min: 60 },
+        ok: [['trust', 'ilic', 1], ['record', 'meeting', 0.4]] },
+      { label: 'Vouch for him in Serbian', sub: 'A foreigner vouching is a curiosity',
+        roll: { p: 0.5, mods: [[['skill', 'slavic', '>=', 1], 0.25], [['legend', '>=', 0.5], 0.1]] },
+        ok: [['legend', 0.05]], fail: [['watch', 0.2], ['record', 'register', 0.6]] },
+      { label: 'Let him answer for himself', sub: 'He is nineteen, and angry',
+        roll: { p: 0.5 },
+        ok: [['nerve', 1]], fail: [['delay', 240], ['watch', 0.1], ['trust', 'ilic', -1]] },
     ] },
 ];

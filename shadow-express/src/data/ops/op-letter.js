@@ -2,13 +2,13 @@
 // See docs/CONTRACTS.md §6. It is a love letter; it is also a warning, in the only code the lovers share.
 
 export default {
-  id: 'op-letter', act: 2, issue: null, giver: 'odile', side: true,
+  id: 'op-letter', act: 1, issue: null, giver: 'odile', side: true,
   title: "Odile's Letter",
   brief: "A letter in lilac paper, sealed with green wax, for Captain Lemaire of the Guides at Brussels. 'It is only a love letter,' Odile says, 'so do not read it.' She is a poor liar, or a very good one.",
   steps: [
     { id: 'open', kind: 'act', city: '*', venue: 'venue:hotel', label: 'Decide what to do with the letter',
       ways: [
-        { id: 'sealed', label: 'Leave the seal unbroken', sub: 'Odile trusts you; so, oddly, do you',
+        { id: 'sealed', label: 'Carry it as it is', sub: 'Odile trusts you; so, oddly, do you',
           risk: 0, rec: null, ok: [['trust', 'odile', 1]] },
         { id: 'steam', label: 'Steam it open over a kettle', sub: 'An hour; green wax is hard to reseal',
           cost: { min: 60 }, risk: 0.3, rec: null, story: 'op-letter.steam' },

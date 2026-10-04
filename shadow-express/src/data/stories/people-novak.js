@@ -1,6 +1,6 @@
 // Storylets with Václav Novák (owner: People). Dry and principled.
 // Arc: a printer and forger in Prague, a short trip from the Vienna posting; the second judge of the cable (Ops scene);
-// mends papers (repeatable), grants the Marchand cover, and posts blank forms once recruited.
+// mends papers (repeatable), grants the Marchand cover, sells Arsenal passes during op-optics, and posts blank forms once recruited.
 // Flags: novak-planted, novak-sold.
 
 const MET = ['any', ['st', 'novak', 'met'], ['st', 'novak', 'cultivated'], ['st', 'novak', 'recruited']];
@@ -53,6 +53,18 @@ export default [
         ok: [['trust', 'novak', 1], ['nerve', 1]] },
     ] },
 
+  { id: 'novak.supper', at: 'person', speaker: 'novak', if: [['st', 'novak', 'met'], ['trust', 'novak', '>=', 1]], w: 4, once: true,
+    title: 'Dumplings and Bohemia',
+    text: "Novák takes you to a beer hall where the waiters speak only Czech and the menu only dumplings. He talks about Hus, Palacký and the price of paper, and asks you exactly one question about yourself, which he has clearly been preparing all evening. It is a good question.",
+    choices: [
+      { label: 'Answer him as honestly as you can', sub: 'Three hours, and a little of the truth', cost: { min: 180 },
+        ok: [['st', 'novak', 'cultivated'], ['trust', 'novak', 1], ['expose', 'novak', 0.1]] },
+      { label: 'Give him your vest camera', sub: 'An answer of a kind', if: [['item', 'vest-camera']],
+        ok: [['item', '-vest-camera'], ['st', 'novak', 'cultivated'], ['trust', 'novak', 2]] },
+      { label: 'Turn the question aside', sub: 'He will notice the turning',
+        ok: [['trust', 'novak', -1], ['nerve', 1]] },
+    ] },
+
   { id: 'novak.recruit', at: 'person', speaker: 'novak', if: [['st', 'novak', 'cultivated'], ['trust', 'novak', '>=', 3]], w: 6, once: true,
     title: 'What a principled forger wants',
     text: "'I forge papers, not opinions,' Novák says. 'I will work for London if London will one day say the word Bohemia aloud, in public, and mean it. Or I will work for money, which says nothing and means it. I would prefer the first. I can live on the second.'",
@@ -75,6 +87,20 @@ export default [
         ok: [['papers', 'active', 0.3], ['record', 'list', 0.1]] },
       { label: 'Burn the forms with the hymns', sub: 'Safer; he will be offended',
         ok: [['trust', 'novak', -1], ['nerve', 1]] },
+    ] },
+
+  { id: 'novak.arsenal', at: 'person', speaker: 'novak', if: [['op', 'op-optics'], MET], w: 8, once: true,
+    title: 'A pass for the Arsenal',
+    text: "Novák does not look surprised. 'The Arsenal,' he says. 'Everybody who wants to see the Arsenal comes to me in the end. The passes are printed in Vienna on bad paper, which is a mercy.' He opens a drawer of blank forms. 'Visitor, contractor or chimney sweep?'",
+    choices: [
+      { label: "Buy a contractor's pass", sub: '£8; good for one visit, if nobody telephones', cost: { money: 8 },
+        ok: [['papers', 'active', 0.2], ['trust', 'novak', 1]] },
+      { label: 'Ask who else bought one', sub: 'He sells to all sides; he says so',
+        roll: { p: 0.5, mods: [[['trust', 'novak', '>=', 3], 0.25]] },
+        ok: [['intel', { subj: 'op:op-optics', claim: { note: 'Novák forged an Arsenal pass last week for a man with a Russian accent.' }, src: 'person:novak', rel: 0.7, truth: true }]],
+        fail: [['trust', 'novak', -1]] },
+      { label: 'Ask him to forge nothing for anyone', sub: 'A principled forger may agree, for a fee', cost: { money: 3 },
+        ok: [['trust', 'novak', 1], ['expose', 'novak', 0.1]] },
     ] },
 
   { id: 'novak.train', at: 'train', speaker: 'novak', if: [['st', 'novak', 'met']], once: true,

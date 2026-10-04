@@ -19,6 +19,7 @@ export default {
     flank += k.shape(k.dome(36, 112, 12, 14), 'dark', { w: .8 }) + k.shape(k.dome(202, 112, 12, 14), 'dark', { w: .8 }); // the hotel's corner cupolas
     flank += k.building(430, 186, 186, 66, { tone: 'mid', roof: 'mansard', floors: 4, cols: 11, lit: .35, rh: 18 });
     for (let x = 434; x < 612; x += 22) flank += k.shape(k.poly([[x, 172], [x + 18, 172], [x + 20, 178], [x - 2, 178]]), 'vert', { w: .5 }); // shop blinds
+    flank += k.shape(k.rect(26, 166, 186, 20), 'mid', { w: 0, op: .55 }) + k.shape(k.rect(430, 166, 186, 20), 'mid', { w: 0, op: .55 }); // soot on the lower storeys
     flank += k.shape(k.rect(120, 98, 4, 14), 'black', { w: .4 }) + k.smoke(122, 97, .7, { seed: 8 }) + k.shape(k.rect(520, 104, 4, 14), 'black', { w: .4 }) + k.smoke(522, 103, .6, { seed: 11 });
 
     // ---------- the Athenaeum, drawn about its own centre and set in place ----------
@@ -62,7 +63,7 @@ export default {
     road += k.line(setts, .4) + k.line('M-5 197H650M-5 200H650', .6);
     for (const x of [192, 448]) { road += k.lamp(x, 188, 1); k.lights.push([x - 2.2, 158.6, 4.4, 4]); }
     const tram = (() => { // an electric tram, its trolley pole raised
-      const x = 72, y = 200;
+      const x = 140, y = 200;
       let s = k.shape(k.rect(x, y - 24, 86, 20), 'mid', { w: .9 }) + k.shape(k.rect(x - 3, y - 28, 92, 5), 'dark', { w: .7 });
       s += k.windows(x + 4, y - 22, 78, 9, 7, 1, { ww: .7, wh: .8, lit: .7 }) + k.shape(k.rect(x, y - 6, 86, 3), 'black', { w: 0 });
       s += `<circle cx="${x + 16}" cy="${y - 2}" r="3" fill="${k.ink}"/><circle cx="${x + 70}" cy="${y - 2}" r="3" fill="${k.ink}"/>`;

@@ -24,13 +24,13 @@ export default {
     { id: 'deliver', kind: 'act', city: 'SPB', venue: 'venue:hotel', by: '07-15 20.00', label: 'Hand them to the colonel',
       ways: [
         { id: 'angleterre', label: 'Room fourteen at the Angleterre', sub: 'As agreed; the hall porter reports to the Okhrana',
-          risk: 0.15, rec: ['meeting', 0.5], ok: [['item', '-diamonds']], fail: [['susp', 'active', 0.1], ['nerve', -1]] },
+          if: [['item', 'diamonds']], risk: 0.15, rec: ['meeting', 0.5], ok: [['item', '-diamonds']], fail: [['susp', 'active', 0.1], ['nerve', -1]] },
         { id: 'opera', label: 'In a box at the Mariinsky', sub: 'Between the acts, under cover of the music',
-          tag: 'venue:opera', if: [['aff', 'venue:opera', '>=', 1]], risk: 0.05, rec: ['sighting', 0.2], ok: [['item', '-diamonds']] },
+          tag: 'venue:opera', if: [['item', 'diamonds'], ['aff', 'venue:opera', '>=', 1]], risk: 0.05, rec: ['sighting', 0.2], ok: [['item', '-diamonds']] },
         { id: 'church', label: "A pew at St Isaac's after vespers", sub: 'A candle, a prayer book, a parcel left behind',
-          tag: 'venue:church', cost: { min: 180 }, risk: 0.1, rec: ['sighting', 0.2], ok: [['item', '-diamonds']] },
+          tag: 'venue:church', if: [['item', 'diamonds']], cost: { min: 180 }, risk: 0.1, rec: ['sighting', 0.2], ok: [['item', '-diamonds']] },
         { id: 'kowal', label: "Through Kowal's cousin in the Haymarket", sub: 'Smugglers deliver; they also remember',
-          if: [['st', 'kowal', 'recruited']], risk: 0.1, rec: null, ok: [['item', '-diamonds'], ['trust', 'kowal', 1]] },
+          if: [['item', 'diamonds'], ['st', 'kowal', 'recruited']], risk: 0.1, rec: null, ok: [['item', '-diamonds'], ['trust', 'kowal', 1]] },
       ] },
   ],
   twists: [

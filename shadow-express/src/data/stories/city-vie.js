@@ -260,7 +260,7 @@ export default [
         roll: { p: 0.65, mods: [[["skill", "tradecraft", ">=", 1], 0.15]] },
         ok: [["standing", 1], ["watch", -0.05]], fail: [["watch", 0.1], ["record", "sighting", 0.3]] },
     ] },
-  { id: "ev.city.vie-mourning", at: "city", if: [["city", "VIE"], ["act", 1]], w: 2,
+  { id: "ev.city.vie-mourning", at: "city", if: [["city", "VIE"], ["act", 1]], w: 2, once: true,
     title: "Black Crape on the Ringstrasse",
     text: "Black crape hangs from the lamp-posts of the Ringstrasse, and the cafés have put the Archduke's portrait in their windows with a candle before it. Tonight a column of students marches towards the Serbian legation singing the Prinz Eugen song, with a few policemen walking beside them as if by chance.",
     choices: [

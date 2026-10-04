@@ -2,7 +2,7 @@
 // Arc: a Belgian nursing sister who lives on the Munich-Venice and Zurich-Venice lines, with a house in Rome.
 // Grants the Doyle cover; carries things across frontiers in her basket and hands them back hours later;
 // may see Jovan into Italy as a novice (op-student).
-// Flags: agathe-alms, agathe-copy, agathe-pistol, agathe-sold.
+// Flags: agathe-alms, agathe-copy, agathe-pistol, agathe-planted, agathe-sold.
 
 const MET = ['any', ['st', 'agathe', 'met'], ['st', 'agathe', 'cultivated'], ['st', 'agathe', 'recruited']];
 const HOLDS = ['any', ['flag', 'agathe-copy'], ['flag', 'agathe-pistol']];
@@ -68,6 +68,9 @@ export default [
         fail: [['item', '-browning'], ['st', 'agathe', 'compromised'], ['nerve', -2]] },
       { label: 'Thank her, and carry your own risks', sub: 'She approves of honesty, mildly',
         ok: [['trust', 'agathe', 1], ['nerve', -1]] },
+      { label: 'Tell her you go on to Rome', sub: 'Customs men gossip with nuns; she gossips back',
+        if: [['not', ['flag', 'agathe-planted']]],
+        ok: [['plant', { via: 'agathe', subj: 'cover:active', claim: { at: 'ROM' } }], ['expose', 'agathe', 0.2], ['flag', 'agathe-planted']] },
       { label: 'Report her basket to the customs', sub: '£10 reward; a nun in a cell', ok: SELL },
     ] },
 
@@ -91,6 +94,18 @@ export default [
         ok: [['standing', 3], ['expose', 'agathe', 0.1], ['record', 'list', 0.1]] },
       { label: 'Ask about her banker in Zurich', sub: 'The hospice banks with Herr Amsler',
         ok: [['intel', { subj: 'person:amsler', claim: { note: 'Agathe: Amsler charges the poor exactly what he charges the rich, which she counts a virtue.' }, src: 'person:agathe', rel: 0.7, truth: true }]] },
+    ] },
+
+  { id: 'agathe.pears', at: 'train', speaker: 'agathe', if: [['st', 'agathe', 'met'], ['trust', 'agathe', '>=', 1]], once: true,
+    title: 'Pears and a rosary',
+    text: "Sister Agathe shares her pears and, between Verona and the sea, her opinions: of bishops, who are slow; of customs men, who are slower; of governments, which she prays for in a tone that suggests they need it. She asks you nothing at all, which is how you know she is curious.",
+    choices: [
+      { label: 'Tell her something true', sub: 'A small truth, offered like a pear',
+        ok: [['st', 'agathe', 'cultivated'], ['trust', 'agathe', 1], ['expose', 'agathe', 0.1]] },
+      { label: 'Give alms for her hospital', sub: '£2, put in her hand without remark', cost: { money: 2 },
+        ok: [['st', 'agathe', 'cultivated'], ['trust', 'agathe', 1]] },
+      { label: 'Pretend to sleep', sub: 'She will pray for you anyway',
+        ok: [['trust', 'agathe', -1], ['nerve', 1]] },
     ] },
 
   { id: 'agathe.recruit', at: 'train', speaker: 'agathe', if: [['st', 'agathe', 'cultivated'], ['trust', 'agathe', '>=', 3]], once: true,

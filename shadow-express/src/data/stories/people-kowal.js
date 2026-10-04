@@ -74,6 +74,18 @@ export default [
         ok: [['trust', 'kowal', -1], ['nerve', 1]] },
     ] },
 
+  { id: 'kowal.vodka', at: 'person', speaker: 'kowal', if: [['st', 'kowal', 'met'], ['trust', 'kowal', '>=', 1]], w: 4, once: true,
+    title: 'Vodka, and an uncle',
+    text: "Kowal pours two glasses of vodka without asking and tells you about his uncle, who smuggled tea, then guns, then a bishop, and was buried with his boots on because nobody could get them off. It is a test. He watches how you drink and where you laugh.",
+    choices: [
+      { label: 'Drink, and laugh in the right places', sub: 'An hour, and a thick head', cost: { min: 60 },
+        ok: [['st', 'kowal', 'cultivated'], ['trust', 'kowal', 1], ['nerve', -1]] },
+      { label: 'Match him with plum brandy', sub: 'Your bottle against his', if: [['item', 'slivovitz']],
+        ok: [['item', '-slivovitz'], ['st', 'kowal', 'cultivated'], ['trust', 'kowal', 2]] },
+      { label: 'Leave the glass untouched', sub: 'He will think you a policeman',
+        ok: [['trust', 'kowal', -2], ['nerve', 1]] },
+    ] },
+
   { id: 'kowal.recruit', at: 'person', speaker: 'kowal', if: [['st', 'kowal', 'cultivated'], ['trust', 'kowal', '>=', 3]], w: 6, once: true,
     title: 'A smuggler on a retainer',
     text: "'You want me regular,' Kowal says. 'Regular costs. I like money, and I like the frontier at night, when the frogs stop and the guards start. Pay me, and give me something worth carrying. Bore me, and I go back to candles.'",
@@ -105,9 +117,9 @@ export default [
     text: "Kowal is counting something: candles, coins or crows. He does not stop when you come in. 'Talk,' he says. 'I count and listen. It is the same muscle.' Bismarck the cat watches you from the samovar with open contempt.",
     choices: [
       { label: 'Bring him Dutch cigars', sub: 'Contraband for a smuggler', if: [['item', 'dutch-cigars'], ['trust', 'kowal', '<', 4]],
-        ok: [['item', '-dutch-cigars'], ['trust', 'kowal', 2], ['st', 'kowal', 'cultivated']] },
+        ok: [['item', '-dutch-cigars'], ['trust', 'kowal', 2]] },
       { label: 'Bring him plum brandy', sub: 'He drinks it neat, and talks', if: [['item', 'slivovitz'], ['trust', 'kowal', '<', 4]],
-        ok: [['item', '-slivovitz'], ['trust', 'kowal', 2], ['st', 'kowal', 'cultivated']] },
+        ok: [['item', '-slivovitz'], ['trust', 'kowal', 2]] },
       { label: 'Tell him you go back to Warsaw', sub: 'Smugglers sell news like candles', if: [['not', ['flag', 'kowal-planted']]],
         ok: [['plant', { via: 'kowal', subj: 'cover:active', claim: { at: 'WAR' } }], ['expose', 'kowal', 0.3], ['flag', 'kowal-planted']] },
       { label: 'Sell him to the Prussians', sub: '£25; his path dies with him', ok: SELL },

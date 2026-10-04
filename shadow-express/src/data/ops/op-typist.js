@@ -1,6 +1,6 @@
 // Fräulein Sauer (owner: Ops). See docs/CONTRACTS.md §6 and docs/REGISTRY.md §7 (Act III: the Berlin posting).
 // Two journeys: from Belgrade to the Berlin post, and out with Sauer to neutral ground as the frontiers close.
-// She cannot be met before the 30th: a day or two of living in Berlin first.
+// She cannot be met before the 30th: a day or two of living in Berlin first. Her sister Grete is People's thread.
 
 export default {
   id: 'op-typist', act: 3, issue: '07-26 09.00', giver: 'handler',
@@ -33,7 +33,6 @@ export default {
   twists: [
     { if: [['op', 'op-typist', 'meet'], ['not', ['op', 'op-typist', 'out']], ['city', 'BER'], ['any', ['watched'], ['chance', 0.4]]],
       story: 'op-typist.followed' },
-    { if: [['op', 'op-typist', 'annex'], ['not', ['op', 'op-typist', 'out']], ['item', 'companion-sauer'], ['city', 'BER']], story: 'op-typist.sister' },
     { if: [['op', 'op-typist', 'meet'], ['not', ['op', 'op-typist', 'out']], ['item', 'companion-sauer'], ['nation', 'DE'], ['day', '56']],
       story: 'op-typist.permit' },
     { if: [['op', 'op-typist', 'annex'], ['not', ['op', 'op-typist', 'out']], ['item', 'companion-sauer'], ['mode', 'rail'], ['nation', 'DE'], ['chance', 0.5]],

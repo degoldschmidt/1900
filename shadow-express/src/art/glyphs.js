@@ -155,7 +155,7 @@ export default {
     return s;
   }),
   cartouche: (uid) => svg(uid, ['mid'], (k) => {
-    // an empty engraved title frame, 64×32 across the middle of the square
+    // an empty engraved title frame, 64×32 across the middle of the square (y 16 to 48)
     let s = k.shape('M10 18H54Q58 18 58 22V42Q58 46 54 46H10Q6 46 6 42V22Q6 18 10 18Z', 'paper', { w: 2 });
     s += k.shape('M12 21.6H52Q54.4 21.6 54.4 24V40Q54.4 42.4 52 42.4H12Q9.6 42.4 9.6 40V24Q9.6 21.6 12 21.6Z', 'none', { w: .8 });
     // scrolls curling at either end
@@ -164,8 +164,7 @@ export default {
       s += g + k.shape('M6 22Q0 22 1 28Q2 32 6 31Q9 30 8 27Q7 25 5 26', 'none', { w: 1.8 }) + k.shape('M6 42Q0 42 1 36Q2 32 5 33', 'none', { w: 1.8 })
         + k.shape('M1.6 28Q2 31 5.6 30.6Q8 29.6 7.4 27.4Z', 'mid', { w: 0 }) + '</g>';
     }
-    s += k.shape('M26 18Q32 13 38 18Z', 'mid', { w: 1.4 }) + k.shape('M26 46Q32 51 38 46Z', 'mid', { w: 1.4 });
-    s += circle(32, 15.6, 1.4, INK, null) + circle(32, 48.4, 1.4, INK, null);
+    s += k.shape('M25 18.2Q32 15 39 18.2Z', 'mid', { w: 1.4 }) + k.shape('M25 45.8Q32 49 39 45.8Z', 'mid', { w: 1.4 });
     return s;
   }),
   'stamp-secret': (uid) => stamp(uid, 'SECRET', WASH, { rot: -12, len: 42 }),

@@ -1,5 +1,6 @@
 // Count the Trains (owner: Ops). See docs/CONTRACTS.md §6 and docs/REGISTRY.md §7.
 // Troop trains crossed the Hohenzollern bridge from 2 August; Germany entered Belgium on 4 August.
+// On the run west from the Berlin post: Herbesthal closes on the 4th, Emmerich perhaps that night (calendar).
 
 export default {
   id: 'op-troops', act: 3, issue: '07-31 09.00', giver: 'handler',
@@ -14,6 +15,9 @@ export default {
       ways: [
         { id: 'eye', label: 'Write up your own count', sub: 'Honest, partial, done by midnight',
           risk: 0.1, rec: ['sighting', 0.2], ok: [['debrief', 'Your tally was your own count: honest, partial, written by candlelight.']] },
+        { id: 'memory', label: 'Keep the count in your head', sub: 'Nothing on paper until you are out',
+          if: [['skill', 'observation', '>=', 2]], risk: 0.05, rec: null,
+          ok: [['standing', 3], ['debrief', 'You carried the count in your head and wrote it out only across the frontier.']] },
         { id: 'glasses', label: "Read the wagons' chalk through glasses", sub: 'Regiments as well as trains; glasses at a bridge',
           tag: 'topic:military', if: [['item', 'field-glasses']], risk: 0.25, rec: ['sighting', 0.5],
           ok: [['standing', 3], ['debrief', 'Through field glasses you read the regiments chalked on the wagons.']],

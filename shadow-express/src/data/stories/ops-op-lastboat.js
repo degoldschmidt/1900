@@ -39,9 +39,9 @@ export default [
     choices: [
       { label: 'Wire Ashby to vouch for you', sub: '£2; he will, and he will remember', cost: { money: 2 },
         ok: [['record', 'wire', 0.5], ['flag', 'op-lastboat-vouched'], ['standing', -2]] },
-      { label: 'Burn the Vészy papers and go plain', sub: 'The count dies a second time',
+      { label: 'Burn the Vészy papers and go plain', sub: 'The Vészys die a second time',
         ok: [['papers', 'vessey', -1], ['nerve', -1]] },
-      { label: 'Risk the aliens officer', sub: "A count's manner opens most doors",
+      { label: 'Risk the aliens officer', sub: "A title's manner opens most doors",
         roll: { p: 0.5, mods: [[['skill', 'composure', '>=', 2], 0.2], [['skill', 'charm', '>=', 2], 0.1]] },
         ok: [['nerve', -1]], fail: [['susp', 'vessey', 0.3], ['record', 'frontier', 1]] },
     ] },

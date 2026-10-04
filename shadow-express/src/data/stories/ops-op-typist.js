@@ -49,25 +49,13 @@ export default [
         fail: lost('Sauer was taken alone in the Friedrichstrasse, with your train ticket in her glove.') },
     ] },
 
-  { id: 'op-typist.sister', at: 'op', speaker: 'sauer',
-    title: 'A sister in Hamburg',
-    text: "On the platform Sauer stops dead. 'Lotte,' she says. 'My sister. When they cannot find me, they will go to her.' Hamburg lies on the slow road to Copenhagen, by the Korsør ferry. It lies on the way to nowhere else. She does not ask; she waits to see what kind of person you are.",
-    choices: [
-      { label: 'Go by Hamburg and fetch Lotte', sub: 'The slow road, and two women to hide',
-        ok: [['trust', 'sauer', 2], ['later', 2, 'op-typist.lotte']] },
-      { label: 'Wire Lotte money to run', sub: '£8, and a telegram IIIb may read', cost: { money: 8 },
-        ok: [['trust', 'sauer', 1], ['record', 'wire', 0.6]] },
-      { label: 'There is no time', sub: 'She will not forgive it',
-        ok: [['trust', 'sauer', -2], ['debrief', 'You would not wait for Lotte Sauer. IIIb questioned her for a week.']] },
-    ] },
-
   { id: 'op-typist.permit', at: 'op',
     title: 'Papers, Fräulein',
     text: 'Since noon the Empire has been in a state of imminent danger of war; the posters say so on every pillar. At the ticket office a police officer asks every German traveller for a permit to leave, and he looks with particular interest at young women travelling with foreigners.',
     choices: [
       { label: 'Dress her as a nursing sister', sub: "A spare habit, and your order's name", if: [['cover', 'doyle']],
         ok: [['record', 'sighting', 0.2]] },
-      { label: 'Pass her off as your maid', sub: 'Nobody questions a countess about her maid', if: [['cover', 'vessey']],
+      { label: 'Pass her off as your maid', sub: 'Nobody questions a {count|countess} about servants', if: [['cover', 'vessey']],
         ok: [['record', 'sighting', 0.3]] },
       { label: 'Out through the goods yard', sub: 'Your pension backs onto the Stettiner sidings', if: [['flag', 'op-typist-stettin']],
         roll: { p: 0.7 }, ok: [['record', 'sighting', 0.2]], fail: [['record', 'sighting', 0.8], ['expose', 'sauer', 0.4]] },
@@ -107,16 +95,4 @@ export default [
         ok: [['nerve', -1]] },
     ] },
 
-  // ---------- aftermath ----------
-  { id: 'op-typist.lotte', at: 'then', speaker: 'sauer', if: [['city', 'HAM']],
-    title: 'Lotte Sauer will not pack',
-    text: 'Lotte is younger, louder, and engaged to a reservist of the 76th Infantry who left for his depot this morning. She will not go. She will not let Hedwig go without her. The sisters argue in whispers in a kitchen that smells of cabbage, and the clock says the Korsør boat leaves in two hours.',
-    choices: [
-      { label: 'Persuade Lotte to come', sub: 'Two hours, and two stubborn women',
-        roll: { p: 0.5, mods: [[['trust', 'sauer', '>=', 3], 0.2], [['skill', 'charm', '>=', 2], 0.1]] },
-        ok: [['trust', 'sauer', 2], ['record', 'register', 0.3], ['debrief', 'Both Sauer sisters crossed to Denmark on the Korsør boat.']],
-        fail: [['trust', 'sauer', -1], ['min', 120]] },
-      { label: 'Leave Lotte money and an address', sub: '£5; she may follow, one day', cost: { money: 5 },
-        ok: [['trust', 'sauer', 1]] },
-    ] },
 ];

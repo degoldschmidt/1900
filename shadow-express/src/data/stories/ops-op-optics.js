@@ -20,7 +20,8 @@ export default [
         ok: [['flag', 'op-optics-lenz'],
           ['intel', { subj: 'op:op-optics', claim: { note: "A draughtsman called Lenz owes a bookmaker more than a year's wages." }, src: 'rumour', rel: 0.7, truth: true }]],
         fail: [['record', 'sighting', 0.5], ['watch', 0.1]] },
-      { label: "Dine in the officers' mess", sub: 'A count may; the trials officers talk', if: [['aff', 'venue:barracks', '>=', 1]],
+      { label: 'Dine with the trials officers', sub: '£3, good wine, and their shop talk', cost: { money: 3 },
+        if: [['any', ['aff', 'venue:barracks', '>=', 1], ['skill', 'charm', '>=', 2]]],
         ok: [['flag', 'op-optics-scouted'], ['flag', 'op-optics-lenz'], ['record', 'meeting', 0.4], ['legend', 0.1]] },
     ] },
 
@@ -41,8 +42,8 @@ export default [
     ] },
 
   { id: 'op-optics.patient', at: 'op', speaker: 'brandl',
-    title: 'The major cannot sleep',
-    text: "Brandl's patient is a major of artillery who sits on the trials committee and has not slept since the manoeuvres. He keeps the drawings in his study to work on at night, which is against every regulation. Brandl prescribes a sleeping draught and a long walk. 'He takes the draught at ten,' Brandl murmurs. 'He never takes the walk.'",
+    title: 'The captain cannot sleep',
+    text: "Brandl's patient is a captain of artillery on the trials commission who has not slept since the manoeuvres. He keeps the drawings in his study to work on at night, which is against every regulation. Brandl prescribes veronal and a long walk. 'He takes the veronal at ten,' Brandl murmurs. 'He never takes the walk.'",
     choices: [
       { label: 'Photograph them while he sleeps', sub: 'An hour in a sleeping man\'s study', if: [['item', 'vest-camera'], ['loyal', 'brandl', 'enemy:heller']],
         ok: [photo, ['record', 'meeting', 0.8], decoy] },
@@ -169,7 +170,7 @@ export default [
     text: 'A letter from Ashby, in the dry hand he keeps for bad news. The Admiralty\'s optical men have studied your plates with great interest. The instrument they show is a fine one. It was also offered to every army in Europe in 1913, and refused by most of them. Somebody knew you were coming.',
     choices: [
       { label: 'Accept the rebuke', sub: 'Standing is easier lost than won',
-        ok: [['standing', -6], ['debrief', "The major's drawings were last year's: Brandl had warned Heller, and Heller left the old set out."]] },
+        ok: [['standing', -6], ['debrief', "The captain's drawings were last year's: Brandl had warned Heller, and Heller left the old set out."]] },
       { label: 'Ask Ashby who knew', sub: 'He will not enjoy the question',
         ok: [['standing', -4], ['intel', { subj: 'person:brandl', claim: { loyal: 'enemy' }, src: 'bureau', rel: 0.6, truth: 'auto' }]] },
     ] },

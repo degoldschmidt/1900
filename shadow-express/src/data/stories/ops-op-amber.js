@@ -5,7 +5,7 @@ const collected = ['op', 'op-amber', 'step:parcel'];
 export default [
   { id: 'op-amber.open', at: 'op',
     title: 'Not only amber',
-    text: 'Under three layers of oilcloth and a great deal of amber lies a flat packet of tracing linen: the forts of Novogeorgievsk, gun by gun, signed by a Russian engineer captain. Kowal is not smuggling amber. He is selling a fortress to the Germans, and you are the mule.',
+    text: 'Under the amber are the letters Kowal admits to, in Polish, for a printer. Under the letters is a flat packet of tracing linen: the forts of Novogeorgievsk, gun by gun, signed by a Russian engineer captain. Kowal is not smuggling amber. He is selling a fortress to the Germans, and you are the mule.',
     choices: [
       { label: 'Take the plans for London', sub: 'Kowal will know soon enough',
         ok: [collected, ['flag', 'op-amber-opened'], ['standing', 3], ['trust', 'kowal', -1]] },
