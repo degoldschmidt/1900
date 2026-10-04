@@ -83,7 +83,7 @@ export function completeActivity(G, a) {
   if (!S.city || a.city !== S.city) return;
   if (a.id === 'work') {
     addLegend(G, legendRate(G) * (1 - legendOf(G) * .5));
-    addWatch(G, -.03);
+    addWatch(G, -.04);
     S.workedOn = Math.floor(S.t / DAY);
     const earn = { hale: 1 + skill(S.hero, 'commerce'), weiss: 1 + Math.floor(skill(S.hero, 'commerce') / 2) }[S.cover] ?? 0;
     if (earn) S.money += earn;
@@ -101,16 +101,16 @@ export function dailyTurn(G) {
   if (!worked && stayDays(G) >= 1) { addLegend(G, -.05); addWatch(G, .03); }
   const nat = G.I.city.get(S.city).nation;
   const d = S.enemy.dossiers[S.cover];
-  if (d?.name && G.I.ground.includes(nat)) addWatch(G, .12); // they have asked the police to find this name
-  for (const h of G.D.hunters) { const st = S.enemy.hunters[h.id]; if (G.W.hunterActive(h, S.t) && !st.leg && st.city === S.city) addWatch(G, .08); }
-  addWatch(G, -.05 * (1 + L));
+  if (d?.name && G.I.ground.includes(nat)) addWatch(G, .07); // they have asked the police to find this name
+  for (const h of G.D.hunters) { const st = S.enemy.hunters[h.id]; if (G.W.hunterActive(h, S.t) && !st.leg && st.city === S.city) addWatch(G, .05); }
+  addWatch(G, -.06 * (1 + L));
 }
 
 /** A record left in a city tells its police something too. */
 export function noticeRecord(G, r) {
   if (!r.city || r.kind === 'calm' || r.planted) return;
   const heat = (r.heat ?? { bribe: .45, sighting: .2, meeting: .35, photo: .6, wire: .12 }[r.kind] ?? 0) * r.fid;
-  if (heat > 0) addWatch(G, heat * .6, r.city);
+  if (heat > 0) addWatch(G, heat * .4, r.city);
 }
 
 /** Lodgings: an hotel registers you each arrival; a pension's landlady notices; rented rooms need the police. */

@@ -4,7 +4,7 @@
 
 import { DAY, T } from '../data/time.js';
 import { rand, hash } from './rng.js';
-import { learn, belief, emptyHunt, linked, SUSPECT } from './enemy.js';
+import { learn, belief, emptyHunt, linked, quietDay, SUSPECT } from './enemy.js';
 import { moveHunters } from './hunters.js';
 import { crossings, delayOf, cancelled } from './timetable.js';
 import { all, eligible, pick } from './storylet.js';
@@ -53,6 +53,7 @@ function tick(G) {
   if (S.booked && S.t >= S.booked.dep) depart(G);
   if (S.journey) journeyStep(G);
   enemyStep(G);
+  if (S.t % DAY === 6 * 60) quietDay(S.enemy);
   if (!S.journey) encounters(G); else trainEncounter(G);
   dueLaters(G);
   acts(G);

@@ -75,7 +75,7 @@ export function makeCards(root, hooks) {
       const o = I.op.get(c.op);
       card.classList.add('telegram');
       const giver = o.giver === 'handler' ? 'ASHBY LONDON' : (I.person.get(o.giver)?.name ?? '').toUpperCase();
-      return `<div class="form"><div class="hd"><span>TELEGRAM</span><span>${esc(when(S.t).toUpperCase())}</span></div><div class="kick">${esc(o.side ? 'A favour' : `Act ${o.act}`)} · ${esc(giver)}</div><h2 class="sc">${esc(o.title)}</h2><p>${esc(o.brief)}</p></div>`;
+      return `<div class="form"><div class="hd"><span>TELEGRAM</span><span>${esc(when(S.t).toUpperCase())}</span></div><div class="kick">${esc(o.side ? 'A favour' : `Act ${o.act}`)} · ${esc(giver)}</div><h2 class="sc">${esc(o.title)}</h2><p>${esc(o.brief)}</p>${S.ops[c.op]?.advance ? `<p class="dim">£${S.ops[c.op].advance} FOR EXPENSES WIRED WITH THIS ORDER</p>` : ''}</div>`;
     }
     if (c.type === 'news') {
       card.classList.add('news');

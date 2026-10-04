@@ -123,6 +123,12 @@ export function emptyHunt(E, city, t) {
   for (const p of E.planted) if (p.accepted && !p.exposed && p.city === city && t - p.t > 12 * 60) exposePlant(E, p, t);
 }
 
+/** Every day: a name that is not yet posted fades a little from the enemy's mind when nothing new comes in. */
+export function quietDay(E) {
+  for (const d of Object.values(E.dossiers)) if (!d.name) d.susp = Math.max(0, d.susp - QUIET);
+}
+export const QUIET = .02;
+
 /** Lie-low decay: suspicion cools a little, old sightings go stale. */
 export function cool(E, factor) {
   for (const d of Object.values(E.dossiers)) if (!d.name) d.susp *= factor;

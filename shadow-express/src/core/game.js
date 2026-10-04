@@ -277,11 +277,20 @@ function plant(G, o) {
 }
 
 /** Operation control from effects: start, finish a step, win, fail. */
+/** What the Bureau wires with each main order, for tickets and rooms. */
+export const EXPENSES = 8;
 export function opControl(G, id, a) {
   const { S } = G;
   const o = S.ops[id];
   if (!o) return;
-  if (a === 'start') { if (o.status === 'pending') { o.status = 'active'; o.started = S.t; G.S.queue.push({ type: 'telegram', op: id, n: ++S.cardN }); } return; }
+  if (a === 'start') {
+    if (o.status !== 'pending') return;
+    o.status = 'active'; o.started = S.t;
+    const od = G.I.op.get(id);
+    if (od && !od.side && !od.optional) { S.money = Math.round((S.money + EXPENSES) * 100) / 100; o.advance = EXPENSES; } // travel money comes with the order
+    G.S.queue.push({ type: 'telegram', op: id, n: ++S.cardN });
+    return;
+  }
   if (o.status !== 'active') return;
   if (a.startsWith('step:')) { o.done[a.slice(5)] = S.t; G.afterStep?.(G, id, a.slice(5)); return; }
   if (a === 'win' || a === 'fail') G.finishOp?.(G, id, a === 'win');
