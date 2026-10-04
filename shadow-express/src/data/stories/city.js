@@ -1,7 +1,412 @@
-// city storylets (owner: Events). Stub.
+// City storylets, one city each (owner: Events). See docs/CONTRACTS.md §5 and §8.
+// Generic city storylets are in city-2.js. Flags: ev-… only.
 
 export default [
-  { "id": "ev.city.stub", "at": "city", "title": "A stub storylet", "text": "Stub text, to be replaced by its owner.", "choices": [
-  { "label": "Spend a little", "sub": "£1", "cost": { "money": 1 }, "ok": [ [ "nerve", 1 ] ] },
-  { "label": "Walk away", "ok": [ [ "nerve", -1 ] ] } ] },
+  // ---------- London ----------
+  { id: "ev.city.lon-poste-restante", at: "city", if: [["city", "LON"]], w: 3, once: true,
+    title: "A Letter Poste Restante",
+    text: "At the Charing Cross post office the clerk looks up. ‘A letter for {name}, {sir|madam}. Foreign post.’ You have given that name to nobody in London. The envelope bears a Rotterdam stamp and no return address. Behind you, a man at the stamp counter has been buying nothing for ten minutes.",
+    choices: [
+      { label: "Take the letter and open it", sub: "Whoever posted it learns who collects",
+        ok: [["record", "sighting", 0.6], ["intel", { subj: "cover:active", claim: { knows: "name" }, src: "seen", rel: 0.6, truth: "auto" }]] },
+      { label: "Leave it and watch the watcher", sub: "An hour among the stamp queues", cost: { min: 60 },
+        roll: { p: 0.5, mods: [[["nerve", ">=", 6], 0.15]] },
+        ok: [["intel", { subj: "cover:active", claim: { knows: "name" }, src: "seen", rel: 0.8, truth: "auto" }], ["nerve", 1]],
+        fail: [["record", "sighting", 0.4], ["nerve", -1]] },
+      { label: "Have the Bureau collect it", sub: "A wire to the Commander; an answer tomorrow",
+        ok: [["record", "wire", 0.2], ["later", 20, "ev.then.lon-letter"]] },
+    ] },
+  { id: "ev.then.lon-letter", at: "then", title: "What the Letter Said",
+    text: "A Bureau messenger finds you. The Rotterdam letter held one sheet, blank until a chemist warmed it. In brown script: ‘Confirm that the person who collects is the one from the Ostend boat.’ Nobody collected it. The man at the stamp counter has been followed to a hairdresser's in the Caledonian Road.",
+    choices: [
+      { label: "Note it and carry on", ok: [["intel", { subj: "cover:active", claim: { knows: "name" }, src: "bureau", rel: 0.9, truth: "auto" }], ["standing", 1]] },
+      { label: "Change your lodgings tonight", sub: "£2 and a cab across London", cost: { money: 2 },
+        ok: [["intel", { subj: "cover:active", claim: { knows: "name" }, src: "bureau", rel: 0.9, truth: "auto" }], ["susp", "active", -0.05]] },
+    ] },
+
+  // ---------- Paris ----------
+  { id: "ev.city.par-crowd", at: "city", if: [["city", "PAR"], ["act", 3]], w: 3, once: true,
+    title: "Milk in the Gutter",
+    text: "A crowd has smashed a dairy with a German name and is pouring its milk into the gutter of the Rue de Rivoli. A boy in a cap points at passers-by. ‘Spies, the lot of them!’ Someone shouts that the {gentleman|lady} by the lamp-post has an accent. Two reservists with bundles turn to look at you.",
+    choices: [
+      { label: "Shout ‘Vive la France!’ with them", sub: "Your accent had better hold",
+        roll: { p: 0.6, mods: [[["cover", "marchand"], 0.25], [["cover", "vessey"], -0.35]] },
+        ok: [["nerve", 1]], fail: [["nerve", -2], ["money", -3], ["record", "sighting", 0.5]] },
+      { label: "Ask a gendarme to see you home", sub: "Your papers go into his notebook", if: [["not", ["cover", "vessey"]]],
+        ok: [["record", "register", 0.5], ["nerve", 1]] },
+      { label: "Slip into Saint-Roch till it passes", sub: "An hour on your knees", tag: "venue:church", cost: { min: 60 },
+        ok: [["nerve", -1]] },
+    ] },
+
+  // ---------- Brussels ----------
+  { id: "ev.city.bru-maps", at: "city", if: [["city", "BRU"], ["act", ">=", 2]], w: 3, once: true,
+    title: "Survey Sheets of Liège",
+    text: "In a stationer's behind the Grand-Place, a fair young man with a soldier's back buys every survey sheet of Liège province in the shop, pays in German gold, and orders more for Friday. When he has gone the stationer beams. A gentleman last month wanted the same, and the Ardennes besides.",
+    choices: [
+      { label: "Follow him to his hotel", sub: "If he turns, he will remember you",
+        roll: { p: 0.55, mods: [[["nerve", ">=", 6], 0.1]] },
+        ok: [["intel", { subj: "city:BRU", claim: { note: "German officers in mufti are buying survey maps of Liège and the Meuse crossings." }, src: "seen", rel: 0.85, truth: true }], ["standing", 2], ["flag", "ev-meuse-maps"]],
+        fail: [["record", "sighting", 0.6], ["nerve", -1]] },
+      { label: "Buy the sheets left in the drawer", sub: "£2; the Bureau will want them", tag: "topic:military", cost: { money: 2 },
+        ok: [["standing", 2]] },
+      { label: "Report him to the Belgian Sûreté", sub: "They will want your name too",
+        ok: [["record", "meeting", 0.5], ["standing", 1], ["flag", "ev-meuse-maps"]] },
+    ] },
+
+  // ---------- Amsterdam ----------
+  { id: "ev.city.ams-colliers", at: "city", if: [["city", "AMS"]], w: 3, once: true,
+    title: "Colliers for Nowhere",
+    text: "On the Handelskade a Dutch shipping clerk is drunk before noon. Three colliers, he says, chartered by a Bremen firm that owns no ships, coaled for a month and cleared for ‘South American ports’ with no cargo but coal. He would sell you the charter papers, if you were in the trade.",
+    choices: [
+      { label: "Talk freights with him", sub: "Only a shipping man would ask", tag: "topic:shipping",
+        roll: { p: 0.45, mods: [[["aff", "topic:shipping", ">=", 1], 0.35]] },
+        ok: [["intel", { subj: "city:AMS", claim: { note: "Colliers chartered through a Bremen firm to coal German cruisers at sea." }, src: "rumour", rel: 0.75, truth: true }], ["standing", 2]],
+        fail: [["record", "meeting", 0.6]] },
+      { label: "Buy the charter papers outright", sub: "£6, and he will remember your face", cost: { money: 6 },
+        ok: [["standing", 4], ["record", "bribe", 0.5]] },
+    ] },
+
+  // ---------- Flushing ----------
+  { id: "ev.city.flu-cigar-man", at: "city", if: [["city", "FLU"]], w: 3, once: true,
+    title: "The Cigar Seller on the Quay",
+    text: "A one-legged cigar seller works the quay where the Folkestone boat ties up. He sells little and watches much. The harbourmaster's boy tells you, for a penny, that a clerk from the German consulate buys him a gin every evening and asks who went aboard.",
+    choices: [
+      { label: "Buy his tray and his memory", sub: "£4 for Dutch cigars and a deaf ear", cost: { money: 4 },
+        ok: [["item", "+dutch-cigars"], ["flag", "ev-cigar-man"]] },
+      { label: "Pay him to report to you", sub: "£8; he may sell to both sides", cost: { money: 8 },
+        roll: { p: 0.6 }, ok: [["flag", "ev-cigar-man"], ["susp", "active", -0.05]], fail: [["record", "bribe", 0.7]] },
+      { label: "Board at the last minute", sub: "A bar, a clock, and his eyes anyway",
+        ok: [["record", "sighting", 0.3], ["nerve", -1]] },
+    ] },
+  { id: "ev.city.flu-cigar-warning", at: "city", if: [["city", "FLU"], ["flag", "ev-cigar-man"], ["act", ">=", 2]], w: 6, once: true,
+    title: "The Cigar Seller Remembers",
+    text: "The cigar seller swings over on his crutch and offers you a light you did not ask for. ‘The consulate's man was asking last night,’ he tells the harbour. ‘Not your name. Your face, your height, your hat. I said I sell cigars to a thousand faces.’ He waits.",
+    choices: [
+      { label: "Pay him again, and well", sub: "£3 for the rest of it", cost: { money: 3 },
+        ok: [["intel", { subj: "cover:active", claim: { knows: "desc" }, src: "porter", rel: 0.75, truth: "auto" }], ["susp", "active", -0.05]] },
+      { label: "Ask him to point the man out", sub: "An evening loitering on the quay", cost: { min: 120 },
+        roll: { p: 0.5 },
+        ok: [["intel", { subj: "cover:active", claim: { knows: "desc" }, src: "seen", rel: 0.9, truth: "auto" }], ["nerve", 1]],
+        fail: [["record", "sighting", 0.6]] },
+    ] },
+
+  // ---------- Hamburg ----------
+  { id: "ev.city.ham-gun-rings", at: "city", if: [["city", "HAM"]], w: 3, once: true,
+    title: "Rings Under the Decks",
+    text: "In a St Pauli cellar a stoker off the Hamburg-Amerika boats swears the new liners have steel rings bolted under the deck planking, ready to take guns. ‘Cruisers in evening dress,’ he says, and laughs too loudly. The landlord is listening. So, perhaps, is the man reading the Fremdenblatt by the stove.",
+    choices: [
+      { label: "Stand him drinks until he draws them", sub: "£2; sailors' bars remember free spenders", tag: "topic:naval", cost: { money: 2 },
+        roll: { p: 0.6 },
+        ok: [["intel", { subj: "city:HAM", claim: { note: "New Hamburg-Amerika liners carry hidden gun mountings under their decks." }, src: "rumour", rel: 0.5, truth: true }], ["standing", 1]],
+        fail: [["record", "sighting", 0.5], ["later", 4, "ev.then.ham-harbour-police"]] },
+      { label: "Check it with a dock clerk", sub: "£5, and a shipping excuse", tag: "venue:docks", cost: { money: 5 },
+        roll: { p: 0.45, mods: [[["aff", "venue:docks", ">=", 1], 0.3]] },
+        ok: [["intel", { subj: "city:HAM", claim: { note: "A dock clerk confirms gun rings fitted in two liners at the Vulcan yard." }, src: "rumour", rel: 0.9, truth: true }], ["standing", 3]],
+        fail: [["record", "bribe", 0.6]] },
+      { label: "Leave before the reader turns a page", sub: "The story goes untold", ok: [["nerve", -1]] },
+    ] },
+  { id: "ev.then.ham-harbour-police", at: "then", if: [["city", "HAM"]], title: "The Harbour Police Call",
+    text: "A constable of the Hafenpolizei finds you, polite as a verger. A stoker has been taken up for loose talk, and he says a foreigner bought his drinks. Would {sir|madam} kindly confirm {his|her} particulars for the report? He has a pencil, a notebook and all afternoon.",
+    choices: [
+      { label: "Give your particulars and smile", ok: [["record", "register", 0.8], ["susp", "active", 0.05]] },
+      { label: "Swear you were never in St Pauli", roll: { p: 0.5, mods: [[["nerve", ">=", 6], 0.15]] },
+        ok: [["nerve", -1]], fail: [["record", "register", 1], ["susp", "active", 0.1]] },
+    ] },
+
+  // ---------- Copenhagen ----------
+  { id: "ev.city.cph-hall-porter", at: "city", if: [["city", "CPH"]], w: 3, once: true,
+    title: "Two Masters in Kongens Nytorv",
+    text: "The hall porter of your Copenhagen hotel keeps a German tip in one waistcoat pocket and a Russian one in the other, and makes no secret of either. ‘Copenhagen is neutral, {sir|madam}. So am I.’ He would be glad to be neutral on your behalf too, at the usual rate.",
+    choices: [
+      { label: "Pay him to tell you who asks", sub: "£3; he will tell them too", cost: { money: 3 },
+        ok: [["record", "bribe", 0.2], ["later", 10, "ev.then.cph-porter-report"]] },
+      { label: "Pay him double to forget you", sub: "£6 for a lighter register", cost: { money: 6 },
+        roll: { p: 0.6 }, ok: [["susp", "active", -0.05]], fail: [["record", "bribe", 0.5]] },
+      { label: "Move to a sailors' pension in Nyhavn", sub: "Fewer questions, worse sleep", tag: "venue:docks",
+        ok: [["nerve", -1], ["record", "register", 0.2]] },
+    ] },
+  { id: "ev.then.cph-porter-report", at: "then", if: [["city", "CPH"]], title: "The Porter's Report",
+    text: "The hall porter brings your boots and, inside the left one, a note in a careful hand. A gentleman from the German Legation asked this morning for the list of English and Swiss guests. A Russian lady in black asked for nothing at all, and tipped him twice as much.",
+    choices: [
+      { label: "Read it and burn it", ok: [["intel", { subj: "hunter:orlova", claim: { at: "CPH" }, src: "porter", rel: 0.45, truth: "auto" }]] },
+      { label: "Pay him to say you have left", sub: "£2; he will say it to both", cost: { money: 2 },
+        ok: [["intel", { subj: "hunter:orlova", claim: { at: "CPH" }, src: "porter", rel: 0.45, truth: "auto" }], ["susp", "active", -0.05]] },
+    ] },
+
+  // ---------- Stockholm ----------
+  { id: "ev.city.sto-finland-boat", at: "city", if: [["city", "STO"]], w: 3, once: true,
+    title: "The Watcher at Skeppsbron",
+    text: "On the Skeppsbron quay a man in a Russian-cut overcoat watches the passengers for Åbo, and writes. A Swedish constable tells you he is from the Okhrana, looking for revolutionaries bound for Finland; Stockholm lets him, out of politeness. He has just written something down about you.",
+    choices: [
+      { label: "Let him take you for a revolutionary", sub: "Russian frontiers will hear of it",
+        ok: [["flag", "ev-okhrana-note"], ["record", "sighting", 0.3]] },
+      { label: "Present your card with a cheerful lie", sub: "He will check it, if he can",
+        roll: { p: 0.55, mods: [[["cover", "vessey"], 0.25], [["cover", "doyle"], 0.15]] },
+        ok: [["nerve", 1]], fail: [["flag", "ev-okhrana-note"], ["record", "meeting", 0.6]] },
+      { label: "Ask the constable to move him on", sub: "£2 for a Swedish courtesy", cost: { money: 2 },
+        ok: [["nerve", 1], ["record", "bribe", 0.2]] },
+    ] },
+
+  // ---------- St Petersburg ----------
+  { id: "ev.city.spb-dvornik", at: "city", if: [["city", "SPB"]], w: 3, once: true,
+    title: "The Dvornik's Book",
+    text: "Every house in Petersburg has its dvornik, a bearded doorkeeper in a white apron who sweeps the yard, locks the gate at midnight and carries the lodgers' passports to the police. Yours holds out one hand for your papers and the other for something else. The police, he says, are very interested in foreigners this week.",
+    choices: [
+      { label: "Hand over your papers, nothing more", sub: "They spend the night at the police station",
+        ok: [["record", "register", 0.8]] },
+      { label: "Fold a rouble note inside them", sub: "£1; he copies slowly and talks freely", cost: { money: 1 },
+        ok: [["record", "register", 0.5], ["later", 8, "ev.then.spb-dvornik-knock"]] },
+      { label: "Keep your passport, sleep elsewhere", sub: "An unregistered foreigner is breaking the law",
+        roll: { p: 0.6 }, ok: [["nerve", -1]], fail: [["record", "sighting", 0.6], ["susp", "active", 0.1]] },
+    ] },
+  { id: "ev.then.spb-dvornik-knock", at: "then", if: [["city", "SPB"]], title: "A Scratch at the Door",
+    text: "Before dawn the dvornik scratches at your door, cap in hand. A gentleman from the Okhrana was at the station asking which foreigners came off the Berlin train. He had a name on a slip of paper. The dvornik did not care to say whether it was yours. He will hold his tongue until noon.",
+    choices: [
+      { label: "Pack and be gone by noon", sub: "A new lodging, and no register yet",
+        ok: [["intel", { subj: "cover:active", claim: { knows: "name" }, src: "porter", rel: 0.5, truth: "auto" }], ["susp", "active", -0.05], ["nerve", -1]] },
+      { label: "Pay him to forget until Sunday", sub: "£2 for a longer silence", cost: { money: 2 },
+        ok: [["intel", { subj: "cover:active", claim: { knows: "name" }, src: "porter", rel: 0.5, truth: "auto" }], ["nerve", 1]] },
+    ] },
+
+  // ---------- Munich ----------
+  { id: "ev.city.mun-optician", at: "city", if: [["city", "MUN"], ["act", ">=", 2]], w: 3, once: true,
+    title: "An Order for Ten Thousand",
+    text: "The optician in the Theatinerstrasse has no field glasses to sell. The army has bought his whole stock, he says, and the stock of every optician in Bavaria, and wants ten thousand more by August. He seems more puzzled than proud. ‘For the manoeuvres,’ he adds, as if somebody had told him to say so.",
+    choices: [
+      { label: "Talk prisms and contracts with him", sub: "A trade question, if you are in the trade", tag: "topic:technical",
+        roll: { p: 0.4, mods: [[["aff", "topic:technical", ">=", 1], 0.4]] },
+        ok: [["intel", { subj: "city:MUN", claim: { note: "The Bavarian army is buying every field glass in the kingdom, for delivery by August." }, src: "rumour", rel: 0.8, truth: true }], ["standing", 2]],
+        fail: [["record", "meeting", 0.5]] },
+      { label: "Buy his last pair from the back", sub: "£14; scarce things are remembered", cost: { money: 14 },
+        ok: [["item", "+field-glasses"], ["record", "sighting", 0.3]] },
+      { label: "Ask why the army wants them now", sub: "A soldier's question from a civilian", tag: "topic:military",
+        roll: { p: 0.5 },
+        ok: [["intel", { subj: "city:MUN", claim: { note: "The Bavarian army is buying every field glass in the kingdom, for delivery by August." }, src: "rumour", rel: 0.6, truth: true }], ["standing", 1]],
+        fail: [["record", "sighting", 0.6], ["susp", "active", 0.05]] },
+    ] },
+
+  // ---------- Marseille ----------
+  { id: "ev.city.mar-pickpocket", at: "city", if: [["city", "MAR"]], w: 3, once: true,
+    title: "A Hand on the Canebière",
+    text: "In the crush by the Vieux-Port a boy bumps you, begs pardon in three languages and is gone up the Canebière. Your breast pocket is lighter. Not the purse: the pocket-book with your papers in it. A fishwife points up an alley into the Panier, where the police do not go after dark.",
+    choices: [
+      { label: "Chase him into the Panier", sub: "Alleys, knives, and your papers",
+        roll: { p: 0.5, mods: [[["nerve", ">=", 6], 0.15], [["item", "browning"], 0.1]] },
+        ok: [["nerve", 1]], fail: [["papers", "active", -0.3], ["nerve", -2], ["later", 18, "ev.then.mar-papers-sold"]] },
+      { label: "Pay a Corsican to fetch them back", sub: "£5 to a man the boy fears", tag: "topic:underworld", cost: { money: 5 },
+        ok: [["record", "bribe", 0.3]] },
+      { label: "Report the loss at the commissariat", sub: "Temporary papers take a day and a ledger", cost: { min: 240 },
+        ok: [["papers", "active", -0.1], ["record", "register", 0.8], ["later", 18, "ev.then.mar-papers-sold"]] },
+    ] },
+  { id: "ev.then.mar-papers-sold", at: "then", title: "Your Papers, for Sale",
+    text: "A note finds you, in pencil, on café paper from the Vieux-Port. Your pocket-book has been found. Its finder will return it for ten pounds, sent to a box at the Marseille post office. If the money is late, he writes, a gentleman at the German consulate collects foreign papers for his album.",
+    choices: [
+      { label: "Send the ten pounds", sub: "£10 by money order", cost: { money: 10 },
+        ok: [["papers", "active", 0.3], ["record", "wire", 0.3]] },
+      { label: "Let them go to the consulate", sub: "The enemy will hold your papers",
+        ok: [["record", "register", 1], ["intel", { subj: "cover:active", claim: { knows: "name" }, src: "seen", rel: 0.8, truth: "auto" }]] },
+    ] },
+
+  // ---------- Barcelona ----------
+  { id: "ev.city.bar-round-up", at: "city", if: [["city", "BAR"]], w: 3, once: true,
+    title: "After the Bomb on the Rambla",
+    text: "A bomb in a tram shelter on the Rambla last night killed a mule and frightened a bishop. This morning the plain-clothes men of the Social Brigade are going through every pension in the old city for foreign anarchists. Yours is next. The landlady says they are very thorough and very bribable, in that order.",
+    choices: [
+      { label: "Wait in your room with your papers", sub: "Thorough men write everything down",
+        ok: [["record", "register", 0.7], ["nerve", -1]] },
+      { label: "Bribe the inspector at the door", sub: "£3, as an anarchist would", cost: { money: 3 },
+        roll: { p: 0.7 }, ok: [["record", "bribe", 0.3]], fail: [["record", "bribe", 0.8], ["susp", "active", 0.05]] },
+      { label: "Pray the morning away in Santa Maria", sub: "They may search your room without you", tag: "venue:church", cost: { min: 240 },
+        roll: { p: 0.6 }, ok: [["nerve", 1]], fail: [["record", "register", 0.5], ["nerve", -1]] },
+    ] },
+
+  // ---------- Madrid ----------
+  { id: "ev.city.mad-rastro", at: "city", if: [["city", "MAD"]], w: 3, once: true,
+    title: "Blank Cédulas in the Rastro",
+    text: "Among the brass bedsteads and plaster saints of the Rastro, a man sells Spanish identity cards from a cigar box: blank, stamped, genuine. A cédula, he says, asks no questions at a Spanish frontier and few at any other. He has one with a Lisbon consular stamp, which costs more because it is better.",
+    choices: [
+      { label: "Buy a blank cédula", sub: "£3; Spanish papers to back the cover", cost: { money: 3 },
+        roll: { p: 0.7 }, ok: [["papers", "active", 0.1]], fail: [["papers", "active", -0.05], ["record", "bribe", 0.4]] },
+      { label: "Buy the one with the Lisbon stamp", sub: "£8; better, if it is what he says", cost: { money: 8 },
+        roll: { p: 0.75 }, ok: [["papers", "active", 0.2]], fail: [["papers", "active", -0.1], ["record", "bribe", 0.6]] },
+      { label: "Ask who else buys from his box", sub: "£1 for gossip about his customers", cost: { money: 1 },
+        ok: [["intel", { subj: "hunter:falk", claim: { at: "MAD" }, src: "rumour", rel: 0.3, truth: "auto" }]] },
+    ] },
+
+  // ---------- Lisbon ----------
+  { id: "ev.city.lis-shipper", at: "city", if: [["city", "LIS"]], w: 3, once: true,
+    title: "A Glass in the Shipper's Lodge",
+    text: "An English port shipper on the Cais do Sodré, red-faced and kind, takes you into his lodge to taste the '04. He knows the Bristol trade, he says, every house in it. He pours three glasses and asks you to name the oldest, and who in Bristol buys it. His clerk listens, pen raised.",
+    choices: [
+      { label: "Taste, and talk Bristol wine", sub: "Simple for a merchant; fatal for an impostor", tag: "topic:trade", if: [["cover", "hale"]],
+        roll: { p: 0.55, mods: [[["item", "port-wine"], 0.25]] },
+        ok: [["flag", "ev-shipper-letter"], ["papers", "active", 0.1]], fail: [["later", 30, "ev.then.lis-bristol-letter"], ["nerve", -1]] },
+      { label: "Confess you know nothing of port", sub: "He forgives you, and remembers you", if: [["not", ["cover", "hale"]]],
+        ok: [["item", "+port-wine"], ["record", "meeting", 0.3]] },
+      { label: "Ask about the steamers instead", sub: "He knows every master on the Lisbon run", tag: "topic:shipping",
+        roll: { p: 0.55, mods: [[["aff", "topic:shipping", ">=", 1], 0.2]] },
+        ok: [["intel", { subj: "line:LON-LIS", claim: { note: "British masters on the Lisbon run expect Admiralty orders the day war comes." }, src: "rumour", rel: 0.6, truth: true }], ["flag", "ev-shipper-letter"]],
+        fail: [["record", "meeting", 0.5]] },
+    ] },
+  { id: "ev.then.lis-bristol-letter", at: "then", title: "An Answer from Bristol",
+    text: "The Lisbon shipper has written to Bristol about the charming {gentleman|lady} who could not tell the '04 from the '12. Bristol knows no such wine house. The story goes the rounds of the English Club, and of the Braganza's coffee room, where the German consul's secretary takes his morning chocolate.",
+    choices: [
+      { label: "Wire the Bureau to vouch for you", sub: "The Commander hates mending legends",
+        ok: [["record", "wire", 0.3], ["standing", -2], ["susp", "active", 0.05]] },
+      { label: "Let the story run its course", sub: "Gossip fades; dossiers do not",
+        ok: [["susp", "active", 0.15], ["papers", "active", -0.1]] },
+    ] },
+
+  // ---------- Rome ----------
+  { id: "ev.city.rom-library", at: "city", if: [["city", "ROM"]], w: 3, once: true,
+    title: "A Reader in the Vatican Library",
+    text: "In the Vatican Library a Tyrolean priest has called for the same Carolingian psalter nine days running and has not turned a page. Each noon a lay brother from the Austrian embassy to the Holy See brings him a sealed envelope; each evening another goes back. The prefect of the reading room finds it edifying.",
+    choices: [
+      { label: "Take the desk beside him", sub: "Three hours of Latin; outsiders are noticed", tag: "venue:archive", cost: { min: 180 },
+        roll: { p: 0.4, mods: [[["aff", "venue:archive", ">=", 1], 0.35]] },
+        ok: [["intel", { subj: "city:ROM", claim: { note: "Austria's embassy to the Holy See passes its post through a priest in the Library." }, src: "seen", rel: 0.85, truth: true }], ["standing", 3]],
+        fail: [["record", "sighting", 0.6]] },
+      { label: "Follow the lay brother at noon", sub: "Rome's lanes are narrow and full of eyes",
+        roll: { p: 0.5 },
+        ok: [["intel", { subj: "city:ROM", claim: { note: "Austria's embassy to the Holy See passes its post through a priest in the Library." }, src: "seen", rel: 0.6, truth: true }], ["standing", 1]],
+        fail: [["record", "sighting", 0.5], ["nerve", -1]] },
+      { label: "Tell the prefect the psalter is unread", sub: "Let the Church tidy its own house",
+        ok: [["standing", 1], ["record", "meeting", 0.3]] },
+    ] },
+
+  // ---------- Venice ----------
+  { id: "ev.city.ven-irredentist", at: "city", if: [["city", "VEN"]], w: 3, once: true,
+    title: "A Parcel for Trieste",
+    text: "At Florian's a young man with ink on his cuffs and an Irredentist pin sits down uninvited. Trieste is Italian, he says, whatever Vienna thinks, and its patriots need paper. Would a foreigner, whom the Austrian customs never trouble, carry a parcel of pamphlets across? A café on the Trieste waterfront will collect it.",
+    choices: [
+      { label: "Carry the parcel to Trieste", sub: "Italian friends; Austrian customs",
+        ok: [["flag", "ev-pamphlets"], ["nerve", -1]] },
+      { label: "Refuse, but buy him a coffee", sub: "£1; he talks freely about the fleet", cost: { money: 1 },
+        ok: [["intel", { subj: "city:TRI", claim: { note: "The Austrian fleet will sail from Pola for the Straits of Otranto within the week." }, src: "rumour", rel: 0.4, truth: false }]] },
+    ] },
+
+  // ---------- Trieste ----------
+  { id: "ev.city.tri-charts", at: "city", if: [["city", "TRI"]], w: 3, once: true,
+    title: "Charts in the Osteria",
+    text: "In an osteria by the Lloyd arsenal a petty officer with a rolled chart under his arm drinks alone and watches the door. He has charts of the Pola minefields, he says, the new ones, and a debt to a Greek. He names a price, and keeps glancing at a man by the window reading a racing paper.",
+    choices: [
+      { label: "Buy the charts on the spot", sub: "£10; contraband from the moment you pay", cost: { money: 10 },
+        roll: { p: 0.6 }, ok: [["item", "+naval-charts"]],
+        fail: [["item", "+naval-charts"], ["record", "bribe", 1], ["later", 3, "ev.then.tri-trap"]] },
+      { label: "Ask to see them first, outside", sub: "If he is bait, the line goes taut",
+        roll: { p: 0.5, mods: [[["nerve", ">=", 6], 0.1]] },
+        ok: [["intel", { subj: "city:TRI", claim: { note: "The Austrian naval police use a petty officer with real charts as bait for buyers." }, src: "seen", rel: 0.8, truth: true }], ["nerve", 1]],
+        fail: [["record", "sighting", 0.6]] },
+      { label: "Finish your wine and leave", sub: "The racing man watches you go",
+        ok: [["record", "sighting", 0.2]] },
+    ] },
+  { id: "ev.then.tri-trap", at: "then", if: [["nation", "AH"], ["item", "naval-charts"]], title: "Two Bowlers in the Corso",
+    text: "Two men in bowlers stop you in the Corso and ask, very civilly, to see what you bought in the osteria. The racing paper is folded under one man's arm. Their warrant is from the naval police at Pola, and they mean to open your case here, in the street.",
+    choices: [
+      { label: "Hand over the charts and protest", sub: "Lose them, and keep your liberty",
+        ok: [["item", "-naval-charts"], ["susp", "active", 0.15], ["record", "register", 1]] },
+      { label: "Bluff: a collector's purchase", sub: "Austrian courts dislike foreign collectors",
+        roll: { p: 0.35, mods: [[["cover", "vessey"], 0.25], [["nerve", ">=", 7], 0.1]] },
+        ok: [["nerve", -1], ["record", "register", 0.6]], fail: [["item", "-naval-charts"], ["susp", "active", 0.2], ["money", -10]] },
+      { label: "Run for the Molo", sub: "The harbour is wide; policemen are slow",
+        roll: { p: 0.4 }, ok: [["nerve", -2], ["record", "sighting", 0.8]],
+        fail: [["item", "-naval-charts"], ["susp", "active", 0.25], ["record", "register", 1]] },
+    ] },
+  { id: "ev.city.tri-parcel", at: "city", if: [["city", "TRI"], ["flag", "ev-pamphlets"]], w: 6, once: true,
+    title: "The Café on the Waterfront",
+    text: "The waterfront café smells of anise and coal smoke. A waiter takes your parcel of pamphlets without a word and returns with your coffee and a folded paper under the saucer. Two Austrian sailors at the next table are singing. Neither, apparently, reads Italian.",
+    choices: [
+      { label: "Read the paper under the saucer", sub: "The Irredentists pay in news",
+        ok: [["unflag", "ev-pamphlets"], ["intel", { subj: "hunter:heller", claim: { at: "TRI" }, src: "rumour", rel: 0.55, truth: "auto" }], ["nerve", 1]] },
+      { label: "Recruit the waiter to count warships", sub: "£3, and he knows your face", cost: { money: 3 },
+        ok: [["unflag", "ev-pamphlets"], ["standing", 3], ["record", "meeting", 0.3]] },
+    ] },
+
+  // ---------- Budapest ----------
+  { id: "ev.city.bud-baths", at: "city", if: [["city", "BUD"], ["act", ">=", 2]], w: 3, once: true,
+    title: "Steam in the Rudas Baths",
+    text: "Under the Turkish dome of the Rudas baths, where steam hides faces and loosens tongues, a clerk from the Honvéd ministry lies on the next slab and grumbles about the railways. Every goods wagon in the kingdom has been counted twice this week, and the counters told to say nothing. He would like to know why.",
+    choices: [
+      { label: "Grumble about the railways too", sub: "Commercial complaints, nothing more", tag: "topic:railways",
+        roll: { p: 0.55 },
+        ok: [["intel", { subj: "city:BUD", claim: { note: "Hungarian railways are counting every goods wagon: the first step of a mobilisation." }, src: "rumour", rel: 0.7, truth: true }], ["standing", 2]],
+        fail: [["record", "meeting", 0.4]] },
+      { label: "Ask him what the army wants", sub: "A blunt question in a quiet room", tag: "topic:military",
+        roll: { p: 0.4 },
+        ok: [["intel", { subj: "city:BUD", claim: { note: "Hungarian railways are counting every goods wagon: the first step of a mobilisation." }, src: "rumour", rel: 0.85, truth: true }], ["standing", 3]],
+        fail: [["record", "sighting", 0.8], ["susp", "active", 0.05]] },
+      { label: "Sweat in silence and listen", sub: "Two hours of steam", cost: { min: 120 },
+        roll: { p: 0.5 },
+        ok: [["intel", { subj: "city:BUD", claim: { note: "Hungarian railways are counting every goods wagon: the first step of a mobilisation." }, src: "rumour", rel: 0.5, truth: true }], ["nerve", 1]],
+        fail: [["nerve", 1]] },
+    ] },
+
+  // ---------- Bucharest ----------
+  { id: "ev.city.buc-oil", at: "city", if: [["city", "BUC"]], w: 3, once: true,
+    title: "Oil Shares at Capșa's",
+    text: "At Capșa's a broker in a fur collar, in July, is selling Ploieşti oil shares at a third off their price. The Germans will buy the fields, he whispers, or the Russians will burn them; either way he would rather hold gold. Around him boyars play baccarat and pretend not to listen.",
+    choices: [
+      { label: "Buy at his price", sub: "£12 for twenty pounds of paper, perhaps", cost: { money: 12 }, tag: "topic:finance",
+        ok: [["item", "+oil-shares"]] },
+      { label: "Ask who is selling, and why", sub: "Bankers talk to those who sound like bankers", tag: "topic:finance",
+        roll: { p: 0.5 },
+        ok: [["intel", { subj: "city:BUC", claim: { note: "Berlin banks are selling Romanian oil: they expect Romania to join the Entente." }, src: "rumour", rel: 0.55, truth: false }]],
+        fail: [["record", "meeting", 0.4]] },
+    ] },
+
+  // ---------- Odessa ----------
+  { id: "ev.city.ode-wheat", at: "city", if: [["city", "ODE"]], w: 3, once: true,
+    title: "A Share in the Wheat",
+    text: "On the Odessa grain exchange a Greek exporter with a carnation in his coat is short of a partner. His steamer sails at dawn for Marseille with eight thousand tons of Kherson wheat, and the Marseille price rises every day the newspapers grow louder. Ten pounds buys a share. He writes receipts in Greek.",
+    choices: [
+      { label: "Buy a ten-pound share", sub: "Paid at Marseille, if the ship arrives", tag: "topic:trade", cost: { money: 10 },
+        ok: [["later", 72, "ev.then.ode-wheat"]] },
+      { label: "Ask what the port police know", sub: "Greeks hear everything on the quays", tag: "venue:docks",
+        roll: { p: 0.5, mods: [[["aff", "venue:docks", ">=", 1], 0.25]] },
+        ok: [["intel", { subj: "line:ODE-IST", claim: { closed: ["07-31 00.00", null] }, src: "rumour", rel: 0.5, truth: "auto" }]],
+        fail: [["record", "meeting", 0.5]] },
+    ] },
+  { id: "ev.then.ode-wheat", at: "then", title: "News of the Wheat",
+    text: "A telegram finds you, in French, from a Marseille agent you have never met. The Kherson wheat is sold. Whether at the price of peace or the price of war, it does not say; only that your share has been wired, less commission, less a charge it calls ‘insurance against events’.",
+    choices: [
+      { label: "Count the money", roll: { p: 0.65 }, ok: [["money", 18], ["record", "wire", 0.2]], fail: [["money", 8], ["record", "wire", 0.2]] },
+    ] },
+
+  // ---------- Constantinople ----------
+  { id: "ev.city.ist-dragoman", at: "city", if: [["city", "IST"]], w: 3, once: true,
+    title: "The Dragoman of the Galata Bridge",
+    text: "A dragoman in a fez and a frock coat attaches himself to you on the Galata bridge. He knows every consulate in Pera, he says, and which of the German officers sent to drill the Sultan's army dine at the Pera Palace, and with whom. His fee is modest. His other clients, he admits, are everybody.",
+    choices: [
+      { label: "Hire him for the day", sub: "£2, and he will tell others he is yours", cost: { money: 2 },
+        roll: { p: 0.6 },
+        ok: [["intel", { subj: "city:IST", claim: { note: "Officers of the German military mission have been told to expect orders by August." }, src: "rumour", rel: 0.6, truth: true }]],
+        fail: [["intel", { subj: "city:IST", claim: { note: "Officers of the German military mission have been told to expect orders by August." }, src: "rumour", rel: 0.6, truth: true }], ["record", "meeting", 0.5]] },
+      { label: "Pay him to watch your hotel", sub: "£4; he will report who asks for you", cost: { money: 4 },
+        ok: [["later", 12, "ev.then.ist-dragoman-report"]] },
+      { label: "Lose him in the Grand Bazaar", sub: "He knows the bazaar better than you", tag: "venue:bazaar",
+        roll: { p: 0.5 }, ok: [["nerve", 1]], fail: [["record", "sighting", 0.4]] },
+    ] },
+  { id: "ev.then.ist-dragoman-report", at: "then", if: [["city", "IST"]], title: "The Dragoman Reports",
+    text: "The dragoman bows into your room with coffee you did not order. Two people asked for you at the desk, he says: a Greek who wished to sell you a carpet, and a European lady in black who wished for nothing and asked the porter which ship you had booked. He charges extra for the lady.",
+    choices: [
+      { label: "Pay the extra for her", sub: "£2 for what the porter told her", cost: { money: 2 },
+        ok: [["intel", { subj: "hunter:orlova", claim: { at: "IST" }, src: "porter", rel: 0.6, truth: "auto" }]] },
+      { label: "Change hotels and steamers", sub: "£4 and a morning of errands", cost: { money: 4 },
+        ok: [["intel", { subj: "hunter:orlova", claim: { at: "IST" }, src: "porter", rel: 0.4, truth: "auto" }], ["susp", "active", -0.05]] },
+    ] },
+
+  // ---------- Athens ----------
+  { id: "ev.city.ath-archaeologist", at: "city", if: [["city", "ATH"]], w: 3, once: true,
+    title: "An Archaeologist Above Piraeus",
+    text: "On the hill above Piraeus a German archaeologist with a sketch-book is drawing a ruined Themistoclean wall, he says, from the one spot that also commands the new coast battery and the coaling quay. He shows you a fine drawing of the wall. He does not turn to the next page.",
+    choices: [
+      { label: "Ask to see the next page", sub: "A scholar's curiosity, or a spy's",
+        roll: { p: 0.4, mods: [[["aff", "venue:archive", ">=", 1], 0.2], [["nerve", ">=", 6], 0.1]] },
+        ok: [["intel", { subj: "city:ATH", claim: { note: "A German archaeologist is sketching the Piraeus coast battery and coaling quay." }, src: "seen", rel: 0.85, truth: true }], ["standing", 2]],
+        fail: [["record", "meeting", 0.5], ["nerve", -1]] },
+      { label: "Watch him through field glasses", sub: "An hour in the ruins, unseen", if: [["item", "field-glasses"]], cost: { min: 60 },
+        ok: [["intel", { subj: "city:ATH", claim: { note: "A German archaeologist is sketching the Piraeus coast battery and coaling quay." }, src: "seen", rel: 0.8, truth: true }], ["standing", 2]] },
+      { label: "Mention him to the harbour police", sub: "The Greeks will want your name as well",
+        ok: [["record", "meeting", 0.5], ["standing", 1]] },
+    ] },
 ];
