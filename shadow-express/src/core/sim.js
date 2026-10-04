@@ -11,7 +11,7 @@ import { all, eligible, pick } from './storylet.js';
 import { END } from './world.js';
 import { context, leave, note, log, has, coverData, addIntel, nationNow, personHere, caseSize } from './game.js';
 import { checkOps } from './ops.js';
-import { dailyTurn, watchEvents, completeActivity, watchOf, shadowed, addWatch, legendOf, LODGINGS, needsRegistration, stayDays } from './residence.js';
+import { dailyTurn, watchEvents, completeActivity, watchOf, shadowed, addWatch, legendOf, LODGINGS, needsRegistration, stayDays, watchLevel } from './residence.js';
 import { skill, has as trait, tongue } from './hero.js';
 import { departuresFrom, CHANGE } from './timetable.js';
 
@@ -86,6 +86,7 @@ function depart(G) {
   const s = W.service.get(b.dp.svc);
   const delay = delayOf(W, b.dp);
   const nCross = crossings(W, b.dp, delay);
+  if (S.expelled?.city === b.dp.from) { (S.banned ??= {})[b.dp.from] = S.cover; S.expelled = null; }
   S.city = null;
   S.journey = { key: b.dp.key, svc: s.id, line: s.line, kind: s.kind, cls: b.cls, from: b.dp.from, to: b.dp.to, dep: b.dp.dep, sched: b.dp.arr, arr: b.dp.arr + delay, delay,
     crossings: nCross.map((x) => ({ ...x, done: false })), eventAt: null, eventDone: false };
@@ -136,6 +137,10 @@ function arrive(G) {
   stationWatch(G);
   if (S.tailedBy && rand(S) < .4) note(G, 'A face again', 'On the platform, a man buys a paper he does not read. You have seen that coat before, at the last station. Or one like it.');
   S.visits[j.to] = (S.visits[j.to] ?? 0) + 1;
+  if (S.banned?.[j.to]) { // back in a city that sent you away: the police keep the file
+    addWatch(G, S.banned[j.to] === S.cover ? .35 : .15);
+    note(G, 'An old file', `${I.city.get(j.to).name} ordered ${S.banned[j.to] === S.cover ? 'this name' : `${S.hero?.sex === 'f' ? 'a woman' : 'a man'} of your description`} to leave not long ago. The police will not have forgotten.`);
+  }
   if (j.kind === 'night') S.nerve = Math.min(10, S.nerve + 1);
   if (S.tailedBy) { const h = S.enemy.hunters[S.tailedBy]; h.leg = null; h.city = j.to; h.idleUntil = S.t + 3 * HOUR; }
   log(G, `Arrived in ${I.city.get(j.to).name}${j.delay > 20 ? `, ${Math.round(j.delay)} minutes late` : ''}.`);
@@ -268,18 +273,32 @@ function recognition(G) {
   return Math.max(E.photo ? .9 : 0, d?.name || linkedName ? .85 : 0, E.desc * .8, d && d.susp >= SUSPECT ? .35 : 0);
 }
 
+/** A hunter in your city still has to find you in it. A chance per day, raised by the police's attention (they can
+ *  point you out), by a name he knows signed in a register, by his tailing; lowered by keeping to your rooms, by
+ *  lying low, and by the dark, unless he is reading the night's hotel registers. */
+export function findOdds(G, h) {
+  const { S } = G;
+  const st = S.enemy.hunters[h.id];
+  const named = !!S.enemy.dossiers[S.cover]?.name;
+  const lodge = S.lodging?.city === S.city ? S.lodging.kind : 'hotel';
+  const doing = S.activity?.id ?? (S.place === 'rooms' ? 'rest' : 'street');
+  let day = .2 * (1 + 2.5 * watchLevel(G));
+  if (st.role === 'tail' && st.target === S.city) day *= 2;
+  if (named) day *= { hotel: 2.5, pension: 1.6, rooms: needsRegistration(G) ? 2.2 : 1.2, rough: 1, safehouse: 0 }[lodge] ?? 1;
+  day *= { rest: .45, cafe: 1.2, work: 1, street: 1 }[doing] ?? 1;
+  if (S.lyingLow) day *= .35;
+  return { day: Math.min(.95, day), registers: named && lodge === 'hotel' };
+}
 function encounters(G) {
-  const { S, W, D, I } = G;
+  const { S, W, D } = G;
   if (S.t % TICK !== 0 || S.queue.length || !S.city) return;
   if (S.place === 'safehouse') return;
+  const night = (S.t % DAY) >= 22 * HOUR || (S.t % DAY) < 6 * HOUR;
   for (const h of D.hunters) {
     if (!W.hunterActive(h, S.t) || h.id === S.tailedBy) continue;
-    const at = hunterAt(G, h.id);
-    if (at.city !== S.city) continue;
-    const st = S.enemy.hunters[h.id];
-    const night = (S.t % DAY) >= 22 * HOUR || (S.t % DAY) < 6 * HOUR;
-    let p = .07 * (st.role === 'tail' && st.target === S.city ? 2.5 : 1) * (night ? .4 : 1) * (S.lyingLow ? .35 : 1);
-    if (night && S.enemy.dossiers[S.cover]?.name) p *= 3; // they read the hotel registers
+    if (hunterAt(G, h.id).city !== S.city) continue;
+    const { day, registers } = findOdds(G, h);
+    const p = (1 - Math.pow(1 - day, TICK / DAY)) * (night ? (registers ? 1.5 : .4) : 1);
     if (rand(S) >= p) continue;
     meet(G, h, 'city');
     if (S.queue.length) return;
@@ -292,7 +311,7 @@ function trainEncounter(G) {
   for (const h of D.hunters) {
     if (!W.hunterActive(h, S.t) || h.id === S.tailedBy) continue;
     if (hunterAt(G, h.id).train !== S.journey.key) continue;
-    if (rand(S) < .2) { meet(G, h, 'train'); return; }
+    if (rand(S) < .12) { meet(G, h, 'train'); return; }
   }
 }
 
@@ -491,9 +510,10 @@ function perish(G) {
 }
 
 /** Nights in a city: whatever lodging you hold is paid for; with none, you take an hotel room and sign its register. */
+const changing = (S) => S.place === 'station' && !!S.trip && !!S.booked; // between two legs of a booked journey
 function nights(G) {
   const { S } = G;
-  if (S.t % DAY !== 23 * HOUR || !S.city) return;
+  if (S.t % DAY !== 23 * HOUR || !S.city || changing(S)) return;
   if (S.place === 'safehouse') { S.nerve = Math.min(10, S.nerve + 2); return; }
   if (S.place === 'rough') { S.nerve = Math.max(0, S.nerve - 1); return; }
   if (!S.lodging || S.lodging.city !== S.city) takeLodging(G, 'hotel');
@@ -515,7 +535,7 @@ export function takeLodging(G, kind) {
 /** The day's turn at 06.00 in a city: legend and watch move; a high watch may bring a search or an inspector. */
 function days(G) {
   const { S } = G;
-  if (S.t % DAY !== 6 * HOUR || !S.city) return;
+  if (S.t % DAY !== 6 * HOUR || !S.city || changing(S)) return;
   dailyTurn(G);
   const ev = watchEvents(G);
   if (ev === 'search') roomSearch(G);

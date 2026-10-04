@@ -283,9 +283,11 @@ export function opActions(G) {
     if (step.after && S.t < T(step.after)) continue;
     if (step.kind === 'meet') {
       const p = I.person.get(step.person);
-      const city = step.city ?? p.city;
-      if (city && S.city !== city && !(Array.isArray(city) && city.includes(S.city))) continue;
-      if (!personHere(G, step.person) && p.city !== S.city) continue;
+      const where = [step.city ?? p.city].flat().filter(Boolean);
+      if (where.length && !where.includes(S.city)) continue;
+      if (['arrested', 'dead'].includes(S.people[step.person]?.st)) continue;
+      // an order that names the city has arranged the meeting there; otherwise the person must be about
+      if (!step.city && !personHere(G, step.person) && p.city !== S.city) continue;
       out.push({ op: o, step, ways: (step.ways ?? [{ id: 'meet', label: `Meet ${p.name}`, risk: 0 }]).map((w) => wayView(G, o, step, w)) });
       continue;
     }

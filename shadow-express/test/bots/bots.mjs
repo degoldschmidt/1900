@@ -4,7 +4,7 @@
 //   exploit-*: one trick spammed (third class only, bribe everything, plant false trails, never sleep in hotels).
 
 import { advance } from '../../src/core/sim.js';
-import { board, book, bookTrip, plan, cardView, choose, walk, opActions, doWay, canLieLow, lieLow, wireFunds, switchCover, stash, checkTail, shakeTail, setLodging, safehouseHere, contactsHere, seek, passDays, doActivity } from '../../src/core/actions.js';
+import { board, book, bookTrip, plan, cardView, choose, walk, opActions, doWay, canLieLow, lieLow, wireFunds, switchCover, stash, retrieve, checkTail, shakeTail, setLodging, safehouseHere, contactsHere, seek, passDays, doActivity } from '../../src/core/actions.js';
 import { legendOf, stayDays } from '../../src/core/residence.js';
 import { currentStep, stepCities, activeOps } from '../../src/core/ops.js';
 import { T } from '../../src/data/time.js';
@@ -13,10 +13,11 @@ import { carriedCovers, contraband, hasUse } from '../../src/core/game.js';
 
 const HOUR = 60;
 
-/** Where the current step of the most urgent active op wants the player. */
+/** Where the current step of the most urgent active op wants the player. A careful player gives up on a step that
+ *  no train can reach in time and turns to the next order instead. */
 function target(G) {
   const { S, I } = G;
-  let best = null;
+  const cands = [];
   for (const o of activeOps(G)) {
     const st = currentStep(G, o.id);
     if (!st) continue;
@@ -24,10 +25,22 @@ function target(G) {
     if (st.kind === 'meet') cities = [st.city ?? I.person.get(st.person).city].flat().filter(Boolean);
     if (st.kind === 'carry' && !S.case.some((x) => x.id === st.item)) continue;
     if (!cities.length || cities[0] === '*') continue;
-    const by = st.by ? T(st.by) : Infinity;
-    if (!best || by < best.by) best = { op: o, step: st, cities, by, after: st.after ? T(st.after) : 0 };
+    cands.push({ op: o, step: st, cities, by: st.by ? T(st.by) : Infinity, after: st.after ? T(st.after) : 0 });
   }
-  return best;
+  cands.sort((a, b) => a.by - b.by);
+  if (G.policy !== POLICIES.competent) return cands[0] ?? null;
+  for (const c of cands) if (reachable(G, c)) return c;
+  return cands[0] ?? null;
+}
+function reachable(G, c) {
+  const { S } = G;
+  if (c.by === Infinity || c.cities.includes(S.city)) return true;
+  const k = `${c.op.id}:${c.step.id}:${Math.floor(S.t / 120)}`;
+  G._reach ??= {};
+  if (k in G._reach) return G._reach[k];
+  let ok = false;
+  for (const city of c.cities) for (const it of plan(G, city)) if (it.arr + 60 <= c.by) ok = true;
+  return (G._reach[k] = ok);
 }
 
 /** Score a data choice by its visible effects (what a careful reader of the sub-text would infer). */
@@ -62,7 +75,6 @@ export const POLICIES = {
     way: (ways) => ways.find((w) => w.open && w.afford),
   },
   competent: {
-    start(G) { for (const c of carriedCovers(G)) if (c !== G.S.cover) stash(G, c); },
     card(G, v) {
       const { S } = G;
       const open = v.choices.map((c, i) => ({ c, i })).filter((x) => x.c.open && x.c.afford !== false);
@@ -84,13 +96,26 @@ export const POLICIES = {
     },
     city(G) {
       const { S } = G;
-      // a cover that has left too many sharp traces is retired
+      const tg = target(G);
+      const posted = tg && tg.cities.includes(S.city);
+      // spare papers are kept in the posting city, and travel with you when you move on
+      for (const [id, c] of Object.entries(S.covers)) if (!posted && !c.carried && !c.burned && c.stash === S.city) retrieve(G, id);
+      if (posted) for (const id of carriedCovers(G)) if (id !== S.cover) stash(G, id);
+      // a name the enemy has, or a cover that has left too many sharp traces, is retired
+      const named = !!S.enemy.dossiers[S.cover]?.name;
       const heat = S.records.filter((r) => r.cover === S.cover && S.t - r.t < 5 * 24 * HOUR).reduce((a, r) => a + (r.heat ?? (r.kind === 'bribe' ? .45 : r.kind === 'sighting' ? .2 : 0)) * r.fid, 0);
-      if (heat > .45) { const alt = Object.entries(S.covers).find(([id, c]) => id !== S.cover && !c.burned && (c.carried || c.stash === S.city)); if (alt) { if (!alt[1].carried) { alt[1].carried = true; alt[1].stash = null; } if (switchCover(G, alt[0]).ok) { stash(G, Object.keys(S.covers).find((k) => k !== S.cover && S.covers[k].carried) ?? ''); return true; } } }
+      if (named || heat > .45) {
+        const alts = Object.entries(S.covers).filter(([id, c]) => id !== S.cover && !c.burned && (c.carried || c.stash === S.city));
+        const alt = alts.find(([id]) => !S.enemy.dossiers[id]?.name) ?? (named ? null : alts[0]);
+        if (alt) {
+          if (!alt[1].carried) retrieve(G, alt[0]);
+          const old = S.cover;
+          if (switchCover(G, alt[0]).ok) { if (posted) stash(G, old); return true; }
+        }
+      }
       if (S.stats.nearMisses > (S._nm ?? 0)) { S._nm = S.stats.nearMisses; if (checkTail(G) && S.tailedBy) shakeTail(G); return true; }
       if (safehouseHere(G)) setLodging(G, 'safehouse');
       else if (S.lodging?.city !== S.city) setLodging(G, 'pension');
-      const tg = target(G);
       const slack = tg ? tg.by - S.t : Infinity;
       return goTo(G, slack > 30 * HOUR ? 'safest' : 'fastest', null) || idle(G, true);
     },
