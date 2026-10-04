@@ -337,7 +337,8 @@ export function makeGlobe(canvas, hooks) {
   // ---------- input: drag, wheel, pinch, tap ----------
   const pointers = new Map();
   let dragStart = null, pinch0 = null, moved = false, idleTimer = 0;
-  const settle = () => { clearTimeout(idleTimer); idleTimer = setTimeout(() => { view.interacting = false; baseKey = ''; hooks.redraw?.(); }, 160); };
+  // full detail returns once the view has been still for a moment and no finger or button is down
+  const settle = () => { clearTimeout(idleTimer); idleTimer = setTimeout(() => { if (pointers.size && moved) return; view.interacting = false; baseKey = ''; hooks.redraw?.(); }, 160); };
   canvas.addEventListener('pointerdown', (e) => {
     canvas.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     moved = false;
@@ -363,7 +364,7 @@ export function makeGlobe(canvas, hooks) {
   const end = (e) => {
     pointers.delete(e.pointerId); canvas.classList.remove('dragging');
     if (pointers.size < 2) pinch0 = null;
-    if (pointers.size === 0) { if (!moved && dragStart) tap(e.clientX, e.clientY); dragStart = null; }
+    if (pointers.size === 0) { if (!moved && dragStart) tap(e.clientX, e.clientY); dragStart = null; if (view.interacting) settle(); }
   };
   canvas.addEventListener('pointerup', end);
   canvas.addEventListener('pointercancel', end);
