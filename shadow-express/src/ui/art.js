@@ -13,7 +13,7 @@ const MAX = 8;
 function svgUrl(svg) { return URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' })); }
 
 /** Draws an SVG string to a PNG object URL at a pixel width (2× for sharpness). */
-function rasterise(svg, w, h, scale = 2) {
+export function rasterise(svg, w, h, scale = 2) {
   return new Promise((resolve) => {
     const src = svgUrl(svg);
     const img = new Image();
