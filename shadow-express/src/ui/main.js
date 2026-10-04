@@ -90,7 +90,13 @@ function computeOverlays() {
   const targets = new Set();
   for (const o of activeOps(G)) { const s = currentStep(G, o.id); if (!s) continue; const cs = s.kind === 'meet' ? [s.city ?? G.I.person.get(s.person).city].flat() : stepCities(s); for (const c of cs) if (c && c !== '*') targets.add(c); }
   const highlight = new Set();
-  if (highlightTo && S.city) for (const it of A.plan(G, highlightTo).slice(0, 1)) for (const l of it.legs) highlight.add(l.line);
+  let route = null;
+  if (highlightTo && S.city) for (const it of A.plan(G, highlightTo).slice(0, 1)) {
+    for (const l of it.legs) highlight.add(l.line);
+    route = [G.I.city.get(S.city).ll, ...it.legs.map((l) => G.I.city.get(l.to).ll)];
+  }
+  const fk = `${highlightTo}|${S.city}`;
+  if (fk !== framedFor) { framedFor = fk; globe.frameRoute(S.journey ? null : route); } // a new plan is shown whole, once
   // hunters, from the dossier: the latest word of each
   const marks = [];
   for (const h of G.D.hunters) {
@@ -115,6 +121,7 @@ function computeOverlays() {
   return { targets, highlight, hunterMarks: marks, knownCancelled, callout: !S.journey, planTo: S.journey ? null : highlightTo };
 }
 const haloCache = {};
+let framedFor = '';
 
 // ---------- the clock ----------
 let last = performance.now(), lastPulse = 0;

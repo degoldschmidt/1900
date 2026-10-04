@@ -434,18 +434,25 @@ export function makeGlobe(canvas, hooks) {
   }
 
   // ---------- the camera ----------
+  /** Aim at the middle of a set of points, close enough that they fill a share `fill` of the screen. */
+  function frameBox(pts, fill, maxZoom) {
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+    const mid = [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2];
+    const span = Math.max(d3().geoDistance([Math.min(...xs), mid[1]], [Math.max(...xs), mid[1]]), d3().geoDistance([mid[0], Math.min(...ys)], [mid[0], Math.max(...ys)]), 0.03);
+    view.tLon = mid[0]; view.tLat = clamp(mid[1], -60, 72); view.tZoom = clamp(fill / span, 1.4, maxZoom);
+  }
+  let routeFrame = null;
+  /** Frame a planned route (its cities, in order) until the journey starts; null lets the camera go home to the city. */
+  function frameRoute(pts) { routeFrame = pts?.length > 1 ? pts : null; if (routeFrame) view.follow = true; }
   function aim(G, dt = 1 / 60) {
     sunClock(G ? G.S.t : START + drift, dt);
     if (!G && !view.interacting && !reduceMotion) { view.tLon = view.lon = (view.lon + dt * 3) % 360; drift = (drift + dt * 4) % (24 * 60); } // the title screen turns slowly
+    if (G?.S.journey) routeFrame = null; // a planned route is framed until the journey starts; then the train is
     if (G && view.follow) {
       const { S, W: Wd, I } = G;
-      if (S.journey) {
-        const l = Wd.line.get(S.journey.line), c = lineCourse(Wd, l);
-        const xs = c.pts.map((p) => p[0]), ys = c.pts.map((p) => p[1]);
-        const mid = [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2];
-        const span = Math.max(d3().geoDistance([Math.min(...xs), mid[1]], [Math.max(...xs), mid[1]]), d3().geoDistance([mid[0], Math.min(...ys)], [mid[0], Math.max(...ys)]), 0.03);
-        view.tLon = mid[0]; view.tLat = clamp(mid[1], -60, 72); view.tZoom = clamp(0.95 / span, 1.4, cityZoom() * 2.2);
-      } else if (S.city) {
+      if (S.journey) frameBox(lineCourse(Wd, Wd.line.get(S.journey.line)).pts, 0.95, cityZoom() * 2.2);
+      else if (routeFrame && S.city) frameBox(routeFrame, 0.8, cityZoom() * 1.8);
+      else if (S.city) {
         const c = I.city.get(S.city);
         const z = cityZoom();
         view.tLon = c.ll[0]; view.tLat = clamp(c.ll[1], -60, 72); view.tZoom = view.tZoom > z * 2 ? view.tZoom : z;
@@ -544,7 +551,7 @@ export function makeGlobe(canvas, hooks) {
 
   resize();
   setCam();
-  return { draw, aim, resize, view, zoomBy, recentre, stats, project, invalidate: () => { baseKey = ''; vecKey = ''; } };
+  return { draw, aim, resize, view, zoomBy, recentre, stats, project, frameRoute, invalidate: () => { baseKey = ''; vecKey = ''; } };
 }
 
 /** The sub-solar point at a campaign minute (CET clock, summer declination). */

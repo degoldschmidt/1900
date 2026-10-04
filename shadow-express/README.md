@@ -9,6 +9,8 @@ A single-page browser spy game in the manner of the great travel-and-choice game
 - **Journeys**: rarer and riskier. Whole itineraries are booked at once, delays show only on the way, connections can be missed, and frontier controls, station police and departure shadows all leave traces.
 - **The operations**: nine orders from London in three acts (one of them optional) and three favours asked by the people you meet.
 - **The hunters**: three of them, working from what the enemy actually knows: hotel registers, passenger lists, frontier books, wires, bribes, faces.
+- **The globe**: a lit sphere in space, night and day as they were at that hour, with a camera that tilts toward the horizon as you zoom in. A dark HUD keeps money, the day and the hour; a callout over your city counts its trains for the next six hours.
+- **Every ending explains itself**: "Their file on you" shows when each name was posted and the records that did it, the tips that were false, and what was true all along. A copy button gives a plain run report.
 
 Original art, text and name. The dates and headlines are real; the people are invented, and so is what the crisis does to each train, frontier and price.
 
@@ -22,9 +24,12 @@ Original art, text and name. The dates and headlines are real; the people are in
   - World and travel: the calendar's effects (`world.js`), timetable and routing (`timetable.js`).
   - The enemy: what it knows (`enemy.js`), the hunters on the timetable (`hunters.js`).
   - The game: storylet conditions and effects (`storylet.js`, `game.js`), the time loop with controls, encounters and contacts (`sim.js`), operations (`ops.js`), the player's actions and the cards (`actions.js`).
-  - The validator (`schema.js`).
+  - The validator (`schema.js`), and the post-mortem and run report read from a finished game (`postmortem.js`, `report.js`).
 - `src/art/`: the soot-and-engraving kit (`kit.js`), the frame for a city scene (`frame.js`), one hand-drawn vignette per city (`vignettes/`), engraved portraits and map glyphs. `docs/ART.md` is the style guide.
-- `src/ui/`: the engraved globe, the ledger (city, departures, orders, people, case, covers, dossier), the cards and the boot loop.
+- `src/ui/`: the screen.
+  - The globe: the camera, a perspective view that tilts toward the horizon (`camera.js`); the light, a coarse ray-cast grid of sea, land and sky (`shade.js`); the map drawn over it (`globe.js`).
+  - The HUD over it (`hud.js`, `hud.css`) and its flat icons (`icons.js`).
+  - The ledger (city, trains, orders, people, case, covers, dossier, you), the cards with the end card's post-mortem (`cards.js`), the copy dialog (`report-ui.js`, `dom.js`), the creator and the boot loop.
 - `land.json`, `land-lo.json`: coastlines from Natural Earth via world-atlas (`prep-land.mjs` cut them).
 
 ## Build, test, play
@@ -37,8 +42,9 @@ node --test test/*.test.mjs       # validator, world, timetable and engine rules
 node test/bots/run.mjs 200        # whole campaigns by careless, competent and exploit bots
 node tools/sheet.mjs PAR,VIE      # a contact sheet of vignettes at four hours (also --portraits, --glyphs)
 node build.mjs                    # build/dev.html for testing
-node test/e2e.mjs                 # Playwright on desktop and phone, with screenshots in build/shots
-node test/perf.mjs                # frame times under a 4× CPU throttle
+node test/e2e.mjs                 # Playwright on desktop and phone, with screenshots in build/shots (--page f.html to test another build)
+node test/postmortem.e2e.mjs      # the end card's file and the copy button, in a sandboxed frame too
+node test/perf.mjs                # frame times under a 4× CPU throttle (--page f.html too)
 node build.mjs --release          # index.html, the published page
 ```
 
