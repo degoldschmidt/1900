@@ -296,6 +296,7 @@ export function makeGlobe(canvas, hooks) {
       trainAt = along(Wd, j.line, j.from, f);
     }
     // hunters as the player knows them: seen (solid), reported (dashed), rumoured (faint); where they could be by now
+    const hunterBoxes = []; // city names keep off these
     for (const m of ui.hunterMarks ?? []) {
       if (!visible(m.ll)) continue;
       const [x, y] = proj(m.ll);
@@ -308,6 +309,8 @@ export function makeGlobe(canvas, hooks) {
       ctx.setLineDash([]);
       ctx.font = `500 12px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
       ctx.lineWidth = 3; ctx.strokeStyle = C.halo; ctx.strokeText(m.label.toUpperCase(), x + 13, y - 27);
+      const lw = ctx.measureText(m.label.toUpperCase()).width;
+      hunterBoxes.push({ x: x + 13 - lw / 2 - 2, y: y - 41, w: lw + 4, h: 15 }, { x: x, y: y - 26, w: 26, h: 26 });
       ctx.fillStyle = '#ffb3a6'; ctx.fillText(m.label.toUpperCase(), x + 13, y - 27);
       ctx.globalAlpha = 1;
     }
@@ -337,7 +340,7 @@ export function makeGlobe(canvas, hooks) {
       labels.push({ c, x, y, prio, big: prio <= 1, gold: isT && !isHere });
     }
     labels.sort((a, b) => a.prio - b.prio || a.y - b.y);
-    const placed = [];
+    const placed = [...hunterBoxes];
     const hits = (r) => placed.some((q) => r.x < q.x + q.w && q.x < r.x + r.w && r.y < q.y + q.h && q.y < r.y + r.h);
     // names keep off other cities' markers, and off the callout over the city you are in (the HUD draws it there)
     const marks = [];

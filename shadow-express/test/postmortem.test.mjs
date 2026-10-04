@@ -90,7 +90,7 @@ function check(G, label) {
   assert.ok(Buffer.byteLength(txt) < 8 * 1024, `${label}: ${Buffer.byteLength(txt)} bytes`);
   assert.ok(txt.startsWith(`SHADOW EXPRESS RUN REPORT ${REPORT_VERSION}`));
   assert.ok(txt.includes(`seed ${S.seed}`), `${label}: seed`);
-  assert.ok(txt.includes(fullName(S.hero)), `${label}: hero`);
+  assert.ok(txt.includes(`hero ${fullName(S.hero).replace(/\s+/g, ' ').trim().slice(0, 40)}`), `${label}: hero`); // the report keeps a name to 40 characters
   assert.ok(txt.includes(S.ended ? `ending ${S.ended.why}` : 'ending none'), `${label}: ending`);
   assert.doesNotMatch(txt, BAD, `${label}: report tokens`);
   const lastLog = S.log.at(-1);
@@ -179,6 +179,7 @@ test('a worst case still makes a short report: a full log, a long name, every re
   G.S.intel = Array.from({ length: 150 }, (_, i) => ({ id: i + 1, subj: 'hunter:falk', claim: { at: 'VIE' }, src: 'rumour', rel: .3, truth: false, planted: false, about: 100, learned: 100 + i, resolved: null }));
   const { txt } = check(G, 'worst');
   assert.ok(txt.includes('Bartholomew-Maximilian'));
+  assert.ok(!txt.includes('Featherstonehaugh-Cholmondeley-Smythe'), 'a long name is cut to fit');
   assert.ok(txt.split('\n').filter((l) => /^\w{3} \d+ \w{3} \d\d\.\d\d {2}Entry/.test(l)).length >= 25, 'a screenful of the log survives');
 });
 
@@ -203,5 +204,11 @@ test('the end card: the file on you is there, escaped, with the button that copi
   G.S.hero.first = '<img src=x onerror=alert(1)>';
   const html = endText(G, { why: 'recalled', n: 1 });
   assert.ok(!html.includes('<img src=x'), 'a name is escaped');
-  assert.ok(pmHtml(postmortem(G)).includes('&lt;img src=x'));
+  // every string the file shows is escaped: plant markup in the headline and a cover's name
+  const pm = postmortem(G);
+  pm.headline = '<img src=x onerror=alert(1)>';
+  if (pm.covers[0]) pm.covers[0].name = '<b>Hale</b>';
+  const ph = pmHtml(pm);
+  assert.ok(ph.includes('&lt;img src=x') && !ph.includes('<img src=x'), 'the headline is escaped');
+  if (pm.covers[0] && pm.covers[0].status !== 'clean') assert.ok(ph.includes('&lt;b&gt;Hale') && !ph.includes('<b>Hale'), 'a cover name is escaped');
 });

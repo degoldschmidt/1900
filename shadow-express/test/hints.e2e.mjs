@@ -1,5 +1,6 @@
 // Browser checks for the ledger's tab strip and the hints, at a phone (390×844) and a desktop (1440×900) size.
-//   node test/hints.e2e.mjs [--page file.html] [--shots dir]
+//   node test/hints.e2e.mjs [--page file.html] [--shots dir] [--only phone,desktop,phone-silenced,desktop-silenced,strips]
+//   (DEBUG=1 prints the time each scenario took)
 // Builds its own page (build/hints.html) unless given one, boots it from file:// with d3 served locally, and plays the
 // opening of a campaign through the real ledger and cards. It does not depend on the HUD: the game is driven through
 // window.__shadow. If the page wires the hints itself (window.__shadow.hints), that instance is tested; if not, the
@@ -21,6 +22,7 @@ const shots = path.resolve(args.includes('--shots') ? args[args.indexOf('--shots
 if (pageArg < 0) execFileSync(process.execPath, [path.join(ROOT, 'build.mjs'), '--out', page], { stdio: 'inherit' });
 const D3 = fs.readFileSync(process.env.D3_PATH || '/tmp/claude-0/-home-user-1900/405f5ed7-5f5c-5b9f-97be-e5f97113fe9d/scratchpad/game/d3-7.8.5/package/dist/d3.min.js', 'utf8');
 fs.mkdirSync(shots, { recursive: true });
+for (const f of fs.readdirSync(shots)) if (f.endsWith('-failure.png')) fs.unlinkSync(path.join(shots, f)); // those of an earlier run
 const wrapped = page.replace(/\.html$/, '') + '.e2e.html'; // next to the page it wraps, so parallel runs do not collide
 fs.writeFileSync(wrapped, `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>${fs.readFileSync(page, 'utf8')}</body></html>`);
 const hintsBundle = esbuild.buildSync({ entryPoints: [path.join(ROOT, 'src/ui/hints.js')], bundle: true, format: 'iife', globalName: 'ShadowHints', write: false, logLevel: 'error' }).outputFiles[0].text;
@@ -229,9 +231,21 @@ async function checkCard(s, id, label) {
   }
   r.tabs.forEach((t, i) => check(b.r <= t.l || b.l >= t.r || b.b <= t.t || b.t >= t.b || !r.open, `${label}: does not cover the ${TABS[i]} tab`));
   check(r.blocked === 0, `${label}: it takes pointer events only inside its own box (${r.blocked} points outside it are intercepted)`);
-  check(r.globe >= 1, `${label}: the globe is still there to touch (${r.globe} sample points)`);
+  if (r.vh >= 700 || r.vw >= 900) check(r.globe >= 1, `${label}: the globe is still there to touch (${r.globe} sample points)`); // on a short phone with the ledger open, the HUD and the sheet leave a thin band of it
   await s.shot(`hint-${id}`);
   return r;
+}
+/** The card follows the ledger: beside or above it when it is open, above the HUD's corner furniture when it is shut. */
+async function followsLedger(s, id) {
+  const { p } = s;
+  await checkCard(s, id, `${s.name} ledger open`);
+  await p.evaluate(() => window.__shadow.ledger.setOpen(false));
+  await p.waitForTimeout(700);
+  await checkCard(s, id, `${s.name} ledger shut`);
+  await s.shot('hint-ledger-shut');
+  await p.evaluate(() => window.__shadow.ledger.setOpen(true));
+  await p.waitForTimeout(700);
+  await checkCard(s, id, `${s.name} ledger open again`);
 }
 async function noOverflow(s, label) {
   const o = await s.p.evaluate(() => ({ doc: document.documentElement.scrollWidth - innerWidth, app: document.getElementById('app').scrollWidth - innerWidth }));
@@ -400,7 +414,7 @@ async function silencedPlay(s) {
   await idle(s, 8000);
   await p.locator('[data-seek="ashby"]').click();
   check(await waitHint(s, 'people', 12000), 'a hint comes after the first meeting');
-  await p.waitForTimeout(500);
+  await followsLedger(s, 'people');
   await p.locator('.hint .hint-off').click();
   await p.waitForTimeout(200);
   check((await p.locator('.hint').count()) === 0, '"No more hints" closes the hint');
@@ -455,6 +469,13 @@ async function strips() {
       await checkTabs(s, `${name} tabs`);
       await s.shot('tabs');
       await noOverflow(s, name);
+      { // a hint at these sizes too
+        await idle(s, 8000);
+        await s.p.locator('[data-seek="ashby"]').click();
+        s.check(await waitHint(s, 'people', 12000), `${name}: a hint comes after the first meeting`);
+        await followsLedger(s, 'people');
+        await noOverflow(s, `${name} with a card`);
+      }
     });
     report(s);
     await s.ctx.close();
@@ -462,7 +483,7 @@ async function strips() {
 }
 
 function report(s) {
-  console.log(`${s.name}: ${s.errors.length ? s.errors.join(' | ') : 'no errors'}`);
+  console.log(`${s.name}${s.wired ? ' (hints wired in the page)' : ''}: ${s.errors.length ? s.errors.join(' | ') : 'no errors'}`);
   fails.push(...s.errors.map((e) => `${s.name}: ${e}`));
 }
 async function run(f, ...a) {

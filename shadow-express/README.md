@@ -10,6 +10,7 @@ A single-page browser spy game in the manner of the great travel-and-choice game
 - **The operations**: nine orders from London in three acts (one of them optional) and three favours asked by the people you meet.
 - **The hunters**: three of them, working from what the enemy actually knows: hotel registers, passenger lists, frontier books, wires, bribes, faces.
 - **The globe**: a lit sphere in space, night and day as they were at that hour, with a camera that tilts toward the horizon as you zoom in. A dark HUD keeps money, the day and the hour; a callout over your city counts its trains for the next six hours.
+- **A first hour that explains itself**: eight one-time hints in the Bureau's voice ("Instructions to Agents Abroad") come as the moment does, never over a card; About switches them off or on again. Every pop-up closes with its X, and a question can be set aside to look at the map first.
 - **Every ending explains itself**: "Their file on you" shows when each name was posted and the records that did it, the tips that were false, and what was true all along. A copy button gives a plain run report.
 
 Original art, text and name. The dates and headlines are real; the people are invented, and so is what the crisis does to each train, frontier and price.
@@ -29,7 +30,7 @@ Original art, text and name. The dates and headlines are real; the people are in
 - `src/ui/`: the screen.
   - The globe: the camera, a perspective view that tilts toward the horizon (`camera.js`); the light, a coarse ray-cast grid of sea, land and sky (`shade.js`); the map drawn over it (`globe.js`).
   - The HUD over it (`hud.js`, `hud.css`) and its flat icons (`icons.js`).
-  - The ledger (city, trains, orders, people, case, covers, dossier, you), the cards with the end card's post-mortem (`cards.js`), the copy dialog (`report-ui.js`, `dom.js`), the creator and the boot loop.
+  - The ledger (city, trains, orders, people, case, covers, dossier, you), the cards with the end card's post-mortem (`cards.js`), the hints (`hints.js`), the copy dialog (`report-ui.js`, `dom.js`), the creator and the boot loop.
 - `land.json`, `land-lo.json`: coastlines from Natural Earth via world-atlas (`prep-land.mjs` cut them).
 
 ## Build, test, play
@@ -44,6 +45,7 @@ node tools/sheet.mjs PAR,VIE      # a contact sheet of vignettes at four hours (
 node build.mjs                    # build/dev.html for testing
 node test/e2e.mjs                 # Playwright on desktop and phone, with screenshots in build/shots (--page f.html to test another build)
 node test/postmortem.e2e.mjs      # the end card's file and the copy button, in a sandboxed frame too
+node test/hints.e2e.mjs           # the hints and the two-row tab strip, from 320 px wide to a laptop
 node test/perf.mjs                # frame times under a 4× CPU throttle (--page f.html too)
 node build.mjs --release          # index.html, the published page
 ```

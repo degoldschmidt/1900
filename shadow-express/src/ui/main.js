@@ -13,6 +13,7 @@ import { makeLedger } from './ledger.js';
 import { makeCards } from './cards.js';
 import { makeHud } from './hud.js';
 import { copyRunReport } from './report-ui.js';
+import { makeHints } from './hints.js';
 import { creator } from './creator.js';
 import { defaultHero } from '../core/hero.js';
 import { $, esc, el, store } from './dom.js';
@@ -70,6 +71,16 @@ const hud = makeHud(app, {
   reopenCard: () => cards.reopen(),
 });
 
+// the Bureau's instructions: one-time hints while nothing else is on screen
+const hints = makeHints(app, {
+  game: () => G,
+  openTab: (k) => { if (G) ledger.show(k); },
+  pause: () => {},
+  save: () => save(),
+  busy: () => cards.isOpen() || cards.isAside() || !!app.querySelector('.title'), // a card (even set aside), the creator, About, the title page
+});
+setInterval(() => hints.check(), 1000);
+
 // the ledger closes with its own button too
 const ledgerX = el('button', 'ledger-x', iconSVG('close'));
 ledgerX.type = 'button'; ledgerX.setAttribute('aria-label', 'Close the ledger'); ledgerX.title = 'Close the ledger';
@@ -88,6 +99,7 @@ document.addEventListener('keydown', (e) => {
   const top = [...app.querySelectorAll('.title')].at(-1);
   if (top) { top.querySelector('.card-x')?.click(); return; }
   if (G && cards.isOpen()) { cards.dismiss(); return; }
+  if (hints.isOpen()) { hints.dismiss(); return; }
   if (G && ledger.isOpen()) { ledger.setOpen(false); refresh(); }
 });
 app.appendChild(toasts); // toasts above the HUD
@@ -159,7 +171,7 @@ function frame(now) {
       let rate = 0, stop = Infinity;
       if (S.journey) { rate = Math.max(40, Math.min(600, (S.journey.arr - S.journey.dep) / 7)); stop = S.journey.arr + 1; }
       else if (S.booked) { rate = 240; stop = S.booked.dep + 1; }
-      else if (S.t < S.busyUntil || S.routine) { rate = S.routine ? 900 : 200; stop = S.routine ? S.routine.until : S.busyUntil; }
+      else if (S.t < S.busyUntil || S.routine) { rate = S.routine ? 900 : 200; stop = S.routine ? Math.max(S.routine.until, S.busyUntil) : S.busyUntil; }
       if (rate) {
         const before = S.t;
         advance(G, Math.min(stop, S.t + rate * speed * dt));
@@ -187,6 +199,7 @@ function refresh() {
   lastLedgerKey = '';
   ledger.render(G);
   cards.render(G);
+  hints.check();
   dirty = true;
 }
 setInterval(() => { // keep the ledger fresh as time passes in a city
@@ -205,11 +218,17 @@ function about() {
     <p>Living under cover: every name you use has a legend in every city, which grows while you work it and wears thin when you do not. The local police watch you more closely after each slip and less after each quiet day; past a point they follow you, search your rooms, or call. Spare papers are safest left with the Bureau in London and sent for by the embassy bag.</p>
     <p class="dim">On the map: the callout over your city counts its trains in the next six hours (tap it for the departures); the pill at the top keeps your money, the day and the hour; the briefcase opens the ledger; your portrait opens your file, with your nerve (♥) and your standing with the Bureau (★).</p>
     <p class="dim">An original game in the manner of the great travel-and-choice games. Art, words and code made for this prototype.</p>
-    <div class="choices"><button class="choice" data-close><b>Back to the game</b></button>${G ? '<button class="choice" data-report><b>Copy run report</b><span>a plain account of this campaign, to paste to the developer</span></button>' : ''}<button class="choice" data-new><b>Begin a new campaign</b><span>this one will be lost</span></button></div></div></div>`;
+    <div class="choices"><button class="choice" data-close><b>Back to the game</b></button>${G ? `<button class="choice" data-hints><b>${hints.enabled() ? 'Hints are on' : 'Show the hints again'}</b><span>${hints.enabled() ? 'the Bureau’s instructions to agents abroad; press to switch them off' : 'from the beginning, one at a time'}</span></button>` : ''}${G ? '<button class="choice" data-report><b>Copy run report</b><span>a plain account of this campaign, to paste to the developer</span></button>' : ''}<button class="choice" data-new><b>Begin a new campaign</b><span>this one will be lost</span></button></div></div></div>`;
   app.appendChild(t);
   t.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => t.remove()));
   t.addEventListener('click', (e) => { if (e.target === t) t.remove(); }); // a click beside the page closes it too
   t.querySelector('.choice[data-close]')?.focus({ preventScroll: true });
+  t.querySelector('[data-hints]')?.addEventListener('click', (e) => {
+    if (hints.enabled()) hints.setEnabled(false); else hints.reset();
+    const b = e.currentTarget;
+    b.querySelector('b').textContent = hints.enabled() ? 'Hints are on' : 'Hints are off';
+    b.querySelector('span').textContent = hints.enabled() ? 'they will come as the moment does' : 'press again to show them from the beginning';
+  });
   t.querySelector('[data-report]')?.addEventListener('click', (e) => { const sub = e.currentTarget.querySelector('span'); copyRunReport(G).then((m) => { sub.textContent = m; sub.setAttribute('role', 'status'); }); });
   t.querySelector('[data-new]').addEventListener('click', () => { t.remove(); newCampaign(); });
 }
@@ -274,5 +293,5 @@ window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.
 // hooks for the tests
 window.__shadow = {
   get G() { return G; }, D, A, advance: (t) => advance(G, t), start: (hero = 'm', seed = 7) => { document.querySelectorAll('.title').forEach((x) => x.remove()); start(hero, seed); },
-  setSpeed: (v) => { speed = v; }, refresh, ledger, globe,
+  setSpeed: (v) => { speed = v; }, refresh, ledger, globe, hints,
 };

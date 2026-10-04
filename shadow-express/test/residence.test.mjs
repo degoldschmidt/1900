@@ -65,9 +65,15 @@ test('tradecraft and languages change how fast the police notice you', () => {
 test('letting the days pass runs the routine and stops at the limit', () => {
   const G = game();
   G.S.t = T('07-03 10.00'); G.S.city = 'VIE'; G.S.cityArrived = G.S.t;
+  const limit = T('07-05 10.00');
   passDays(G, 2);
-  for (let i = 0; i < 200 && G.S.routine; i++) { advance(G, G.S.routine.until); drain(G); }
-  assert.ok(G.S.t >= T('07-05 10.00') - 60, `time ${G.S.t}`);
+  for (let i = 0; i < 200 && G.S.t < limit - 60; i++) {
+    if (!G.S.routine) passDays(G, (limit - G.S.t) / DAY); // something needed the player (a hunter seen, a note): carry on after it
+    advance(G, G.S.routine.until);
+    if (!G.S.routine) assert.ok(G.S.t >= limit - 1 || G.S.queue.some((c) => !c.routine && c.type !== 'news'), 'the routine stops only at its limit or for something that needs you');
+    drain(G);
+  }
+  assert.ok(G.S.t >= limit - 60, `time ${G.S.t}`);
   assert.ok(legendOf(G) > .1, 'the routine works the legend');
 });
 
@@ -88,4 +94,16 @@ test('a whole journey changes trains, and a late train can miss its connection',
     if (G.S.city && !G.S.journey && !G.S.booked && !G.S.trip) break;
   }
   assert.ok(G.S.city === 'VIE' || missed, `ended in ${G.S.city}`);
+});
+
+test('a routine that ends during an errand ends at its hour: the clock never waits on it', () => {
+  const G = game();
+  G.S.t = T('07-01 09.00'); G.S.city = 'VIE'; G.S.cityArrived = G.S.t; G.S.busyUntil = G.S.t;
+  doActivity(G, 'work');
+  assert.ok(G.S.busyUntil > G.S.t + 60, 'a morning of work runs past the hour');
+  const until = G.S.t + 60;
+  G.S.routine = { until }; // as 'Let a day pass' leaves it, mid-errand
+  for (let i = 0; i < 20 && G.S.t < until; i++) { advance(G, until); drain(G); }
+  assert.ok(G.S.t >= until && G.S.t < G.S.busyUntil, 'the hour came while the errand ran on');
+  assert.equal(G.S.routine, null, 'the routine is over at its hour, errand or no');
 });

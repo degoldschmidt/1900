@@ -1,1 +1,4 @@
 build/
+# wrappers the browser tests write beside the page they test
+*.e2e.html
+*.perf.html

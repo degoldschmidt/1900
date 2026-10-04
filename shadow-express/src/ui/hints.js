@@ -51,7 +51,7 @@ export const HINTS = [
     due: ({ S }) => spareCovers(S) && journeys(S) === 0 && ordersOpen(S),
     done: (G, ui) => onTab(ui, 'covers') },
   { id: 'arrival', n: 4,
-    text: 'Take lodgings under City: an hotel enters you in its register, rented rooms in the police’s; each register is a trace. ‘Your legend here’ shows how well your name is established in this town: work it, or it wears thin.',
+    text: 'Take lodgings under City. An hotel enters you in its register, and in some lands rented rooms go on a police form: either is a trace. ‘Your legend here’ shows how well your name is established: work it, or it wears thin.',
     due: ({ S }) => journeys(S) >= 1 && sinceArrival(S) <= 12 * HOUR },
   { id: 'traces', n: 5,
     text: 'You are leaving traces: registers, passenger lists, frontier books. In the {dossier|Dossier}, ‘They know’ shows what you have left and about when it reaches the enemy; ‘Known’ and ‘Suspected’ hold what you have seen and what you only suspect.',

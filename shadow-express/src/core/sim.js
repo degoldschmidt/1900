@@ -71,6 +71,7 @@ function tick(G) {
   if (S.tailedBy && S.t - S.tailSince > 30 * HOUR && !S.queue.length) confront(G, S.tailedBy, 'tail');
   if (S.t >= END && !S.ended) endGame(G, 'time');
   if (S.standing <= 0 && !S.ended) endGame(G, 'recalled');
+  if (S.routine && routineInterrupted(S)) S.routine = null; // "until something needs you"
 }
 
 // ---------- journeys ----------
@@ -618,12 +619,20 @@ function roomSearch(G) {
 /** Let the days pass: the routine works the legend by day, listens in cafés of an evening, sleeps at night, and stops for anything that needs you. */
 function routine(G) {
   const { S } = G;
-  if (!S.routine || S.queue.length || !S.city || S.journey || S.booked || S.activity || S.t < S.busyUntil) return;
-  if (S.t >= S.routine.until) { S.routine = null; return; }
+  if (!S.routine) return;
+  if (S.t >= S.routine.until) { S.routine = null; return; } // even mid-activity: the clock must not wait on a routine that is over
+  if (S.queue.length || !S.city || S.journey || S.booked || S.activity || S.t < S.busyUntil) return;
   const w = watchOf(S.t).name;
   const id = w === 'night' ? 'rest' : w === 'evening' ? (rand(S) < .5 ? 'cafe' : 'rest') : 'work';
   startActivity(G, id);
-  if (w === 'morning' && rand(S) < .22) { const st = pickStory(G, 'interlude'); if (st) S.queue.push({ type: 'story', id: st.id, n: ++S.cardN }); }
+  if (w === 'morning' && rand(S) < .22) { const st = pickStory(G, 'interlude'); if (st) S.queue.push({ type: 'story', id: st.id, n: ++S.cardN, routine: true }); }
+}
+/**
+ * What ends the routine: anything that needs you. An order, a hunter, the police, a contact, a consequence coming due,
+ * an operation's scene all do; the routine's own small scenes of city life, and the morning paper, do not.
+ */
+function routineInterrupted(S) {
+  return S.queue.some((c) => !c.routine && c.type !== 'news');
 }
 export function startActivity(G, id) {
   const { S } = G;
@@ -637,7 +646,7 @@ function afterActivity(G, a) {
   const { S } = G;
   if (S.queue.length || !S.city) return;
   if (a.id === 'cafe') cafeRumour(G);
-  if ((a.id === 'work' || a.id === 'cafe') && rand(S) < (a.id === 'cafe' ? .45 : .3)) { const st = pickStory(G, 'city'); if (st) S.queue.push({ type: 'story', id: st.id, n: ++S.cardN }); }
+  if ((a.id === 'work' || a.id === 'cafe') && rand(S) < (a.id === 'cafe' ? .45 : .3)) { const st = pickStory(G, 'city'); if (st) S.queue.push({ type: 'story', id: st.id, n: ++S.cardN, routine: !!S.routine }); }
 }
 
 /** A café is a newspaper with legs: talk of the hunters and the lines, true or not; a good eye sorts some of it. */
