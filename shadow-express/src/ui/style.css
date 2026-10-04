@@ -259,3 +259,64 @@ button { font: inherit; color: inherit; }
   .card .art { width: 72px; }
 }
 @media (prefers-reduced-motion: reduce) { .ledger, .card, .toast { transition: none; animation: none; } }
+
+/* ---- the agent's file: the character creator */
+.title.creator { align-items: flex-start; overflow-y: auto; }
+.title .card.cr { width: min(860px, 100%); margin: 2vh auto; text-align: left; animation: none; }
+.cr .cr-top { display: grid; grid-template-columns: 170px 1fr; gap: 18px; margin-top: 8px; }
+.cr-face { text-align: center; }
+.cr-skill > div:first-child { text-align: left; }
+.cr-skill b { display: block; }
+.cr-face img { width: 150px; height: 188px; display: block; margin: 0 auto; border: 1.5px solid var(--ink); box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--ink); background: var(--paper-2); }
+.cr-name { font-size: 19px; margin-top: 10px; }
+.cr-sub { font-size: 13px; font-style: italic; }
+.cr-steps { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1.5px solid var(--ink); margin-bottom: 10px; }
+.cr-steps button { border: 1px solid var(--ink); border-bottom: 0; background: var(--paper-2); font-family: var(--font-display); font-size: 14px; padding: 5px 9px 4px; margin-right: -1px; cursor: pointer; border-radius: 3px 3px 0 0; }
+.cr-steps button[aria-current="true"] { background: var(--ink); color: var(--paper); }
+.cr-body { min-height: 360px; }
+.cr-body h2 { margin-top: 0; }
+.cr-body h3 { font-family: var(--font-display); font-weight: 400; font-size: 17px; margin: 14px 0 6px; border-bottom: .5px solid var(--ink); }
+.cr-grid { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end; }
+.cr-grid label { font-family: var(--font-display); font-size: 13px; display: grid; gap: 2px; }
+.cr-grid input, .cr-row select { font: inherit; font-size: 16px; padding: 5px 7px; background: rgba(255,250,235,.6); color: var(--ink); border: 1px solid var(--ink); border-radius: 2px; min-width: 0; }
+.cr-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin: 7px 0; }
+.cr-l { font-family: var(--font-display); font-size: 14px; min-width: 64px; }
+.chipbtn { border: 1px solid var(--ink); background: rgba(255,250,235,.4); padding: 3px 9px; border-radius: 12px; cursor: pointer; font-size: 14px; min-height: 30px; }
+.chipbtn[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.chipbtn:hover, .chipbtn:focus-visible { background-image: var(--hatch); outline: none; }
+.chipbtn[aria-pressed="true"]:hover { background-image: none; }
+.cr-cards { display: grid; gap: 8px; grid-template-columns: 1fr; }
+.cr-cards.two { grid-template-columns: 1fr 1fr; }
+.cr-card { text-align: left; border: 1.5px solid var(--ink); background: rgba(255,250,235,.35); padding: 9px 11px; cursor: pointer; border-radius: 2px; display: grid; gap: 4px; }
+.cr-card b { font-weight: 400; font-size: 17px; }
+.cr-card span { font-size: 13.5px; color: var(--ink-2); }
+.cr-card[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ink); background-image: var(--hatch); }
+.cr-card:disabled { opacity: .45; cursor: default; }
+.cr-card.small b { font-size: 15.5px; }
+.cr-skill { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 6px 0; border-top: .5px dotted var(--ink-2); }
+.cr-skill b { font-weight: 400; font-size: 16px; text-transform: capitalize; }
+.cr-skill .dim { font-size: 13px; }
+.cr-step { display: flex; align-items: center; gap: 6px; flex: none; }
+.cr-step .pips i { width: 11px; height: 14px; }
+.cr-step .pips i.gift { border-color: var(--blood); }
+.cr-step .pips i.gift.on { background: var(--blood); }
+.cr-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 12px; border-top: 1.5px solid var(--ink); padding-top: 10px; flex-wrap: wrap; }
+.cr-go { width: auto; display: inline-block; }
+.cr-file { position: relative; border: 1px solid var(--ink-2); padding: 14px 16px; background: #f3ead2; }
+.cr-file p { font-family: var(--font-type); font-size: 14px; margin: 5px 0; line-height: 1.5; }
+.cr-stamp { position: absolute; right: 14px; top: 10px; font-family: var(--font-display); letter-spacing: .2em; color: var(--blood); border: 2.5px solid var(--blood); padding: 2px 10px; transform: rotate(-8deg); opacity: .85; }
+@media (max-width: 640px) {
+  .cr .cr-top { grid-template-columns: 1fr; }
+  .cr-face img { width: 110px; height: 138px; }
+  .cr-grid { grid-template-columns: 1fr 1fr; }
+  .cr-grid .iconbtn { grid-column: span 2; }
+  .cr-cards.two { grid-template-columns: 1fr; }
+  .cr-steps button { font-size: 12.5px; padding: 4px 6px 3px; }
+}
+
+/* ---- the day in a city */
+.daybar { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13.5px; margin: 2px 0 6px; flex-wrap: wrap; }
+.meter { display: inline-flex; align-items: center; gap: 4px; }
+.meter .gauge { width: 70px; }
+.signs { font-style: italic; color: var(--ink-2); font-size: 13.5px; }
+.hud .face { width: 44px; height: 55px; display: block; border: 1px solid var(--ink); }

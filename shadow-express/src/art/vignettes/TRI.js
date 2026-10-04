@@ -37,45 +37,48 @@ export default {
 
     // ---------- Miramare on its point ----------
     const point = (() => {
-      let s = k.shape(`M646 128Q600 132 570 150Q540 166 500 178Q470 186 446 194Q436 198 440 202Q480 206 540 206T646 210Z`, 'stipple', { w: 1 });
-      s += k.shape(`M440 202Q480 206 540 206T646 210V214Q560 214 500 210T436 202Z`, 'black', { w: .5 }); // the rock at the waterline
-      for (let i = 0; i < 9; i++) { const x = 450 + i * 22 + r() * 6; s += k.line(`M${f(x)} ${f(203 + i * .4)}l${f(2 + r() * 3)} 5`, .6); }
+      let s = k.shape('M646 116Q604 120 574 140Q546 156 506 168Q466 180 432 190Q408 198 414 204Q470 210 540 210T646 214Z', 'stipple', { w: 1 });
+      s += k.shape('M414 204Q470 210 540 210T646 214V219Q560 219 500 214T410 204Z', 'black', { w: .5 }); // the rock at the waterline
+      for (let i = 0; i < 10; i++) { const x = 424 + i * 22 + r() * 6; s += k.line(`M${f(x)} ${f(205 + i * .5)}l${f(2 + r() * 3)} 5`, .6); }
       // the park climbing behind: one dark wood of ilex and pine, its crowns lit along the top
-      let wood = 'M560 176', wy = 150;
-      for (let x = 560; x < 650; x += 12) { wy -= 3 + r() * 3; const up = 6 + r() * 8; wood += `L${x} ${f(wy)}q3 ${f(-up)} 6 ${f(-up * .7)}q3 ${f(up * .1)} 6 ${f(up * .6)}`; }
-      s += k.shape(wood + 'V180H560Z', 'dark', { w: .8 });
-      for (let i = 0; i < 7; i++) { const x = 566 + i * 12 + r() * 4, y = 146 - i * 4 + r() * 4; s += k.shape(`M${f(x - 6)} ${f(y)}q3 -6 7 -5q4 1 4 5Z`, 'stipple', { w: 0 }); }
-      for (let i = 0; i < 5; i++) { const x = 548 + r() * 20, y = 168 + r() * 14; s += k.shape(`M${f(x - 7)} ${f(y)}q3 -8 8 -7q5 1 5 7Z`, 'dark', { w: .5 }); }
+      let wood = 'M582 178', wy = 146;
+      for (let x = 582; x < 650; x += 12) { wy -= 3 + r() * 3; const up = 6 + r() * 8; wood += `L${x} ${f(wy)}q3 ${f(-up)} 6 ${f(-up * .7)}q3 ${f(up * .1)} 6 ${f(up * .6)}`; }
+      s += k.shape(wood + 'V182H582Z', 'dark', { w: .8 });
+      for (let i = 0; i < 6; i++) { const x = 588 + i * 12 + r() * 4, y = 142 - i * 4 + r() * 4; s += k.shape(`M${f(x - 6)} ${f(y)}q3 -6 7 -5q4 1 4 5Z`, 'stipple', { w: 0 }); }
+      for (let i = 0; i < 5; i++) { const x = 570 + r() * 20, y = 170 + r() * 14; s += k.shape(`M${f(x - 7)} ${f(y)}q3 -8 8 -7q5 1 5 7Z`, 'dark', { w: .5 }); }
       return s;
     })();
     const castle = (() => {
-      const by = 186;
+      const by = 192;
       let s = '';
       // the landing stage and its sphinx
-      s += k.shape(k.rect(430, by + 8, 30, 5), 'light', { w: .7 }) + k.shape(`M434 ${by + 8}v-4q2 -3 5 -3l2 3h3v4Z`, 'dark', { w: .4 });
-      // the main block: two storeys, crenellated, the far wing in shade
-      s += k.shape(k.rect(470, 136, 72, by - 136), 'light', { w: 1.2 });
-      s += k.shape(k.rect(530, 136, 12, by - 136), 'mid', { w: .6 });
-      s += k.shape(k.rect(542, 148, 26, by - 148 + 4), 'mid', { w: 1 }) + k.shape(k.rect(556, 148, 12, by - 144), 'dark', { w: 0 });
-      s += k.windows(474, 142, 54, 36, 6, 2, { arched: true, ww: .45, wh: .62, lit: .5 });
-      s += k.windows(544, 152, 22, 28, 2, 2, { arched: true, ww: .45, wh: .6, lit: .4 });
-      const crenels = (x0, x1, y, h = 3.6) => { let d = `M${x0} ${y}`; for (let x = x0; x < x1 - 1; x += 6) d += `v${-h}h3v${h}h3`; return k.shape(d + `V${y + 2}H${x0}Z`, 'light', { w: .7 }); };
-      s += crenels(468, 544, 136) + crenels(540, 570, 148);
-      s += k.shape(k.rect(470, 158, 60, 3), 'mid', { w: .4 }); // the string course
+      s += k.shape(k.rect(402, by + 6, 40, 6), 'light', { w: .8 }) + k.shape(`M408 ${by + 6}v-5q3 -4 7 -4l3 4h4v5Z`, 'dark', { w: .5 });
+      // the main block: two storeys under a crenellated parapet, the far wing in shade
+      s += k.shape(k.rect(466, 124, 102, by - 124), 'light', { w: 1.3 });
+      s += k.shape(k.rect(552, 124, 16, by - 124), 'mid', { w: .6 });
+      s += k.shape(k.rect(568, 140, 34, by - 140 + 4), 'mid', { w: 1.1 }) + k.shape(k.rect(588, 140, 14, by - 136), 'dark', { w: 0 });
+      s += k.windows(470, 132, 78, 50, 7, 2, { arched: true, ww: .45, wh: .62, lit: .5 });
+      s += k.windows(571, 146, 28, 38, 2, 2, { arched: true, ww: .45, wh: .6, lit: .4 });
+      const crenels = (x0, x1, y, h = 4.4) => { let d = `M${x0} ${y}`; for (let x = x0; x < x1 - 1; x += 7) d += `v${-h}h3.6v${h}h3.4`; return k.shape(d + `V${y + 2.4}H${x0}Z`, 'light', { w: .8 }); };
+      s += crenels(464, 570, 124) + crenels(566, 604, 140);
+      s += k.shape(k.rect(466, 158, 86, 3.4), 'mid', { w: .5 }); // the string course
+      s += k.shape(k.rect(466, by - 8, 102, 8), 'mid', { w: .6 }); // the sea-stained plinth
       // the terrace on the seaward end with its balustrade
-      s += k.shape(k.rect(448, 170, 24, by - 170 + 4), 'light', { w: .8 }) + k.line(`M447 170h26`, 1);
-      for (let x = 450; x < 472; x += 3) s += k.line(`M${x} 170v-4`, .5);
-      s += k.line('M447 166h26', .7);
+      s += k.shape(k.rect(424, 166, 20, by - 166 + 4), 'light', { w: .9 }) + k.line('M423 166h22', 1.1);
+      for (let x = 426; x < 444; x += 3) s += k.line(`M${x} 166v-5`, .5);
+      s += k.line('M423 161h22', .8);
       // the square keep at the point, with its corbelled crown and the flag
-      const tx = 452, tw = 24, tt = 100;
-      s += k.shape(k.rect(tx, tt, tw, by - tt), 'paper', { w: 1.3 }) + k.shape(k.rect(tx + tw - 8, tt, 8, by - tt), 'mid', { w: .6 });
-      s += k.windows(tx + 3, tt + 12, tw - 10, 48, 1, 3, { arched: true, ww: .5, wh: .6, lit: .5 });
-      s += k.shape(k.rect(tx - 3, tt - 8, tw + 6, 8), 'light', { w: 1 });
-      let corb = `M${tx - 3} ${tt}`;
-      for (let i = 0; i < 6; i++) corb += `q2.5 4 5 0`;
-      s += k.shape(corb + 'Z', 'dark', { w: .5 }) + crenels(tx - 3, tx + tw + 4, tt - 8, 4);
-      s += k.shape(k.rect(tx + tw - 5, tt - 8, 8, 8), 'mid', { w: 0 });
-      s += k.flag(tx + tw / 2, tt - 12, 1.1, 'mid');
+      const tx = 440, tw = 30, tt = 80;
+      s += k.shape(k.rect(tx, tt, tw, by - tt), 'paper', { w: 1.4 }) + k.shape(k.rect(tx + tw - 10, tt, 10, by - tt), 'mid', { w: .6 });
+      s += k.windows(tx + 4, tt + 14, tw - 13, 66, 1, 4, { arched: true, ww: .5, wh: .6, lit: .5 });
+      s += k.shape(k.rect(tx - 4, tt - 9, tw + 8, 9), 'light', { w: 1.1 });
+      let corb = `M${tx - 4} ${tt}`;
+      for (let i = 0; i < 7; i++) corb += 'q2.7 4.4 5.4 0';
+      s += k.shape(corb + 'Z', 'dark', { w: .5 }) + crenels(tx - 4, tx + tw + 5, tt - 9, 5);
+      s += k.shape(k.rect(tx + tw - 6, tt - 9, 10, 9), 'mid', { w: 0 });
+      s += k.flag(tx + tw / 2, tt - 14, 1.3, 'mid');
+      // a steam launch putting out from the landing
+      s += k.shape('M372 197h30l-4 4h-24Z', 'black', { w: .6 }) + k.shape(k.rect(380, 191, 12, 6), 'light', { w: .5 }) + k.shape(k.rect(388, 183, 3, 8), 'black', { w: .4 }) + k.smoke(389.5, 182, .45, { seed: 12 });
       return s;
     })();
 
@@ -99,7 +102,6 @@ export default {
       s += k.shape('M-10 80Q80 74 186 78Q100 84 -10 86Z', 'black', { w: 0 });
       return s;
     })();
-    terrace += k.tree(440, 246, 2.2, 'cypress');
 
     return far + water + fleet + point + castle + terrace + pine;
   },

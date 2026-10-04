@@ -1,7 +1,150 @@
-// train storylets (owner: Events). Stub.
+// Train, boat, coach and path storylets (owner: Events): the people you travel with.
+// More in train-2.js. See docs/CONTRACTS.md §5 and §8. Flags: ev-… only.
 
 export default [
-  { "id": "ev.train.stub", "at": "train", "title": "A stub storylet", "text": "Stub text, to be replaced by its owner.", "choices": [
-  { "label": "Spend a little", "sub": "£1", "cost": { "money": 1 }, "ok": [ [ "nerve", 1 ] ] },
-  { "label": "Walk away", "ok": [ [ "nerve", -1 ] ] } ] },
+  // ---------- the card sharp: two flags that come back ----------
+  { id: "ev.train.card-sharp", at: "train", if: [["mode", "rail"], ["class", 1]], w: 2, once: true,
+    title: "Cards in the Saloon Car",
+    text: "In the saloon car a genial Belgian in a pearl tiepin is dealing écarté to a young lieutenant on his way back to his regiment. The lieutenant loses a month's pay with every hand, and the Belgian's left thumb does something clever with the deck each time he cuts. The lieutenant has begun to sweat. So has the attendant.",
+    choices: [
+      { label: "Expose the sharp before the car", sub: "A scene, a grateful officer, an enemy made",
+        roll: { p: 0.6, mods: [[["nerve", ">=", 6], 0.15]] },
+        ok: [["flag", "ev-sharp-exposed"], ["flag", "ev-subaltern-owed"], ["nerve", 1], ["record", "sighting", 0.3]],
+        fail: [["flag", "ev-sharp-exposed"], ["nerve", -2], ["record", "sighting", 0.5]] },
+      { label: "Cut in and beat him at it", sub: "£5 stake; win his money quietly", tag: "venue:club", cost: { money: 5 },
+        roll: { p: 0.45, mods: [[["aff", "venue:club", ">=", 1], 0.15]] },
+        ok: [["money", 15], ["flag", "ev-subaltern-owed"]], fail: [["nerve", -1]] },
+      { label: "Pay the boy's debt and say nothing", sub: "£6; a debt repaid is a friendship", cost: { money: 6 },
+        ok: [["flag", "ev-subaltern-owed"]] },
+      { label: "Mind your own business", sub: "The lieutenant pays; the Belgian smiles at you",
+        ok: [["nerve", -1]] },
+    ] },
+
+  // ---------- the sleeping car ----------
+  { id: "ev.train.sleeper-passport", at: "train", if: [["mode", "rail"], ["clock", "21.00", "02.00"], ["any", ["class", 1], ["class", 2]]], w: 2, once: true,
+    title: "Your Passport for the Night",
+    text: "The Wagons-Lits attendant makes up your berth with the deft contempt of his trade and holds out a hand. ‘Your passport, {sir|madam}. I keep it for the frontier, so the gentlemen of the customs need not wake you.’ It is the custom of the line. It also means a stranger holds your name all night.",
+    choices: [
+      { label: "Hand it over and sleep", sub: "Rested; your papers in a stranger's pocket",
+        ok: [["nerve", 2], ["record", "berth", 0.6]] },
+      { label: "Hand it over with a sovereign", sub: "£1, and ask him to warn you of callers", cost: { money: 1 },
+        ok: [["nerve", 1], ["record", "berth", 0.4], ["later", 3, "ev.then.attendant-knock"]] },
+      { label: "Keep it; be woken at the frontier", sub: "A customs lantern at three in the morning",
+        ok: [["nerve", -1]] },
+    ] },
+  { id: "ev.then.attendant-knock", at: "then", title: "Two Taps on the Door",
+    text: "At two in the morning the attendant taps twice, as agreed. A passenger from the next carriage asked him which berth was taken by the {legend}. He said he did not know. He thinks the man got off at the last stop, but he would not swear to it. He would like another sovereign.",
+    choices: [
+      { label: "Pay him, and wedge a chair", sub: "£1, and a short night", cost: { money: 1 },
+        ok: [["intel", { subj: "cover:active", claim: { knows: "desc" }, src: "porter", rel: 0.6, truth: "auto" }], ["nerve", -1]] },
+      { label: "Sit up dressed until dawn", sub: "Watch the corridor yourself",
+        ok: [["intel", { subj: "cover:active", claim: { knows: "desc" }, src: "porter", rel: 0.5, truth: "auto" }], ["susp", "active", -0.05], ["nerve", -2]] },
+    ] },
+
+  // ---------- Act III: third class ----------
+  { id: "ev.train.reservists", at: "train", if: [["mode", "rail"], ["act", 3], ["class", 3]], w: 3, once: true,
+    title: "A Carriage of Reservists",
+    text: "Third class is full of reservists going to their depots with cardboard boxes and loaves under their arms. They sing, they pass a bottle, and a red-faced corporal wants to know why a foreigner is travelling on a day like this. The carriage goes quiet to hear your answer. Somebody has a knife out, for the bread.",
+    choices: [
+      { label: "Pass round your plum brandy", sub: "Slivovitz makes a friend of anybody", if: [["item", "slivovitz"]],
+        ok: [["item", "-slivovitz"], ["nerve", 1]] },
+      { label: "Hand round your cigars", sub: "Dutch cigars, and no more questions", if: [["item", "dutch-cigars"]],
+        ok: [["item", "-dutch-cigars"], ["nerve", 1]] },
+      { label: "Sing with them, in their language", sub: "Know the words, or be remembered",
+        roll: { p: 0.5, mods: [[["cover", "vessey"], 0.2], [["cover", "weiss"], 0.1], [["nerve", ">=", 6], 0.1]] },
+        ok: [["nerve", 2]], fail: [["record", "sighting", 0.7], ["nerve", -1]] },
+      { label: "Stand in the corridor till the end", sub: "Hours on your feet; the corporal watches",
+        ok: [["nerve", -2], ["record", "sighting", 0.3]] },
+    ] },
+
+  // ---------- the passenger list ----------
+  { id: "ev.train.passenger-list", at: "train", if: [["any", ["mode", "sea"], ["kind", "steamer"]]], w: 2,
+    title: "The Purser's List",
+    text: "The purser posts the passenger list in a brass frame by the saloon stairs, as the company requires: names, nationality, port of embarkation. A copy goes ashore with the pilot, to the harbour police and to anybody who asks the right clerk nicely. Your name is not yet on it. The purser's pen is waiting.",
+    choices: [
+      { label: "Give your name and nation", sub: "Honest, and copied ashore", ok: [["record", "list", 0.8]] },
+      { label: "Pay the purser to misspell it", sub: "£2 for a different name in brass", cost: { money: 2 },
+        roll: { p: 0.7 }, ok: [["record", "list", 0.3]], fail: [["record", "bribe", 0.7], ["record", "list", 0.8]] },
+      { label: "Show the master your shipper's letter", sub: "Travel as the master's guest, off the list", if: [["flag", "ev-shipper-letter"]],
+        ok: [["unflag", "ev-shipper-letter"], ["nerve", 1]] },
+    ] },
+
+  // ---------- coach and path ----------
+  { id: "ev.train.bosnian-coach", at: "train", if: [["kind", "coach"]], w: 3, once: true,
+    title: "Gendarmes on the Drina Road",
+    text: "The coach labours up through beech woods, four horses and a driver who crosses himself at every shrine. At a bend two gendarmes with cock feathers in their hats wave it down. They want the schoolmaster in the corner seat, who has gone the colour of tallow. His bundle of books is on the rack above your head.",
+    choices: [
+      { label: "Claim the books are yours", sub: "His books; your name in their notebook",
+        roll: { p: 0.5, mods: [[["cover", "doyle"], 0.2]] },
+        ok: [["record", "register", 0.5], ["nerve", 1], ["later", 6, "ev.then.coach-schoolmaster"]],
+        fail: [["record", "register", 0.9], ["susp", "active", 0.1]] },
+      { label: "Pass the bundle out of the window", sub: "Into the ditch, unseen, you hope",
+        roll: { p: 0.55 }, ok: [["nerve", -1]], fail: [["record", "sighting", 0.6], ["nerve", -1]] },
+      { label: "Look out at the beech woods", sub: "They take him; nobody looks at you", ok: [["nerve", -1]] },
+    ] },
+  { id: "ev.then.coach-schoolmaster", at: "then", title: "A Paper Through the Window",
+    text: "At a village halt a barefoot boy runs beside the coach and throws a folded paper through your window. It is in careful German, signed with a schoolmaster's initials. ‘The fat captain with the scar is at the Konak in Sarajevo, asking about foreigners on the Drina road. Thank you for the books.’",
+    choices: [
+      { label: "Burn it and believe it", ok: [["intel", { subj: "hunter:heller", claim: { at: "SAR" }, src: "rumour", rel: 0.7, truth: "auto" }]] },
+      { label: "Keep it as a keepsake", sub: "A dangerous thing to keep",
+        ok: [["intel", { subj: "hunter:heller", claim: { at: "SAR" }, src: "rumour", rel: 0.7, truth: "auto" }], ["nerve", 1], ["record", "sighting", 0.2]] },
+    ] },
+  { id: "ev.train.guide-wants-more", at: "train", if: [["kind", "path"]], w: 3, once: true,
+    title: "The Guide Wants More",
+    text: "Halfway across, in rain that runs down your collar and into your boots, the guide stops under a dripping pine. The frontier guards changed their patrol last week, he says, and the price has changed with it. He names a sum. Behind him the path forks into the dark, and only he knows which fork leads anywhere.",
+    choices: [
+      { label: "Pay what he asks", sub: "£5, in the rain", cost: { money: 5 }, ok: [["nerve", -1]] },
+      { label: "Pay half and promise the rest", sub: "£2 now; he will remember the promise", cost: { money: 2 },
+        ok: [["later", 20, "ev.then.guide-sells"]] },
+      { label: "Refuse, and go on alone", sub: "The left fork, or the right",
+        roll: { p: 0.45, mods: [[["nerve", ">=", 6], 0.1]] },
+        ok: [["delay", 120], ["nerve", 1]], fail: [["delay", 360], ["nerve", -2], ["record", "sighting", 0.5]] },
+    ] },
+  { id: "ev.then.guide-sells", at: "then", title: "The Other Half",
+    text: "Word comes back along the smugglers' road, as word does. The guide you left owing has collected the other half of his fee from the frontier gendarmes instead: your height, your hat, your accent, and which way you went down the mountain. He thought it only fair.",
+    choices: [
+      { label: "Send him the money, too late", sub: "£3; he may unsay a little", cost: { money: 3 },
+        ok: [["record", "sighting", 0.4]] },
+      { label: "Accept it and move on", ok: [["record", "sighting", 0.7], ["intel", { subj: "cover:active", claim: { knows: "desc" }, src: "rumour", rel: 0.7, truth: "auto" }]] },
+    ] },
+  { id: "ev.train.path-lantern", at: "train", if: [["kind", "path"]], w: 2, once: true,
+    title: "A Lantern on the Path",
+    text: "A lantern comes swinging along the frontier path, and the guide pulls you flat into the bracken. Two border guards pass close enough to untie their bootlaces, arguing about a woman in the village. One stops to light his pipe. His match shows him the guide's bundle, lying in the mud of the path.",
+    choices: [
+      { label: "Lie still and pray", sub: "If he looks down, he looks at you",
+        roll: { p: 0.5, mods: [[["nerve", ">=", 6], 0.15]] },
+        ok: [["nerve", -1]], fail: [["record", "sighting", 0.8], ["delay", 120], ["money", -5]] },
+      { label: "Roll a coin into the lantern light", sub: "£1; the old smugglers' courtesy", cost: { money: 1 },
+        roll: { p: 0.65 }, ok: [["nerve", 1]], fail: [["record", "sighting", 0.6]] },
+      { label: "Run for the trees", sub: "Fast, loud, and perhaps fatal",
+        roll: { p: 0.4 }, ok: [["delay", 60], ["nerve", -2]], fail: [["record", "sighting", 1], ["susp", "active", 0.2], ["nerve", -3]] },
+    ] },
+
+  // ---------- the Channel boats: a porter who remembers ----------
+  { id: "ev.train.channel-porter", at: "train", if: [["mode", "ferry"], ["any", ["nation", "GB"], ["nation", "FR"], ["nation", "BE"], ["nation", "NL"]]], w: 3, once: true,
+    title: "A Porter on the Quay",
+    text: "On the quay a porter in a tarred cap seizes your case before the gangway is down and carries it aboard as if it held the crown jewels. He has carried luggage for thirty years, he says, and remembers every face that ever tipped him properly, and a few that did not. He sets the case down and waits.",
+    choices: [
+      { label: "Tip him handsomely; ask his name", sub: "£1 for a friend on the boat quay", cost: { money: 1 },
+        ok: [["flag", "ev-porter-friend"]] },
+      { label: "Tip him the usual sixpence", sub: "Exactly what is expected", ok: [["record", "sighting", 0.1]] },
+      { label: "Wave him off; carry your own", sub: "Memorable, and not kindly", ok: [["flag", "ev-porter-slighted"]] },
+    ] },
+  { id: "ev.train.porter-warning", at: "train", if: [["mode", "ferry"], ["flag", "ev-porter-friend"], ["act", ">=", 2]], w: 6, once: true,
+    title: "A Word on the Gangway",
+    text: "The porter in the tarred cap is on the quay again and takes your case like an old friend's. Under the noise of the winches he says that a gentleman was asking yesterday after a traveller of your height and hat, alone, and paid for a look at the passenger list. He has not seen him since.",
+    choices: [
+      { label: "Board by the crew gangway with him", sub: "£1; off the list, among the coal sacks", cost: { money: 1 },
+        ok: [["unflag", "ev-porter-friend"], ["susp", "active", -0.05], ["intel", { subj: "cover:active", claim: { knows: "desc" }, src: "porter", rel: 0.7, truth: "auto" }]] },
+      { label: "Ask what the gentleman looked like", sub: "Thirty years of faces; he will remember",
+        ok: [["unflag", "ev-porter-friend"], ["intel", { subj: "cover:active", claim: { knows: "desc" }, src: "porter", rel: 0.8, truth: "auto" }], ["record", "sighting", 0.2]] },
+    ] },
+  { id: "ev.train.porter-grudge", at: "train", if: [["mode", "ferry"], ["flag", "ev-porter-slighted"], ["act", ">=", 2]], w: 6, once: true,
+    title: "The Porter Points",
+    text: "The porter in the tarred cap is on the quay again. He does not offer to carry your case. He watches you to the gangway, then crosses to a man in a bowler by the customs shed and says something behind his hand. The man in the bowler takes out a notebook and looks at you with interest.",
+    choices: [
+      { label: "Go back and tip him now", sub: "£2; late, but perhaps not too late", cost: { money: 2 },
+        roll: { p: 0.5 }, ok: [["unflag", "ev-porter-slighted"], ["record", "sighting", 0.2]], fail: [["unflag", "ev-porter-slighted"], ["record", "sighting", 0.6]] },
+      { label: "Keep walking, face down", sub: "The notebook stays open", ok: [["unflag", "ev-porter-slighted"], ["record", "sighting", 0.7]] },
+    ] },
 ];

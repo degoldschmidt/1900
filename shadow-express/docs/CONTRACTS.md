@@ -129,7 +129,7 @@ STORY = { id:'kowal.meet', at:'city'|'train'|'person'|'op'|'interlude'|'control'
 - `train`: during journeys. Add `['mode', …]`, `['kind', …]` or `['class', …]` conditions.
 - `person`: when you seek out a person in the People view. The engine opens the heaviest eligible one whose `speaker` is that person.
 - `op`: an operation's step, way or twist.
-- `interlude`: lie-low gaps between orders.
+- `interlude`: quiet days in a posting, while the days pass (and lie-low gaps between orders).
 - `control`: frontier controls. The engine adds the standard choices: show papers, declare goods, bribe, trust the lining, claim the pouch, talk your way through. Your storylet supplies the scene and at most two extra choices.
 - `encounter`: a hunter is here. The engine adds: brazen it out, slip away, pay a porter to delay him, draw the pistol (with a weapon), go quietly. You supply the scene and at most two extra choices.
 - `then`: never chosen by the engine. Only reached through `next`, `later`, an `entry`, a hunter's `voice` or an op.
@@ -156,6 +156,10 @@ STORY = { id:'kowal.meet', at:'city'|'train'|'person'|'op'|'interlude'|'control'
 | `['mode', m]` · `['kind', k]` · `['class', n]` | the current journey's line mode, service kind, travel class |
 | `['state', nation, 'peace'\|'tension'\|'war']` · `['war', a, b]` | the world |
 | `['hunter', id, 'here']` | a hunter is in the same place (truth; encounters only) |
+| `['skill', name, op, n]` | the agent's skill: languages `german french italian slavic` (0–2), and `charm tradecraft observation composure paperwork streetwise commerce` (0–3) |
+| `['stay', op, n]` | whole days spent in the current city since arriving |
+| `['legend', op, n]` | how established the active cover is in this city, 0..1 (grows with cover work) |
+| `['watched']` | the local police are watching you here (truth: offer warning signs, never state it) |
 
 **Effects** — `[name, ...args]`, applied in order:
 
@@ -177,6 +181,8 @@ STORY = { id:'kowal.meet', at:'city'|'train'|'person'|'op'|'interlude'|'control'
 | `['delay', n]` | the current journey arrives n minutes later |
 | `['unlock', 'flag:name']` | set a flag that opens a hidden service or path |
 | `['debrief', text]` | a line for the operation's debrief |
+| `['legend', n]` | the active cover becomes more (or less) established in this city (n −1..1) |
+| `['watch', n]` | local police attention on you here rises (or falls) by n (−1..1) |
 
 **Intel.** `subj` is `hunter:id`, `person:id`, `line:ID`, `service:id`, `frontier:ID`, `city:ID`, `cover:id` (or `cover:active`) or `op:id`. `claim` has exactly one key: `{at:CITY}`, `{heading:CITY}`, `{loyal:'enemy'|'bureau'|'self'|'cause'}`, `{closed:[from|null, until|null]}`, `{knows:'name'|'desc'|'photo'}` or `{note:'≤ 20 words'}`. `src` is `seen porter paper bureau rumour police guide` or `person:id`. `rel` is how reliable it looks (0..1). `truth` is `true`, `false` or `'auto'` (the engine decides from the world; not for notes).
 
@@ -214,7 +220,8 @@ OP = { id:'op-ultimatum', act:2, issue:'07-18 09.00'|null, giver:'handler'|perso
   - Not noticed: the step is done, `ok` applies, and `rec` is written at its fidelity.
   - With `story`, the storylet runs instead of the roll; its choices finish the step with `['op', id, 'step:copy']`.
 - **Every key step** (any `act` unless `key:false`) has at least two ways, and at least one way is open to three or more covers.
-- **Side ops** (`side:true`, `issue:null`) come from a person through `['op', id, 'start']`. **Main ops** arrive by telegram at `issue`; at most two main ops overlap.
+- **Side ops** (`side:true`, `issue:null`) come from a person through `['op', id, 'start']`. **Main ops** arrive by telegram at `issue`; at most two main ops overlap. A main op with `optional:true` may be declined on its telegram.
+- **Postings** (REGISTRY §7): most steps are city work in the city where the agent is posted; a journey is a deliberate, high-stakes step. `wait` and `observe` steps count the time spent living in that city.
 
 ## 7. Runtime shapes (engine only, for reference)
 

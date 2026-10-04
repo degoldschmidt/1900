@@ -11,7 +11,7 @@ export default {
       const Q = (a, b) => `${f(x + a * s * dir)} ${f(y + b * s)}`;
       const body = `M${Q(-11, -12)}Q${Q(-11.5, -16)} ${Q(-8, -16.2)}Q${Q(-2, -14.6)} ${Q(2.6, -16.4)}L${Q(9.4, -22.6)}L${Q(10.4, -24)}L${Q(11, -22.4)}L${Q(15.6, -17.6)}L${Q(15, -16.2)}L${Q(12, -17.6)}L${Q(8.8, -12.4)}Q${Q(8.8, -9)} ${Q(6.5, -8.6)}Q${Q(-1, -7.4)} ${Q(-6.5, -8.4)}Q${Q(-10.4, -8.6)} ${Q(-11, -12)}Z`;
       const legs = `M${Q(-8.5, -9)}L${Q(-9.8, -4.5)}L${Q(-8.8, 0)}M${Q(-6, -8.4)}L${Q(-6.6, -4.4)}L${Q(-5.6, 0)}M${Q(4.6, -8.6)}L${Q(4.8, 0)}M${Q(6.6, -9)}L${Q(7.4, -4)}L${Q(7.2, 0)}`;
-      return k.line(legs, 1.25 * s) + k.line(`M${Q(-11, -14)}q${f(-2.4 * s * dir)} ${f(3 * s)} ${f(-1.8 * s * dir)} ${f(9 * s)}`, 1.3 * s) + k.shape(body, tone, { w: .6 });
+      return k.line(legs, f(1.25 * s)) + k.line(`M${Q(-11, -14)}q${f(-2.4 * s * dir)} ${f(3 * s)} ${f(-1.8 * s * dir)} ${f(9 * s)}`, f(1.3 * s)) + k.shape(body, tone, { w: .6 });
     };
     const hide = (boxes) => { k.lights = k.lights.filter(([x, y, w, h]) => !boxes.some(([a, b, c, d]) => x + w / 2 > a && x + w / 2 < c && y + h / 2 > b && y + h / 2 < d)); };
     // cobbles as one path: rows of small arcs, larger toward the eye
@@ -131,7 +131,7 @@ export default {
     let refl = '';
     for (const [x, y, sc, kind] of [[300, 218, 1.15, 'soldier'], [316, 220, 1.2, 'porter'], [372, 234, 1.45, 'woman'], [388, 236, 1.5, 'man'],
       [588, 238, 1.55, 'porter'], [612, 234, 1.4, 'woman'], [256, 212, .9, 'priest'], [452, 214, 1, 'woman']]) {
-      refl += k.line(`M${P(x, y + 1.5)}v${f(9 * sc)}`, 2.2 * sc, { op: .4 });
+      refl += k.line(`M${P(x, y + 1.5)}v${f(9 * sc)}`, f(2.2 * sc), { op: .4 });
       s += k.figure(x, y, sc, kind);
     }
     for (const x of [126, 276, 446]) { s += k.lamp(x, 216, 1.2); refl += k.line(`M${P(x, 218)}v12`, 1.3, { op: .45 }); }

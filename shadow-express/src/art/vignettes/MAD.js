@@ -13,8 +13,8 @@ export default {
       const Q = (a, b) => `${f(x + a * s * dir)} ${f(y + b * s)}`;
       const body = `M${Q(-11, -12)}Q${Q(-11.5, -16)} ${Q(-8, -16.2)}Q${Q(-2, -14.6)} ${Q(2.6, -16.4)}L${Q(9.4, -22.6)}L${Q(10.4, -24)}L${Q(11, -22.4)}L${Q(15.6, -17.6)}L${Q(15, -16.2)}L${Q(12, -17.6)}L${Q(8.8, -12.4)}Q${Q(8.8, -9)} ${Q(6.5, -8.6)}Q${Q(-1, -7.4)} ${Q(-6.5, -8.4)}Q${Q(-10.4, -8.6)} ${Q(-11, -12)}Z`;
       const legs = `M${Q(-8.5, -9)}L${Q(-9.8, -4.5)}L${Q(-8.8, 0)}M${Q(-6, -8.4)}L${Q(-6.6, -4.4)}L${Q(-5.6, 0)}M${Q(4.6, -8.6)}L${Q(4.8, 0)}M${Q(6.6, -9)}L${Q(7.4, -4)}L${Q(7.2, 0)}`;
-      return k.line(legs, 1.25 * s) + k.line(`M${Q(-11, -14)}q${f(-2.4 * s * dir)} ${f(3 * s)} ${f(-1.8 * s * dir)} ${f(9 * s)}`, 1.3 * s) + k.shape(body, tone, { w: .6 })
-        + (mule ? k.line(`M${Q(10.2, -23)}L${Q(8.6, -28.5)}M${Q(10.8, -22.8)}L${Q(11.4, -28.4)}`, 1.2 * s) : '');
+      return k.line(legs, f(1.25 * s)) + k.line(`M${Q(-11, -14)}q${f(-2.4 * s * dir)} ${f(3 * s)} ${f(-1.8 * s * dir)} ${f(9 * s)}`, f(1.3 * s)) + k.shape(body, tone, { w: .6 })
+        + (mule ? k.line(`M${Q(10.2, -23)}L${Q(8.6, -28.5)}M${Q(10.8, -22.8)}L${Q(11.4, -28.4)}`, f(1.2 * s)) : '');
     };
 
     // ---- far: the Guadarrama, the ridge and the Royal Palace on it, the roofs falling toward us
@@ -44,6 +44,7 @@ export default {
       ca += k.shape(k.rect(x, 186, w, 14), 'dark', { w: .6 }) + k.line(`M${P(x - 2, 200 - h + 3)}h${f(w + 4)}`, 1.4);
       for (let i = 1; i < 4; i++) ca += k.line(`M${P(x + 3, 200 - h + i * (h - 14) / 4 + 5)}h${f(w - 6)}`, .9);
     }
+    for (const [x, y] of [[30, 136], [118, 140], [166, 154]]) ca += k.shape(k.rect(x - 2, y - 8, 4, 9), 'black', { w: .5 }) + k.smoke(x, y - 8, 1, { seed: x });
     ca += k.tree(196, 202, 1.5, 'round') + k.tree(226, 202, 1.3, 'round') + k.tree(258, 200, 1.1, 'round');
     s += ca;
     hide([[-5, 130, 340, 200]]);

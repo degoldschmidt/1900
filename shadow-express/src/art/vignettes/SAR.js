@@ -19,6 +19,7 @@ export default {
       [380, 126], [408, 116], [436, 108], [466, 104], [496, 102], [528, 100], [560, 102], [590, 104], [620, 102], [396, 140], [424, 132], [452, 124], [484, 120], [514, 118], [546, 118], [576, 120], [606, 118]];
     for (const [x, y] of dots) far += k.building(x, y + 10, 11 + r() * 6, 8 + r() * 4, { far: true, roof: 'pitch', rh: 6, windows: false });
     for (let i = 0; i < 10; i++) far += k.tree(10 + r() * 620, 130 + r() * 30, .5, r() < .5 ? 'poplar' : 'cypress');
+    far += k.smoke(70, 118, .5, { seed: 4 }) + k.smoke(452, 100, .5, { seed: 8 }) + k.smoke(560, 96, .45, { seed: 15 });
     far += k.haze(130, 40, .3);
 
     // ---------- the town on the valley floor: domes and minarets ----------
@@ -93,6 +94,9 @@ export default {
     }
     stones += k.shape('M60 240q30 -16 90 -14q50 2 70 14Z', 'stipple', { w: .9 }) + k.figure(118, 230, 1.3, 'porter') + k.line('M124 210q34 -14 62 4', .9) + k.line('M186 214v14', .5);
 
-    return far + town + quays + bridge + water + stones;
+    // the near bank in shadow at the bottom left, the river darkening toward us
+    let near = k.shape('M-5 226Q40 220 80 228Q110 236 120 245H-5Z', 'dark', { w: .9 }) + k.shape('M300 245Q420 230 645 236V245Z', 'mid', { w: 0, op: .7 });
+    for (let i = 0; i < 12; i++) { const x = r() * 110, y = 222 + r() * 6; near += k.line(`M${f(x)} ${f(y + 4)}q${f(-1 + r() * 2)} -5 ${f(-2 + r() * 4)} -9`, .6); }
+    return far + town + quays + bridge + water + near + stones;
   },
 };

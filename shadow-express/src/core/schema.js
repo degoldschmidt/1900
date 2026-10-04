@@ -125,6 +125,7 @@ export function validate(D, opts = {}) {
       case 'wstate': return S.WORLD_STATES.includes(a) || `bad world state ${a}`;
       case 'hunter': return H.has(a) || `no hunter ${a}`;
       case 'here': return a === 'here' || `write 'here'`;
+      case 'skillName': return S.SKILLS.includes(a) || S.LANGUAGES.includes(a) || `no skill ${a}`;
       case 'rkind': return S.RECORD_KINDS.includes(a) || `bad record kind ${a}`;
       case 'story': if (!ST.has(a)) return `no story ${a}`; ref(a, w); return true;
       case 'itemDelta': return (typeof a === 'string' && /^[+-]/.test(a) && I.has(a.slice(1))) || `item delta must be '+id' or '-id' of a known item: ${a}`;
@@ -485,7 +486,7 @@ export function validate(D, opts = {}) {
   const cmpv = (a, op, b) => ({ '>': a > b, '>=': a >= b, '<': a < b, '<=': a <= b, '==': a === b, '!=': a !== b }[op]);
   for (const o of O.values()) {
     const w = `op:${o.id}`;
-    keysOnly(o, ['id', 'act', 'issue', 'giver', 'title', 'brief', 'steps', 'twists', 'win', 'fail', 'debrief', 'side'], w);
+    keysOnly(o, ['id', 'act', 'issue', 'giver', 'title', 'brief', 'steps', 'twists', 'win', 'fail', 'debrief', 'side', 'optional'], w);
     if (!/^op-[a-z0-9-]+$/.test(o.id)) err(w, "op ids start with 'op-'");
     if (![1, 2, 3].includes(o.act)) err(w, 'act must be 1, 2 or 3');
     if (o.side) { if (o.issue !== null) err(w, 'a side op is started by a storylet: issue null'); }

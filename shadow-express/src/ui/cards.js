@@ -4,7 +4,7 @@
 import { cardView, choose } from '../core/actions.js';
 import { context, text, coverName, aff } from '../core/game.js';
 import { chanceOf } from '../core/storylet.js';
-import { when, longDate, hm } from '../data/time.js';
+import { when, longDate, hm, span } from '../data/time.js';
 import { vignetteUrl, portraitUrl, glyphSvg, weatherAt } from './art.js';
 import { esc } from './dom.js';
 
@@ -95,6 +95,9 @@ export function makeCards(root, hooks) {
       return `<div class="kick">Debrief · ${esc(when(S.t))}</div><span class="stamp ${c.won ? 'ok' : ''}" style="float:right">${c.won ? 'ACCOMPLISHED' : 'FAILED'}</span><h2>${esc(o.title)}</h2>${lines}<div class="rule"></div><p class="it">${esc(o.debrief)}</p>`;
     }
     if (c.type === 'act') { card.classList.add('title-card'); return `<div class="kick">${esc(longDate(S.t))}</div><h1>${esc(c.title.split(' · ')[1] ?? c.title)}</h1><div class="kick" style="text-align:center">${esc(c.title.split(' · ')[0])}</div><div class="rule"></div><p>${esc(c.text)}</p>`; }
+    if (c.type === 'missed') { card.classList.add('danger'); return `<div class="kick">${esc(I.city.get(c.city).name)} · ${esc(when(S.t))}</div><h2>Missed connection</h2><p>The ${esc(G.W.service.get(c.svc).name)} for ${esc(I.city.get(c.to).name)} left at ${esc(hm(c.dep))}${S.t > c.dep ? `, ${esc(span(S.t - c.dep))} before you stepped down` : ''}. A porter shrugs. The station clock does not care about your orders.</p>`; }
+    if (c.type === 'late') return `<div class="kick">${esc(G.W.service.get(S.journey?.svc)?.name ?? '')}</div><h2>Running late</h2><p>The guard says the train is ${esc(span(c.delay))} behind time. At ${esc(I.city.get(c.at).name)} the ${esc(G.W.service.get(c.svc).name)} leaves at ${esc(hm(c.dep))}: you will not make it, unless it waits.</p>`;
+    if (c.type === 'inspector') { card.classList.add('danger'); return `<div class="kick">${esc(I.city.get(S.city)?.name ?? '')} · ${esc(when(S.t))}</div><h2>An inspector calls</h2><p>A man in a good overcoat is waiting in your rooms, hat on his knee. Police. He has a list of questions and all the time in the world: your business here, your friends, the letters you post, and why ${esc(coverName(G))} keeps the hours ${S.sex === 'f' ? 'she' : 'he'} does.</p>`; }
     if (c.type === 'note') return `<div class="kick">${esc(when(S.t))}</div><h2>${esc(c.title)}</h2><p>${esc(c.text)}</p>`;
     if (c.type === 'end') return endText(G, c);
     // storylets, controls, encounters
@@ -136,7 +139,7 @@ export function makeCards(root, hooks) {
       const ch = changes(G, before, G.S);
       const rolled = c.roll || (c.std && c.p !== undefined && c.p < 1);
       const typeEnd = G.S.ended;
-      if ((rolled || ch.length) && !['telegram', 'news', 'arrive', 'note', 'debrief', 'act'].includes(v.card.type) && !typeEnd) {
+      if ((rolled || ch.length) && !['telegram', 'news', 'arrive', 'note', 'debrief', 'act', 'missed'].includes(v.card.type) && !typeEnd) {
         resultShown = true;
         const word = rolled ? (res.success ? 'It goes as you hoped.' : 'It does not go your way.') : 'Done.';
         card.querySelector('.choices').innerHTML = `<p class="result">${esc(word)}</p><div class="chips" style="justify-content:flex-start">${ch.map(([s, k]) => `<span class="chip ${k}">${esc(s)}</span>`).join('')}</div><button class="choice" id="cardCont"><b>Continue</b></button>`;

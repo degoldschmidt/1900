@@ -39,11 +39,18 @@ export default {
     // the wooded slopes: clumps of acacia and plane, lit along their tops, darker on the shaded side
     const clump = (x, y, w, shade) => k.shape(`M${f(x - w)} ${f(y)}q${f(w * .1)} ${f(-w * .9)} ${f(w * .7)} ${f(-w * .8)}q${f(w * .5)} ${f(-w * .5)} ${f(w * .9)} ${f(w * .1)}q${f(w * .5)} ${f(w * .1)} ${f(w * .4)} ${f(w * .7)}Z`, shade ? 'dark' : 'mid', { w: .5 })
       + k.shape(`M${f(x - w * .9)} ${f(y - w * .2)}q${f(w * .1)} ${f(-w * .6)} ${f(w * .6)} ${f(-w * .6)}q${f(w * .3)} ${f(-w * .3)} ${f(w * .7)} 0q${f(-w * .6)} ${f(w * .1)} ${f(-w * 1.3)} ${f(w * .6)}Z`, 'stipple', { w: 0 });
-    for (let row = 0; row < 6; row++) for (let i = 0; i < 16; i++) {
-      const x = -6 + i * 42 + (row % 2) * 21 + r() * 10, y = cliff + 16 + row * 17 + r() * 4, t = (y - cliff) / (quayY - cliff);
-      const sl = tL - 10 + (bL - 40 - tL) * t, sr = tR + 6 + (bR + 16 - tR) * t;
-      if (x > sl - 12 && x < sr + 12) continue;
-      slope += clump(x, y, 12 + r() * 5, x > 320);
+    // crowns of acacia, plane and poplar, irregular, the back rows first so the near ones overlap them
+    for (let row = 0; row < 6; row++) {
+      let x = -10 + r() * 20;
+      while (x < 650) {
+        const w = 10 + r() * 12 + row * .9, y = cliff + 13 + row * 16.5 + (r() - .5) * 8, t = (y - cliff) / (quayY - cliff);
+        const sl = tL - 12 + (bL - 40 - tL) * t, sr = tR + 6 + (bR + 16 - tR) * t;
+        if (!(x > sl - w && x < sr + w)) {
+          if (r() < .12) slope += k.tree(x, y + 8, .7 + row * .08, 'poplar');
+          else slope += clump(x, y, w, x > 320);
+        }
+        x += w * 1.45 + r() * 16;
+      }
     }
     // ---------- the stairs ----------
     const edge = (t, side) => side < 0 ? tL + (bL - tL) * t : tR + (bR - tR) * t;

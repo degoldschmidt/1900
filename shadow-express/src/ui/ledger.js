@@ -2,7 +2,8 @@
 // Everything the player knows, and nothing the player does not: the dossier's "They know" is built from your own
 // traces and when they will arrive, never from the enemy's mind.
 
-import { board, book, plan, walk, contactsHere, seek, setLodging, safehouseHere, switchCover, stash, retrieve, checkTail, shakeTail, market, buy, sell, opActions, doWay, canLieLow, lieLow, wireFunds, wireQuery, mendPapers, sendCourier, useItem, usable, PUNCT_WORDS } from '../core/actions.js';
+import { board, book, bookTrip, plan, walk, contactsHere, seek, setLodging, safehouseHere, switchCover, stash, retrieve, checkTail, shakeTail, market, buy, sell, opActions, doWay, canLieLow, lieLow, wireFunds, wireQuery, mendPapers, sendCourier, useItem, usable, activities, doActivity, passDays, stopRoutine, PUNCT_WORDS } from '../core/actions.js';
+import { legendOf, watchOf, LODGINGS, needsRegistration, stayDays } from '../core/residence.js';
 import { coverName, coverLegend, coverData, aff, caseSize, CASE_SIZE, has, act as actOf, personHere } from '../core/game.js';
 import { currentStep, stepCities } from '../core/ops.js';
 import { when, hm, dayShort, span, T } from '../data/time.js';
@@ -62,10 +63,15 @@ export function makeLedger(root, hooks) {
     setTimeout(() => vignetteUrl(S.city, (S.t % 1440) / 60, weatherAt(G, S.city, S.t)).then((u) => { const im = body.querySelector('.vignette img'); if (!im || im.dataset.city !== S.city) return; if (u) im.src = u; else im.closest('.vignette').hidden = true; }), 0);
     const ops = opActions(G);
     const people = contactsHere(G);
-    const lodge = S.place === 'safehouse' ? 'a safe house' : S.place === 'rough' ? 'no bed (sleeping rough)' : 'an hotel, under your cover name';
     const lie = canLieLow(G);
+    const L = legendOf(G), days = stayDays(G), w = watchOf(S.t);
+    const signs = signsHere(G);
+    const lodging = S.lodging?.city === S.city ? LODGINGS[S.lodging.kind].label.toLowerCase() : 'none yet: an hotel tonight';
     let h = `<div class="vignette"><img alt="${esc(c.name)}" data-city="${esc(S.city)}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>
-      <h2>${esc(c.name)}</h2><p class="cityline">${esc(c.line)}</p>`;
+      <h2>${esc(c.name)}</h2><p class="cityline">${esc(c.line)}</p>
+      ${S.expelled?.city === S.city ? `<p class="red"><b>Ordered to leave</b> by ${esc(when(S.expelled.by))}.</p>` : ''}
+      <div class="daybar"><span>${esc(dayShort(S.t))}, ${esc(w.name)} · ${days ? `${days} day${days === 1 ? '' : 's'} here` : 'just arrived'} · lodging: ${esc(lodging)}</span></div>
+      <div class="daybar"><span class="meter" title="How established ${esc(coverName(G))} is here">your legend here <span class="gauge"><i style="width:${Math.round(L * 100)}%"></i></span></span><span class="signs">${esc(signs)}</span></div>`;
     if (ops.length) {
       h += `<h3>The work here</h3>`;
       for (const a of ops) {
@@ -78,23 +84,38 @@ export function makeLedger(root, hooks) {
         h += `</div>`;
       }
     }
-    h += `<h3>${esc(hm(S.t))} in ${esc(c.name)}</h3><div class="acts">`;
+    h += `<h3>This ${esc(w.name)}</h3><div class="acts">`;
+    for (const a of activities(G)) h += `<button class="act" data-activity="${a.id}" ${a.open ? '' : 'disabled'}><b>${esc(a.label)}</b><span>${esc(a.sub)}; until ${esc(hm(a.end))}</span></button>`;
     h += `<button class="act" data-do="walk"><b>Walk the city</b><span>an hour or two; anything may happen</span></button>`;
     for (const p of people) h += `<button class="act" data-seek="${esc(p.person.id)}"><b>Seek out ${esc(p.person.name)}</b><span>${esc(G.S.people[p.person.id].st === 'unknown' ? p.person.role : G.S.people[p.person.id].st)}</span></button>`;
+    h += `</div><h3>Days</h3><div class="acts">`;
+    if (S.routine) h += `<button class="act" data-do="stop"><b>Stop the routine</b><span>until ${esc(when(S.routine.until))}</span></button>`;
+    else {
+      h += `<button class="act" data-pass="1"><b>Let a day pass</b><span>your legend by day, a café of an evening</span></button>`;
+      h += `<button class="act" data-pass="7"><b>Let the days pass</b><span>until something needs you, a week at most</span></button>`;
+      if (lie) h += `<button class="act" data-do="lielow"><b>Lie low until the next order</b><span>about ${esc(span(lie - S.t))}; the trail cools</span></button>`;
+    }
     h += `<button class="act" data-tab-go="board"><b>Departures</b><span>trains and boats from ${esc(c.name)}</span></button>`;
     if (market(G).buy.length || market(G).sell.length) h += `<button class="act" data-tab-go="case"><b>The market</b><span>${esc(market(G).buy.map((x) => x.item.name).join(', ') || 'buyers for what you carry')}</span></button>`;
-    h += `<button class="act" data-wait="60"><b>Wait an hour</b><span>idle time is noticed</span></button>`;
-    h += `<button class="act" data-wait="night"><b>Wait until morning</b><span>you sleep at ${esc(lodge)}</span></button>`;
-    if (lie) h += `<button class="act" data-do="lielow"><b>Lie low until the next order</b><span>about ${esc(span(lie - S.t))}; the trail cools</span></button>`;
+    h += `</div><h3>Lodgings</h3><div class="acts">`;
+    for (const k of ['hotel', 'pension', 'rooms', ...(safehouseHere(G) ? ['safehouse'] : []), 'rough']) {
+      const Lg = LODGINGS[k], cur = S.lodging?.city === S.city && S.lodging.kind === k;
+      const note = { hotel: 'the register, every arrival', pension: 'a landlady who notices', rooms: needsRegistration(G) ? 'the police registration form; private after' : 'private, by the week', safehouse: 'no register, a friend downstairs', rough: 'no register; no rest' }[k];
+      h += `<button class="act" data-lodge="${k}" ${cur ? 'disabled' : ''}><b>${esc(Lg.label)}</b><span>${Lg.perNight ? `£${Lg.perNight} a night; ` : ''}${esc(note)}${cur ? ' · yours' : ''}</span></button>`;
+    }
     h += `</div><h3>Tradecraft</h3><div class="acts">`;
-    h += `<button class="act" data-lodge="hotel" ${S.place === 'hotel' || S.place === 'street' || S.place === 'station' ? 'disabled' : ''}><b>Sleep at an hotel</b><span>£1; your name goes in the register</span></button>`;
-    if (safehouseHere(G)) h += `<button class="act" data-lodge="safehouse" ${S.place === 'safehouse' ? 'disabled' : ''}><b>Use the safe house</b><span>no register, rest</span></button>`;
-    h += `<button class="act" data-lodge="rough" ${S.place === 'rough' ? 'disabled' : ''}><b>Sleep rough</b><span>no register; costs nerve</span></button>`;
     h += `<button class="act" data-do="tail"><b>Walk to see if you are followed</b><span>an hour and a half</span></button>`;
-    if (S.knownTail && S.tailedBy) h += `<button class="act danger" data-do="shake"><b>Shake off the man behind you</b><span>two hours; nerve</span></button>`;
+    if (S.knownTail) h += `<button class="act danger" data-do="shake"><b>Shake off the man behind you</b><span>two hours; nerve</span></button>`;
     h += `<button class="act" data-do="wire"><b>Wire London for funds</b><span>+£15; standing −4; a telegram is read</span></button>`;
     h += `<button class="act" data-tab-go="covers"><b>Change your papers</b><span>now ${esc(coverName(G))}</span></button></div>`;
     return h;
+  }
+  /** What the player has noticed of being watched here: signs, not the truth. */
+  function signsHere(G) {
+    const { S } = G;
+    const notes = S.intel.filter((e) => e.city === S.city && e.claim?.note && S.t - e.learned < 4 * 1440 && /follow|search|watch/.test(e.claim.note));
+    const n = notes.length + (S.knownTail ? 1 : 0);
+    return n === 0 ? 'no sign of being watched' : n === 1 ? 'a sign or two of being watched' : 'many signs of being watched';
   }
   const riskWord = (r) => (r >= .45 ? 'high' : r >= .25 ? 'fair' : r >= .1 ? 'low' : 'slight');
   function stepWords(G, s) {
@@ -116,7 +137,14 @@ export function makeLedger(root, hooks) {
       const its = plan(G, state.planTo);
       h += `<h3>To ${esc(I.city.get(state.planTo).name)}</h3>`;
       if (!its.length) h += `<p class="dim">No way there in the coming days, as far as you know.</p>`;
-      for (const it of its) h += `<div class="itin"><span class="k">${esc(it.kinds.join(' · '))}</span> — arrives ${esc(when(it.arr))} · about £${Math.round(it.fare)} · ${it.risk < 4 ? 'few controls' : it.risk < 10 ? 'some controls' : 'hard frontiers'}<div class="legs">${it.legs.map((l) => `${esc(hm(l.dep))} ${esc(W.service.get(l.svc).name)} to ${esc(I.city.get(l.to).name)}`).join(' → ')}</div></div>`;
+      its.forEach((it, n) => {
+        const changes = it.legs.length - 1;
+        const tight = it.legs.slice(1).some((l, i) => l.dep - it.legs[i].arr < 45);
+        h += `<div class="itin"><span class="k">${esc(it.kinds.join(' · '))}</span> — arrives ${esc(when(it.arr))} · about £${Math.round(it.fare)} · ${it.risk < 4 ? 'few controls' : it.risk < 10 ? 'some controls' : 'hard frontiers'} · ${changes ? `${changes} change${changes > 1 ? 's' : ''}${tight ? ', tight' : ''}` : 'direct'}
+          <div class="legs">${it.legs.map((l) => `${esc(hm(l.dep))} ${esc(W.service.get(l.svc).name)} to ${esc(I.city.get(l.to).name)} (${esc(hm(l.arr))})`).join(' → ')}</div>
+          <div class="fares" style="margin-top:5px">${[1, 2, 3].map((k) => `<button class="fare" data-trip="${n}" data-cls="${k}" ${it.legs.some((l) => W.service.get(l.svc).fare[k] === undefined) ? 'disabled' : ''}>${['', '1st', '2nd', '3rd'][k]}<small>whole journey</small></button>`).join('')}</div></div>`;
+      });
+      state.its = its;
     }
     const list = rows.filter((r) => !state.dest || r.to === state.dest);
     if (!list.length) h += `<p class="dim">Nothing leaves for there in the next two days.</p>`;
@@ -263,6 +291,7 @@ export function makeLedger(root, hooks) {
 
   // ---------- events ----------
   function wire(G) {
+    const { I, W } = G;
     const q = (s) => body.querySelectorAll(s);
     const after = () => hooks.acted?.();
     q('[data-do]').forEach((b) => b.addEventListener('click', () => {
@@ -272,9 +301,19 @@ export function makeLedger(root, hooks) {
       if (k === 'tail') checkTail(G);
       if (k === 'shake') shakeTail(G);
       if (k === 'wire') wireFunds(G);
+      if (k === 'stop') stopRoutine(G);
       after();
     }));
     q('[data-seek]').forEach((b) => b.addEventListener('click', () => { seek(G, b.dataset.seek); after(); }));
+    q('[data-activity]').forEach((b) => b.addEventListener('click', () => { doActivity(G, b.dataset.activity); after(); }));
+    q('[data-pass]').forEach((b) => b.addEventListener('click', () => { passDays(G, Number(b.dataset.pass)); after(); }));
+    q('[data-trip]').forEach((b) => b.addEventListener('click', () => {
+      const it = state.its?.[Number(b.dataset.trip)];
+      const r = it ? bookTrip(G, it, Number(b.dataset.cls)) : { ok: false, why: 'Plan again.' };
+      if (!r.ok) hooks.toast?.(r.why, true);
+      else { hooks.ticket?.(`${I.city.get(it.legs[0].from).name} → ${I.city.get(it.legs.at(-1).to).name}`, `${it.legs.length} train${it.legs.length > 1 ? 's' : ''} · ${['', 'first', 'second', 'third'][Number(b.dataset.cls)]} class · £${r.total}`, `departs ${when(it.legs[0].dep)}`); hooks.booked?.(); }
+      after();
+    }));
     q('[data-wait]').forEach((b) => b.addEventListener('click', () => {
       const S = G.S;
       const m = b.dataset.wait === 'night' ? (((7 * 60 - (S.t % 1440)) + 1440) % 1440 || 1440) : Number(b.dataset.wait);

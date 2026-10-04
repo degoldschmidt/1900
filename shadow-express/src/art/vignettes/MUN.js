@@ -14,7 +14,7 @@ export default {
       const Q = (a, b) => `${f(x + a * s * dir)} ${f(y + b * s)}`;
       const body = `M${Q(-11, -12)}Q${Q(-11.5, -16)} ${Q(-8, -16.2)}Q${Q(-2, -14.6)} ${Q(2.6, -16.4)}L${Q(9.4, -22.6)}L${Q(10.4, -24)}L${Q(11, -22.4)}L${Q(15.6, -17.6)}L${Q(15, -16.2)}L${Q(12, -17.6)}L${Q(8.8, -12.4)}Q${Q(8.8, -9)} ${Q(6.5, -8.6)}Q${Q(-1, -7.4)} ${Q(-6.5, -8.4)}Q${Q(-10.4, -8.6)} ${Q(-11, -12)}Z`;
       const legs = `M${Q(-8.5, -9)}L${Q(-9.8, -4.5)}L${Q(-8.8, 0)}M${Q(-6, -8.4)}L${Q(-6.6, -4.4)}L${Q(-5.6, 0)}M${Q(4.6, -8.6)}L${Q(4.8, 0)}M${Q(6.6, -9)}L${Q(7.4, -4)}L${Q(7.2, 0)}`;
-      return k.line(legs, 1.25 * s) + k.line(`M${Q(-11, -14)}q${f(-2.4 * s * dir)} ${f(3 * s)} ${f(-1.8 * s * dir)} ${f(9 * s)}`, 1.3 * s) + k.shape(body, tone, { w: .6 });
+      return k.line(legs, f(1.25 * s)) + k.line(`M${Q(-11, -14)}q${f(-2.4 * s * dir)} ${f(3 * s)} ${f(-1.8 * s * dir)} ${f(9 * s)}`, f(1.3 * s)) + k.shape(body, tone, { w: .6 });
     };
 
     // ---- the Frauenkirche, frontal, centred at the end of the lane
@@ -55,7 +55,7 @@ export default {
     const zEnd = 4.4, far1 = (xn) => P(VX + (xn - VX) / zEnd, VY + (GY - VY) / zEnd);
     const [lx, ly] = pt(-1, zEnd, GY), [rx, ry] = pt(1, zEnd, GY);
     let st = k.shape(k.poly([[XL, GY], [lx, ly], [rx, ry], [XR, GY]]), 'paper', { w: .8 });
-    for (let z = 1.04; z < zEnd; z *= 1.07) { const [ax, ay] = pt(-1, z, GY), [bx] = pt(1, z, GY); st += k.line(`M${P(ax, ay)}H${f(bx)}`, .35 + .5 / z); }
+    for (let z = 1.04; z < zEnd; z *= 1.07) { const [ax, ay] = pt(-1, z, GY), [bx] = pt(1, z, GY); st += k.line(`M${P(ax, ay)}H${f(bx)}`, f(.35 + .5 / z)); }
     for (const xn of [-160, 40, 220, 400, 600, 800]) st += k.line(`M${P(xn, GY)}L${far1(xn)}`, .4);
     st += k.shape(`M${P(XL, GY)}L${P(lx, ly)}L${far1(150)}L${P(150, GY)}Z`, 'mid', { w: 0, op: .55 });
     for (const xn of [40, 600]) st += k.line(`M${P(xn, GY)}L${far1(xn)}`, 1);

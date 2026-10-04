@@ -36,7 +36,7 @@ export default {
         for (let z = za + .1; z < zb - .14; z += .25) {
         left += k.shape(quad(X, Y, Y + 20, z, z + .1), 'black', { w: .5 }) + k.shape(quad(X, Y + 20, Y + 23, z - .01, z + .11), 'light', { w: .4 });
         if (Y === Yt + 48 && za < 2) left += k.shape(k.poly([P(X, Y + 20, z - .02), P(X, Y + 20, z + .12), P(X + 14, Y + 20, z + .12), P(X + 14, Y + 20, z - .02)]), 'dark', { w: .5 }) + k.shape(quad(X + 14, Y + 12, Y + 20, z - .02, z + .12), 'none', { w: .5 });
-        if (k.rand() < .3) { const [x0, y0] = P(X, Y, z), [x1, y1] = P(X, Y + 20, z + .1); k.lights.push([f(Math.min(x0, x1)), f(y0), f(Math.abs(x1 - x0) || 1), f(y1 - y0)]); }
+        if (k.rand() < (za < 2 ? 0 : za < 3 ? .2 : .3)) { const [x0, y0] = P(X, Y, z), [x1, y1] = P(X, Y + 20, z + .1); k.lights.push([f(Math.min(x0, x1)), f(y0), f(Math.abs(x1 - x0) || 1), f(y1 - y0)]); }
         }
       }
       const [px, py] = P(X, Yt - 24, za), [qx, qy] = P(X, Yb, za);
@@ -109,6 +109,12 @@ export default {
     life += k.lamp(380, 206, 1.3) + k.lamp(520, 214, 1.6);
     k.lights.push([376.8, 165.3, 6.4, 6], [516, 165.6, 8, 8]);
 
-    return far + road + left + ath + garden + life + chestnut;
+    // soot: chimney stacks on the mansards, their smoke drifting over the boulevard
+    let soot = '';
+    for (const [z, Yt] of [[2.5, -156], [3.9, -174], [5.4, -140]]) {
+      const [x, y] = P(X, Yt, z), h = 14 / z * 2;
+      soot += k.shape(k.rect(x - 3 / z * 2, y - h, 6 / z * 2, h), 'black', { w: .5 }) + k.smoke(x, y - h, 1.6 / z * 2, { seed: Math.round(z * 10) });
+    }
+    return far + road + left + soot + ath + garden + life + chestnut;
   },
 };

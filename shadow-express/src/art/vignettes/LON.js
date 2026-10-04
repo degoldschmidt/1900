@@ -7,6 +7,7 @@ export default {
     const r = k.rng(12);
     const waterY = 184;
     let far = k.skyline(-5, 640, waterY - 6, { seed: 4, hMin: 10, hMax: 26, style: 'north' }) + k.haze(waterY - 30, 26, .3); // Lambeth behind, in soot
+    const farLights = k.lights.length; // the far windows end here; those behind Parliament stay dark
     // Victoria Tower: square, pinnacled, the flag up
     const vt = (() => {
       const x = 532, w = 42, top = 52;
@@ -57,6 +58,8 @@ export default {
       + k.lamp(30, waterY - 15, .8) + k.lamp(92, waterY - 15, .8) + k.lamp(150, waterY - 15, .8)
       + k.figure(56, waterY - 15, .6, 'man') + k.figure(64, waterY - 15, .6, 'woman') + k.figure(118, waterY - 15, .6, 'man');
     const city = far + vt + front + clock;
+    const behind = ([x, y]) => (x > 170 && x < 576 && y > 40) || (x > 160 && x < 210);
+    k.lights.splice(0, farLights, ...k.lights.slice(0, farLights).filter((l) => !behind(l)));
     let water = k.water(waterY, 240);
     water += k.reflect(`<g opacity=".9">${front}${clock}${vt}</g>`, waterY, .3) + k.shape(k.rect(-5, waterY, 650, 5), 'horiz', { w: 0 });
     // river traffic

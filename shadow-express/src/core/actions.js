@@ -3,7 +3,9 @@
 import { DAY, T } from '../data/time.js';
 import { rand, hash } from './rng.js';
 import { departuresFrom, earliest, route, crossings, cancelled, delayOf, CHANGE } from './timetable.js';
-import { controlOdds, pickStory, advance, confront, knowDisruption, endGame, TICK } from './sim.js';
+import { controlOdds, pickStory, advance, confront, knowDisruption, endGame, TICK, startActivity, takeLodging } from './sim.js';
+import { skill, has as trait, tongue } from './hero.js';
+import { activities, watchOf, shadowed, addWatch, legendOf, SHADOWED, LODGINGS } from './residence.js';
 import { context, storyChoices, resolveChoice, leave, note, log, has, hasUse, contraband, coverData, coverName, aff, caseSize, CASE_SIZE, personHere, addIntel, carriedCovers, nationNow, act as actOf } from './game.js';
 import { currentStep, stepCities, finishOp, activeOps } from './ops.js';
 import { apply as applyEffects, all, chanceOf } from './storylet.js';
@@ -56,12 +58,28 @@ export function book(G, key, cls) {
   if (S.money < fare) return { ok: false, why: 'You cannot afford it.' };
   S.money -= fare;
   S.booked = { dp: row.dp, cls, fare, dep: row.dp.dep };
+  S.trip = null;
+  S.routine = null;
   S.place = 'station';
   S.stats.decisions++;
   if (row.next) S.stats.nextTrain++; else S.stats.notNext++;
   const p = aff(G, `class:${cls}`);
   if (p < 0) leave(G, 'sighting', .4, { heat: .5 }); // a count in third class is noticed
   return { ok: true };
+}
+
+/** Book a whole journey: every leg paid now, connections made on the way if the trains allow. */
+export function bookTrip(G, it, cls) {
+  const { S, W } = G;
+  if (!S.city || !it?.legs?.length || it.legs[0].from !== S.city) return { ok: false, why: 'Not from here.' };
+  const fares = it.legs.map((l) => { const f = W.service.get(l.svc).fare; return f[cls] ?? f[2] ?? f[3] ?? f[1]; });
+  const total = fares.reduce((a, b) => a + b, 0);
+  if (S.money < total) return { ok: false, why: 'You cannot afford the whole journey.' };
+  const first = book(G, it.legs[0].key, W.service.get(it.legs[0].svc).fare[cls] !== undefined ? cls : Number(Object.keys(W.service.get(it.legs[0].svc).fare)[0]));
+  if (!first.ok) return first;
+  S.money -= total - fares[0];
+  S.trip = { legs: it.legs, i: 0, cls, to: it.legs.at(-1).to };
+  return { ok: true, total };
 }
 
 /** Up to three itineraries to a destination: fastest, safest, cheapest, on the timetable as the player knows it. */
@@ -134,9 +152,32 @@ function meetingTrace(G, id) {
 export function setLodging(G, place) {
   const { S } = G;
   if (place === 'safehouse' && !safehouseHere(G)) return false;
-  S.place = place;
+  if (S.lodging?.city === S.city && S.lodging.kind === place) return false;
+  S.stats.decisions++;
+  return takeLodging(G, place);
+}
+
+// ---------- the day in a city ----------
+export { activities };
+/** Spend the rest of this watch of the day on an activity. */
+export function doActivity(G, id) {
+  const { S } = G;
+  const a = activities(G).find((x) => x.id === id);
+  if (!a || !a.open || S.queue.length) return false;
+  S.routine = null;
+  S.stats.decisions++;
+  startActivity(G, id);
   return true;
 }
+/** Let the days pass: the routine runs until something needs you, or for at most `days` days. */
+export function passDays(G, days = 7) {
+  const { S } = G;
+  if (!S.city || S.queue.length) return false;
+  S.routine = { until: S.t + days * DAY };
+  S.stats.decisions++;
+  return true;
+}
+export const stopRoutine = (G) => { G.S.routine = null; };
 export const safehouseHere = (G) => G.D.people.some((p) => p.city === G.S.city && p.perks.includes('safehouse') && G.S.people[p.id].st === 'recruited');
 
 export function switchCover(G, id) {
@@ -174,20 +215,25 @@ export function checkTail(G) {
   const { S } = G;
   S.busyUntil = Math.max(S.busyUntil, S.t) + 90;
   S.stats.decisions++;
-  const seen = S.tailedBy ? rand(S) < .75 : rand(S) < .08;
-  S.knownTail = seen && !!S.tailedBy;
+  const eye = .06 * skill(S.hero, 'observation') + .04 * skill(S.hero, 'tradecraft');
+  const police = shadowed(G);
+  const seen = S.tailedBy ? rand(S) < .7 + eye : police ? rand(S) < .55 + eye : rand(S) < .08 - eye / 2;
+  S.knownTail = seen && (!!S.tailedBy || police);
   const h = S.tailedBy ? G.I.hunter.get(S.tailedBy) : null;
-  note(G, 'A long walk', seen ? (h ? `Twice round the square and back by the arcade. ${cap(h.look)} keeps forty yards behind you.` : 'A man in a brown coat stops when you stop. Or does he?') : 'Nobody follows. Or nobody you can see.');
-  if (seen && !h) addIntel(G, { subj: 'cover:active', claim: { note: 'followed in the street' }, src: 'seen', rel: .4, truth: false });
+  note(G, 'A long walk', seen ? (h ? `Twice round the square and back by the arcade. ${cap(h.look)} keeps forty yards behind you.` : police ? 'A plain-clothes man with a policeman\'s boots stops when you stop, and studies a shop window full of corsets.' : 'A man in a brown coat stops when you stop. Or does he?') : 'Nobody follows. Or nobody you can see.');
+  if (seen) addIntel(G, { subj: 'cover:active', claim: { note: h ? `followed by ${h.name}` : 'followed in the street' }, src: 'seen', rel: h || police ? .9 : .4, truth: !!h || police });
   return seen;
 }
 export function shakeTail(G) {
   const { S } = G;
-  if (!S.tailedBy) { S.busyUntil = Math.max(S.busyUntil, S.t) + 120; return false; }
   S.busyUntil = Math.max(S.busyUntil, S.t) + 120;
   S.nerve = Math.max(0, S.nerve - 1);
   S.stats.decisions++;
-  const p = .5 + (S.nerve >= 6 ? .15 : 0) + (G.I.city.get(S.city).capital ? .1 : 0);
+  const p = .5 + (S.nerve >= 6 ? .15 : 0) + (G.I.city.get(S.city).capital ? .1 : 0) + .08 * skill(S.hero, 'tradecraft');
+  if (!S.tailedBy) { // only the police shadow: lose him for the day, at the cost of looking like someone with a reason to
+    if (shadowed(G) && rand(S) < p) { S.shookUntil = Math.floor(S.t / DAY) * DAY + DAY + 6 * HOUR; addWatch(G, .05); S.knownTail = false; note(G, 'Lost him', 'In at the front of the Arcade, out by the tradesmen\'s door. For the rest of the day nobody follows you; tomorrow, someone will be told to try harder.'); return true; }
+    return false;
+  }
   if (rand(S) < p) { const h = S.tailedBy; S.tailedBy = null; S.knownTail = false; leave(G, 'sighting', .5, { heat: .4 }); note(G, 'Lost him', 'Through a department store, out by the goods door, onto a moving tram. You are alone.'); log(G, `Shook off ${G.I.hunter.get(h).name}.`); return true; }
   confront(G, S.tailedBy, 'tail');
   return false;
@@ -198,8 +244,9 @@ const cap = (s) => s[0].toUpperCase() + s.slice(1);
 export function market(G) {
   const { S, W, I } = G;
   if (!S.city) return { buy: [], sell: [] };
-  const buy = G.D.items.filter((it) => it.city === S.city && it.price !== null).map((it) => ({ item: it, price: Math.max(1, Math.round(it.price * W.price(it.id, S.city, S.t))) }));
-  const sell = S.case.map((x) => I.item.get(x.id)).filter((it) => it && it.sell[S.city] !== undefined).map((it) => ({ item: it, price: Math.round(it.sell[S.city] * W.price(it.id, S.city, S.t)) }));
+  const c = skill(S.hero, 'commerce');
+  const buy = G.D.items.filter((it) => it.city === S.city && it.price !== null).map((it) => ({ item: it, price: Math.max(1, Math.round(it.price * W.price(it.id, S.city, S.t) * (1 - .05 * c))) }));
+  const sell = S.case.map((x) => I.item.get(x.id)).filter((it) => it && it.sell[S.city] !== undefined).map((it) => ({ item: it, price: Math.round(it.sell[S.city] * W.price(it.id, S.city, S.t) * (1 + .06 * c)) }));
   return { buy, sell };
 }
 export function buy(G, id) {
@@ -341,9 +388,11 @@ export function sendCourier(G, person, item) {
   const p = G.I.person.get(person);
   if (!p?.perks.includes('courier') || S.people[person].st !== 'recruited' || !personHere(G, person) || !has(G, item)) return false;
   S.case.splice(S.case.findIndex((x) => x.id === item), 1);
-  S.later.push({ at: S.t + 48 * HOUR, until: S.t + 49 * HOUR, courier: { person, item } });
+  const companion = G.I.item.get(item)?.fn === 'companion';
+  const dest = companion ? (G.D.ops.map((o) => o.steps.find((st) => st.kind === 'carry' && st.item === item)).find(Boolean)?.to ?? 'LON') : 'LON';
+  S.later.push({ at: S.t + (companion ? 60 : 48) * HOUR, until: S.t + 100 * HOUR, courier: { person, item, to: [dest].flat()[0] } });
   S.stats.decisions++;
-  log(G, `${p.name} takes ${G.I.item.get(item).name.toLowerCase()} to London.`);
+  log(G, `${p.name} takes ${G.I.item.get(item).name.replace(/,.*$/, '').toLowerCase()} on, out of your hands.`);
   return true;
 }
 
@@ -352,7 +401,7 @@ export function useItem(G, id) {
   const { S, I, W } = G;
   const it = I.item.get(id);
   if (!it || !has(G, id)) return false;
-  if (it.tags.includes('use:nerve')) { S.case.splice(S.case.findIndex((x) => x.id === id), 1); S.nerve = Math.min(10, S.nerve + 3); log(G, `${it.name}: courage, of a kind.`); S.stats.decisions++; return true; }
+  if (it.tags.includes('use:nerve')) { S.case.splice(S.case.findIndex((x) => x.id === id), 1); S.nerve = Math.min(10, S.nerve + (trait(S.hero, 'drink') ? 5 : 3)); log(G, `${it.name}: courage, of a kind.`); S.stats.decisions++; return true; }
   if (it.tags.includes('use:credit')) {
     if (!S.city || !I.city.get(S.city).venues.includes('venue:bank')) return false;
     if (!W.credit(S.t)) { note(G, 'No credit', 'The cashier shakes his head: the exchanges are closed, and no letter of credit will be honoured until the crisis is over.'); return false; }
@@ -385,6 +434,13 @@ export function cardView(G) {
   if (card.type === 'story') { const s = I.story.get(card.id); return { card, story: s, choices: storyChoices(G, s, card) }; }
   if (card.type === 'control') { const s = card.story ? I.story.get(card.story) : null; return { card, story: s, choices: [...controlChoices(G, card), ...(s ? storyChoices(G, s, card).slice(0, 2) : [])] }; }
   if (card.type === 'encounter') { const s = card.story ? I.story.get(card.story) : null; return { card, story: s, choices: [...encounterChoices(G, card), ...(s ? storyChoices(G, s, card).slice(0, 2) : [])] }; }
+  if (card.type === 'missed') return { card, choices: missedChoices(G, card) };
+  if (card.type === 'late') return { card, choices: [
+    { std: 'hold', label: 'Telegraph ahead to hold the connection', sub: '£1; the station-master may oblige', cost: 1, p: .45 + .05 * skill(S.hero, 'charm'), open: true, afford: S.money >= 1 },
+    { std: 'continue', label: 'Sit back and hope', open: true, afford: true }] };
+  if (card.type === 'inspector') return { card, choices: inspectorChoices(G) };
+  if (card.type === 'telegram' && I.op.get(card.op)?.optional && S.ops[card.op].status === 'active') return { card, choices: [
+    { std: 'accept', label: 'Accept the job', open: true, afford: true }, { std: 'decline', label: 'Decline it', sub: 'Ashby will not hold it against you, much', open: true, afford: true }] };
   return { card, choices: [{ label: card.type === 'end' ? 'The end' : 'Continue', ok: [], std: 'continue', open: true, afford: true }] };
 }
 
@@ -420,13 +476,14 @@ function controlChoices(G, card) {
   const desc = S.enemy.desc * (I.ground.includes(card.into) ? .3 : .1);
   const out = [];
   const companion = S.case.some((x) => I.item.get(x.id)?.fn === 'companion');
-  const pPapers = card.alien ? .05 : card.alert ? .1 : Math.max(.05, Math.min(.95, .35 + papers * .6 - desc - (companion ? .12 : 0)));
+  const pw = .05 * skill(S.hero, 'paperwork'), cmp = .06 * skill(S.hero, 'composure'), lang = [-.12, .05, .1][tongue(S.hero, card.into)];
+  const pPapers = card.alien ? .05 : card.alert ? .1 + cmp / 2 : Math.max(.05, Math.min(.95, .35 + papers * .6 - desc - (companion ? .12 : 0) + pw));
   if (card.papers || card.search) out.push({ std: 'papers', label: card.papers ? `Show the papers of ${coverName(G)}` : 'Open your case', sub: card.search ? 'They will search the case' : companion ? 'Two sets of papers to satisfy him' : 'Your name goes in their book', p: card.papers ? pPapers : 1, open: true, afford: true });
   if (card.search && cb.length) out.push({ std: 'declare', label: 'Declare what you carry', sub: `Lose ${cb.map((x) => I.item.get(x.id).name.toLowerCase()).join(', ')}`, open: true, afford: true });
   if (card.search && pouch) out.push({ std: 'pouch', label: 'Claim the diplomatic bag', sub: 'Not searched; but remembered', open: true, afford: true });
   const bribe = 2 + 2 * actOf(G);
-  out.push({ std: 'bribe', label: `Fold £${bribe} into the passport`, sub: N.bribe >= .5 ? 'Officials here are known to oblige' : 'Officials here are not known to oblige', cost: bribe, open: true, afford: S.money >= bribe, p: Math.min(.95, N.bribe + (S.journey?.cls === 1 ? .1 : 0) - (card.alert ? .3 : 0)) });
-  if (S.nerve >= 1) out.push({ std: 'talk', label: 'Talk your way through', sub: 'Costs nerve', open: true, afford: true, p: Math.max(.05, .4 + (coverData(G)?.nation === 'CH' ? .15 : 0) + (S.covers[S.cover] ? 0 : 0) - (card.alien ? .4 : 0) - (card.alert ? .25 : 0)) });
+  out.push({ std: 'bribe', label: `Fold £${bribe} into the passport`, sub: N.bribe >= .5 ? 'Officials here are known to oblige' : 'Officials here are not known to oblige', cost: bribe, open: true, afford: S.money >= bribe, p: Math.min(.95, N.bribe + (S.journey?.cls === 1 ? .1 : 0) - (card.alert ? .3 : 0) + .05 * skill(S.hero, 'streetwise')) });
+  if (S.nerve >= 1) out.push({ std: 'talk', label: 'Talk your way through', sub: tongue(S.hero, card.into) === 0 ? 'Costs nerve; you do not speak his language' : 'Costs nerve', open: true, afford: true, p: Math.max(.05, .4 + (coverData(G)?.nation === 'CH' ? .15 : 0) + cmp + lang - (card.alien ? .4 : 0) - (card.alert ? .25 : 0)) });
   return out.map((c) => ({ ...c, spare, lining }));
 }
 
@@ -435,6 +492,13 @@ function std(G, card, c) {
   S.stats.decisions++;
   if (card.type === 'control') return controlOutcome(G, card, c);
   if (card.type === 'encounter') return encounterOutcome(G, card, c);
+  if (card.type === 'missed') return missedOutcome(G, card, c);
+  if (card.type === 'inspector') return inspectorOutcome(G, c);
+  if (card.type === 'late') {
+    if (c.std === 'hold') { S.money -= 1; if (rand(S) < c.p) { if (S.trip) S.trip.held = card.next; log(G, 'The connection will wait, a little.'); return { success: true }; } return { success: false }; }
+    return { success: true };
+  }
+  if (card.type === 'telegram' && c.std === 'decline') { S.ops[card.op].status = 'declined'; S.standing = Math.max(0, S.standing - 2); log(G, `Declined: ${G.I.op.get(card.op).title}.`); return { success: true }; }
   if (['telegram', 'debrief', 'news', 'note', 'arrive', 'act'].includes(card.type)) {
     if (S.lyingLow && !S.queue.length) { const u = S.lyingLow; S.lyingLow = null; cool(G); S.busyUntil = u; }
     return { success: true };
@@ -444,6 +508,7 @@ function std(G, card, c) {
 
 function controlOutcome(G, card, c) {
   const { S, I } = G;
+  if (trait(S.hero, 'nervous')) S.nerve = Math.max(0, S.nerve - 1);
   const x = { fid: card.fid, name: card.name };
   if (c.std === 'bribe') {
     S.money -= c.cost;
@@ -512,15 +577,76 @@ function arrest(G, card) {
   return { success: false };
 }
 
+// ---------- missed connections ----------
+function missedChoices(G, card) {
+  const { S, W, I } = G;
+  const trip = S.trip;
+  const final = trip?.to ?? card.to;
+  const its = plan(G, final).slice(0, 2);
+  const out = its.map((it, i) => ({ std: 'reroute', it, label: `${i === 0 ? 'Take' : 'Or take'} the ${hmText(it.legs[0].dep)} ${W.service.get(it.legs[0].svc).name}`, sub: `to ${I.city.get(it.legs[0].to).name}; in ${I.city.get(final).name} ${whenText(it.arr)}`, open: true, afford: true }));
+  out.push({ std: 'stay', label: `Give up the journey at ${I.city.get(S.city).name}`, sub: 'take a room, think again', open: true, afford: true });
+  return out;
+}
+function missedOutcome(G, card, c) {
+  const { S, W } = G;
+  if (c.std === 'reroute') {
+    const cls = S.trip?.cls ?? 2;
+    S.trip = null;
+    S.booked = null;
+    const r = bookTrip(G, c.it, cls);
+    if (!r.ok) { note(G, 'Stranded', 'There is not enough in your purse for the new tickets. You will have to find the money, or another way.'); S.queue.push({ type: 'arrive', city: S.city, delay: 0, n: ++S.cardN }); return { success: false }; }
+    return { success: true };
+  }
+  S.trip = null;
+  S.queue.push({ type: 'arrive', city: S.city, delay: 0, n: ++S.cardN });
+  return { success: true };
+}
+const hmText = (t) => { const m = ((t % 1440) + 1440) % 1440; return `${String(Math.floor(m / 60)).padStart(2, '0')}.${String(m % 60).padStart(2, '0')}`; };
+const whenText = (t) => `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][((Math.floor(t / 1440) % 7) + 7) % 7]} ${hmText(t)}`;
+
+// ---------- the inspector calls ----------
+function inspectorChoices(G) {
+  const { S, I } = G;
+  const L = legendOf(G), N = I.nation.get(I.city.get(S.city).nation);
+  const alerted = !!S.enemy.dossiers[S.cover]?.name;
+  const bribe = 3 + 2 * actOf(G);
+  return [
+    { std: 'answer', label: 'Answer every question', sub: L >= .5 ? 'Your life here bears looking into' : 'Your life here is thin', p: Math.max(.05, Math.min(.95, .3 + .5 * L + .05 * skill(S.hero, 'composure') - (alerted ? .3 : 0))), open: true, afford: true },
+    { std: 'papers', label: 'Produce papers and a reference', sub: 'He will write it all down', p: Math.max(.05, Math.min(.95, .25 + (S.covers[S.cover]?.papers ?? .5) * .5 + .06 * skill(S.hero, 'paperwork') - (alerted ? .3 : 0))), open: true, afford: true },
+    { std: 'fund', label: `£${bribe} for the police widows' fund`, sub: N.bribe >= .5 ? 'It is done here' : 'It is not much done here', cost: bribe, p: Math.min(.9, N.bribe + .05 * skill(S.hero, 'streetwise')), open: true, afford: S.money >= bribe },
+    { std: 'leave', label: 'Promise to leave within the day', sub: 'No questions asked; no staying either', open: true, afford: true },
+  ];
+}
+function inspectorOutcome(G, c) {
+  const { S, I } = G;
+  const onGround = I.ground.includes(I.city.get(S.city).nation);
+  const expel = (why) => { S.expelled = { city: S.city, by: S.t + 24 * HOUR }; note(G, 'Ordered to leave', `${why} You have until this time tomorrow to be gone from ${I.city.get(S.city).name}.`); };
+  if (c.std === 'leave') { addWatch(G, -.2); expel('He bows, satisfied.'); return { success: true }; }
+  if (c.std === 'fund') {
+    S.money -= c.cost;
+    if (rand(S) < c.p) { addWatch(G, -.35); leave(G, 'bribe', .2); log(G, 'The inspector is grateful on behalf of the widows.'); return { success: true }; }
+    leave(G, 'bribe', 1); addWatch(G, .2);
+    if (onGround && G.W.act(S.t) === 3) { note(G, 'Arrested', 'He counts the money twice, then calls the constable from the stairs.'); endGame(G, 'arrested'); return { success: false }; }
+    expel('He returns the money with a look you will remember.');
+    return { success: false };
+  }
+  if (rand(S) < c.p) { addWatch(G, -.3); leave(G, c.std === 'papers' ? 'register' : 'calm', c.std === 'papers' ? .7 : .25); log(G, 'The inspector leaves, apparently content.'); return { success: true }; }
+  addWatch(G, .1);
+  leave(G, 'sighting', .8, { heat: .4 });
+  if (onGround && G.W.act(S.t) === 3) { note(G, 'Arrested', 'He closes his notebook. "You will come with me, please." The please is a formality.'); endGame(G, 'arrested'); return { success: false }; }
+  expel('He is not satisfied, and says so in the language of the regulations.');
+  return { success: false };
+}
+
 // ---------- encounters ----------
 function encounterChoices(G, card) {
   const { S, I } = G;
   const d = S.enemy.dossiers[S.cover];
   const known = !!d?.name, photo = S.enemy.photo;
   const out = [];
-  out.push({ std: 'brazen', label: 'Brazen it out', sub: known ? 'He knows the name you travel under' : 'He may not be sure of you', open: true, afford: true, p: Math.max(.05, .62 - (known ? .3 : 0) - (photo ? .25 : 0) + (coverData(G)?.nation === 'CH' ? .08 : 0)) });
-  out.push({ std: 'slip', label: S.journey ? 'Get down at the next halt' : 'Slip away through the crowd', sub: 'Costs nerve', open: S.nerve >= 1, afford: true, p: .6 + (S.journey ? -.1 : 0) });
-  out.push({ std: 'porter', label: 'Pay a porter to delay him', sub: '£3', open: true, afford: S.money >= 3, p: .7 });
+  out.push({ std: 'brazen', label: 'Brazen it out', sub: known ? 'He knows the name you travel under' : 'He may not be sure of you', open: true, afford: true, p: Math.max(.05, .62 - (known ? .3 : 0) - (photo ? .25 : 0) + (coverData(G)?.nation === 'CH' ? .08 : 0) + .05 * skill(S.hero, 'composure')) });
+  out.push({ std: 'slip', label: S.journey ? 'Get down at the next halt' : 'Slip away through the crowd', sub: 'Costs nerve', open: S.nerve >= 1, afford: true, p: .6 + (S.journey ? -.1 : 0) + .07 * skill(S.hero, 'tradecraft') });
+  out.push({ std: 'porter', label: 'Pay a porter to delay him', sub: '£3', open: true, afford: S.money >= 3, p: .7 + .05 * skill(S.hero, 'streetwise') });
   if (S.case.some((x) => I.item.get(x.id)?.tags.includes('weapon'))) out.push({ std: 'pistol', label: 'Draw the pistol', sub: 'There will be no hiding afterwards', open: true, afford: true, p: .75 });
   out.push({ std: 'quiet', label: 'Go quietly', sub: card.kind === 'arrest' ? 'This is his ground' : 'He cannot hold you long here', open: true, afford: true });
   return out;

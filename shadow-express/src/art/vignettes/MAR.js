@@ -105,8 +105,8 @@ export default {
     for (const [x, y, sc] of boats) {
       const L = 46 * sc, H = 9 * sc, mh = 120 * sc;
       ms += k.shape(`M${P(x - L / 2, y - H)}h${f(L)}q-3 ${f(H * .7)} -9 ${f(H)}h${f(-L + 16)}q-6 -2 -7 ${f(-H)}Z`, 'dark', { w: .9 }) + k.line(`M${P(x - L / 2, y - H + 2)}h${f(L)}`, .6, { color: k.paper });
-      ms += k.line(`M${P(x, y - H)}V${f(y - mh)}`, 1.4 * sc);
-      ms += k.line(`M${P(x - 2, y - mh * .82)}L${P(x + 26 * sc, y - mh * .52)}`, 1.1 * sc) + k.shape(`M${P(x, y - mh * .8)}L${P(x + 24 * sc, y - mh * .53)}l-2 3L${P(x, y - mh * .74)}Z`, 'light', { w: .6 });
+      ms += k.line(`M${P(x, y - H)}V${f(y - mh)}`, f(1.4 * sc));
+      ms += k.line(`M${P(x - 2, y - mh * .82)}L${P(x + 26 * sc, y - mh * .52)}`, f(1.1 * sc)) + k.shape(`M${P(x, y - mh * .8)}L${P(x + 24 * sc, y - mh * .53)}l-2 3L${P(x, y - mh * .74)}Z`, 'light', { w: .6 });
       ms += k.line(`M${P(x, y - mh)}L${P(x - L / 2, y - H)}M${P(x, y - mh)}L${P(x + L / 2, y - H)}`, .45);
     }
     s += ms;
@@ -117,12 +117,17 @@ export default {
     for (let y = 224; y < 242; y += 6) pave += `M-5 ${y}H645`;
     for (let x = -4, i = 0; x < 645; x += 16, i++) for (let y = 218; y < 240; y += 6) pave += `M${f(x + (y / 6 % 2) * 8)} ${y}v6`;
     q += k.line(pave, .4);
-    // the awning and its black shade
-    q += k.shape('M150 236L170 222H290L300 236Z', 'black', { w: 0, op: .55 }) + k.line('M164 236V200M286 236V200', 1.3);
-    q += k.shape('M150 200L162 190H290L302 200Z', 'light', { w: 1 });
+    // the fish stall: a striped canvas pitched on four poles, its valance, a trestle table, and the black shade beneath
+    q += k.shape('M146 238L166 222H296L306 238Z', 'black', { w: 0, op: .6 });
+    q += k.line('M160 238V204M292 238V204', 2) + k.line('M172 228V206M282 228V206', 1.2);
+    q += k.shape('M150 206L166 196H286L302 206Z', 'light', { w: 1.1 });
     let aw = '';
-    for (let x = 152; x < 300; x += 12) aw += k.shape(`M${P(x, 200)}h12v4q-6 3 -12 0Z`, (x / 12) % 2 < 1 ? 'dark' : 'paper', { w: .6 });
-    q += aw;
+    for (let x = 166; x < 286; x += 10) aw += `M${x} 196L${f(150 + (x - 166) * 152 / 120)} 206`;
+    q += k.line(aw, .6);
+    let val = 'M150 206';
+    for (let x = 150; x < 302; x += 8) val += `q4 5 8 0`;
+    q += k.shape(val + 'V206Z', 'dark', { w: .7 });
+    q += k.shape(k.rect(162, 222, 128, 4), 'dark', { w: .8 }) + k.line('M168 226l-4 12M284 226l4 12', 1.2);
     for (const [x, y] of [[176, 232], [204, 234], [232, 230], [258, 233]]) {
       q += k.shape(k.rect(x - 11, y - 8, 22, 8), 'mid', { w: .8 });
       for (let i = 0; i < 3; i++) q += k.shape(`M${P(x - 8 + i * 6, y - 9)}q3 -3 5 0q-2 3 -5 0l-1.6 1.4v-2.8Z`, 'light', { w: .5 });

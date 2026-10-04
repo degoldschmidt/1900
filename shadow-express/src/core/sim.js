@@ -11,6 +11,9 @@ import { all, eligible, pick } from './storylet.js';
 import { END } from './world.js';
 import { context, leave, note, log, has, coverData, addIntel, nationNow, personHere, caseSize } from './game.js';
 import { checkOps } from './ops.js';
+import { dailyTurn, watchEvents, completeActivity, watchOf, shadowed, addWatch, legendOf, LODGINGS, needsRegistration, stayDays } from './residence.js';
+import { skill, has as trait, tongue } from './hero.js';
+import { departuresFrom, CHANGE } from './timetable.js';
 
 export const TICK = 30;
 const HOUR = 60;
@@ -37,12 +40,14 @@ function nextEvent(G) {
     n = Math.min(n, j.arr);
   }
   if (S.booked) n = Math.min(n, S.booked.dep);
+  if (S.activity) n = Math.min(n, Math.max(S.activity.until, S.t + 1));
   for (const l of S.later) n = Math.min(n, Math.max(l.at, S.t + 1));
   return n;
 }
 
 function tick(G) {
   const { S, W } = G;
+  if (S.activity && S.t >= S.activity.until) { const a = S.activity; S.activity = null; completeActivity(G, a); afterActivity(G, a); }
   if (S.booked && S.t >= S.booked.dep) depart(G);
   if (S.journey) journeyStep(G);
   enemyStep(G);
@@ -57,7 +62,8 @@ function tick(G) {
   people(G);
   perish(G);
   nights(G);
-  loiter(G);
+  days(G);
+  routine(G);
   if (S.tailedBy && S.t - S.tailSince > 30 * HOUR && !S.queue.length) confront(G, S.tailedBy, 'tail');
   if (S.t >= END && !S.ended) endGame(G, 'time');
   if (S.standing <= 0 && !S.ended) endGame(G, 'recalled');
@@ -88,6 +94,9 @@ function depart(G) {
   // the service's own records: a passenger list, a sleeping-car berth
   for (const k of s.records) leave(G, k, k === 'berth' ? .75 : b.cls === 1 ? .55 : .4, { city: b.dp.from });
   if (S.tailedBy) { const h = S.enemy.hunters[S.tailedBy]; h.leg = { svc: s.id, key: b.dp.key, from: b.dp.from, to: b.dp.to, dep: b.dp.dep, arr: S.journey.arr }; }
+  // a police shadow on the platform reads your ticket and telegraphs ahead
+  if ((S.watch?.[b.dp.from] ?? 0) >= .35 && (S.shookUntil ?? 0) <= S.t) leave(G, 'sighting', .75, { city: S.trip?.legs.at(-1)?.to ?? b.dp.to, t: S.journey.arr, heat: .2 });
+  if (trait(S.hero, 'nervous') && S.journey.crossings.length) S.nerve = Math.max(0, S.nerve - 1);
   log(G, `Left ${I.city.get(b.dp.from).name} by the ${s.name}.`);
 }
 
@@ -104,6 +113,8 @@ function journeyStep(G) {
     j.eventDone = true;
     if (rand(S) < .75) { const st = pickStory(G, 'train'); if (st) { S.queue.push({ type: 'story', id: st.id, n: ++S.cardN }); return; } }
   }
+  delayWarning(G);
+  if (S.queue.length) return;
   if (S.t >= j.arr) arrive(G);
 }
 
@@ -112,8 +123,11 @@ function arrive(G) {
   const j = S.journey;
   S.journey = null;
   S.city = j.to;
+  if (connect(G, j)) return; // changing trains: the journey goes on
   S.cityArrived = S.t;
   S.place = 'street';
+  S.trip = null;
+  stationWatch(G);
   if (S.tailedBy && rand(S) < .4) note(G, 'A face again', 'On the platform, a man buys a paper he does not read. You have seen that coat before, at the last station. Or one like it.');
   S.visits[j.to] = (S.visits[j.to] ?? 0) + 1;
   if (j.kind === 'night') S.nerve = Math.min(10, S.nerve + 1);
@@ -122,6 +136,51 @@ function arrive(G) {
   S.queue.push({ type: 'arrive', city: j.to, delay: j.delay, n: ++S.cardN });
   checkOps(G);
   if (S.visits[j.to] === 1 || rand(S) < .45) { const st = pickStory(G, 'city'); if (st) S.queue.push({ type: 'story', id: st.id, n: ++S.cardN }); }
+}
+
+// ---------- through journeys: connections ----------
+/** At a junction of a booked journey: make the next train, or miss it. Returns true while the journey goes on. */
+function connect(G, j) {
+  const { S, W, I } = G;
+  const trip = S.trip;
+  if (!trip || trip.legs[trip.i]?.key !== j.key) return false;
+  const next = trip.legs[trip.i + 1];
+  if (!next) return false;
+  trip.i++;
+  S.place = 'station';
+  S.cityArrived = S.t;
+  stationWatch(G);
+  if (cancelled(W, next)) { S.trip = null; note(G, 'No connection', `At ${I.city.get(S.city).name} the board says the ${W.service.get(next.svc).name} does not run today. You are on your own from here.`); S.queue.push({ type: 'arrive', city: S.city, delay: j.delay, n: ++S.cardN }); return true; }
+  if (S.t + CHANGE <= next.dep || (trip.held === next.key && S.t <= next.dep + 30)) {
+    S.booked = { dp: next, cls: trip.cls, fare: 0, dep: Math.max(next.dep, S.t) };
+    log(G, `Changed trains at ${I.city.get(S.city).name}.`);
+    return true;
+  }
+  S.queue.push({ type: 'missed', city: S.city, svc: next.svc, dep: next.dep, to: next.to, n: ++S.cardN });
+  return true;
+}
+
+/** Police at the station with a list: on enemy ground, if the name you travel under is on it. */
+function stationWatch(G) {
+  const { S, I } = G;
+  const nat = I.city.get(S.city).nation, d = S.enemy.dossiers[S.cover];
+  if (d?.alerts?.includes(nat) && rand(S) < .3 + .2 * (G.W.act(S.t) - 1)) {
+    const x = { id: 'STN', name: `${I.city.get(S.city).name} station`, into: nat };
+    S.queue.push({ type: 'control', fid: x.id, name: x.name, into: nat, papers: true, search: rand(S) < .4, alert: true, alien: false, story: null, n: ++S.cardN });
+  }
+}
+
+/** Running late with a connection at risk: the passenger learns it on the way, and may telegraph ahead. */
+function delayWarning(G) {
+  const { S, W, I } = G;
+  const j = S.journey, trip = S.trip;
+  if (!j || !trip || j.warned || j.delay < 25) return;
+  const next = trip.legs[trip.i + 1];
+  if (!next || next.from !== j.to) return;
+  if (S.t < j.dep + (j.sched - j.dep) * .3) return;
+  j.warned = true;
+  if (j.arr + CHANGE <= next.dep) return;
+  S.queue.push({ type: 'late', delay: j.delay, at: j.to, next: next.key, svc: next.svc, dep: next.dep, n: ++S.cardN });
 }
 
 // ---------- frontier controls ----------
@@ -325,7 +384,7 @@ function resolveIntel(G, e, truth) {
   if (e.resolved === e.truth && e.truth) s.right++; else s.wrong++;
 }
 
-function courierArrives(G, { person, item }) {
+function courierArrives(G, { person, item, to }) {
   const { S, I } = G;
   const p = I.person.get(person), st = S.people[person].st;
   if (['arrested', 'compromised', 'dead'].includes(st) || (S.people[person].loyal ?? '').startsWith('enemy:')) {
@@ -333,12 +392,16 @@ function courierArrives(G, { person, item }) {
     if ((S.people[person].loyal ?? '').startsWith('enemy:')) leave(G, 'talk', 1, { person, city: p.city ?? 'BER' });
     return;
   }
+  courierDone(G, item, to ?? 'LON');
+  note(G, 'From London', I.item.get(item).fn === 'companion' ? `ASHBY TO YOU: YOUR FRIEND ARRIVED SAFELY ${(I.city.get(to)?.name ?? '').toUpperCase()} STOP WELL DONE STOP` : `ASHBY TO YOU: ${I.item.get(item).name.toUpperCase()} RECEIVED STOP WELL DONE STOP`);
+}
+function courierDone(G, item, to) {
+  const { S } = G;
   for (const o of G.D.ops) {
     if (S.ops[o.id].status !== 'active') continue;
     const step = o.steps.find((x) => !S.ops[o.id].done[x.id]);
-    if (step?.kind === 'carry' && step.item === item && [step.to].flat().includes('LON')) { S.ops[o.id].done[step.id] = S.t; G.afterStep?.(G, o.id, step.id); }
+    if (step?.kind === 'carry' && step.item === item && [step.to].flat().includes(to)) { S.ops[o.id].done[step.id] = S.t; G.afterStep?.(G, o.id, step.id); }
   }
-  note(G, 'From London', `ASHBY TO YOU: ${I.item.get(item).name.toUpperCase()} RECEIVED STOP WELL DONE STOP`);
 }
 
 function calendar(G) {
@@ -421,21 +484,104 @@ function perish(G) {
   }
 }
 
-/** Hanging about in one city is noticed: every eight hours outside a safe house, a vague sighting under the active cover. */
-function loiter(G) {
-  const { S } = G;
-  if (!S.city || S.place === 'safehouse' || S.t % (8 * HOUR) !== 0 || S.lyingLow) return;
-  if (S.t - (S.cityArrived ?? S.t) >= 8 * HOUR) leave(G, 'sighting', .15, { heat: 0 });
-}
-
-/** Nights in a city: a hotel register under the active cover, a safe house, or none. */
+/** Nights in a city: whatever lodging you hold is paid for; with none, you take an hotel room and sign its register. */
 function nights(G) {
   const { S } = G;
   if (S.t % DAY !== 23 * HOUR || !S.city) return;
   if (S.place === 'safehouse') { S.nerve = Math.min(10, S.nerve + 2); return; }
   if (S.place === 'rough') { S.nerve = Math.max(0, S.nerve - 1); return; }
-  if (S.money >= 1) { S.money -= 1; leave(G, 'register', .6); S.nerve = Math.min(10, S.nerve + 1); }
+  if (!S.lodging || S.lodging.city !== S.city) takeLodging(G, 'hotel');
+  const L = LODGINGS[S.lodging.kind];
+  if (S.money >= L.perNight) { S.money = Math.round((S.money - L.perNight) * 100) / 100; S.nerve = Math.min(10, S.nerve + 1); }
   else { S.nerve = Math.max(0, S.nerve - 1); }
+}
+/** Taking lodgings leaves a register: the hotel's, the landlady's, or the police registration of rented rooms. */
+export function takeLodging(G, kind) {
+  const { S } = G;
+  if (!S.city) return false;
+  S.lodging = { city: S.city, kind, since: S.t };
+  const L = LODGINGS[kind];
+  if (L.fid) leave(G, 'register', kind === 'rooms' && needsRegistration(G) ? .85 : L.fid);
+  if (kind === 'safehouse') S.place = 'safehouse'; else if (kind === 'rough') S.place = 'rough'; else S.place = 'rooms';
+  return true;
+}
+
+/** The day's turn at 06.00 in a city: legend and watch move; a high watch may bring a search or an inspector. */
+function days(G) {
+  const { S } = G;
+  if (S.t % DAY !== 6 * HOUR || !S.city) return;
+  dailyTurn(G);
+  const ev = watchEvents(G);
+  if (ev === 'search') roomSearch(G);
+  if (ev === 'inspector') S.queue.push({ type: 'inspector', n: ++S.cardN });
+  if (S.expelled && S.expelled.city === S.city && S.t > S.expelled.by) {
+    S.expelled = null;
+    if (W_ground(G) && G.W.act(S.t) === 3) { note(G, 'Arrested', 'You were ordered to leave and did not. The police come at dawn, with a warrant this time.'); endGame(G, 'arrested'); }
+    else { S.covers[S.cover].burned = true; S.busyUntil = S.t + 36 * HOUR; S.standing = Math.max(0, S.standing - 12); note(G, 'Deported', 'Two policemen, a closed carriage, and a frontier at dawn. The name you lived under here is finished.'); }
+  }
+}
+const W_ground = (G) => G.I.ground.includes(G.I.city.get(G.S.city)?.nation);
+
+/** The police search your rooms while you are out. */
+function roomSearch(G) {
+  const { S, I } = G;
+  const lining = S.case.some((x) => I.item.get(x.id)?.tags.includes('use:lining'));
+  let found = S.case.filter((x) => { const it = I.item.get(x.id); return it && (it.tags.includes('contraband') || it.fn === 'doc'); }).map((x) => x.id);
+  if (lining && found.length) found = found.slice(1);
+  const spare = Object.entries(S.covers).filter(([id, c]) => id !== S.cover && c.carried && !c.burned).map(([id]) => id);
+  const sparesFound = spare.length && !(lining && !found.length) && rand(S) < .6;
+  for (const id of found) { const i = S.case.findIndex((y) => y.id === id); if (i >= 0) S.case.splice(i, 1); }
+  if (sparesFound) for (const c of [S.cover, ...spare]) { S.covers[c].burned = true; leave(G, 'frontier', 1, { cover: c, heat: 1 }); }
+  if (found.length || sparesFound) { addWatch(G, .2); leave(G, 'sighting', .8, { heat: .5 }); }
+  else addWatch(G, -.05);
+  addIntel(G, { subj: 'cover:active', claim: { note: 'the police searched your rooms' }, src: 'seen', rel: 1, truth: true });
+  note(G, 'Your rooms were searched', found.length || sparesFound
+    ? `The things in your case were put back almost where they were. Almost. Missing: ${[...found.map((id) => I.item.get(id).name.toLowerCase()), ...(sparesFound ? ['a second passport'] : [])].join(', ')}.`
+    : 'A drawer not quite closed, a hair gone from the clasp of your case. Nothing taken. They found nothing, this time; but they looked.');
+}
+
+/** Let the days pass: the routine works the legend by day, listens in cafés of an evening, sleeps at night, and stops for anything that needs you. */
+function routine(G) {
+  const { S } = G;
+  if (!S.routine || S.queue.length || !S.city || S.journey || S.booked || S.activity || S.t < S.busyUntil) return;
+  if (S.t >= S.routine.until) { S.routine = null; return; }
+  const w = watchOf(S.t).name;
+  const id = w === 'night' ? 'rest' : w === 'evening' ? (rand(S) < .5 ? 'cafe' : 'rest') : 'work';
+  startActivity(G, id);
+  if (w === 'morning' && rand(S) < .22) { const st = pickStory(G, 'interlude'); if (st) S.queue.push({ type: 'story', id: st.id, n: ++S.cardN }); }
+}
+export function startActivity(G, id) {
+  const { S } = G;
+  const { name, end } = watchOf(S.t);
+  S.activity = { id, city: S.city, until: end, night: name === 'night' };
+  S.busyUntil = Math.max(S.busyUntil, end);
+  if (id === 'rest') S.place = S.place === 'safehouse' ? 'safehouse' : 'rooms';
+  else if (S.place !== 'safehouse') S.place = 'street';
+}
+function afterActivity(G, a) {
+  const { S } = G;
+  if (S.queue.length || !S.city) return;
+  if (a.id === 'cafe') cafeRumour(G);
+  if ((a.id === 'work' || a.id === 'cafe') && rand(S) < (a.id === 'cafe' ? .45 : .3)) { const st = pickStory(G, 'city'); if (st) S.queue.push({ type: 'story', id: st.id, n: ++S.cardN }); }
+}
+
+/** A café is a newspaper with legs: talk of the hunters and the lines, true or not; a good eye sorts some of it. */
+function cafeRumour(G) {
+  const { S, W, D } = G;
+  const obs = skill(S.hero, 'observation');
+  const lang = tongue(S.hero, G.I.city.get(S.city).nation);
+  if (lang === 0 && rand(S) < .5) return; // you cannot follow the talk
+  const hs = D.hunters.filter((h) => W.hunterActive(h, S.t));
+  if (hs.length && rand(S) < .55) {
+    const h = hs[Math.floor(rand(S) * hs.length)], st = S.enemy.hunters[h.id];
+    const real = st.leg ? st.leg.to : st.city;
+    const truth = rand(S) < .5 + .08 * obs;
+    const at = truth ? real : D.cities[Math.floor(rand(S) * D.cities.length)].id;
+    addIntel(G, { subj: `hunter:${h.id}`, claim: { at }, src: 'rumour', rel: .35 + .05 * obs, truth: at === real });
+    return;
+  }
+  const r = W.rumours(S.t)[0];
+  if (r) { const line = r.fx.find((e) => e[0] === 'suspend'); if (line && String(line[1]).startsWith('line:')) addIntel(G, { subj: line[1], claim: { closed: [r.at, null] }, src: 'rumour', rel: .5, truth: true }); }
 }
 
 // ---------- storylet choice ----------

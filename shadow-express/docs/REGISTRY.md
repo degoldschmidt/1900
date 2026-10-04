@@ -162,24 +162,47 @@ Each person appears in at least two places. A person's `city` and `train` storyl
 | `heller` · Hauptmann Heller | Evidenzbureau | AH · AH, DE | VIE | 06-28 00.00 | a stout officer in mufti with a duelling scar and an unlit cigar |
 | `orlova` · Madame Orlova | freelance, in Austrian pay | RU · AH, DE | ZUR | 07-13 00.00 | a small woman in widow's black with very good gloves |
 
-## 7. Operations
+## 7. Operations: postings and journeys (revised 4 October)
 
-Main ops arrive by telegram at `issue`; at most two overlap. Step ids in **bold** are fixed, because People and Events may test them with `['op', id, step]`.
+The agent spends most of the campaign **posted** in one city at a time, living under cover for days or weeks: working the legend, cultivating people, watching, being watched. Journeys are rare, and each one is high-stakes: timetables, delays, missed connections, frontier controls and surveillance decide the operation.
+
+| act | posting | lived for |
+|---|---|---|
+| I | **Vienna** (`VIE`) | 1 – 15 July |
+| II | **Belgrade** (`BEG`) | 15 – 26 July |
+| III | **Berlin** (`BER`) | 28 July – 1 August, then the run home |
+
+Main ops arrive by telegram at `issue`; at most two overlap.
+- **Optional ops** (`optional:true`) may be declined on their telegram.
+- **Step ids in bold** are fixed, because People and Events test them with `['op', id, step]`.
+- **Most steps are city work** in the posting city (`act`, `meet`, `wait`, `observe`). At most one high-stakes journey per op, marked ✈.
 
 | id | act | issue | title | outline |
 |---|---|---|---|---|
-| `op-cable` | 1 | 06-28 17.00 | The Sarajevo Cable | **reach** Sarajevo by 2 July; **meet** Jovan, who has the cable; **judge** it in Vienna (Brandl) or Prague (Novák); **home**: carry `sarajevo-cable` to London by 9 July. Was it forged? |
-| `op-optics` | 1 | 07-03 09.00 | Coincidence | a Berlin works has a new coincidence rangefinder. **reach** Berlin; **photo** the drawings (as Weiss on a sales call, through Sauer, a bribed draughtsman, or keys at night); **home**: carry `rangefinder-plates` to London by 12 July |
-| `op-diamonds` | 1 | 07-07 09.00 | Stones for Petersburg | **buy** uncut stones in Amsterdam with Bureau money; **carry** `diamonds` to St Petersburg by 15 July, across a Russian frontier, or by Kowal's path. Win grants `vessey` |
-| `op-mole` | 2 | 07-13 09.00 | The Mole | Heller knew too much. Brandl, Ilić and Amsler each knew. **feed** each a different false detail (`plant`); **watch** which one the hunters act on; **name** the mole to Ashby by 20 July |
-| `op-ultimatum` | 2 | 07-18 09.00 | The Ultimatum | **reach** Vienna by 21 July; **copy** the note's text at the ministry; **wire** it from neutral ground or London before it is delivered (23 July, 18.00) |
-| `op-student` | 2 | 07-21 09.00 | Get Jovan Out | **find** Jovan before the police do; **out**: carry `companion-jovan` to Italy, Switzerland or London by 28 July |
-| `op-typist` | 3 | 07-27 09.00 | Fräulein Sauer | **meet** Sauer in Berlin by 31 July; **out**: carry `companion-sauer` and `staff-papers` to neutral ground by 2 August |
-| `op-troops` | 3 | 07-31 09.00 | Count the Trains | **watch** the Hohenzollern bridge at Cologne between 2 August 06.00 and 3 August 18.00; **out**: carry `troop-tally` to London, Flushing, Amsterdam or Brussels by 4 August, 23.00 |
-| `op-lastboat` | 3 | 08-02 09.00 | The Last Boat | **home**: reach London before the British ultimatum expires (4 August, 23.00 London, midnight CET) with whatever papers you carry |
-| `op-letter` | side | — | Odile's Letter | carry a sealed letter from Paris to a Belgian officer in Brussels. Is it only a love letter? |
-| `op-brother` | side | — | The Brother | Ilić's brother Pavle was taken in the Sarajevo round-ups; get him out of the garrison prison |
-| `op-amber` | side | — | Amber for Berlin | smuggle Kowal's parcel from Warsaw to Berlin |
+| `op-cable` | 1 | 06-28 17.00 | The Sarajevo Cable | ✈ **reach** Vienna by 1 July 18.00 (take up the post) · ✈ **meet** Jovan in Sarajevo by 4 July (round-ups; Bosnian controls) · **judge** it with Brandl in Vienna by 8 July · **home**: an `act` in Vienna (embassy bag, cipher wire, courier) by 9 July |
+| `op-optics` | 1 | 07-03 09.00 | Coincidence | the Arsenal in **Vienna** is trialling a coincidence rangefinder · **reach** Vienna (already there) · **case** the Arsenal over days (`observe`/`wait`) · an insider (way or `meet`) · **photo** at the Arsenal · **home**: an `act` in Vienna by 12 July |
+| `op-diamonds` | 1 | 07-04 09.00 | Stones for Petersburg | `optional:true`: the one long journey of Act I, for money and the `vessey` cover · **buy** in Amsterdam · ✈ **carry** to St Petersburg by 15 July |
+| `op-mole` | 2 | 07-13 09.00 | The Mole | ✈ **reach** Belgrade by 15 July 12.00 (by Semlin) · **feed**: tell Ilić one detail in person, then write to Brandl and Amsler with different ones (`plant`) · **watch** Belgrade for two days: which city do the hunters go to? · **name** the mole to London by 20 July |
+| `op-ultimatum` | 2 | 07-18 09.00 | The Ultimatum | in **Belgrade**: **reach** (already there) · be there when the note is delivered (23 July, 18.00) · **copy** its text that evening · **wire** it to London by 24 July 12.00, every way leaving a different trace (wire through Semlin is read in Vienna; the legation cipher; a courier by Salonika) |
+| `op-student` | 2 | 07-21 09.00 | Get Jovan Out | Jovan has fled to Belgrade · **find** him by 25 July · ✈ **out**: `companion-jovan` to Constantinople, Athens, Italy or London by 28 July. Escort him yourself, or give him to a recruited courier |
+| `op-typist` | 3 | 07-26 09.00 | Fräulein Sauer | ✈ **reach** Berlin by 29 July · **meet** Sauer by 31 July (days of cultivation) · the railway annex (`staff-papers`) · ✈ **out**: `companion-sauer` to neutral ground by 2 August |
+| `op-troops` | 3 | 07-31 09.00 | Count the Trains | **watch** the Hohenzollern bridge at Cologne between 2 August 06.00 and 3 August 18.00, on the run west · ✈ **out**: `troop-tally` to London, Flushing, Amsterdam or Brussels by 4 August 23.00 |
+| `op-lastboat` | 3 | 08-02 09.00 | The Last Boat | ✈ **home**: London before 4 August 23.00 (London time) |
+| `op-letter` | side | — | Odile's Letter | started by Odile |
+| `op-brother` | side | — | The Brother | started by Ilić, in Belgrade |
+| `op-amber` | side | — | Amber for Berlin | started by Kowal, in Berlin |
+
+**Living under cover** (engine, for writers): every day in a city the engine tracks two things.
+- **Legend** (`['legend', '>=', .5]`): how established the active cover is there, 0..1. It grows with cover work and wears thin with neglect.
+- **Watch** (`['watched']`, truth): whether the local police watch you. It rises with traces in that city and falls with quiet, established days.
+
+"Let the days pass" runs the routine and stops for cards: `city` and `interlude` storylets, letters from people, news. Postings want many repeatable city scenes:
+- the landlady;
+- the police registration (*Meldezettel*);
+- the café regulars;
+- the man across the street;
+- cover work for each cover;
+- a contact's routine.
 
 ## 8. Calendar anchors (World writes the full rows)
 

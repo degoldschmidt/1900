@@ -11,10 +11,10 @@ export default {
     let far = k.mountains(plainY - 10, { seed: 14, h: 24, snow: false });
     far += k.shape(`M556 ${plainY - 4}C572 160 588 130 598 112C606 128 622 160 645 ${plainY - 4}Z`, 'light', { far: true, w: .6 }); // Lycabettus
     far += k.shape(k.rect(595, 106, 6, 6), 'paper', { far: true, w: .5 }) + k.shape(k.gable(594, 106, 8, 4), 'mid', { far: true, w: .4 });
-    far += k.skyline(500, 645, plainY - 2, { seed: 5, style: 'south', hMin: 6, hMax: 14, wMin: 10, wMax: 20, chimneys: false });
+    far += k.skyline(500, 645, plainY - 2, { seed: 5, style: 'south', hMin: 10, hMax: 20, wMin: 12, wMax: 22, chimneys: false, lit: .5 });
     for (let i = 0; i < 6; i++) far += k.shape(k.rect(560 + i * 6, plainY - 36, 2.6, 32), 'vert', { far: true, w: .4 });
     far += k.shape(k.rect(558, plainY - 39, 36, 3), 'light', { far: true, w: .4 });
-    far += k.skyline(-5, 130, plainY - 2, { seed: 8, style: 'south', hMin: 5, hMax: 12, wMin: 10, wMax: 18, chimneys: false });
+    far += k.skyline(-5, 130, plainY - 2, { seed: 8, style: 'south', hMin: 9, hMax: 18, wMin: 12, wMax: 20, chimneys: false, lit: .5 });
     far += k.haze(plainY - 24, 24, .35);
 
     // ---------- the rock ----------
@@ -120,7 +120,9 @@ export default {
         + k.line(`M${f(x + 1.5 * s * dir)} ${f(y - 3 * s)}v${S(3)}M${f(x + 4 * s * dir)} ${f(y - 3 * s)}v${S(3)}M${f(x + 9 * s * dir)} ${f(y - 3 * s)}v${S(3)}M${f(x + 11.5 * s * dir)} ${f(y - 3 * s)}v${S(3)}`, .8 * s)
         + k.line(`M${f(x + 14 * s * dir)} ${f(y - 12 * s)}q${D(-2)} ${S(-4)} ${D(-6)} ${S(-3)}M${f(x)} ${f(y - 6 * s)}l${D(-2)} ${S(2)}`, .7 * s);
     };
-    let fore = wall + olive(64, 236, 2.3) + olive(250, 214, 1) + olive(214, 208, .7) + k.tree(16, 240, 1.7, 'cypress') + k.tree(126, 226, 1.4, 'cypress');
+    let fore = k.shape('M-5 228Q60 220 150 230Q200 236 230 245H-5Z', 'mid', { w: 0, op: .8 }) + k.shape('M-5 238Q40 232 100 238L104 245H-5Z', 'dark', { w: 0 });
+    for (let i = 0; i < 7; i++) { const x = 20 + r() * 200, y = 232 + r() * 8; fore += k.shape(`M${f(x - 6)} ${f(y)}q3 -5 7 -5q5 1 5 5Z`, 'light', { w: .7 }); }
+    fore += wall + olive(64, 236, 2.3) + olive(250, 214, 1) + olive(214, 208, .7) + k.tree(16, 240, 1.7, 'cypress') + k.tree(126, 226, 1.4, 'cypress');
     fore += drum(150, 234, 1.4) + capital(214, 238, 1.3);
     fore += k.shape(k.rect(276, 204, 10, 32), 'paper', { w: .9 }) + k.shape(k.rect(281, 204, 5, 32), 'mid', { w: 0 }) + k.shape(k.poly([[275, 205], [279, 199], [282, 203], [287, 198], [287, 206]]), 'light', { w: .7 });
     fore += k.shape(k.rect(270, 234, 22, 3), 'black', { w: 0 });

@@ -53,7 +53,7 @@ export function learn(E, records, ctx, t) {
       continue;
     }
     const heat = (r.heat ?? HEAT[r.kind] ?? 0) * r.fid;
-    E.desc = Math.min(1, E.desc + (DESC[r.kind] ?? 0) * r.fid * (r.kind === 'photo' ? 1 : .6));
+    E.desc = Math.min(1, E.desc + (DESC[r.kind] ?? 0) * r.fid * (r.kind === 'photo' ? 1 : .6) * (E.descMul ?? 1));
     if (r.kind === 'photo' && r.fid > .6) E.photo = true;
     if (r.person) E.assoc[r.person] = Math.min(1, (E.assoc[r.person] ?? 0) + r.fid * .45);
     if (!r.cover) continue;

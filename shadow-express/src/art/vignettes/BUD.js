@@ -73,10 +73,23 @@ export default {
         const sc = 1 / z(t), w = t ? .8 : 1.3;
         let o = k.shape(box(-4, 134, 122, -46), 'light', { w });
         o += k.shape(box(-4, 134, 8, -46), 'vert', { w: w * .6 });
-        if (!t) for (let Y = 120; Y > -46; Y -= 9) { const [ax, ay] = q(8, Y), [bx] = q(122, Y); o += k.line(`M${f(ax)} ${f(ay)}H${f(bx)}`, .4); }
+        if (!t) {
+          let joints = '';
+          for (let Y = 120, row = 0; Y > -46; Y -= 9, row++) {
+            const [ax, ay] = q(8, Y), [bx] = q(104, Y); joints += `M${f(ax)} ${f(ay)}H${f(bx)}`;
+            for (let dx = 16 + (row % 2) * 9; dx < 104; dx += 18) { if (Y < 94 && Y > 10 && dx > 26 && dx < 90) continue; const [jx, jy] = q(dx, Y); joints += `M${f(jx)} ${f(jy)}v9`; }
+          }
+          o += k.line(joints, .4);
+        }
         o += k.shape(box(104, 134, 122, -46), 'dark', { w: w * .5 });
         const [ax, ay] = q(30, 94), [bx, by] = q(86, 18), [cx2, cy2] = q(38, 78), [dx2, dy2] = q(78, 18);
         o += k.shape(k.arch(ax, ay, bx - ax, by - ay), 'black', { w: w * .85 }) + k.shape(k.arch(cx2, cy2, dx2 - cx2, dy2 - cy2), 'paper', { w: w * .5 });
+        if (!t) { // the voussoirs and the keystone; soot darkening the foot
+          const cxA = (ax + bx) / 2, rA = (bx - ax) / 2, cyA = ay + rA; let vs = '';
+          for (let i = 1; i < 12; i++) { const qa = Math.PI + i * Math.PI / 12; vs += `M${f(cxA + Math.cos(qa) * rA)} ${f(cyA + Math.sin(qa) * rA)}L${f(cxA + Math.cos(qa) * (rA + 9))} ${f(cyA + Math.sin(qa) * (rA + 9))}`; }
+          o += k.line(vs, .6) + k.shape(k.rect(cxA - 5, ay - 10, 10, 11), 'light', { w: .9 });
+          o += k.shape(box(-4, -20, 122, -46), 'mid', { w: 0, op: .55 });
+        }
         o += k.shape(box(-8, 140, 126, 132), 'light', { w: w * .8 }) + k.shape(box(-6, 152, 124, 140), 'light', { w: w * .7 }) + k.shape(box(104, 152, 126, 132), 'dark', { w: 0 });
         o += k.line((() => { const [l, y] = q(-8, 132), [rr] = q(126, 132); return `M${f(l)} ${f(y)}H${f(rr)}`; })(), w);
         for (const dx of [14, 96]) o += k.shape(box(dx, 108, dx + 6, -12), 'vert', { w: w * .45 });
@@ -114,16 +127,20 @@ export default {
     for (const x of [60, 180, 300, 420]) quay += k.shape(`M${x} 226v-5q0 -3 3 -3t3 3v5Z`, 'black', { w: .6 });
     quay += k.lamp(240, 226, 1) + k.figure(118, 226, 1, 'man') + k.figure(132, 226, .95, 'woman') + k.figure(360, 226, 1, 'porter');
     k.lights.push([237.5, 197, 5, 4]);
-    const lion = (() => {
-      let s = k.shape(k.rect(396, 196, 54, 30), 'light', { w: 1 }) + k.shape(k.rect(436, 196, 14, 30), 'dark', { w: 0 }) + k.shape(k.rect(392, 192, 62, 5), 'light', { w: .8 });
-      s += k.shape('M404 192q-2 -6 4 -8h8q2 -2 6 -2q10 -1 18 2q8 0 10 8Z', 'dark', { w: .8 }); // the body and the forepaws
-      s += k.shape('M404 192h16v-3h-14Z', 'mid', { w: .5 });
-      s += k.shape('M410 186q-6 -4 -4 -12q2 -9 11 -10q9 0 11 8q1 8 -6 13q-6 3 -12 1Z', 'black', { w: .7 }); // the maned head
-      s += k.shape('M408 178q-4 0 -4 4q2 3 6 2Z', 'light', { w: .5 });
-      s += k.line('M450 190q6 -2 4 -8q-1 -3 2 -4', 1);
+    const lion = (() => { // one of the bridge's stone lions, couchant on its plinth, facing the river
+      let s = k.shape(k.rect(394, 196, 58, 30), 'light', { w: 1 }) + k.shape(k.rect(438, 196, 14, 30), 'dark', { w: 0 }) + k.shape(k.rect(390, 191, 66, 6), 'light', { w: .9 });
+      for (let y = 203; y < 226; y += 7) s += k.line(`M394 ${y}H438`, .4);
+      // haunch, back and chest, then the forepaws stretched out in front
+      s += k.shape('M446 191C448 182 444 176 434 176C426 176 420 174 414 172L404 186L398 186C394 186 392 189 394 191Z', 'light', { w: 1 });
+      s += k.shape('M446 191C448 184 446 180 440 179C442 184 442 188 438 191Z', 'mid', { w: 0 }) + k.shape('M404 191H428C426 188 422 186 416 186H404Z', 'mid', { w: 0 });
+      s += k.line('M394 189.4H404M396 191V188', .6);
+      // the head with its heavy mane, the muzzle forward
+      s += k.shape('M402 186C398 184 397 178 400 172C402 166 408 163 414 164C421 165 424 171 422 178C420 184 414 188 406 188Z', 'mid', { w: 1 });
+      s += k.shape('M400 172C398 172 395 174 395 177C395 180 397 181 400 181L404 180C405 176 404 173 400 172Z', 'light', { w: .8 });
+      s += k.line('M398 175h1.6M396 179.6q2 1 4 0M408 168q4 4 3 12M413 167q3 5 2 13', .6);
+      s += k.line('M446 189q8 -2 6 -9q-1 -4 3 -5', 1.2); // the tail
       return s;
     })();
-
     return far + parl + water + traffic + bridge + quay + lion;
   },
 };

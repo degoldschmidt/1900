@@ -86,7 +86,7 @@ export default {
       b += k.shape(k.poly([at(za, .05), at(zb, .05), at(zb, 0), at(za, 0)]), 'water', { w: 0 });
       let rim = '';
       for (const [x, y] of pts) rim += `${rim ? 'L' : 'M'}${P(x, y)}`;
-      b += k.line(rim, 1.3 / Math.sqrt(1 + i * dz));
+      b += k.line(rim, f(1.3 / Math.sqrt(1 + i * dz)));
     }
     // parapet band and cornice
     b += k.shape(k.poly([at(1, 1), at(zF, 1), at(zF, .9), at(1, .9)]), 'vert', { w: .9 });
@@ -102,12 +102,12 @@ export default {
     for (let i = n; i >= 1; i--) {
       const z = 1 + i * dz, [x, y] = at(z, 1), sc = 1.15 / z;
       b += k.shape(k.rect(x - 5 * sc, y - 9 * sc, 10 * sc, 9 * sc), 'dark', { w: .6 });
-      if (i === 3) b += k.line(`M${P(x, y - 9 * sc)}v${f(-34 * sc)}M${P(x - 8 * sc, y - 34 * sc)}h${f(16 * sc)}`, 2.2 * sc) + k.shape(`M${P(x - 1.6 * sc, y - 31 * sc)}l-1 ${f(12 * sc)}h${f(5 * sc)}l-1 ${f(-12 * sc)}Z`, 'ink', { w: 0 });
+      if (i === 3) b += k.line(`M${P(x, y - 9 * sc)}v${f(-34 * sc)}M${P(x - 8 * sc, y - 34 * sc)}h${f(16 * sc)}`, f(2.2 * sc)) + k.shape(`M${P(x - 1.6 * sc, y - 31 * sc)}l-1 ${f(12 * sc)}h${f(5 * sc)}l-1 ${f(-12 * sc)}Z`, 'ink', { w: 0 });
       else {
         b += k.shape(`M${P(x - 6 * sc, y - 9 * sc)}q${f(1 * sc)} ${f(-12 * sc)} ${f(4 * sc)} ${f(-19 * sc)}q${f(2 * sc)} ${f(-3 * sc)} ${f(4 * sc)} 0q${f(4 * sc)} ${f(8 * sc)} ${f(4 * sc)} ${f(19 * sc)}Z`, 'black', { w: .5 });
         b += `<circle cx="${f(x)}" cy="${f(y - 30 * sc)}" r="${f(2.6 * sc)}" fill="${k.ink}"/>`;
         if (i % 2) b += `<circle cx="${f(x)}" cy="${f(y - 30 * sc)}" r="${f(5 * sc)}" fill="none" stroke="${k.ink}" stroke-width="${f(.8 * sc + .2)}"/>`;
-        else b += k.line(`M${P(x + 3 * sc, y - 22 * sc)}l${f(6 * sc)} ${f(-8 * sc)}`, 1.2 * sc);
+        else b += k.line(`M${P(x + 3 * sc, y - 22 * sc)}l${f(6 * sc)} ${f(-8 * sc)}`, f(1.2 * sc));
       }
     }
     // gas lamps and walkers along the deck, near end

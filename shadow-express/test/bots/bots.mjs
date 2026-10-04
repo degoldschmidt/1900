@@ -4,7 +4,8 @@
 //   exploit-*: one trick spammed (third class only, bribe everything, plant false trails, never sleep in hotels).
 
 import { advance } from '../../src/core/sim.js';
-import { board, book, plan, cardView, choose, walk, opActions, doWay, canLieLow, lieLow, wireFunds, switchCover, stash, checkTail, shakeTail, setLodging, safehouseHere, contactsHere, seek } from '../../src/core/actions.js';
+import { board, book, bookTrip, plan, cardView, choose, walk, opActions, doWay, canLieLow, lieLow, wireFunds, switchCover, stash, checkTail, shakeTail, setLodging, safehouseHere, contactsHere, seek, passDays, doActivity } from '../../src/core/actions.js';
+import { legendOf, stayDays } from '../../src/core/residence.js';
 import { currentStep, stepCities, activeOps } from '../../src/core/ops.js';
 import { T } from '../../src/data/time.js';
 import { rand } from '../../src/core/rng.js';
@@ -76,6 +77,8 @@ export const POLICIES = {
         const by = (k) => open.find((x) => x.c.std === k);
         return ((named ? by('porter') ?? by('slip') : by('brazen')) ?? open[0]).i;
       }
+      if (v.card.type === 'inspector') { const by = (k) => open.find((x) => x.c.std === k); return ((legendOf(G) >= .45 ? by('answer') : by('papers')) ?? open[0]).i; }
+      if (v.card.type === 'missed') return (open.find((x) => x.c.std === 'reroute') ?? open[0]).i;
       if (!open.length) return -1;
       return open.reduce((a, b) => (score(b.c) > score(a.c) ? b : a)).i;
     },
@@ -86,6 +89,7 @@ export const POLICIES = {
       if (heat > .45) { const alt = Object.entries(S.covers).find(([id, c]) => id !== S.cover && !c.burned && (c.carried || c.stash === S.city)); if (alt) { if (!alt[1].carried) { alt[1].carried = true; alt[1].stash = null; } if (switchCover(G, alt[0]).ok) { stash(G, Object.keys(S.covers).find((k) => k !== S.cover && S.covers[k].carried) ?? ''); return true; } } }
       if (S.stats.nearMisses > (S._nm ?? 0)) { S._nm = S.stats.nearMisses; if (checkTail(G) && S.tailedBy) shakeTail(G); return true; }
       if (safehouseHere(G)) setLodging(G, 'safehouse');
+      else if (S.lodging?.city !== S.city) setLodging(G, 'pension');
       const tg = target(G);
       const slack = tg ? tg.by - S.t : Infinity;
       return goTo(G, slack > 30 * HOUR ? 'safest' : 'fastest', null) || idle(G, true);
@@ -127,6 +131,14 @@ function goTo(G, kind, cls) {
   let best = null;
   for (const c of tg.cities) for (const it of plan(G, c)) if (!best || score2(it, kind) < score2(best, kind)) best = it;
   if (!best) return false;
+  if (best.legs.length > 1 && G.policy !== POLICIES.careless) {
+    const want = cls ?? G.I.cover.get(S.cover)?.cls ?? 2;
+    for (const c of [want, 2, 3, 1]) {
+      const r = bookTrip(G, best, c);
+      if (r.ok) { advance(G, best.legs[0].dep + 1); return true; }
+      if (/afford/.test(r.why ?? '')) { if (!wireFunds(G)) break; }
+    }
+  }
   const leg = best.legs[0];
   const row = board(G, 96).find((r) => r.dp.key === leg.key);
   if (!row) return false;
@@ -144,9 +156,13 @@ function idle(G, careful) {
   const { S } = G;
   if (canLieLow(G) && lieLow(G)) return true;
   const people = contactsHere(G);
-  if (people.length && rand(S) < .5) { seek(G, people[Math.floor(rand(S) * people.length)].person.id); return true; }
-  if (!careful && rand(S) < .5) { walk(G); return true; }
-  advance(G, S.t + 2 * HOUR);
+  if (people.length && rand(S) < .35) { seek(G, people[Math.floor(rand(S) * people.length)].person.id); return true; }
+  if (!careful && rand(S) < .3) { walk(G); return true; }
+  const tg = target(G);
+  // waiting for a window to open in this city, or for the next order: let the days pass
+  const until = tg && tg.after > S.t ? Math.min(tg.after, S.t + 2 * 1440) : S.t + 1440;
+  passDays(G, Math.max(.25, (until - S.t) / 1440));
+  advance(G, until);
   return true;
 }
 

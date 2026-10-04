@@ -35,7 +35,7 @@ const page = tpl.replace('/*STYLE*/', () => css).replace('/*SCRIPT*/', () => js)
 const hosts = new Set([...page.matchAll(/https?:\/\/([a-z0-9.-]+)/gi)].map((m) => m[1].toLowerCase()));
 const bad = [...hosts].filter((h) => !ALLOWED.includes(h));
 if (bad.length) fail(`hosts outside the allowlist: ${bad.join(', ')}`);
-if (page.length > LIMIT) fail(`page is ${(page.length / 1024).toFixed(0)} KB, over ${LIMIT / 1024} KB`);
+if (page.length > LIMIT) { if (release) fail(`page is ${(page.length / 1024).toFixed(0)} KB, over ${LIMIT / 1024} KB`); else console.warn(`note: the dev page is ${(page.length / 1024).toFixed(0)} KB unminified; the limit applies to --release`); }
 const out = release ? path.join(ROOT, 'index.html') : path.join(ROOT, 'build/dev.html');
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, page);

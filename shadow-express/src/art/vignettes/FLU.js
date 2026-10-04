@@ -13,6 +13,8 @@ export default {
     let swell = '';
     for (let i = 0; i < 46; i++) { const t = Math.pow(r(), 1.3), y = HZ + 2 + t * 56, x = r() * 650, w = 6 + t * 30; swell += `M${f(x)} ${f(y)}q${f(w / 2)} ${f(-1 - t * 2)} ${f(w)} 0`; }
     sea += k.line(swell, .6);
+    sea += k.shape(`M-5 ${HZ}H645V${HZ + 9}H-5Z`, 'horiz', { w: 0, op: .5 }); // a squall darkening the far water
+    sea += k.shape(`M-5 ${HZ + 30}Q200 ${HZ + 26} 400 ${HZ + 32}T645 ${HZ + 28}V${HZ + 40}Q420 ${HZ + 44} 200 ${HZ + 38}T-5 ${HZ + 40}Z`, 'horiz', { w: 0, op: .35 });
     let shore = k.shape(`M-5 ${HZ}L60 ${HZ - 3}L180 ${HZ - 2}L260 ${HZ - 4}L420 ${HZ - 2}L645 ${HZ - 3}V${HZ + 1}H-5Z`, 'mid', { far: true, w: .5 });
     shore += k.shape(k.rect(318, HZ - 14, 3, 11), 'dark', { far: true, w: .4 }) + k.shape(k.spire(319.5, HZ - 14, 4, 7), 'dark', { far: true, w: .4 });
     shore += k.haze(HZ - 14, 16, .3);
@@ -20,7 +22,9 @@ export default {
     shore += sail(150, HZ + 6, .55) + sail(205, HZ + 4, .45) + sail(452, HZ + 8, .6);
 
     // ---------- the harbour mouth: two piers on piles, the lighthouse at the head of the near one
-    let pier = k.shape(k.rect(540, HZ + 4, 110, 4), 'mid', { far: true, w: .5 });
+    let pier = k.skyline(560, 660, HZ + 4, { seed: 41, style: 'north', hMin: 10, hMax: 22, wMin: 10, wMax: 16 });
+    for (const [x, sc] of [[586, 1.3], [624, 1]]) pier += k.shape(k.rect(x - 2, HZ - 28, 4, 30), 'dark', { far: true, w: .4 }) + k.smoke(x, HZ - 30, sc, { seed: x });
+    pier += k.shape(k.rect(540, HZ + 4, 110, 4), 'mid', { far: true, w: .5 });
     for (let x = 544; x < 645; x += 7) pier += k.line(`M${x} ${HZ + 8}v4`, .6, { far: true });
     pier += k.shape(k.rect(556, HZ - 6, 5, 10), 'light', { far: true, w: .5 }) + k.shape(k.rect(555, HZ - 9, 7, 3), 'dark', { far: true, w: .4 });
     const PY = 178;
@@ -62,7 +66,8 @@ export default {
     const ship = steamer(226, 182, 200, -1);
 
     // ---------- the dyke and the windmill on it
-    let dyke = k.shape('M-5 197L136 194Q186 196 222 210Q240 217 262 219V245H-5Z', 'stipple', { w: 0 }) + k.line('M-5 197L136 194Q186 196 222 210Q240 217 262 219', 1.2);
+    let dyke = k.shape('M-5 197L136 194Q186 196 222 210Q240 217 262 219V245H-5Z', 'stipple', { w: 0 }) + k.line('M-5 197L136 194Q186 196 222 210Q240 217 262 219', 1.3);
+    dyke += k.shape('M-5 214Q80 208 150 214Q200 222 230 245H-5Z', 'mid', { w: 0, op: .45 }); // the dyke's flank going down into shadow
     dyke += k.shape('M-5 197L136 194L148 199Q90 201 -5 206Z', 'paper', { w: .6 }); // the crest walk
     let toe = '';
     for (let i = 0; i < 9; i++) { const x = 178 + i * 10.5, y = 204 + i * 2.2 + (i > 4 ? (i - 4) * 1.4 : 0); toe += `M${f(x)} ${f(y + 9)}l1 -7q4 -3 9 -1l1 8Z`; }

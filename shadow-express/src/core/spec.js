@@ -48,7 +48,10 @@ export const CONDS = {
   money: ['cmp', 'num'], nerve: ['cmp', 'num'], standing: ['cmp', 'num'],
   mode: ['mode'], kind: ['skind'], class: ['cls'],
   state: ['nation', 'wstate'], war: ['nation', 'nation'], hunter: ['hunter', 'here'],
+  skill: ['skillName', 'cmp', 'num'], stay: ['cmp', 'num'], legend: ['cmp', 'num'], watched: [],
 };
+export const LANGUAGES = ['german', 'french', 'italian', 'slavic'];
+export const SKILLS = ['charm', 'tradecraft', 'observation', 'composure', 'paperwork', 'streetwise', 'commerce'];
 
 /** Effects: name → argument types. */
 export const EFFECTS = {
@@ -60,6 +63,7 @@ export const EFFECTS = {
   cover: ['coverDelta'], papers: ['coverOrActive', 'num'],
   op: ['op', 'opAction'], later: ['hours', 'story'], delay: ['num'],
   unlock: ['unlockFlag'], debrief: ['str'],
+  legend: ['num'], watch: ['num'],
 };
 
 /** Calendar effects: name → argument types. */

@@ -46,6 +46,10 @@ export function test(c, ctx) {
     case 'state': return ctx.worldState(a[0]) === a[1];
     case 'war': return ctx.atWar(a[0], a[1]);
     case 'hunter': return ctx.hunterHere(a[0]);
+    case 'skill': return cmp(ctx.skill(a[0]), a[1], a[2]);
+    case 'stay': return cmp(ctx.stay(), a[0], a[1]);
+    case 'legend': return cmp(ctx.legend(), a[0], a[1]);
+    case 'watched': return ctx.watched();
     default: throw new Error(`unknown condition ${name}`);
   }
 }

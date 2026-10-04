@@ -5,14 +5,16 @@
 export default {
   id: 'COL',
   draw(k) {
-    const f = k.f, P = k.paper, r = k.rng(61);
+    const f = k.f, P = k.paper;
     const seg = (x0, y0, x1, y1) => `M${f(x0)} ${f(y0)}L${f(x1)} ${f(y1)}`;
-    const hide = (x0, y0, x1, y1) => { for (let i = k.lights.length - 1; i >= 0; i--) { const [x, y, w, h] = k.lights[i]; if (x + w > x0 && x < x1 && y + h > y0 && y < y1) k.lights.splice(i, 1); } };
+    // drop lit windows of the first n lights (the far layers) wherever a nearer shape covers them; returns how many went
+    const hide = (n, rects) => { let gone = 0; for (let i = n - 1; i >= 0; i--) { const [x, y, w, h] = k.lights[i]; if (rects.some(([x0, y0, x1, y1]) => x + w > x0 && x < x1 && y + h > y0 && y < y1)) { k.lights.splice(i, 1); gone++; } } return gone; };
     const CB = 190; // the cathedral's foot, behind the embankment
     const s = 1.17; // px per metre on the cathedral
 
     // ---------- far: Deutz across the Rhine, soot
     let far = k.skyline(300, 660, 184, { seed: 17, style: 'north', hMin: 8, hMax: 20, wMin: 14, wMax: 26 }) + k.haze(150, 40, .34);
+    const nFar = k.lights.length;
 
     // ---------- the cathedral
     const y = (m) => CB - m * s;
@@ -151,7 +153,7 @@ export default {
     k.lights.push([467.9, 200.8, 4.2, 5.4]);
     yard += k.haze(196, 30, .22);
 
-    hide(330, 100, 440, 186); // nothing of Deutz shows through the choir and the bridgehead
+    hide(nFar, [[296, 90, 440, 186]]); // nothing of Deutz shows through the choir and the bridgehead
     return far + dom + rhine + bridge + train + hall + yard + wag + engine;
   },
 };

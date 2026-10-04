@@ -12,6 +12,8 @@ import { HEAT } from '../core/enemy.js';
 import { makeGlobe, haloOf } from './globe.js';
 import { makeLedger } from './ledger.js';
 import { makeCards } from './cards.js';
+import { creator } from './creator.js';
+import { defaultHero } from '../core/hero.js';
 import { portraitUrl } from './art.js';
 import { $, esc, el, store } from './dom.js';
 
@@ -153,7 +155,7 @@ function frame(now) {
       let rate = 0, stop = Infinity;
       if (S.journey) { rate = Math.max(40, Math.min(600, (S.journey.arr - S.journey.dep) / 7)); stop = S.journey.arr + 1; }
       else if (S.booked) { rate = 240; stop = S.booked.dep + 1; }
-      else if (S.t < S.busyUntil) { rate = 200; stop = S.busyUntil; }
+      else if (S.t < S.busyUntil || S.routine) { rate = S.routine ? 900 : 200; stop = S.routine ? S.routine.until : S.busyUntil; }
       if (rate) {
         const before = S.t;
         advance(G, Math.min(stop, S.t + rate * speed * dt));
@@ -201,24 +203,25 @@ function about() {
     <div class="choices"><button class="choice" data-close><b>Back to the game</b></button><button class="choice" data-new><b>Begin a new campaign</b><span>this one will be lost</span></button></div></div>`;
   app.appendChild(t);
   t.querySelector('[data-close]').addEventListener('click', () => t.remove());
-  t.querySelector('[data-new]').addEventListener('click', () => { t.remove(); store.del(KEY); G = null; title((sex) => start(sex)); });
+  t.querySelector('[data-new]').addEventListener('click', () => { t.remove(); store.del(KEY); G = null; title((hero) => start(hero)); });
 }
 
 // ---------- start ----------
 function title(onStart) {
   const t = el('div', 'title');
+  t.dataset.v = '2';
   t.innerHTML = `<div class="card paper"><div class="kick">Europe, summer 1914</div><h1>Shadow Express</h1><div class="rule"></div>
     <p>Sunday, the twenty-eighth of June. In Sarajevo, the heir to the Austrian throne has been shot. In London, a commander of the Secret Service Bureau sends for you.</p>
     <p>For five weeks you will cross Europe by named trains under borrowed names, with papers that may not bear inspection. You will cultivate people who may betray you, and betray some who trust you. Three hunters work from whatever you leave behind: a hotel register, a passenger list, a frontier book, a face.</p>
     <p class="dim">Drag the globe to turn it; pinch or scroll to look closer. Tap a city for its trains. Every choice may come back.</p>
-    <div class="who"><button data-sex="m"><img alt="" data-p="m"><b>A gentleman</b></button><button data-sex="f"><img alt="" data-p="f"><b>A lady</b></button></div></div>`;
+    <div class="choices"><button class="choice" data-new><b>Make your agent</b><span>name, looks, past, talents, faults and kit</span></button><button class="choice" data-quick><b>Begin at once</b><span>with a ready-made agent</span></button></div></div>`;
   app.appendChild(t);
-  portraitUrl('hero-m', { seed: 501, sex: 'm', hat: 'bowler', hair: 'short', beard: 'moustache', collar: 'stiff', age: 'mid' }).then((u) => { const i = t.querySelector('[data-p="m"]'); if (u && i) i.src = u; });
-  portraitUrl('hero-f', { seed: 502, sex: 'f', hat: 'wide', hair: 'bun', beard: 'none', collar: 'lace', age: 'mid' }).then((u) => { const i = t.querySelector('[data-p="f"]'); if (u && i) i.src = u; });
-  t.querySelectorAll('[data-sex]').forEach((b) => b.addEventListener('click', () => { t.remove(); onStart(b.dataset.sex); }));
+  t.querySelector('[data-new]').addEventListener('click', () => { t.remove(); creator(app, D.items, (hero) => onStart(hero)); });
+  t.querySelector('[data-quick]').addEventListener('click', () => { t.remove(); onStart(defaultHero(Math.random() < .5 ? 'm' : 'f')); });
 }
-function start(sex, seed = (Date.now() ^ 0x5eed) >>> 0) {
-  G = makeGame(D, newGame(D, { seed, sex }));
+function start(hero, seed = (Date.now() ^ 0x5eed) >>> 0) {
+  if (typeof hero === 'string') hero = defaultHero(hero);
+  G = makeGame(D, newGame(D, { seed, hero }));
   G.endGame = endGame;
   highlightTo = null;
   ledger.state.tab = 'city';
@@ -239,7 +242,7 @@ function boot(data) {
   let saved = data?.state ?? null;
   if (!saved) { try { saved = JSON.parse(store.get(KEY) || 'null'); } catch { saved = null; } }
   if (saved && saved.v === 2 && !saved.ended) resume(saved);
-  else title((sex) => start(sex));
+  else title((hero) => start(hero));
   requestAnimationFrame(frame);
 }
 window.addEventListener('resize', () => { globe.resize(); dirty = true; });
@@ -250,6 +253,6 @@ window.claude?.hot?.ready ? window.claude.hot.ready(boot) : boot(window.claude?.
 
 // hooks for the tests
 window.__shadow = {
-  get G() { return G; }, D, A, advance: (t) => advance(G, t), start: (sex = 'm', seed = 7) => { document.querySelector('.title')?.remove(); start(sex, seed); },
+  get G() { return G; }, D, A, advance: (t) => advance(G, t), start: (hero = 'm', seed = 7) => { document.querySelectorAll('.title').forEach((x) => x.remove()); start(hero, seed); },
   setSpeed: (v) => { speed = v; }, refresh, ledger, globe,
 };

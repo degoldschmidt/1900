@@ -5,8 +5,10 @@
 export default {
   id: 'HAM',
   draw(k) {
-    const f = k.f, P = k.paper, r = k.rng(88);
+    const f = k.f, P = k.paper;
     const seg = (x0, y0, x1, y1) => `M${f(x0)} ${f(y0)}L${f(x1)} ${f(y1)}`;
+    // drop lit windows of the first n lights (the far layers) wherever a nearer shape covers them; returns how many went
+    const hide = (n, rects) => { let gone = 0; for (let i = n - 1; i >= 0; i--) { const [x, y, w, h] = k.lights[i]; if (rects.some(([x0, y0, x1, y1]) => x + w > x0 && x < x1 && y + h > y0 && y < y1)) { k.lights.splice(i, 1); gone++; } } return gone; };
     const lerp = (a, b, t) => a + (b - a) * t;
     const QY = 208; // quay edge
 
@@ -14,16 +16,17 @@ export default {
     let far = k.skyline(-5, 330, 168, { seed: 9, style: 'north', hMin: 12, hMax: 30, wMin: 12, wMax: 22 });
     far += k.shape(k.rect(-5, 160, 260, 8), 'light', { far: true, w: .5 }) + k.shape(k.rect(130, 148, 10, 12) + k.rect(200, 150, 8, 10), 'mid', { far: true, w: .4 });
     // the Michel: brick tower, clock stage, the colonnaded lantern, the copper cupola and spire
-    const MX = 84, mb = 156, ms = 1.08, my = (m) => mb - m * ms;
-    let mic = k.shape(k.rect(MX - 9, my(70), 18, 70 * ms), 'mid', { far: true, w: .8 }) + k.shape(k.rect(MX + 2, my(70), 7, 70 * ms), 'dark', { far: true, w: 0 });
-    mic += k.shape(k.rect(MX - 7.5, my(84), 15, 14 * ms), 'light', { far: true, w: .8 }) + `<circle cx="${MX}" cy="${f(my(77))}" r="3.6" fill="${P}" stroke="${k.sepia}" stroke-width=".7"/>`;
+    const MX = 86, mb = 168, ms = 1.18, my = (m) => mb - m * ms;
+    let mic = k.shape(k.rect(MX - 9, my(70), 18, 70 * ms), 'dark', { far: true, w: 1 }) + k.shape(k.rect(MX + 2, my(70), 7, 70 * ms), 'black', { far: true, w: 0 });
+    mic += k.shape(k.rect(MX - 7.5, my(84), 15, 14 * ms), 'mid', { far: true, w: 1 }) + `<circle cx="${MX}" cy="${f(my(77))}" r="3.6" fill="${P}" stroke="${k.sepia}" stroke-width=".7"/>`;
     mic += k.shape(k.rect(MX - 8.5, my(85.5), 17, 1.6), 'dark', { far: true, w: .5 });
-    mic += k.shape(k.rect(MX - 6, my(98), 12, 12.5 * ms), 'none', { far: true, w: .7 }) + k.line(`M${MX - 6} ${f(my(98))}V${f(my(85.5))}M${MX - 2} ${f(my(98))}V${f(my(85.5))}M${MX + 2} ${f(my(98))}V${f(my(85.5))}M${MX + 6} ${f(my(98))}V${f(my(85.5))}`, .9, { far: true });
+    mic += k.shape(k.rect(MX - 6, my(98), 12, 12.5 * ms), 'none', { far: true, w: .9 }) + k.line(`M${MX - 6} ${f(my(98))}V${f(my(85.5))}M${MX - 2} ${f(my(98))}V${f(my(85.5))}M${MX + 2} ${f(my(98))}V${f(my(85.5))}M${MX + 6} ${f(my(98))}V${f(my(85.5))}`, 1.3, { far: true });
     mic += k.shape(k.rect(MX - 7, my(99.5), 14, 1.6), 'dark', { far: true, w: .5 });
-    mic += k.shape(`M${MX - 6} ${f(my(99.5))}Q${MX - 6} ${f(my(108))} ${MX} ${f(my(109))}Q${MX + 6} ${f(my(108))} ${MX + 6} ${f(my(99.5))}Z`, 'dark', { far: true, w: .7 });
-    mic += k.shape(k.rect(MX - 2.5, my(113), 5, 4 * ms), 'light', { far: true, w: .5 }) + k.shape(k.spire(MX, my(113), 5.4, 18 * ms), 'dark', { far: true, w: .6 }) + k.line(`M${MX} ${f(my(131))}v-4M${MX - 1.6} ${f(my(129.5))}h3.2`, .7, { far: true });
+    mic += k.shape(`M${MX - 6} ${f(my(99.5))}Q${MX - 6} ${f(my(108))} ${MX} ${f(my(109))}Q${MX + 6} ${f(my(108))} ${MX + 6} ${f(my(99.5))}Z`, 'black', { far: true, w: .9 });
+    mic += k.shape(k.rect(MX - 2.5, my(113), 5, 4 * ms), 'light', { far: true, w: .5 }) + k.shape(k.spire(MX, my(113), 5.4, 18 * ms), 'black', { far: true, w: .8 }) + k.line(`M${MX} ${f(my(131))}v-4M${MX - 1.6} ${f(my(129.5))}h3.2`, .7, { far: true });
     far += mic + k.haze(110, 60, .34);
-    for (const [x, sc] of [[30, 1.1], [168, 1.3], [246, .9]]) far += k.shape(k.rect(x - 2, 136, 4, 24), 'dark', { far: true, w: .4 }) + k.smoke(x, 134, sc, { seed: x });
+    const nFar = k.lights.length;
+    for (const [x, sc] of [[150, 1.1], [204, 1.3], [262, .9]]) far += k.shape(k.rect(x - 2, 136, 4, 24), 'dark', { far: true, w: .4 }) + k.smoke(x, 134, sc, { seed: x });
 
     // ---------- the harbour water, tugs and lighters
     let water = k.water(166, QY + 2, { seed: 7 });
@@ -118,6 +121,7 @@ export default {
     folk += k.lamp(268, 240, 1.4);
     k.lights.push([265.8, 199.9, 4.5, 5.9]);
 
+    hide(nFar, [[316, 0, 650, 220]]); // the north bank behind the liner's bow stays dark
     return far + water + cranes + liner + quay + crates + folk;
   },
 };

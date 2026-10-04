@@ -1,12 +1,14 @@
-// Stones for Petersburg (owner: Ops). See docs/CONTRACTS.md §6 and docs/REGISTRY.md §7. Win grants the Vészy cover.
+// Stones for Petersburg (owner: Ops). See docs/CONTRACTS.md §6 and docs/REGISTRY.md §7.
+// Optional: the one long journey of Act I, away from the Vienna post. Win grants the Vészy cover.
+// Taking it costs Vienna time (op-optics) and makes the run to the Belgrade post (op-mole, 15 July) tight.
 
 export default {
-  id: 'op-diamonds', act: 1, issue: '07-07 09.00', giver: 'handler',
+  id: 'op-diamonds', act: 1, issue: '07-04 09.00', giver: 'handler', optional: true,
   title: 'Stones for Petersburg',
-  brief: 'BUREAU FUNDS AWAIT YOU AT TWENTSCHE BANK AMSTERDAM FROM EIGHTH STOP BUY UNCUT STONES STOP CARRY THEM TO PETERSBURG BY FIFTEENTH STOP OUR FRIEND WAITS AT THE ANGLETERRE STOP RUSSIAN CUSTOMS SEARCH FOR STONES STOP HIS PAYMENT WILL BE A NEW NAME FOR YOU ASHBY',
+  brief: 'IF VIENNA CAN SPARE YOU STOP BUREAU FUNDS AT TWENTSCHE BANK AMSTERDAM FROM SIXTH STOP BUY UNCUT STONES STOP CARRY THEM TO PETERSBURG BY FIFTEENTH STOP OUR FRIEND WAITS AT THE ANGLETERRE STOP RUSSIAN CUSTOMS SEARCH FOR STONES STOP PAYMENT IS A NEW NAME FOR YOU ASHBY',
   steps: [
-    { id: 'buy', kind: 'act', city: 'AMS', venue: 'venue:market', after: '07-08 09.00', by: '07-10 18.00', gives: 'diamonds',
-      label: 'Buy the stones in Amsterdam, from the eighth',
+    { id: 'buy', kind: 'act', city: 'AMS', venue: 'venue:market', after: '07-06 09.00', by: '07-11 18.00', gives: 'diamonds',
+      label: 'Buy the stones in Amsterdam',
       ways: [
         { id: 'bourse', label: 'Buy on the diamond bourse', sub: "Bureau money, and a members' book to sign",
           tag: 'topic:trade', if: [['aff', 'topic:trade', '>=', 1]], risk: 0.1, rec: ['register', 0.5],
@@ -19,7 +21,7 @@ export default {
           tag: 'venue:docks', risk: 0.3, rec: ['sighting', 0.4], ok: [['money', 8]], fail: [['nerve', -2], ['susp', 'active', 0.1]] },
       ] },
     { id: 'carry', kind: 'carry', item: 'diamonds', to: 'SPB', by: '07-15 12.00', label: 'Carry the stones to Petersburg by the fifteenth' },
-    { id: 'deliver', kind: 'act', city: 'SPB', venue: 'venue:hotel', by: '07-16 12.00', label: 'Hand them to the colonel',
+    { id: 'deliver', kind: 'act', city: 'SPB', venue: 'venue:hotel', by: '07-15 20.00', label: 'Hand them to the colonel',
       ways: [
         { id: 'angleterre', label: 'Room fourteen at the Angleterre', sub: 'As agreed; the hall porter reports to the Okhrana',
           risk: 0.15, rec: ['meeting', 0.5], ok: [['item', '-diamonds']], fail: [['susp', 'active', 0.1], ['nerve', -1]] },
@@ -38,8 +40,10 @@ export default {
       ['flag', 'op-diamonds-amsler'], ['loyal', 'amsler', 'enemy:orlova']], story: 'op-diamonds.tipped' },
     { if: [['op', 'op-diamonds', 'buy'], ['not', ['op', 'op-diamonds', 'deliver']], ['nation', 'RU'], ['item', 'diamonds'],
       ['flag', 'op-diamonds-amsler'], ['loyal', 'amsler', 'enemy:orlova'], ['not', ['flag', 'op-diamonds-hidden']]], story: 'op-diamonds.search' },
+    { if: [['op', 'op-diamonds', 'buy'], ['not', ['op', 'op-diamonds', 'carry']], ['mode', 'rail'], ['item', 'diamonds'], ['chance', 0.4]],
+      story: 'op-diamonds.nord' },
   ],
   win: [['standing', 10], ['money', 10], ['cover', '+vessey']],
-  fail: [['standing', -15]],
+  fail: [['standing', -10]],
   debrief: "The stones paid a colonel of the Russian General Staff who preferred carats to cheques; he sold London the dates of Russia's trial mobilisation. His office also paid in kind: the passports of the Vészys, a childless Hungarian couple dead of typhus in a Petersburg clinic in May. The Almanach de Gotha still lists them alive.",
 };

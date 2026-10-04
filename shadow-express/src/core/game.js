@@ -8,6 +8,8 @@ import { newEnemy } from './enemy.js';
 import { DEFAULT_AFF, classAff } from './spec.js';
 import { chanceOf, apply as applyEffects, all, render } from './storylet.js';
 import { earliest } from './timetable.js';
+import { BACKGROUNDS, KIT, defaultHero, skill, has as trait, fullName } from './hero.js';
+import { legendOf, addLegend, addWatch, shadowed, stayDays, noticeRecord } from './residence.js';
 
 export const START = T('06-28 16.00');
 export const CASE_SIZE = 6;
@@ -40,7 +42,10 @@ function loyalties(D, seed) {
   return out;
 }
 
-export function newGame(D, { seed = 1, sex = 'm', start = 'LON', t = START } = {}) {
+export function newGame(D, { seed = 1, sex = 'm', start = 'LON', t = START, hero = null } = {}) {
+  hero = hero ? JSON.parse(JSON.stringify(hero)) : defaultHero(sex);
+  sex = hero.sex;
+  const bg = BACKGROUNDS.find((b) => b.id === hero.background) ?? BACKGROUNDS[0];
   const loyal = loyalties(D, seed);
   const S = {
     v: 2, seed, rng: (seed * 2654435761) >>> 0 || 1, t, sex,
@@ -53,10 +58,26 @@ export function newGame(D, { seed = 1, sex = 'm', start = 'LON', t = START } = {
     newsSeen: [], log: [], debrief: [], visits: { [start]: 1 }, ended: null,
     stats: { decisions: 0, journeys: 0, nextTrain: 0, notNext: 0, controls: 0, encounters: 0, nearMisses: 0, detained: 0, records: 0, plants: 0 },
   };
-  for (const c of D.covers) if (c.unlock === null) { S.covers[c.id] = { papers: c.papers, carried: true, burned: false }; S.cover ??= c.id; }
+  // the agent: covers from the background, purse and standing from background and traits, papers from paperwork
+  S.hero = hero;
+  S.legend = {}; S.watch = {};
+  const covers = bg.covers.filter((id) => D.covers.some((c) => c.id === id));
+  for (const id of covers.length ? covers : D.covers.filter((c) => c.unlock === null).map((c) => c.id)) {
+    const c = D.covers.find((x) => x.id === id);
+    S.covers[id] = { papers: Math.min(1, c.papers + .03 * skill(hero, 'paperwork') - (trait(hero, 'poor') ? .1 : 0)), carried: true, burned: false };
+    S.cover ??= id;
+  }
+  S.money = bg.money + (trait(hero, 'money') ? 30 : 0) - (trait(hero, 'gambler') ? 15 : 0);
+  S.standing = Math.min(80, bg.standing + (trait(hero, 'protege') ? 10 : 0) - (trait(hero, 'debts') ? 8 : 0));
+  S.nerve = 7 + (trait(hero, 'iron') ? 2 : 0) - (trait(hero, 'drink') ? 1 : 0);
   for (const p of D.people) S.people[p.id] = { st: 'unknown', trust: 0, exp: 0, loyal: loyal[p.id], told: [] };
   for (const o of D.ops) S.ops[o.id] = { status: 'pending', done: {}, waitMin: 0, obsMin: 0, way: {}, twists: {} };
-  S.case.push({ id: 'bradshaw', t });
+  const items = [bg.item, ...(hero.kit ?? [])].filter((id, i, a) => id && a.indexOf(id) === i && D.items.some((x) => x.id === id));
+  for (const id of items) S.case.push({ id, t });
+  S.money = Math.max(5, S.money - (hero.kit ?? []).reduce((a, id) => a + (KIT.find((k) => k.id === id)?.price ?? 0), 0));
+  // the face the enemy may learn: some faces are easier to describe than others
+  S.enemy.descMul = trait(hero, 'forgettable') ? .6 : trait(hero, 'striking') ? 1.5 : 1;
+  if (trait(hero, 'known')) S.enemy.desc = .3;
   return S;
 }
 
@@ -67,7 +88,7 @@ export function makeGame(D, S) {
 
 // ---------- queries ----------
 export const coverData = (G, id = G.S.cover) => G.I.cover.get(id);
-export const coverName = (G, id = G.S.cover) => { const c = coverData(G, id); return c ? c[G.S.sex === 'f' ? 'woman' : 'man'].name : 'yourself'; };
+export const coverName = (G, id = G.S.cover) => { if (id === 'self' && G.S.hero) return fullName(G.S.hero); const c = coverData(G, id); return c ? c[G.S.sex === 'f' ? 'woman' : 'man'].name : 'yourself'; };
 export const coverLegend = (G, id = G.S.cover) => { const c = coverData(G, id); return c ? c[G.S.sex === 'f' ? 'woman' : 'man'].legend : ''; };
 export function aff(G, tag, id = G.S.cover) {
   const c = coverData(G, id);
@@ -133,6 +154,10 @@ export function context(G, card = {}) {
     worldState: (n) => W.state(n, S.t),
     atWar: (a, b) => W.atWar(a, b, S.t),
     hunterHere: (id) => card.hunter === id,
+    skill: (name) => skill(S.hero, name),
+    stay: () => stayDays(G),
+    legend: () => legendOf(G),
+    watched: () => shadowed(G),
     seen: (id) => !!S.seen[id],
     coverName: () => coverName(G), coverLegend: () => coverLegend(G),
     cityName: () => (S.city ? I.city.get(S.city).name : I.city.get(S.journey?.to)?.name ?? ''),
@@ -180,6 +205,8 @@ export function leave(G, kind, fid, o = {}) {
   if (S.tailedBy && kind !== 'talk') { r.arrives = Math.min(r.arrives, t + 90); r.fid = Math.max(r.fid, .8); } // a tail sees everything
   S.records.push(r);
   S.stats.records++;
+  noticeRecord(G, r);
+  if (shadowed(G) && kind !== 'talk' && kind !== 'calm') { r.fid = Math.max(r.fid, .7); r.arrives = Math.min(r.arrives, t + 6 * 60); } // the police pass on what they see
   return r;
 }
 
@@ -215,6 +242,8 @@ function effects(G, card) {
     later: (h, story) => { S.later.push({ at: S.t + Math.round(h * 60), story, until: S.t + Math.round(h * 60) + 2 * DAY }); },
     delay: (n) => { if (S.journey) { S.journey.arr += n; for (const x of S.journey.crossings) if (!x.done) x.t += Math.round(n / 2); } },
     debrief: (text) => { S.debrief.push({ t: S.t, op: opOf() ?? null, text }); },
+    legend: (n) => addLegend(G, n),
+    watch: (n) => addWatch(G, n),
     // engine-only effects (never in data)
     note: (title, text) => note(G, title, text),
   };
@@ -275,8 +304,10 @@ export function resolveChoice(G, choice, card = {}) {
   if (fit === 0) leave(G, 'sighting', .3, { heat: .15 });
   if (fit < 0) leave(G, 'sighting', .6, { heat: .35 });
   let success = true;
+  const speaker = card.id ? G.I.story.get(card.id)?.speaker : null;
+  const charm = speaker && G.I.person.has(speaker) ? .04 * skill(S.hero, 'charm') : 0;
   if (choice.roll) {
-    const p = chanceOf(choice.roll, ctx) - (S.nerve <= 1 ? .1 : 0) - (fit < 0 ? .2 : 0);
+    const p = chanceOf(choice.roll, ctx) - (S.nerve <= 1 ? .1 : 0) - (fit < 0 ? .2 : 0) + charm;
     success = rand(S) < Math.max(.05, p);
   }
   applyEffects(success ? choice.ok : choice.fail, ctx);

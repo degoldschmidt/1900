@@ -67,7 +67,7 @@ export default {
     s += fb;
     // the river leaving the lake, under the terrace
     s += k.shape('M318 168L400 168Q414 182 436 191L645 196V245H360Q346 196 318 168Z', 'water', { w: 1 });
-    for (let i = 0; i < 9; i++) s += k.line(`M${P(346 + i * 20, 178 + i * 4)}h${f(14 + i * 3)}`, .6 + i * .05);
+    for (let i = 0; i < 9; i++) s += k.line(`M${P(346 + i * 20, 178 + i * 4)}h${f(14 + i * 3)}`, f(.6 + i * .05));
     s += k.boat(520, 222, .9, 'barge', -1);
 
     // ---- the Grossmünster: the twin towers with their domed caps, the nave roof running left

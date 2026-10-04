@@ -9,7 +9,6 @@ export default {
     const VY = 178, EYE = 4;
     const at = (yg) => (yg - VY) / EYE; // px per metre for something standing on ground y
     const seg = (a, b) => `M${f(a[0])} ${f(a[1])}L${f(b[0])} ${f(b[1])}`;
-    const hide = (x0, y0, x1, y1) => { for (let i = k.lights.length - 1; i >= 0; i--) { const [x, y, w, h] = k.lights[i]; if (x + w > x0 && x < x1 && y + h > y0 && y < y1) k.lights.splice(i, 1); } };
     const lerp = (a, b, t) => a + (b - a) * t;
 
     // ---------- far: roofs beyond the square, soot
@@ -150,12 +149,8 @@ export default {
     // between the Hôtel de Ville and the guildhalls, the mouth of a street in sepia
     let gap = k.shape(k.rect(HX1 + 4, 150, GX0 - HX1 - 4, 44), 'light', { far: true, w: .5 }) + k.shape(k.gable(HX1 + 4, 150, GX0 - HX1 - 4, 18), 'tiles', { far: true });
     gap += k.windows(HX1 + 8, 156, GX0 - HX1 - 12, 32, 3, 3, { far: true, lit: .3 });
-    // the dark house on the near left corner, in shadow
-    let corner = k.shape(k.poly([[-6, 34], [44, 58], [44, 212], [-6, 222]]), 'dark', { w: 1.1 });
-    corner += k.shape(k.poly([[-6, 34], [19, 8], [44, 58]]), 'black', { w: 1 });
-    let cw = '';
-    for (const u of [4, 22]) for (let i = 0; i < 5; i++) { const y = 54 + u * .5 + i * 28; cw += k.poly([[u, y], [u + 10, y + 3], [u + 10, y + 19], [u, y + 17]]); }
-    corner += k.shape(cw, 'black', { w: .5 }) + k.line(`M44 58V212`, 1.3);
+    // to the left of the Hôtel de Ville, the houses of the rue Charles Buls in sepia
+    gap = k.skyline(-5, HX0 - 6, HB, { seed: 12, style: 'north', hMin: 26, hMax: 44, wMin: 12, wMax: 20 }) + gap;
 
     // ---------- the square: cobbles, the flower market under its parasols
     let ground = k.shape(`M-5 ${HB}L${GX0} ${HB + 4}L652 ${f(bAt(GX1))}V245H-5Z`, 'paper', { w: 0 }) + k.line(`M-5 ${HB}L${GX0} ${HB + 4}L652 ${f(bAt(GX1))}`, 1.2);
@@ -199,6 +194,6 @@ export default {
     for (const [x, yg, tone] of spots) market += parasol(x, yg - .3, tone) + fig(x - .9 * at(yg), yg - .25 * at(yg), 'woman') + stall(x, yg);
     const folk = fig(222, 208, 'man') + fig(230, 209, 'woman') + fig(402, 214, 'porter') + fig(476, 230, 'man') + fig(486, 231, 'woman') + fig(612, 238, 'priest') + fig(56, 222, 'soldier') + fig(66, 223, 'woman') + dogcart(196, 236) + fig(186, 236, 'woman') + fig(150, 214, 'man');
 
-    return far + gap + hdv + tow + guild + corner + ground + market + folk;
+    return far + gap + hdv + tow + guild + ground + market + folk;
   },
 };
