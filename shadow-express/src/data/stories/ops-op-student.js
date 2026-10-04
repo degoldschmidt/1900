@@ -43,7 +43,7 @@ export default [
 
   { id: 'op-student.courier', at: 'then', if: [['op', 'op-student'], ['not', ['op', 'op-student', 'out']]],
     title: 'Word from the courier',
-    text: "Three days after you gave Jovan to your courier, the cable office has a telegram for your cover name, sent by way of Salonika: an uncle's news, in a code agreed over a café table. Before you open it you remember how Jovan looked at the courier: a stranger, at a stranger's prices.",
+    text: "Two and a half days after you gave Jovan to your courier, the cable office has a telegram for your cover name: an uncle's news, in a code agreed over a café table. Before you open it you remember how Jovan looked at the courier: a stranger, at a stranger's prices.",
     choices: [
       { label: 'Open the telegram', sub: 'Safe across, or taken at a frontier',
         roll: { p: 0.75, mods: [[['trust', 'jovan', '>=', 2], 0.1], [['st', 'agathe', 'recruited'], 0.05]] },
@@ -72,7 +72,7 @@ export default [
         fail: [ilicSold, ['debrief', 'A gendarme took your money and Jovan both. Ilić had sold the address.'], ...taken, ['record', 'bribe', 1]] },
     ] },
 
-  { id: 'op-student.semlin', at: 'then', if: [WITH, ['any', ['city', 'BEG'], ['city', 'BUD']]],
+  { id: 'op-student.semlin', at: 'then', if: [WITH, ['city', 'BEG']],
     title: 'The Semlin bridge is blown',
     text: 'When you go to the station for tickets, it is crowded with families sitting on their trunks, and a rumour runs ahead of every train: the Serbs have mined the Semlin bridge, or blown it already, and nothing will go north again. A clerk chalks DELAYED against every departure and refuses to say more. Jovan watches the gendarmes, and the gendarmes watch everyone.',
     choices: [
@@ -83,7 +83,7 @@ export default [
       { label: 'Bribe the telegraph clerk', sub: '£2; the Semlin wire runs over the bridge', cost: { money: 2 },
         ok: [['intel', { subj: 'line:BUD-BEG', claim: { note: 'The Semlin wire still works, so the bridge still stands. For now.' }, src: 'porter', rel: 0.8, truth: true }],
           ['record', 'bribe', 0.3]] },
-      { label: 'Walk down to the Sava and look', sub: 'An hour and a half; foreigners at bridges are noticed', cost: { min: 90 },
+      { label: 'Walk down to the Sava and look', sub: 'An hour and a half; foreigners at bridges are noticed', cost: { min: 90 }, if: [['city', 'BEG']],
         ok: [['intel', { subj: 'line:BUD-BEG', claim: { note: 'The bridge stands. Sappers are working under the first span, and they are not mending it.' }, src: 'seen', rel: 0.95, truth: true }],
           ['record', 'sighting', 0.4]] },
       { label: 'Take it on trust', sub: 'Rumours are sometimes true',
@@ -92,7 +92,7 @@ export default [
 
   { id: 'op-student.enlist', at: 'then', speaker: 'jovan', if: [WITH, ['nation', 'RS'], ['day', '012']],
     title: 'Jovan wants to enlist',
-    text: "Serbia is mobilising: reservists in their Sunday clothes at every corner and every station, women running beside them, a band somewhere. Jovan watches from the window for a long time. 'Every Bosnian in Belgrade is volunteering,' he says. 'My friends are in Austrian cells, and you want me to sit in Constantinople.' He is twenty, and he is not asking.",
+    text: "Serbia is mobilising: reservists in their Sunday clothes at every corner and every station, women running beside them, a band somewhere. Jovan watches from the window for a long time. 'Every Bosnian in Belgrade is volunteering,' he says. 'My friends are in Austrian cells, and you want me to sit in a café abroad.' He is twenty, and he is not asking.",
     choices: [
       { label: 'Talk him round', sub: 'He trusts you, or he does not',
         roll: { p: 0.4, mods: [[['trust', 'jovan', '>=', 2], 0.3], [['flag', 'op-cable-promise'], 0.15], [['skill', 'charm', '>=', 2], 0.1]] },

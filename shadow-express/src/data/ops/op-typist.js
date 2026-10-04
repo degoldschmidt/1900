@@ -1,6 +1,7 @@
 // Fräulein Sauer (owner: Ops). See docs/CONTRACTS.md §6 and docs/REGISTRY.md §7 (Act III: the Berlin posting).
 // Two journeys: from wherever op-student left you to the Berlin post, and out with Sauer to neutral ground as the frontiers close.
-// The post can be taken up as late as Thursday night, so that even the Constantinople road with Jovan can still reach it.
+// The post can be taken up as late as Friday morning, so that even the Constantinople road with Jovan can still reach it;
+// arriving earlier buys days of cultivating Sauer (People), which the twists and rolls reward.
 // She cannot be met before the 30th. The scenes of the way out are `later` continuations armed when the annex is out.
 
 const ROAD = [['later', 1, 'op-typist.permit'], ['later', 2, 'op-typist.major']];
@@ -8,11 +9,11 @@ const ROAD = [['later', 1, 'op-typist.permit'], ['later', 2, 'op-typist.major']]
 export default {
   id: 'op-typist', act: 3, issue: '07-26 09.00', giver: 'handler',
   title: 'Fräulein Sauer',
-  brief: 'TAKE UP BERLIN POST BY THURSDAY STOP IIIB HUNTING A LEAK IN THE GENERAL STAFF TYPING POOL STOP CULTIVATE SAUER QUIETLY AND MEET HER BY FRIDAY NOON STOP SHE CAN BRING THE RAILWAY ANNEX STOP GET HER TO NEUTRAL GROUND BY SUNDAY STOP FRONTIERS WILL CLOSE ASHBY',
+  brief: 'TAKE UP BERLIN POST BY FRIDAY MORNING STOP IIIB HUNTING A LEAK IN THE GENERAL STAFF TYPING POOL STOP CULTIVATE SAUER QUIETLY AND MEET HER BY FRIDAY EVENING STOP SHE CAN BRING THE RAILWAY ANNEX STOP GET HER TO NEUTRAL GROUND BY SUNDAY STOP FRONTIERS WILL CLOSE ASHBY',
   steps: [
-    { id: 'reach', kind: 'wait', city: 'BER', min: 120, by: '07-31 06.00', label: 'Take up the Berlin post by Thursday night', story: 'op-typist.post' },
-    { id: 'meet', kind: 'meet', person: 'sauer', city: 'BER', after: '07-30 08.00', by: '07-31 12.00', gives: 'companion-sauer',
-      label: 'Meet Sauer by Friday noon',
+    { id: 'reach', kind: 'wait', city: 'BER', min: 120, by: '07-31 10.30', label: 'Take up the Berlin post by Friday morning', story: 'op-typist.post' },
+    { id: 'meet', kind: 'meet', person: 'sauer', city: 'BER', after: '07-30 08.00', by: '07-31 18.00', gives: 'companion-sauer',
+      label: 'Meet Sauer by Friday evening',
       ways: [
         { id: 'tearoom', label: 'The Wertheim tea room, as arranged', sub: 'A parcel of gloves; she will be early', risk: 0.1, story: 'op-typist.meet' },
         { id: 'church', label: 'A pew behind hers at evening prayers', sub: 'Two hours of hymns; nobody follows a typist to church',
