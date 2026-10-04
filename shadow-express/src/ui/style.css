@@ -126,7 +126,7 @@ button { font: inherit; color: inherit; }
 .fare.implausible { border-color: var(--blood); color: var(--blood); }
 .dep.cancelled { opacity: .5; }
 .dep.cancelled .to { text-decoration: line-through; }
-.dep.next .t::after { content: " ·"; }
+.dep.next .row1 > span:first-child .t::after { content: " ·"; }
 .filter { display: flex; gap: 6px; margin: 4px 0 8px; flex-wrap: wrap; }
 .filter select { font: inherit; font-size: 14px; background: var(--paper); color: var(--ink); border: 1px solid var(--ink); padding: 3px 6px; border-radius: 2px; }
 .itin { border: 1px solid var(--ink); padding: 7px 9px; margin: 6px 0; }
