@@ -13,9 +13,14 @@ export const START = T('06-28 16.00');
 export const CASE_SIZE = 6;
 export const NERVE_MAX = 10;
 
+/** When every borrowed name is burned, the agent travels on a genuine British passport: safer papers, but a real name to lose. */
+export const SELF = { id: 'self', nation: 'GB', cls: 2, man: { name: 'yourself', legend: 'a British subject on your own passport' }, woman: { name: 'yourself', legend: 'a British subject on your own passport' },
+  papers: .9, backstopH: 6, aff: { 'topic:military': -1, 'venue:barracks': -1 }, props: [], unlock: null, blurb: 'Your own name. The last one you have.' };
+
 export function indexes(D) {
   const by = (rows) => new Map(rows.map((r) => [r.id, r]));
   const I = { city: by(D.cities), nation: by(D.nations), item: by(D.items), cover: by(D.covers), person: by(D.people), hunter: by(D.hunters), op: by(D.ops), story: by(D.stories), line: by(D.lines) };
+  I.cover.set('self', SELF);
   I.atList = {};
   for (const s of D.stories) (I.atList[s.at] ??= []).push(s);
   I.ground = [...new Set(D.hunters.flatMap((h) => h.ground))];

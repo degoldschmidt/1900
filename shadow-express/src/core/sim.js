@@ -48,11 +48,16 @@ function tick(G) {
   enemyStep(G);
   if (!S.journey) encounters(G); else trainEncounter(G);
   dueLaters(G);
+  acts(G);
   calendar(G);
+  tips(G);
+  goAndSee(G);
+  bureau(G);
   checkOps(G);
   people(G);
   perish(G);
   nights(G);
+  loiter(G);
   if (S.tailedBy && S.t - S.tailSince > 30 * HOUR && !S.queue.length) confront(G, S.tailedBy, 'tail');
   if (S.t >= END && !S.ended) endGame(G, 'time');
   if (S.standing <= 0 && !S.ended) endGame(G, 'recalled');
@@ -107,6 +112,9 @@ function arrive(G) {
   const j = S.journey;
   S.journey = null;
   S.city = j.to;
+  S.cityArrived = S.t;
+  S.place = 'street';
+  if (S.tailedBy && rand(S) < .4) note(G, 'A face again', 'On the platform, a man buys a paper he does not read. You have seen that coat before, at the last station. Or one like it.');
   S.visits[j.to] = (S.visits[j.to] ?? 0) + 1;
   if (j.kind === 'night') S.nerve = Math.min(10, S.nerve + 1);
   if (S.tailedBy) { const h = S.enemy.hunters[S.tailedBy]; h.leg = null; h.city = j.to; h.idleUntil = S.t + 3 * HOUR; }
@@ -255,6 +263,7 @@ function dueLaters(G) {
   for (let i = 0; i < S.later.length; i++) {
     const l = S.later[i];
     if (S.t < l.at) continue;
+    if (l.courier) { S.later.splice(i--, 1); courierArrives(G, l.courier); continue; }
     if (S.t > l.until) { S.later.splice(i--, 1); continue; }
     const st = I.story.get(l.story);
     if (!st) { S.later.splice(i--, 1); continue; }
@@ -265,6 +274,70 @@ function dueLaters(G) {
     S.queue.push({ type: 'story', id: st.id, n: ++S.cardN });
     return;
   }
+}
+
+const ACTS = [null, null,
+  ['Act II · The Ultimatum', 'Three weeks after Sarajevo, Vienna is drafting a note that Belgrade cannot accept. Police on every frontier are told to look harder. In Zurich, a woman in widow\'s black takes rooms by the lake and starts buying information.'],
+  ['Act III · Mobilisation', 'Serbia has refused, Austria has mobilised, and Russia will follow. Lines are wanted for the army; frontiers close at a day\'s notice; a foreigner\'s papers can make him a prisoner. The hunters may now take you on their own ground.']];
+function acts(G) {
+  const { S, W } = G;
+  const a = W.act(S.t);
+  if ((S.actShown ?? 1) < a) { S.actShown = a; S.queue.push({ type: 'act', act: a, title: ACTS[a][0], text: ACTS[a][1], n: ++S.cardN }); }
+}
+
+/** Recruited contacts with the intel perk send word of the hunters now and then; a traitor sends lies that lure. */
+function tips(G) {
+  const { S, W, D } = G;
+  if (S.t % (12 * HOUR) !== 0) return;
+  for (const p of D.people) {
+    const ps = S.people[p.id];
+    if (ps.st !== 'recruited' || !p.perks.includes('intel')) continue;
+    if ((ps.lastTip ?? 0) > S.t - 36 * HOUR) continue;
+    ps.lastTip = S.t;
+    const hs = D.hunters.filter((h) => W.hunterActive(h, S.t));
+    if (!hs.length) continue;
+    const h = hs[Math.floor(hash(S.seed, 'tip', p.id, S.t) * hs.length)], st = S.enemy.hunters[h.id];
+    const real = st.leg ? st.leg.to : st.city;
+    const traitor = (ps.loyal ?? '').startsWith('enemy:');
+    const at = traitor ? farFrom(G, real) : real;
+    addIntel(G, { subj: `hunter:${h.id}`, claim: { at }, src: `person:${p.id}`, rel: .75, truth: !traitor });
+    log(G, `Word from ${p.name}: ${h.name} is in ${G.I.city.get(at).name}.`);
+  }
+}
+
+/** Being in a city settles what was said of it: a hunter said to be here is, or is not, to be seen. */
+function goAndSee(G) {
+  const { S } = G;
+  if (!S.city || S.t % (2 * HOUR) !== 0) return;
+  for (const e of S.intel) {
+    if (e.resolved !== null || !e.claim?.at || e.claim.at !== S.city || !e.subj.startsWith('hunter:')) continue;
+    if (S.t - e.learned > 2 * DAY) continue;
+    const here = S.enemy.hunters[e.subj.slice(7)];
+    const isHere = here && !here.leg && here.city === S.city;
+    if (!isHere && S.t - (S.cityArrived ?? S.t) >= 4 * HOUR) resolveIntel(G, e, false);
+  }
+}
+function resolveIntel(G, e, truth) {
+  const { S } = G;
+  e.resolved = truth === e.truth ? e.truth : truth;
+  const s = (S.sources[e.src] ??= { right: 0, wrong: 0 });
+  if (e.resolved === e.truth && e.truth) s.right++; else s.wrong++;
+}
+
+function courierArrives(G, { person, item }) {
+  const { S, I } = G;
+  const p = I.person.get(person), st = S.people[person].st;
+  if (['arrested', 'compromised', 'dead'].includes(st) || (S.people[person].loyal ?? '').startsWith('enemy:')) {
+    note(G, 'The courier', `${p.name} never reached London. Nor did ${I.item.get(item).name.toLowerCase()}.`);
+    if ((S.people[person].loyal ?? '').startsWith('enemy:')) leave(G, 'talk', 1, { person, city: p.city ?? 'BER' });
+    return;
+  }
+  for (const o of G.D.ops) {
+    if (S.ops[o.id].status !== 'active') continue;
+    const step = o.steps.find((x) => !S.ops[o.id].done[x.id]);
+    if (step?.kind === 'carry' && step.item === item && [step.to].flat().includes('LON')) { S.ops[o.id].done[step.id] = S.t; G.afterStep?.(G, o.id, step.id); }
+  }
+  note(G, 'From London', `ASHBY TO YOU: ${I.item.get(item).name.toUpperCase()} RECEIVED STOP WELL DONE STOP`);
 }
 
 function calendar(G) {
@@ -283,6 +356,21 @@ function hearsOf(G, r) {
   return r.fx.some((e) => e[1] === n || (typeof e[1] === 'string' && e[1].startsWith('line:') && W.line.get(e[1].slice(5)) && [W.line.get(e[1].slice(5)).a, W.line.get(e[1].slice(5)).b].includes(S.city)));
 }
 export function knowDisruption(G, svc, why) { if (why && why !== 'military' && !G.S.newsSeen.includes(why)) G.S.newsSeen.push(why); G.S.flags[`known:${why}`] = true; }
+
+/** Answers to questions wired to London: right three times in four. */
+function bureau(G) {
+  const { S } = G;
+  for (const q of S.queries ?? []) {
+    if (q.done || S.t < q.at) continue;
+    q.done = true;
+    const p = G.I.person.get(q.person);
+    const truth = (S.people[q.person].loyal ?? '').startsWith('enemy:');
+    const right = hash(S.seed, 'bureau', q.person, q.at) < .75;
+    const says = right ? truth : !truth;
+    addIntel(G, { subj: `person:${q.person}`, claim: { loyal: says ? 'enemy' : S.people[q.person].loyal === 'enemy' ? 'self' : (S.people[q.person].loyal ?? 'self').replace(/^enemy:.*/, 'self') }, src: 'bureau', rel: .75, truth: right });
+    note(G, 'From London', `ASHBY TO YOU: ENQUIRIES CONCERNING ${p.name.toUpperCase()} ${says ? 'SUGGEST HE IS NOT WHAT HE SEEMS STOP TAKE CARE' : 'FIND NOTHING AGAINST HIM STOP'}`);
+  }
+}
 
 /** Contacts the enemy watches notice it; the compromised are taken on enemy ground; the arrested talk, a step a day. */
 function people(G) {
@@ -330,6 +418,13 @@ function perish(G) {
     const tag = it?.tags.find((x) => x.startsWith('perishable:'));
     if (tag && S.t - S.case[i].t > Number(tag.slice(11)) * HOUR) { S.case.splice(i--, 1); log(G, `The ${it.name.toLowerCase()} has spoiled.`); }
   }
+}
+
+/** Hanging about in one city is noticed: every eight hours outside a safe house, a vague sighting under the active cover. */
+function loiter(G) {
+  const { S } = G;
+  if (!S.city || S.place === 'safehouse' || S.t % (8 * HOUR) !== 0 || S.lyingLow) return;
+  if (S.t - (S.cityArrived ?? S.t) >= 8 * HOUR) leave(G, 'sighting', .15, { heat: 0 });
 }
 
 /** Nights in a city: a hotel register under the active cover, a safe house, or none. */

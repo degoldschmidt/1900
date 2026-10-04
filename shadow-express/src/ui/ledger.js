@@ -2,7 +2,7 @@
 // Everything the player knows, and nothing the player does not: the dossier's "They know" is built from your own
 // traces and when they will arrive, never from the enemy's mind.
 
-import { board, book, plan, walk, contactsHere, seek, setLodging, safehouseHere, switchCover, stash, retrieve, checkTail, shakeTail, market, buy, sell, opActions, doWay, canLieLow, lieLow, wireFunds, PUNCT_WORDS } from '../core/actions.js';
+import { board, book, plan, walk, contactsHere, seek, setLodging, safehouseHere, switchCover, stash, retrieve, checkTail, shakeTail, market, buy, sell, opActions, doWay, canLieLow, lieLow, wireFunds, wireQuery, mendPapers, sendCourier, useItem, usable, PUNCT_WORDS } from '../core/actions.js';
 import { coverName, coverLegend, coverData, aff, caseSize, CASE_SIZE, has, act as actOf, personHere } from '../core/game.js';
 import { currentStep, stepCities } from '../core/ops.js';
 import { when, hm, dayShort, span, T } from '../data/time.js';
@@ -59,12 +59,12 @@ export function makeLedger(root, hooks) {
         <p class="dim">Travelling as ${esc(coverName(G))}, ${esc(coverLegend(G))}.</p>`;
     }
     const c = I.city.get(S.city);
-    setTimeout(() => vignetteUrl(S.city, (S.t % 1440) / 60).then((u) => { const im = body.querySelector('.vignette img'); if (u && im && im.dataset.city === S.city) im.src = u; }), 0);
+    setTimeout(() => vignetteUrl(S.city, (S.t % 1440) / 60).then((u) => { const im = body.querySelector('.vignette img'); if (!im || im.dataset.city !== S.city) return; if (u) im.src = u; else im.closest('.vignette').hidden = true; }), 0);
     const ops = opActions(G);
     const people = contactsHere(G);
     const lodge = S.place === 'safehouse' ? 'a safe house' : S.place === 'rough' ? 'no bed (sleeping rough)' : 'an hotel, under your cover name';
     const lie = canLieLow(G);
-    let h = `<div class="vignette"><img alt="${esc(c.name)}" data-city="${esc(S.city)}" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></div>
+    let h = `<div class="vignette"><img alt="${esc(c.name)}" data-city="${esc(S.city)}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>
       <h2>${esc(c.name)}</h2><p class="cityline">${esc(c.line)}</p>`;
     if (ops.length) {
       h += `<h3>The work here</h3>`;
@@ -128,7 +128,7 @@ export function makeLedger(root, hooks) {
       const recs = r.svc.records.map((k) => `<span class="chip">${esc(REC[k])}</span>`).join('');
       const lag = r.records.length ? `<span class="chip">reaches them in ~${Math.round(r.lagH)}h</span>` : '';
       h += `<div class="dep ${r.cancelled ? 'cancelled' : ''} ${r.next ? 'next' : ''}"><div class="row1"><span><span class="t">${esc(hm(r.dep))}</span> <span class="to">${esc(I.city.get(r.to).name)}</span></span><span class="t">${esc(dayShort(r.arr) === dayShort(r.dep) ? '' : dayShort(r.arr) + ' ')}${esc(hm(r.arr))}</span></div>
-        <div class="svc">${esc(r.svc.name)} · ${esc(KIND[r.svc.kind] ?? r.svc.kind)}${r.sleeper ? ' · sleeping cars' : ''} · ${esc(span(r.arr - r.dep))} · ${esc(r.punct)}${r.cancelled ? ' · DOES NOT RUN' : ''}</div>
+        <div class="svc">${esc(r.svc.name)} · ${esc(KIND[r.svc.kind] ?? r.svc.kind)}${r.sleeper ? ' · sleeping cars' : ''} · ${esc(span(r.arr - r.dep))} · ${esc(r.punct)}${r.forecast > 30 ? ` · <b>the guide expects ${esc(span(r.forecast))} late</b>` : ''}${r.cancelled ? ' · DOES NOT RUN' : ''}</div>
         <div class="row2"><span class="chips" style="justify-content:flex-start">${xs}${recs}${lag}${r.rumour ? '<span class="chip warn">rumours of trouble</span>' : ''}</span>
         <span class="fares">${r.classes.map((k) => { const p = r.plaus[k] ?? 1; return `<button class="fare ${p < 0 ? 'implausible' : p === 0 ? 'odd' : ''}" data-book="${esc(r.dp.key)}" data-cls="${k}" ${r.cancelled || S.money < r.fares[k] ? 'disabled' : ''} title="${p < 0 ? 'Implausible for your cover' : p === 0 ? 'Odd for your cover' : 'Fits your cover'}">${['', '1st', '2nd', '3rd'][k]}<small>£${r.fares[k]}</small></button>`; }).join('')}</span></div></div>`;
     }
@@ -166,11 +166,14 @@ export function makeLedger(root, hooks) {
       const where = p.city ? I.city.get(p.city).name : 'travels';
       const here = personHere(G, p.id) && !!S.city;
       setTimeout(() => portraitUrl(p.id, p.portrait).then((u) => { const im = body.querySelector(`[data-pid="${p.id}"]`); if (u && im) im.src = u; }), 0);
-      h += `<div class="person" data-person="${esc(p.id)}"><img alt="" data-pid="${esc(p.id)}" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="><div><div class="nm">${esc(p.name)}</div><div class="rl">${esc(p.role)} · ${esc(where)}</div>
+      h += `<div class="person" data-person="${esc(p.id)}"><img alt="" data-pid="${esc(p.id)}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><div><div class="nm">${esc(p.name)}</div><div class="rl">${esc(p.role)} · ${esc(where)}</div>
         <div style="margin-top:3px"><span class="chip ${['compromised', 'arrested', 'dead'].includes(st.st) ? 'bad' : st.st === 'recruited' ? 'good' : ''}">${esc(st.st)}</span> <span class="trust">${trust}</span></div>
         ${st.covers?.length ? `<div class="dim" style="font-size:12.5px;margin-top:3px">knows you as ${esc(st.covers.map((c) => coverName(G, c)).join(', '))}</div>` : ''}
         ${st.st === 'recruited' && p.perks.length ? `<div class="dim" style="font-size:12.5px">offers: ${esc(p.perks.join(', '))}</div>` : ''}
-        ${here ? `<button class="act" style="margin-top:5px" data-seek="${esc(p.id)}"><b>Seek out</b><span>here now</span></button>` : ''}</div></div>`;
+        ${here ? `<button class="act" style="margin-top:5px" data-seek="${esc(p.id)}"><b>Seek out</b><span>here now</span></button>` : ''}
+        ${here && st.st === 'recruited' && p.perks.includes('papers') ? `<button class="act" data-mend="${esc(p.id)}" ${S.money < 5 ? 'disabled' : ''}><b>Have your papers mended</b><span>£5, three hours</span></button>` : ''}
+        ${here && st.st === 'recruited' && p.perks.includes('courier') ? S.case.filter((x) => I.item.get(x.id)?.fn === 'doc').map((x) => `<button class="act" data-courier="${esc(p.id)}" data-item="${esc(x.id)}"><b>Send ${esc(I.item.get(x.id).name.toLowerCase())} to London</b><span>two days; if all goes well</span></button>`).join('') : ''}
+        ${S.city && !(S.queries ?? []).some((q) => q.person === p.id && !q.done) ? `<button class="act" data-query="${esc(p.id)}" ${S.money < 2 ? 'disabled' : ''}><b>Ask London about ${esc(p.name.split(' ').at(-1))}</b><span>£2; an answer in a day or two</span></button>` : ''}</div></div>`;
     }
     return h;
   }
@@ -184,7 +187,7 @@ export function makeLedger(root, hooks) {
       const it = I.item.get(x.id);
       if (!it) continue;
       const tags = it.tags.map((t) => t === 'contraband' ? '<span class="chip bad">contraband</span>' : t === 'weapon' ? '<span class="chip bad">weapon</span>' : t.startsWith('perishable') ? '<span class="chip warn">spoils</span>' : t.startsWith('use:') ? `<span class="chip good">${esc(t.slice(4))}</span>` : t.startsWith('cover:') ? `<span class="chip">suits ${esc(coverName(G, t.slice(6)))}</span>` : '').join('');
-      h += `<div class="entry"><b class="sc">${esc(it.name)}</b> <span class="chips">${tags}</span><div class="dim">${esc(it.line)}</div></div>`;
+      h += `<div class="entry"><b class="sc">${esc(it.name)}</b> <span class="chips">${tags}</span><div class="dim">${esc(it.line)}</div>${usable(G, it.id) ? `<button class="iconbtn" style="margin-top:4px" data-use="${esc(it.id)}">${it.tags.includes('use:credit') ? 'Draw £20 at the bank' : 'Use it'}</button>` : ''}</div>`;
     }
     if (S.city) {
       const m = market(G);
@@ -293,6 +296,10 @@ export function makeLedger(root, hooks) {
     q('[data-retrieve]').forEach((b) => b.addEventListener('click', () => { retrieve(G, b.dataset.retrieve); after(); }));
     q('[data-buy]').forEach((b) => b.addEventListener('click', () => { buy(G, b.dataset.buy); after(); }));
     q('[data-sell]').forEach((b) => b.addEventListener('click', () => { sell(G, b.dataset.sell); after(); }));
+    q('[data-use]').forEach((b) => b.addEventListener('click', () => { if (!useItem(G, b.dataset.use)) hooks.toast?.('Not here, not now.', true); after(); }));
+    q('[data-mend]').forEach((b) => b.addEventListener('click', () => { mendPapers(G, b.dataset.mend); after(); }));
+    q('[data-courier]').forEach((b) => b.addEventListener('click', () => { sendCourier(G, b.dataset.courier, b.dataset.item); after(); }));
+    q('[data-query]').forEach((b) => b.addEventListener('click', () => { wireQuery(G, b.dataset.query); after(); }));
     q('[data-sub]').forEach((b) => b.addEventListener('click', () => { state.sub = b.dataset.sub; hooks.refresh?.(); }));
   }
 

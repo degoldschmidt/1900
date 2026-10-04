@@ -44,6 +44,7 @@ export function makeGlobe(canvas, hooks) {
   const graticule = d3().geoGraticule10();
   const LAND = { type: 'Feature', geometry: land }, LANDLO = { type: 'Feature', geometry: landLo };
   const view = { lon: 6, lat: 50, zoom: 1.6, tLon: 6, tLat: 50, tZoom: 1.6, follow: true, moving: 0, interacting: false };
+  const stats = { base: 0, bases: 0 };
   let W = 0, H = 0, DPR = 1, baseKey = '', pats = null, labelW = new Map();
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
@@ -82,10 +83,12 @@ export function makeGlobe(canvas, hooks) {
   const visible = (ll) => d3().geoDistance(ll, [view.lon, view.lat]) < Math.PI / 2 - 0.03;
 
   function drawBase(cx, cy, R) {
-    const lod = view.interacting ? 'lo' : view.zoom >= 2.6 ? 'hi' : 'lo';
-    const key = [W, H, DPR, view.lon.toFixed(2), view.lat.toFixed(2), view.zoom.toFixed(3), lod].join('|');
+    const fast = view.interacting || view.moving;
+    const lod = fast ? 'lo' : view.zoom >= 2.6 ? 'hi' : 'lo';
+    const key = [W, H, DPR, view.lon.toFixed(3), view.lat.toFixed(3), view.zoom.toFixed(4), lod, fast].join('|');
     if (key === baseKey) return;
     baseKey = key;
+    const t0 = performance.now();
     if (base.width !== canvas.width || base.height !== canvas.height) { base.width = canvas.width; base.height = canvas.height; }
     const c = bctx, P = patterns();
     c.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -99,18 +102,23 @@ export function makeGlobe(canvas, hooks) {
     c.save(); c.beginPath(); bpath(sphere); c.clip();
     c.beginPath(); bpath(graticule); c.strokeStyle = 'rgba(156,123,82,.35)'; c.lineWidth = .6; c.stroke();
     const L = lod === 'hi' ? LAND : LANDLO;
-    // water-lining: three rules following the coast out to sea
-    if (!view.interacting) {
+    // water-lining: three rules following the coast out to sea (at rest only)
+    if (!fast) {
       const sc = clamp(view.zoom, 1, 6);
+      const ring = new Path2D(); // one projected path, stroked six times
+      const rp = d3().geoPath(proj, ring);
+      rp(view.zoom >= 5 ? L : LANDLO);
       for (const w of [13, 9, 5.5].map((x) => x * Math.sqrt(sc) / 1.4)) {
-        c.beginPath(); bpath(L); c.strokeStyle = 'rgba(58,72,112,.5)'; c.lineWidth = w; c.lineJoin = 'round'; c.stroke();
-        c.beginPath(); bpath(L); c.strokeStyle = SEA; c.lineWidth = w - 1.1; c.stroke();
+        c.strokeStyle = 'rgba(58,72,112,.5)'; c.lineWidth = w; c.lineJoin = 'round'; c.stroke(ring);
+        c.strokeStyle = SEA; c.lineWidth = w - 1.1; c.stroke(ring);
       }
     }
-    c.beginPath(); bpath(L); c.fillStyle = P.land; c.fill();
-    c.strokeStyle = INK; c.lineWidth = view.zoom > 4 ? 1.1 : .8; c.stroke();
+    const coast = new Path2D();
+    d3().geoPath(proj, coast)(L);
+    c.fillStyle = P.land; c.fill(coast);
+    c.strokeStyle = INK; c.lineWidth = view.zoom > 4 ? 1.1 : .8; c.stroke(coast);
     // engraved names: nations in spaced capitals, seas in italic
-    if (!view.interacting) {
+    if (!fast) {
       c.textAlign = 'center'; c.textBaseline = 'middle';
       for (const [name, lon, lat, minZ] of NATIONS) {
         if (view.zoom < minZ * .7 || !visible([lon, lat])) continue;
@@ -128,14 +136,16 @@ export function makeGlobe(canvas, hooks) {
         spaced(c, name, x, y, 1.5);
       }
     }
-    c.fillStyle = P.grain; c.fillRect(0, 0, W, H);
+    if (!fast) { c.fillStyle = P.grain; c.fillRect(0, 0, W, H); }
     c.restore();
     // the rim: a double rule
     c.beginPath(); bpath(sphere); c.strokeStyle = INK; c.lineWidth = 2.2; c.stroke();
     c.beginPath(); c.arc(cx, cy, R + 5, 0, 2 * Math.PI); c.strokeStyle = 'rgba(239,226,196,.55)'; c.lineWidth = .8; c.stroke();
+    stats.base = performance.now() - t0; stats.bases++;
   }
+  const charW = new Map();
   function spaced(c, text, x, y, sp) {
-    const chars = [...text], widths = chars.map((ch) => c.measureText(ch).width);
+    const chars = [...text], widths = chars.map((ch) => { const k = c.font + ch; if (!charW.has(k)) charW.set(k, c.measureText(ch).width); return charW.get(k); });
     const total = widths.reduce((a, b) => a + b, 0) + sp * (chars.length - 1);
     let px = x - total / 2;
     c.textAlign = 'left';
@@ -193,7 +203,8 @@ export function makeGlobe(canvas, hooks) {
       if (known.has(l.id)) { const m = along(Wd, l.id, l.a, .5); if (visible(m)) { const [x, y] = proj(m); ctx.setLineDash([]); ctx.strokeStyle = BLOOD; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(x - 5, y - 5); ctx.lineTo(x + 5, y + 5); ctx.moveTo(x + 5, y - 5); ctx.lineTo(x - 5, y + 5); ctx.stroke(); } }
     }
     ctx.setLineDash([]);
-    // frontier posts, closer in
+    // frontier posts, closer in (their names are placed after the cities, where there is room)
+    const frontierLabels = [];
     if (view.zoom >= 2.4) {
       const sentry = glyph('sentry'), seen = new Set();
       const s = clamp(view.zoom * 3.2, 10, 22);
@@ -203,7 +214,7 @@ export function makeGlobe(canvas, hooks) {
         const [x, y] = proj(f.ll);
         if (sentry) ctx.drawImage(sentry, x - s / 2, y - s / 2, s, s);
         else { ctx.fillStyle = INK; ctx.fillRect(x - 3, y - 3, 6, 6); }
-        if (view.zoom >= 5) { ctx.font = `italic ${clamp(view.zoom * 1.6 + 6, 11, 15)}px "IM Fell English", Georgia, serif`; ctx.fillStyle = 'rgba(43,29,18,.85)'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(f.name, x + s / 2 + 2, y); }
+        if (view.zoom >= 4.5) frontierLabels.push({ name: f.name, x, y, off: s / 2 + 2 });
       }
     }
     // the journey: travelled part bold, the train on the line
@@ -267,6 +278,17 @@ export function makeGlobe(canvas, hooks) {
       ctx.lineWidth = 3.4; ctx.strokeStyle = 'rgba(239,226,196,.92)'; ctx.strokeText(L.c.name, r.x + 2, r.y + h / 2 + 1);
       ctx.fillStyle = L.red ? BLOOD : INK; ctx.fillText(L.c.name, r.x + 2, r.y + h / 2 + 1);
     }
+    ctx.font = `italic ${clamp(view.zoom * 1.4 + 6, 11, 14)}px "IM Fell English", Georgia, serif`;
+    for (const F of frontierLabels) {
+      const w = ctx.measureText(F.name).width + 4, h = 14;
+      const spots = [[F.x + F.off, F.y - h / 2], [F.x - F.off - w, F.y - h / 2], [F.x - w / 2, F.y + F.off]];
+      const spot = spots.map(([x, y]) => ({ x, y, w, h })).find((r) => !hits(r) && r.x >= 4 && r.x + r.w <= W - 4 && r.y >= 4 && r.y + r.h <= H - 4);
+      if (!spot) continue;
+      placed.push(spot);
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(239,226,196,.85)'; ctx.strokeText(F.name, spot.x + 2, spot.y + h / 2);
+      ctx.fillStyle = 'rgba(43,29,18,.9)'; ctx.fillText(F.name, spot.x + 2, spot.y + h / 2);
+    }
     // the train, or the player in a city
     if (trainAt && visible(trainAt)) {
       const [x, y] = proj(trainAt);
@@ -286,7 +308,7 @@ export function makeGlobe(canvas, hooks) {
   }
 
   // ---------- the camera ----------
-  function aim(G) {
+  function aim(G, dt = 1 / 60) {
     if (G && view.follow) {
       const { S, W: Wd, I } = G;
       const ledger = hooks.ledgerInset?.();
@@ -301,10 +323,16 @@ export function makeGlobe(canvas, hooks) {
         view.tLon = c.ll[0]; view.tLat = clamp(c.ll[1] - (ledger?.bottom ? 1.5 : 0), -60, 72); view.tZoom = Math.max(view.tZoom, 3.2) > 6 ? view.tZoom : 3.2;
       }
     }
-    const k = reduceMotion ? 1 : 0.09;
-    const before = view.lon + view.lat + view.zoom;
-    view.lon += angDiff(view.tLon, view.lon) * k; view.lat += (view.tLat - view.lat) * k; view.zoom += (view.tZoom - view.zoom) * k;
-    view.moving = Math.abs(view.lon + view.lat + view.zoom - before) > 1e-4;
+    const k = reduceMotion ? 1 : 1 - Math.pow(1 - 0.12, Math.min(6, dt * 60)); // frame-rate independent easing
+    const dl = angDiff(view.tLon, view.lon), da = view.tLat - view.lat, dz = view.tZoom - view.zoom;
+    if (Math.abs(dl) < .02 && Math.abs(da) < .02 && Math.abs(dz) < .004 * view.zoom) { // close enough: snap and rest
+      const was = view.moving;
+      view.lon = view.tLon; view.lat = view.tLat; view.zoom = view.tZoom; view.moving = false;
+      if (was) hooks.redraw?.();
+      return;
+    }
+    view.lon += dl * k; view.lat += da * k; view.zoom += dz * k;
+    view.moving = true;
   }
 
   // ---------- input: drag, wheel, pinch, tap ----------
@@ -357,7 +385,7 @@ export function makeGlobe(canvas, hooks) {
   function recentre() { view.follow = true; }
 
   resize();
-  return { draw, aim, resize, view, zoomBy, recentre, invalidate: () => { baseKey = ''; } };
+  return { draw, aim, resize, view, zoomBy, recentre, stats, invalidate: () => { baseKey = ''; } };
 }
 
 /** The sub-solar point at a campaign minute (CET clock, summer declination). */

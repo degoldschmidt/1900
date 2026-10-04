@@ -24,7 +24,7 @@ const hud = el('div', 'hud'); app.appendChild(hud);
 const journeyEl = el('div', 'journey plate paper'); journeyEl.hidden = true; app.appendChild(journeyEl);
 const toasts = el('div', 'toasts'); toasts.setAttribute('aria-live', 'polite'); app.appendChild(toasts);
 
-let G = null, speed = 1, paused = false, dirty = true, highlightTo = null;
+let G = null, speed = 1, paused = false, dirty = true, highlightTo = null, wasTravelling = false;
 
 const globe = makeGlobe(canvas, {
   game: () => G,
@@ -65,17 +65,22 @@ let hudKey = '';
 function renderHud() {
   const S = G.S;
   const d = dateOf(S.t);
-  const key = [S.t, S.money, S.nerve, S.standing, S.cover, speed, paused, !!S.journey, S.records.length].join('|');
+  const key = [S.t, S.money, S.nerve, S.standing, S.cover, speed, paused, !!S.journey, S.records.length, ledger.isOpen(), innerWidth < 600].join('|');
   if (key === hudKey) return;
   hudKey = key;
   const act = G.W.act(S.t);
   const nerve = Array.from({ length: 10 }, (_, i) => `<i class="${S.nerve > i ? 'on' : ''}"></i>`).join('');
   const moving = !!S.journey || !!S.booked || S.t < S.busyUntil;
-  hud.innerHTML = `<div class="plate paper"><div class="date">${esc(d.dayName)} ${d.day} ${esc(d.monthName)} · ${esc(hm(S.t))}<small>Act ${['I', 'II', 'III'][act - 1]}: ${['A Shot in Sarajevo', 'The Ultimatum', 'Mobilisation'][act - 1]}</small></div>
-    <div class="stats"><span>£<b>${Math.round(S.money)}</b></span><span title="Nerve">nerve <span class="pips ${S.nerve <= 2 ? 'low' : ''}">${nerve}</span></span><span title="Standing with the Bureau">standing <span class="gauge"><i style="width:${S.standing}%"></i></span></span></div></div>
-    <button class="plate paper coverbadge" data-covers title="Your cover"><div class="nm">${esc(coverName(G))}</div><div class="lg">${esc(coverLegend(G))}</div><div class="lg">what they may know <span class="heat"><i style="left:0;width:${Math.round(heatOf(S.cover) * 100)}%"></i></span></div></button>
-    ${moving ? `<div class="speed"><button class="iconbtn" data-speed aria-pressed="${speed > 1}">${speed === 1 ? '» faster' : speed === 3 ? '»» fast' : '»»» fastest'}</button><button class="iconbtn" data-pause aria-pressed="${paused}">${paused ? '▶ go on' : '❚❚ pause'}</button></div>` : ''}`;
+  const compact = innerWidth < 600;
+  hud.classList.toggle('compact', compact);
+  hud.innerHTML = `<div class="plate paper"><div class="date">${esc(compact ? d.dayName.slice(0, 3) : d.dayName)} ${d.day} ${esc(compact ? d.monthName.slice(0, 4).replace(/e$/, '') : d.monthName)} · ${esc(hm(S.t))}<small>Act ${['I', 'II', 'III'][act - 1]}: ${['A Shot in Sarajevo', 'The Ultimatum', 'Mobilisation'][act - 1]}</small></div>
+    <div class="stats"><span>£<b>${Math.round(S.money)}</b></span><span title="Nerve">${compact ? '' : 'nerve '}<span class="pips ${S.nerve <= 2 ? 'low' : ''}">${nerve}</span></span><span title="Standing with the Bureau">${compact ? '' : 'standing '}<span class="gauge"><i style="width:${S.standing}%"></i></span></span></div></div>
+    <button class="plate paper coverbadge" data-covers title="Your cover"><div class="nm">${esc(coverName(G))}</div>${compact ? '' : `<div class="lg">${esc(coverLegend(G))}</div>`}<div class="lg">${compact ? '' : 'what they may know '}<span class="heat"><i style="left:0;width:${Math.round(heatOf(S.cover) * 100)}%"></i></span></div></button>
+    <div class="speed">${compact ? '' : `<button class="iconbtn" data-ledger aria-pressed="${ledger.isOpen()}">Ledger</button>`}<button class="iconbtn" data-about aria-label="About">${compact ? '?' : 'About'}</button></div>
+    ${moving ? `<div class="speed"><button class="iconbtn" data-speed aria-pressed="${speed > 1}">${compact ? ['»', '»»', '»»»'][[1, 3, 8].indexOf(speed)] : speed === 1 ? '» faster' : speed === 3 ? '»» fast' : '»»» fastest'}</button><button class="iconbtn" data-pause aria-pressed="${paused}">${paused ? '▶' + (compact ? '' : ' go on') : '❚❚' + (compact ? '' : ' pause')}</button></div>` : ''}`;
   hud.querySelector('[data-covers]').addEventListener('click', () => ledger.show('covers'));
+  hud.querySelector('[data-ledger]')?.addEventListener('click', () => { ledger.setOpen(!ledger.isOpen()); hudKey = ''; refresh(); });
+  hud.querySelector('[data-about]').addEventListener('click', about);
   hud.querySelector('[data-speed]')?.addEventListener('click', () => { speed = speed === 1 ? 3 : speed === 3 ? 8 : 1; hudKey = ''; renderHud(); });
   hud.querySelector('[data-pause]')?.addEventListener('click', () => { paused = !paused; hudKey = ''; renderHud(); });
 }
@@ -90,7 +95,16 @@ function renderJourney() {
 }
 
 // ---------- what the globe shows ----------
+let ovKey = '', ovVal = null;
 function overlays() {
+  const S = G.S;
+  const key = `${Math.floor(S.t / 15)}|${S.city}|${highlightTo}|${S.intel.length}|${S.queue.length}`;
+  if (key === ovKey && ovVal) return ovVal;
+  ovKey = key;
+  ovVal = computeOverlays();
+  return ovVal;
+}
+function computeOverlays() {
   const S = G.S;
   const targets = new Set();
   for (const o of activeOps(G)) { const s = currentStep(G, o.id); if (!s) continue; const cs = s.kind === 'meet' ? [s.city ?? G.I.person.get(s.person).city].flat() : stepCities(s); for (const c of cs) if (c && c !== '*') targets.add(c); }
@@ -109,12 +123,20 @@ function overlays() {
     haloCache[key] ??= haloOf(G.W, e.claim.at, e.learned, S.t);
     marks.push({ ll, kind, alpha: Math.max(.3, 1 - age / (4 * 1440)), label: `${h.name.split(' ').at(-1)} · ${span(age)} ago`, halo: haloCache[key] });
   }
-  return { targets, highlight, hunterMarks: marks };
+  // lines the player knows are closed now
+  const knownCancelled = new Set();
+  for (const l of G.D.lines) {
+    const svcs = G.D.services.filter((x) => x.line === l.id && x.kind !== 'path');
+    if (!svcs.length) continue;
+    const rows = svcs.map((x) => G.W.suspended(x, S.t));
+    if (rows.every(Boolean) && rows.every((r) => { const row = G.W.rows.find((y) => y.id === r); return (row?.fact && row.t <= S.t) || S.newsSeen.includes(r); })) knownCancelled.add(l.id);
+  }
+  return { targets, highlight, hunterMarks: marks, knownCancelled };
 }
 const haloCache = {};
 
 // ---------- the clock ----------
-let last = performance.now();
+let last = performance.now(), lastPulse = 0;
 function frame(now) {
   const dt = Math.min(.1, (now - last) / 1000);
   last = now;
@@ -131,12 +153,15 @@ function frame(now) {
         advance(G, Math.min(stop, S.t + rate * speed * dt));
         if (S.t !== before) dirty = true;
         if (!S.journey && !S.booked && S.t >= S.busyUntil && !cardView(G)) { refresh(); save(); }
+        if (wasTravelling && !S.journey && !S.booked && S.city) { wasTravelling = false; ledger.state.tab = 'city'; ledger.setOpen(true); refresh(); }
+        if (S.journey) wasTravelling = true;
       }
     }
   }
   if (G) {
-    globe.aim(G);
-    if (dirty || globe.view.moving || (G.S.city && !G.S.journey)) { globe.draw(G, overlays()); dirty = false; }
+    globe.aim(G, dt);
+    const pulse = G.S.city && !G.S.journey && now - lastPulse > 90;
+    if (dirty || globe.view.moving || pulse) { globe.draw(G, overlays()); dirty = false; if (pulse) lastPulse = now; }
     renderHud();
     renderJourney();
     if (cardView(G)) { if (!cards.isOpen()) { cards.render(G); } else cards.render(G); }
@@ -160,6 +185,18 @@ setInterval(() => { // keep the ledger fresh as time passes in a city
 }, 700);
 
 function save() { if (G) store.set(KEY, JSON.stringify(G.S)); }
+
+function about() {
+  const t = el('div', 'title');
+  t.innerHTML = `<div class="card paper"><div class="kick">About</div><h2>Shadow Express</h2><div class="rule"></div>
+    <p>A spy journey through the July Crisis of 1914. The dates and headlines in the newspapers are real; the people you meet are invented, and so is what the crisis does to each train, frontier and price: that is the game's design, not history.</p>
+    <p>What you know is in the dossier: what you have seen, what you only suspect, and the traces you have left behind you, with your guess at when each will reach the other side. Hunters on the map are drawn as you last heard of them; the dotted rings are where they could be by now.</p>
+    <p class="dim">An original game in the manner of the great travel-and-choice games. Art, words and code made for this prototype.</p>
+    <div class="choices"><button class="choice" data-close><b>Back to the game</b></button><button class="choice" data-new><b>Begin a new campaign</b><span>this one will be lost</span></button></div></div>`;
+  app.appendChild(t);
+  t.querySelector('[data-close]').addEventListener('click', () => t.remove());
+  t.querySelector('[data-new]').addEventListener('click', () => { t.remove(); store.del(KEY); G = null; title((sex) => start(sex)); });
+}
 
 // ---------- start ----------
 function title(onStart) {

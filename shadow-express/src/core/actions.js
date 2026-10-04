@@ -2,7 +2,7 @@
 
 import { DAY, T } from '../data/time.js';
 import { rand, hash } from './rng.js';
-import { departuresFrom, earliest, route, crossings, cancelled, CHANGE } from './timetable.js';
+import { departuresFrom, earliest, route, crossings, cancelled, delayOf, CHANGE } from './timetable.js';
 import { controlOdds, pickStory, advance, confront, knowDisruption, endGame, TICK } from './sim.js';
 import { context, storyChoices, resolveChoice, leave, note, log, has, hasUse, contraband, coverData, coverName, aff, caseSize, CASE_SIZE, personHere, addIntel, carriedCovers, nationNow, act as actOf } from './game.js';
 import { currentStep, stepCities, finishOp, activeOps } from './ops.js';
@@ -39,7 +39,8 @@ export function board(G, hours = 36) {
     const isNext = !firstTo.has(dp.to) && !known;
     if (isNext) firstTo.set(dp.to, dp.key);
     const c = coverData(G);
-    return { dp, svc: s, line: l, to: dp.to, dep: dp.dep, arr: dp.arr, fares: s.fare, classes: Object.keys(s.fare).map(Number), cancelled: known,
+    const forecast = has(G, 'bradshaw') && !known ? delayOf(W, dp) : null;
+    return { dp, svc: s, line: l, to: dp.to, dep: dp.dep, arr: dp.arr, fares: s.fare, classes: Object.keys(s.fare).map(Number), cancelled: known, forecast,
       punct: PUNCT_WORDS(s.punct), crossings: xs, records: recs, lagH: lag, rumour, next: isNext, sleeper: s.sleeper,
       alien: xs.some((x) => x.odds.alien), alert: xs.some((x) => x.odds.alert), plaus: c ? Object.fromEntries(Object.keys(s.fare).map((k) => [k, aff(G, `class:${k}`)])) : {} };
   });
@@ -308,6 +309,62 @@ export function lieLow(G) {
   return true;
 }
 
+/** Ask London about a person: the answer comes in a day or two, and is not always right. */
+export function wireQuery(G, person) {
+  const { S } = G;
+  if (!S.city || S.money < 2) return false;
+  S.money -= 2;
+  (S.queries ??= []).push({ person, at: S.t + (24 + Math.round(rand(S) * 24)) * HOUR });
+  leave(G, 'wire', .4);
+  S.stats.decisions++;
+  log(G, `Wired London about ${G.I.person.get(person).name}.`);
+  return true;
+}
+
+/** A recruited forger mends the papers of the active cover. */
+export function mendPapers(G, person) {
+  const { S } = G;
+  const p = G.I.person.get(person);
+  if (!p?.perks.includes('papers') || S.people[person].st !== 'recruited' || !personHere(G, person) || S.money < 5) return false;
+  S.money -= 5;
+  S.covers[S.cover].papers = Math.min(1, S.covers[S.cover].papers + .15);
+  S.busyUntil = Math.max(S.busyUntil, S.t) + 3 * HOUR;
+  meetingTrace(G, person);
+  S.stats.decisions++;
+  log(G, `${p.name} mends the papers of ${coverName(G)}.`);
+  return true;
+}
+
+/** A recruited courier takes a document to London for you; it arrives in two days, if the courier is not stopped. */
+export function sendCourier(G, person, item) {
+  const { S } = G;
+  const p = G.I.person.get(person);
+  if (!p?.perks.includes('courier') || S.people[person].st !== 'recruited' || !personHere(G, person) || !has(G, item)) return false;
+  S.case.splice(S.case.findIndex((x) => x.id === item), 1);
+  S.later.push({ at: S.t + 48 * HOUR, until: S.t + 49 * HOUR, courier: { person, item } });
+  S.stats.decisions++;
+  log(G, `${p.name} takes ${G.I.item.get(item).name.toLowerCase()} to London.`);
+  return true;
+}
+
+/** Use a tool from the case: brandy for nerve, a letter of credit at a bank. */
+export function useItem(G, id) {
+  const { S, I, W } = G;
+  const it = I.item.get(id);
+  if (!it || !has(G, id)) return false;
+  if (it.tags.includes('use:nerve')) { S.case.splice(S.case.findIndex((x) => x.id === id), 1); S.nerve = Math.min(10, S.nerve + 3); log(G, `${it.name}: courage, of a kind.`); S.stats.decisions++; return true; }
+  if (it.tags.includes('use:credit')) {
+    if (!S.city || !I.city.get(S.city).venues.includes('venue:bank')) return false;
+    if (!W.credit(S.t)) { note(G, 'No credit', 'The cashier shakes his head: the exchanges are closed, and no letter of credit will be honoured until the crisis is over.'); return false; }
+    if ((S.lastCredit ?? -Infinity) > S.t - 2 * 1440) return false;
+    S.lastCredit = S.t; S.money += 20; leave(G, 'register', .5); S.stats.decisions++;
+    log(G, 'Drew £20 against the letter of credit.');
+    return true;
+  }
+  return false;
+}
+export const usable = (G, id) => { const it = G.I.item.get(id); return !!it && (it.tags.includes('use:nerve') || (it.tags.includes('use:credit') && !!G.S.city && G.I.city.get(G.S.city).venues.includes('venue:bank'))); };
+
 export function wireFunds(G) {
   const { S } = G;
   if (!S.city) return false;
@@ -377,7 +434,7 @@ function std(G, card, c) {
   S.stats.decisions++;
   if (card.type === 'control') return controlOutcome(G, card, c);
   if (card.type === 'encounter') return encounterOutcome(G, card, c);
-  if (card.type === 'telegram' || card.type === 'debrief' || card.type === 'news' || card.type === 'note' || card.type === 'arrive') {
+  if (['telegram', 'debrief', 'news', 'note', 'arrive', 'act'].includes(card.type)) {
     if (S.lyingLow && !S.queue.length) { const u = S.lyingLow; S.lyingLow = null; cool(G); S.busyUntil = u; }
     return { success: true };
   }
@@ -474,6 +531,14 @@ function encounterOutcome(G, card, c) {
   const onGround = h.ground.includes(nationNow(G));
   const caught = () => {
     if (W.act(S.t) === 3 && onGround) { note(G, 'Taken', `${h.name} does not raise his voice. He does not need to.`); endGame(G, 'captured'); return { success: false }; }
+    if (!onGround) { // he cannot hold you here; he can look at you, long and well
+      leave(G, 'photo', .7, { heat: .6 });
+      S.nerve = Math.max(0, S.nerve - 2);
+      S.busyUntil = Math.max(S.busyUntil, S.t) + 3 * HOUR;
+      st.idleUntil = S.t + 3 * HOUR;
+      note(G, 'A long look', `${h.name} cannot arrest you here, and knows it. He walks beside you for a street, studying your face as if to learn it by heart. A man with a camera waits at the corner.`);
+      return { success: false };
+    }
     return detainedByHunter(G, h, onGround);
   };
   const away = (fid, txt) => { leave(G, 'sighting', fid, { heat: .4 }); S.tailedBy = null; S.knownTail = false; st.idleUntil = S.t + 2 * HOUR; if (txt) log(G, txt); return { success: true }; };
@@ -498,6 +563,7 @@ function detainedByHunter(G, h, onGround) {
   note(G, 'Questioned', `${h.name} keeps you ${onGround ? 'a day and a half' : 'half a day'} in a room without a window. A photographer comes. Then a door opens, and you are let go: the name of ${coverName(G)} is worth nothing now.`);
   const next = Object.entries(S.covers).find(([, v]) => !v.burned && v.carried);
   if (next) S.cover = next[0];
+  else if (!S.covers.self) { S.covers.self = { papers: .9, carried: true, burned: false, gained: S.t }; S.cover = 'self'; note(G, 'Your own name', 'No borrowed name is left to you. From here you travel as yourself, on a British passport that is perfectly genuine, and perfectly easy to trace.'); }
   else endGame(G, 'exposed');
   return { success: false };
 }

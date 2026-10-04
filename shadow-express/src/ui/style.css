@@ -28,7 +28,7 @@
 [hidden] { display: none !important; }
 html, body { margin: 0; height: 100%; background: var(--soot); color: var(--paper); font-family: var(--font-body); overflow: hidden; -webkit-text-size-adjust: 100%; }
 button { font: inherit; color: inherit; }
-#app { position: fixed; inset: 0; overflow: hidden; }
+#app { position: fixed; inset: 0; overflow: hidden; overflow: clip; }
 #globe { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
 #globe.dragging { cursor: grabbing; }
 
@@ -215,7 +215,7 @@ button { font: inherit; color: inherit; }
 /* toasts */
 .toasts { position: absolute; z-index: 9; left: 50%; transform: translateX(-50%); bottom: 18px; display: grid; gap: 6px; width: min(460px, calc(100% - 32px)); pointer-events: none; }
 @media (min-width: 900px) { .toasts { left: calc(50% - var(--ledger-w) / 2); } }
-@media (max-width: 899px) { .toasts { bottom: auto; top: 112px; } }
+@media (max-width: 899px) { .toasts { bottom: auto; top: 96px; } }
 .toast { padding: 7px 12px; font-size: 14.5px; animation: rise .3s; border: 1px solid var(--ink); box-shadow: 0 6px 20px rgba(0,0,0,.5); }
 .toast.bad { border-color: var(--blood); color: var(--blood); }
 
@@ -237,6 +237,13 @@ button { font: inherit; color: inherit; }
 .title .who img { width: 84px; display: block; margin: 0 auto 6px; }
 .title .who b { font-family: var(--font-display); font-weight: 400; font-size: 18px; }
 
+.hud.compact { gap: 6px; }
+.hud.compact .plate { padding: 5px 8px 6px; }
+.hud.compact .coverbadge { max-width: 34vw; overflow: hidden; }
+.hud.compact .coverbadge .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 14px; }
+.hud.compact .speed .iconbtn { min-width: 32px; padding: 3px 6px; }
+.hud.compact .pips i { width: 4px; }
+.hud.compact .gauge { width: 40px; }
 @media (max-width: 520px) {
   .hud { top: 8px; left: 8px; gap: 6px; }
   .plate { padding: 5px 8px 6px; }

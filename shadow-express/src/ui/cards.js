@@ -85,8 +85,8 @@ export function makeCards(root, hooks) {
     if (c.type === 'arrive') {
       const city = I.city.get(c.city);
       const late = c.delay > 20 ? ` · ${Math.round(c.delay)} minutes late` : '';
-      setTimeout(() => vignetteUrl(c.city, (S.t % 1440) / 60).then((u) => { const im = card.querySelector('.wide img'); if (u && im) im.src = u; }), 0);
-      return `<div class="kick">Arrived · ${esc(when(S.t))}${esc(late)}</div><div class="wide"><img alt="${esc(city.name)}" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></div><h2>${esc(city.name)}</h2><p class="it">${esc(city.line)}</p>`;
+      setTimeout(() => vignetteUrl(c.city, (S.t % 1440) / 60).then((u) => { const im = card.querySelector('.wide img'); if (!im) return; if (u) im.src = u; else im.closest('.wide').hidden = true; }), 0);
+      return `<div class="kick">Arrived · ${esc(when(S.t))}${esc(late)}</div><div class="wide"><img alt="${esc(city.name)}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div><h2>${esc(city.name)}</h2><p class="it">${esc(city.line)}</p>`;
     }
     if (c.type === 'debrief') {
       const o = I.op.get(c.op);
@@ -94,6 +94,7 @@ export function makeCards(root, hooks) {
       card.classList.add('debrief');
       return `<div class="kick">Debrief · ${esc(when(S.t))}</div><span class="stamp ${c.won ? 'ok' : ''}" style="float:right">${c.won ? 'ACCOMPLISHED' : 'FAILED'}</span><h2>${esc(o.title)}</h2>${lines}<div class="rule"></div><p class="it">${esc(o.debrief)}</p>`;
     }
+    if (c.type === 'act') { card.classList.add('title-card'); return `<div class="kick">${esc(longDate(S.t))}</div><h1>${esc(c.title.split(' · ')[1] ?? c.title)}</h1><div class="kick" style="text-align:center">${esc(c.title.split(' · ')[0])}</div><div class="rule"></div><p>${esc(c.text)}</p>`; }
     if (c.type === 'note') return `<div class="kick">${esc(when(S.t))}</div><h2>${esc(c.title)}</h2><p>${esc(c.text)}</p>`;
     if (c.type === 'end') return endText(G, c);
     // storylets, controls, encounters
@@ -133,7 +134,7 @@ export function makeCards(root, hooks) {
       const ch = changes(G, before, G.S);
       const rolled = c.roll || (c.std && c.p !== undefined && c.p < 1);
       const typeEnd = G.S.ended;
-      if ((rolled || ch.length) && !['telegram', 'news', 'arrive', 'note', 'debrief'].includes(v.card.type) && !typeEnd) {
+      if ((rolled || ch.length) && !['telegram', 'news', 'arrive', 'note', 'debrief', 'act'].includes(v.card.type) && !typeEnd) {
         resultShown = true;
         const word = rolled ? (res.success ? 'It goes as you hoped.' : 'It does not go your way.') : 'Done.';
         card.querySelector('.choices').innerHTML = `<p class="result">${esc(word)}</p><div class="chips" style="justify-content:flex-start">${ch.map(([s, k]) => `<span class="chip ${k}">${esc(s)}</span>`).join('')}</div><button class="choice" id="cardCont"><b>Continue</b></button>`;
