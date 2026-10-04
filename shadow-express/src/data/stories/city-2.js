@@ -103,7 +103,7 @@ export default [
     text: "The newsboys are running with a special edition, the ink still wet. Austria has handed Serbia a note with a time limit of forty-eight hours. Belgrade, the paper says, is packing its archives into railway wagons, and the Semlin bridge may be closed to all traffic at any hour. The boy wants twice the price.",
     choices: [
       { label: "Buy the paper at his price", sub: "The latest on the lines, or the latest guess", cost: { money: 1 },
-        ok: [["intel", { subj: "line:BUD-BEG", claim: { closed: ["07-29 00.00", null] }, src: "paper", rel: 0.6, truth: "auto" }]] },
+        ok: [["intel", { subj: "line:BUD-BEG", claim: { closed: ["07-29 06.00", null] }, src: "paper", rel: 0.6, truth: "auto" }]] },
       { label: "Ask the boy what the porters say", sub: "Newsboys hear the station first",
         roll: { p: 0.5 },
         ok: [["intel", { subj: "line:BUD-BEG", claim: { closed: ["07-25 00.00", null] }, src: "porter", rel: 0.5, truth: "auto" }]],

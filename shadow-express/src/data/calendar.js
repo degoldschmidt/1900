@@ -85,7 +85,7 @@ export default [
     fx: [['lag', 'FR', 0.9]] },
   { id: 'sava-bridge', at: '07-29 01.30', p: 1, fact: true, rumourLeadH: 6,
     news: 'SAVA BRIDGE BLOWN UP; BELGRADE UNDER FIRE',
-    text: 'The Serbians destroyed the railway bridge between Semlin and Belgrade in the night. Austrian monitors on the Danube and the batteries at Semlin then opened fire on the town. Nothing can cross the river by rail.',
+    text: 'The Serbians destroyed the railway bridge between Semlin and Belgrade in the night, while Austrian monitors on the Danube and the batteries at Semlin opened fire on the town. Nothing can cross the river by rail.',
     fx: [['suspend', 'line:BUD-BEG', null, null], ['control', 'frontier:SEM', 0.2]] },
   { id: 'russia-partial', at: '07-29 22.00', p: 1, fact: true, rumourLeadH: 12,
     news: 'RUSSIA MOBILISES IN HER SOUTHERN DISTRICTS',
@@ -94,7 +94,7 @@ export default [
   // The Russian frontiers close. Kowal's path stays open: only the scheduled services are suspended.
   { id: 'russia-general', at: '07-30 18.00', p: 1, fact: true, rumourLeadH: 12,
     news: 'GENERAL MOBILISATION ORDERED IN RUSSIA',
-    text: 'The Tsar has signed the order mobilising the whole army and fleet; the first day is tomorrow. Traffic across the Prussian and Galician frontiers is expected to cease, and the Warsaw expresses have been taken for the army.',
+    text: 'The Tsar has signed the order mobilising the whole army and fleet; the first day is tomorrow. Traffic across the Prussian and Galician frontiers is expected to cease, and the railways are given over to the army.',
     fx: [['suspend', 'line:BER-SPB', '07-31 00.00', null], ['suspend', 'line:WAR-VIE', '07-31 00.00', null],
       ['suspend', 'service:ber-war-express', '07-31 00.00', null], ['suspend', 'service:ber-war-night', '07-31 00.00', null], ['suspend', 'service:ber-war-slow', '07-31 00.00', null],
       ['suspend', 'service:war-spb-express', null, null], ['suspend', 'service:war-ode-express', null, null],

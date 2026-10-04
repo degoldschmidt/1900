@@ -1,58 +1,67 @@
-// Budapest: from the Buda embankment beside the Chain Bridge. Its near pylon, a triumphal arch, towers at the right;
-// the chains sweep away across the Danube to the far pylon, and on the Pest bank the Parliament spreads out
-// with its ribbed dome and spire.
+// Budapest: from the roadway of the Chain Bridge, looking upriver. The Buda pylon's dressed stone stands at the left;
+// the great eyebar chains sweep down across the view, hung with rods to the lattice parapet. Beyond the Danube the
+// Parliament fills the Pest bank; Castle Hill rises on the left with the Matthias Church and the Fishermen's Bastion.
 
 export default {
   id: 'BUD',
   draw(k) {
     const f = k.f, r = k.rng(52);
-    const bank = 176;
+    const bank = 168, par = 194, deck = 214;
 
-    // the bridge in perspective: t runs from the near pylon (0) to the far one (1)
-    const Z = 3, xN = 474, xF = 262, cy = 168;
-    const vx = (Z * xF - xN) / (Z - 1);
-    const z = (t) => 1 + t * (Z - 1);
-    const P = (t, Y, dx = 0) => [vx + (xN + dx - vx) / z(t), cy - Y / z(t)];
+    // ---------- far: St Stephen's dome over the Pest roofs, factory smoke ----------
+    let far = k.shape(k.rect(596, 100, 30, 30), 'light', { far: true, w: .5 }) + k.shape(k.dome(611, 100, 15, 18), 'mid', { far: true, w: .6 }) + k.shape(k.rect(608, 70, 6, 8), 'light', { far: true, w: .4 }) + k.line('M611 70v-6', .5, { far: true });
+    for (const x of [586, 636]) far += k.shape(k.rect(x - 4, 92, 8, 38), 'light', { far: true, w: .5 }) + k.shape(k.dome(x, 92, 4, 5), 'mid', { far: true, w: .4 });
+    far += k.shape(k.rect(606, 104, 4, 30), 'black', { far: true, w: .4 }) + k.smoke(608, 102, .7, { seed: 3 });
+    far += k.haze(bank - 36, 36, .35);
 
-    // ---------- far: Pest behind the Parliament ----------
-    let far = k.skyline(-5, 300, bank - 2, { seed: 13, style: 'east', hMin: 10, hMax: 26 }) + k.haze(bank - 30, 30, .35);
+    // ---------- Castle Hill on the Buda side ----------
+    const hill = (() => {
+      let s = k.shape(`M30 ${bank}C60 148 84 112 118 96C150 82 220 78 262 88C290 98 306 130 322 ${bank}Z`, 'stipple', { far: true, w: .8 });
+      for (let i = 0; i < 14; i++) { const x = 60 + r() * 250, y = 112 + r() * 40, w = 6 + r() * 6; s += k.shape(`M${f(x - w)} ${f(y)}q${f(w * .3)} ${f(-w)} ${f(w)} ${f(-w * .9)}q${f(w)} 0 ${f(w)} ${f(w * .9)}Z`, 'dark', { far: true, w: .4 }); }
+      s += k.skyline(52, 322, bank, { seed: 21, style: 'east', far: true, hMin: 10, hMax: 22, wMin: 12, wMax: 20 }); // the Water Town
+      // the Fishermen's Bastion: white arcades and conical turrets along the crest
+      s += k.shape(k.rect(140, 88, 112, 12), 'light', { far: true, w: .6 });
+      for (let x = 144; x < 250; x += 8) s += k.shape(k.arch(x, 91, 4, 9), 'dark', { far: true, w: .3 });
+      for (const [x, h] of [[142, 14], [170, 20], [206, 24], [242, 16]]) s += k.shape(k.rect(x - 3.5, 94 - h, 7, h - 6), 'paper', { far: true, w: .5 }) + k.shape(k.spire(x, 94 - h, 10, 11), 'mid', { far: true, w: .5 });
+      // the Matthias Church and its tall tiled spire
+      s += k.shape(k.rect(184, 70, 40, 18), 'light', { far: true, w: .6 }) + k.shape(k.gable(182, 70, 44, 14), 'tiles', { far: true, w: .6 });
+      s += k.shape(k.rect(214, 40, 13, 48), 'light', { far: true, w: .6 }) + k.shape(k.rect(222, 40, 5, 48), 'mid', { far: true, w: 0 });
+      s += k.shape(k.spire(220.5, 40, 15, 30), 'dark', { far: true, w: .6 }) + k.line('M220.5 10v-5M218.5 7h4', .6, { far: true });
+      return s;
+    })();
 
-    // ---------- the Parliament ----------
+    // ---------- the Parliament on the Pest bank ----------
     const parl = (() => {
-      const by = bank, top = 130;
-      let s = k.shape(k.rect(-6, top, 250, by - top), 'light');
-      s += k.shape(k.rect(-6, by - 12, 250, 12), 'mid', { w: .7 });
-      // the river front: tall pointed windows in pairs, buttresses with pinnacles
-      for (let x = -2; x < 240; x += 10) s += k.shape(k.gothic(x + 2, top + 8, 5, 20), 'glass', { w: .45 }) + k.shape(k.gothic(x + 2, top + 32, 5, 10), 'glass', { w: .45 });
-      for (let x = -6; x <= 244; x += 20) s += k.shape(k.rect(x - 1.5, top - 6, 3, 7), 'mid', { w: .5 }) + k.shape(k.spire(x, top - 6, 4, 9), 'dark', { w: .5 });
-      // steep roofs behind the parapet
-      s += k.shape(k.poly([[-6, top], [4, top - 12], [80, top - 12], [90, top]]), 'dark', { w: .8 }) + k.shape(k.poly([[150, top], [160, top - 12], [236, top - 12], [246, top]]), 'dark', { w: .8 });
-      // pavilions with their pointed roofs and turrets
-      for (const [x, w] of [[14, 24], [182, 24], [-6, 14], [230, 16]]) {
+      const x0 = 300, x1 = 652, by = bank, top = 128, cx = 476;
+      let s = k.shape(k.rect(x0, top, x1 - x0, by - top), 'light');
+      s += k.shape(k.rect(x0, by - 12, x1 - x0, 12), 'mid', { w: .7 });
+      for (let x = x0 + 4; x < x1; x += 10) s += k.shape(k.gothic(x + 2, top + 8, 5, 18), 'glass', { w: .45 }) + k.shape(k.gothic(x + 2, top + 30, 5, 9), 'glass', { w: .45 });
+      for (let x = x0; x <= x1; x += 20) s += k.shape(k.rect(x - 1.5, top - 6, 3, 7), 'mid', { w: .5 }) + k.shape(k.spire(x, top - 6, 4, 9), 'dark', { w: .5 });
+      s += k.shape(k.poly([[x0, top], [x0 + 10, top - 12], [cx - 62, top - 12], [cx - 52, top]]), 'dark', { w: .8 }) + k.shape(k.poly([[cx + 52, top], [cx + 62, top - 12], [x1, top - 12], [x1, top]]), 'dark', { w: .8 });
+      for (const [x, w] of [[x0, 16], [cx - 118, 26], [cx + 92, 26], [x1 - 24, 22]]) { // pavilions with steep roofs and corner turrets
         s += k.shape(k.rect(x, top - 16, w, by - top + 16), 'light', { w: .9 }) + k.shape(k.rect(x + w - 6, top - 16, 6, by - top + 16), 'dark', { w: 0 });
         s += k.windows(x + 2, top - 12, w - 9, 40, 2, 3, { arched: true, ww: .5, wh: .7 });
-        s += k.shape(k.poly([[x - 2, top - 16], [x + w / 2, top - 38], [x + w + 2, top - 16]]), 'dark', { w: .8 });
+        s += k.shape(k.poly([[x - 2, top - 16], [x + w / 2, top - 40], [x + w + 2, top - 16]]), 'dark', { w: .8 });
         s += k.shape(k.spire(x + 1, top - 16, 4, 14), 'dark', { w: .5 }) + k.shape(k.spire(x + w - 1, top - 16, 4, 14), 'dark', { w: .5 });
       }
       // the central block, its two slender spires, the drum and the great ribbed dome
-      const cx = 120;
-      s += k.shape(k.rect(cx - 38, top - 22, 76, by - top + 22), 'light', { w: 1 }) + k.shape(k.rect(cx + 24, top - 22, 14, by - top + 22), 'dark', { w: .5 });
-      s += k.windows(cx - 34, top - 18, 56, 46, 5, 2, { arched: true, ww: .45, wh: .7 });
+      s += k.shape(k.rect(cx - 40, top - 22, 80, by - top + 22), 'light', { w: 1 }) + k.shape(k.rect(cx + 26, top - 22, 14, by - top + 22), 'dark', { w: .5 });
+      s += k.windows(cx - 36, top - 18, 58, 44, 5, 2, { arched: true, ww: .45, wh: .7 });
       s += k.shape(k.gable(cx - 18, top - 22, 36, 14), 'mid', { w: .8 });
-      for (const sx of [cx - 46, cx + 46]) s += k.shape(k.rect(sx - 3.5, top - 52, 7, 52), 'vert', { w: .7 }) + k.shape(k.spire(sx, top - 52, 8, 30), 'dark', { w: .7 });
-      s += k.shape(k.rect(cx - 30, 92, 60, 18), 'light', { w: 1 }) + k.shape(k.rect(cx + 14, 92, 16, 18), 'dark', { w: 0 });
-      for (let x = cx - 28; x < cx + 26; x += 7) s += k.shape(k.gothic(x, 94, 4, 14), 'glass', { w: .4 });
-      for (let x = cx - 30; x <= cx + 30; x += 10) s += k.shape(k.spire(x, 92, 3.5, 10), 'dark', { w: .5 });
-      s += k.shape(`M${cx - 28} 92C${cx - 30} 64 ${cx - 14} 48 ${cx} 44C${cx + 14} 48 ${cx + 30} 64 ${cx + 28} 92Z`, 'light', { w: 1.3 });
-      s += k.shape(`M${cx + 4} 45C${cx + 18} 52 ${cx + 30} 66 ${cx + 28} 92H${cx + 10}C${cx + 12} 72 ${cx + 10} 56 ${cx + 4} 45Z`, 'dark', { w: 0 });
-      for (const t of [-.66, -.33, 0, .33, .66]) s += k.line(`M${f(cx + t * 28)} 92Q${f(cx + t * 24)} 58 ${cx} 44`, .6);
-      s += k.shape(k.rect(cx - 5, 32, 10, 13), 'light', { w: .8 }) + k.shape(k.spire(cx, 32, 9, 26), 'dark', { w: .8 }) + k.line(`M${cx} 6v-4`, .7);
+      for (const sx of [cx - 48, cx + 48]) s += k.shape(k.rect(sx - 3.5, top - 54, 7, 54), 'vert', { w: .7 }) + k.shape(k.spire(sx, top - 54, 8, 32), 'dark', { w: .7 });
+      s += k.shape(k.rect(cx - 31, 88, 62, 18), 'light', { w: 1 }) + k.shape(k.rect(cx + 15, 88, 16, 18), 'dark', { w: 0 });
+      for (let x = cx - 29; x < cx + 27; x += 7) s += k.shape(k.gothic(x, 90, 4, 14), 'glass', { w: .4 });
+      for (let x = cx - 31; x <= cx + 31; x += 10.3) s += k.shape(k.spire(x, 88, 3.5, 10), 'dark', { w: .5 });
+      s += k.shape(`M${cx - 29} 88C${cx - 31} 60 ${cx - 15} 43 ${cx} 39C${cx + 15} 43 ${cx + 31} 60 ${cx + 29} 88Z`, 'light', { w: 1.3 });
+      s += k.shape(`M${cx + 4} 40C${cx + 19} 47 ${cx + 31} 62 ${cx + 29} 88H${cx + 10}C${cx + 12} 68 ${cx + 10} 51 ${cx + 4} 40Z`, 'dark', { w: 0 });
+      for (const t of [-.66, -.33, 0, .33, .66]) s += k.line(`M${f(cx + t * 29)} 88Q${f(cx + t * 25)} 54 ${cx} 39`, .6);
+      s += k.shape(k.rect(cx - 5, 27, 10, 13), 'light', { w: .8 }) + k.shape(k.spire(cx, 27, 9, 24), 'dark', { w: .8 }) + k.line(`M${cx} 3v-3`, .7);
       return s;
     })();
 
     // ---------- the Danube ----------
     let water = k.water(bank, 240, { seed: 33 });
-    water += k.reflect(`<g>${parl}</g>`, bank, .22) + k.shape(k.rect(-5, bank, 650, 4), 'horiz', { w: 0 });
+    water += k.reflect(k.shape(k.rect(300, 128, 352, 40), 'light', { w: .6 }) + k.shape(`M447 88C445 60 461 43 476 39C491 43 507 60 505 88Z`, 'light', { w: 1 }) + k.shape(k.rect(436, 106, 80, 62), 'light', { w: .8 }), bank, .2) + k.shape(k.rect(-5, bank, 650, 3), 'horiz', { w: 0 });
     const paddle = (x, y, s, dir = 1) => { // a Danube paddle steamer
       const S = (n) => f(n * s), D = (n) => f(n * s * dir);
       let o = k.shape(`M${f(x - 34 * s * dir)} ${f(y - 6 * s)}h${D(70)}l${D(-6)} ${S(6)}h${D(-60)}Z`, 'black', { w: .7 });
@@ -62,85 +71,63 @@ export default {
       o += k.shape(k.rect(x - 2 * s, y - 32 * s, 4.4 * s, 17 * s), 'black', { w: .5 }) + k.smoke(x, y - 33 * s, .9 * s, { seed: 6 });
       return o + k.flag(x + 30 * s * dir, y - 15 * s, .5 * s);
     };
-    const traffic = paddle(328, 204, 1, -1) + k.boat(150, 190, .8, 'barge', 1) + k.boat(560, 226, 1.1, 'barge', -1);
+    const traffic = paddle(250, 188, .75, -1) + k.boat(120, 180, .5, 'barge', 1) + k.boat(560, 184, .55, 'barge', -1) + k.boat(400, 186, .5, 'sail', 1);
 
-    // ---------- the Chain Bridge ----------
-    const bridge = (() => {
-      let s = '';
-      // a pylon, a triumphal arch in dressed stone, drawn at depth t (0 near, 1 far)
-      const pylon = (t) => {
-        const q = (dx, Y) => P(t, Y, dx), box = (dx0, Y0, dx1, Y1) => { const [ax, ay] = q(dx0, Y0), [bx, by] = q(dx1, Y1); return k.rect(ax, ay, bx - ax, by - ay); };
-        const sc = 1 / z(t), w = t ? .8 : 1.3;
-        let o = k.shape(box(-4, 134, 122, -46), 'light', { w });
-        o += k.shape(box(-4, 134, 8, -46), 'vert', { w: w * .6 });
-        if (!t) {
-          let joints = '';
-          for (let Y = 120, row = 0; Y > -46; Y -= 9, row++) {
-            const [ax, ay] = q(8, Y), [bx] = q(104, Y); joints += `M${f(ax)} ${f(ay)}H${f(bx)}`;
-            for (let dx = 16 + (row % 2) * 9; dx < 104; dx += 18) { if (Y < 94 && Y > 10 && dx > 26 && dx < 90) continue; const [jx, jy] = q(dx, Y); joints += `M${f(jx)} ${f(jy)}v9`; }
-          }
-          o += k.line(joints, .4);
-        }
-        o += k.shape(box(104, 134, 122, -46), 'dark', { w: w * .5 });
-        const [ax, ay] = q(30, 94), [bx, by] = q(86, 18), [cx2, cy2] = q(38, 78), [dx2, dy2] = q(78, 18);
-        o += k.shape(k.arch(ax, ay, bx - ax, by - ay), 'black', { w: w * .85 }) + k.shape(k.arch(cx2, cy2, dx2 - cx2, dy2 - cy2), 'paper', { w: w * .5 });
-        if (!t) { // the voussoirs and the keystone; soot darkening the foot
-          const cxA = (ax + bx) / 2, rA = (bx - ax) / 2, cyA = ay + rA; let vs = '';
-          for (let i = 1; i < 12; i++) { const qa = Math.PI + i * Math.PI / 12; vs += `M${f(cxA + Math.cos(qa) * rA)} ${f(cyA + Math.sin(qa) * rA)}L${f(cxA + Math.cos(qa) * (rA + 9))} ${f(cyA + Math.sin(qa) * (rA + 9))}`; }
-          o += k.line(vs, .6) + k.shape(k.rect(cxA - 5, ay - 10, 10, 11), 'light', { w: .9 });
-          o += k.shape(box(-4, -20, 122, -46), 'mid', { w: 0, op: .55 });
-        }
-        o += k.shape(box(-8, 140, 126, 132), 'light', { w: w * .8 }) + k.shape(box(-6, 152, 124, 140), 'light', { w: w * .7 }) + k.shape(box(104, 152, 126, 132), 'dark', { w: 0 });
-        o += k.line((() => { const [l, y] = q(-8, 132), [rr] = q(126, 132); return `M${f(l)} ${f(y)}H${f(rr)}`; })(), w);
-        for (const dx of [14, 96]) o += k.shape(box(dx, 108, dx + 6, -12), 'vert', { w: w * .45 });
-        return o + (sc < 1 ? '' : '');
-      };
-      s += pylon(1);
-      // the deck receding, its girder and railing
-      const d0 = P(0, 18), d1 = P(1, 18), b0 = P(0, 6), b1 = P(1, 6);
-      s += k.shape(k.poly([d0, d1, b1, b0]), 'mid', { w: .9 });
-      s += k.line(`M${f(d0[0])} ${f(d0[1] - 5)}L${f(d1[0])} ${f(d1[1] - 2)}`, .8);
-      for (let t = 0; t <= 1; t += .04) { const [x, y] = P(t, 18); s += k.line(`M${f(x)} ${f(y)}v${f(-5 / z(t))}`, .4); }
-      // the chains: two strands on each side, the far side's thinner, hung with rods to the deck
-      const chain = (dx, lift, w) => {
-        let d = '', rods = '';
-        for (let i = 0; i <= 30; i++) {
-          const t = i / 30, Y = 124 - lift - 104 * 4 * t * (1 - t);
-          const [x, y] = P(t, Y, dx);
-          d += `${i ? 'L' : 'M'}${f(x)} ${f(y)}`;
-          if (lift === 0 && i % 2 === 1 && i < 29) { const [, yd] = P(t, 18, dx); rods += `M${f(x)} ${f(y)}V${f(yd)}`; }
-        }
-        return k.line(d, w) + (rods ? k.line(rods, .45) : '');
-      };
-      s += chain(-14, 0, 1) + chain(-14, 8, .8) + chain(0, 0, 2.2) + chain(0, 8, 1.6);
-      s += pylon(0);
-      const x1 = 596, x0 = xN - 4, base = 214;
-      // the deck through the arch, and on toward Buda; the chains running down to their anchorage
-      s += k.shape(k.rect(x1, 148, 50, 10), 'mid', { w: .8 }) + k.line(`M${x1} 143H646`, .8);
-      s += k.line(`M${x1} 44Q620 80 646 108`, 2.2) + k.line(`M${x1} 52Q620 86 646 114`, 1.6);
-      s += k.shape(k.rect(x0 - 10, base - 6, x1 - x0 + 26, 32), 'vert', { w: 1 }) + k.shape(k.rect(x1 - 4, base - 6, 20, 32), 'dark', { w: 0 });
+    // ---------- the bridge: rods, lattice parapet, the chains overhead ----------
+    const chainY = (x, d = 0) => { const t = (590 - x) / 524; return 196 + d - 190 * t * t; };
+    let rods = '';
+    for (let x = 90; x < 640; x += 24) { const y = chainY(x, 9); if (par - y > 3) rods += `M${x} ${f(y)}V${par}`; }
+    let bridge = k.line(rods, .7);
+    // the parapet: an iron lattice between two rails, posts at intervals
+    bridge += k.shape(k.rect(60, par, 590, deck - par), 'none', { w: 0 });
+    let lat = '';
+    for (let x = 52; x < 650; x += 9) lat += `M${x} ${par + 2}l9 ${deck - par - 4}M${x + 9} ${par + 2}l-9 ${deck - par - 4}`;
+    bridge += k.line(lat, .55) + k.shape(k.rect(60, par - 2, 590, 4), 'dark', { w: .8 }) + k.shape(k.rect(60, deck - 3, 590, 4), 'dark', { w: .8 });
+    for (let x = 108; x < 650; x += 96) bridge += k.shape(k.rect(x - 3, par - 4, 6, deck - par + 2), 'black', { w: .5 });
+    for (const x of [300, 492]) { bridge += k.lamp(x, par - 4, 1.4); k.lights.push([f(x - 3.5), f(par - 4 - 40.6), 7, 7]); }
+    // the chains: two strands of eyebars pinned link to link, lit along their tops
+    const strand = (d, w) => {
+      let path = '', pins = '';
+      for (let x = 66; x <= 650; x += 6) path += `${x === 66 ? 'M' : 'L'}${x} ${f(chainY(x, d))}`;
+      let s = k.line(path, w) + k.line(path.replace(/(\d+\.?\d*) (\d+\.?\d*)/g, (m, a, b) => `${a} ${f(+b - w * .32)}`), w * .22, { color: k.paper });
+      for (let x = 66; x < 650; x += 30) pins += `<circle cx="${x}" cy="${f(chainY(x, d))}" r="${f(w * .42)}" fill="${k.paper}" stroke="${k.ink}" stroke-width=".8"/>`;
+      return s + pins;
+    };
+    bridge += strand(9, 5.4) + strand(0, 6.6);
+
+    // ---------- the roadway, its people, a cab ----------
+    let road = k.shape(k.rect(-5, deck, 655, 32), 'paper', { w: 0 }) + k.line(`M-5 ${deck}H650`, 1.2);
+    let setts = '';
+    for (let row = 0; row < 5; row++) { const y = deck + 4 + row * 5 + row * row * .5; for (let x = (row % 2) * 7 - 7; x < 650; x += 13 + row * 2) setts += `M${f(x)} ${f(y)}q${f(3 + row * .5)} -2.4 ${f(7 + row)} 0`; }
+    road += k.line(setts, .5) + k.shape(k.rect(-5, deck, 655, 3), 'dark', { w: 0, op: .6 });
+    road += k.figure(236, 238, 1.4, 'man') + k.figure(251, 238, 1.35, 'woman') + k.figure(452, 239, 1.45, 'soldier') + k.figure(150, 237, 1.3, 'porter');
+    const cab = (x, y, s) => { // a fiaker trotting toward Pest: solid ink silhouettes, paper highlights
+      const T = (d) => d.replace(/(-?\d+\.?\d*) (-?\d+\.?\d*)/g, (m, u, w) => `${f(x + u * s)} ${f(y + w * s)}`);
+      let o = k.shape(T('M2 -24 C10 -27 22 -25 28 -28 C30 -32 32 -36 34 -38 L35 -42 L37 -38 C39 -37 41 -33 42 -31 L41 -28 C38 -29 36 -30 34 -30 C33 -27 32 -24 31 -20 C28 -16 18 -16 10 -16 C6 -17 3 -19 1 -22 Z'), 'ink', { w: .6 });
+      o += k.line(T('M29 -18 L33 -9 L31 -2 M27 -18 L25 -9 L21 -4 M7 -17 L4 -8 L5 0 M10 -17 L13 -9 L12 0'), 2.2 * s);
+      o += k.line(T('M2 -24 C-2 -22 -3 -16 -2 -11'), 1.6 * s) + k.line(T('M12 -25 C20 -27 26 -26 30 -30'), .7, { color: k.paper });
+      o += k.line(T('M30 -24 L-6 -18'), 1.2); // the shafts
+      o += k.shape(T('M-36 -12 L-6 -12 C-4 -16 -5 -24 -10 -26 L-34 -26 C-38 -24 -38 -16 -36 -12 Z'), 'ink', { w: .6 }); // the body
+      o += k.shape(T('M-36 -26 C-40 -36 -32 -42 -24 -42 L-22 -26 Z'), 'dark', { w: .7 }); // the folded hood
+      o += k.line(T('M-33 -20 L-10 -20'), .8, { color: k.paper });
+      o += k.shape(T('M-12 -26 L-10 -34 L-2 -34 L-4 -26 Z'), 'ink', { w: .5 }); // the box
+      o += k.figure(x - 6 * s, y - 34 * s, .8 * s, 'man') + k.line(T('M-3 -44 C6 -54 18 -52 26 -46'), .6);
+      for (const [wx, wr] of [[-28, 9], [-9, 6.5]]) o += `<circle cx="${f(x + wx * s)}" cy="${f(y - wr * s)}" r="${f(wr * s)}" fill="none" stroke="${k.ink}" stroke-width="${f(1.4 * s)}"/>` + k.line(T(`M${wx - wr} ${-wr} L${wx + wr} ${-wr} M${wx} ${-2 * wr} L${wx} 0`), .6);
+      return o;
+    };
+    road += cab(552, 240, 1.15);
+
+    // ---------- the Buda pylon: dressed stone, sooted at its foot ----------
+    const pylon = (() => {
+      let s = k.shape('M-6 -6H66V246H-6Z', 'light', { w: 1.4 });
+      let joints = '';
+      for (let y = 4, row = 0; y < 240; y += 10, row++) { joints += `M-6 ${y}H54`; for (let x = (row % 2) * 9 + 4; x < 54; x += 18) joints += `M${x} ${y}v10`; }
+      s += k.line(joints, .45) + k.shape('M52 -6H66V246H52Z', 'dark', { w: .7 });
+      s += k.shape('M-6 150H66V246H-6Z', 'mid', { w: 0, op: .5 }) + k.shape('M-6 206H68V246H-6Z', 'vert', { w: 1 });
+      s += k.shape('M-6 22H70V30H-6Z', 'light', { w: 1 }) + k.line('M-6 30H70', 1.4);
       return s;
     })();
 
-    // ---------- the Buda embankment, a lion on its plinth ----------
-    let quay = k.shape('M-5 226H460V245H-5Z', 'vert', { w: 1 }) + k.line('M-5 226H460', 1.4) + k.shape(k.rect(-5, 226, 465, 4), 'light', { w: 0 });
-    for (const x of [60, 180, 300, 420]) quay += k.shape(`M${x} 226v-5q0 -3 3 -3t3 3v5Z`, 'black', { w: .6 });
-    quay += k.lamp(240, 226, 1) + k.figure(118, 226, 1, 'man') + k.figure(132, 226, .95, 'woman') + k.figure(360, 226, 1, 'porter');
-    k.lights.push([237.5, 197, 5, 4]);
-    const lion = (() => { // one of the bridge's stone lions, couchant on its plinth, facing the river
-      let s = k.shape(k.rect(394, 196, 58, 30), 'light', { w: 1 }) + k.shape(k.rect(438, 196, 14, 30), 'dark', { w: 0 }) + k.shape(k.rect(390, 191, 66, 6), 'light', { w: .9 });
-      for (let y = 203; y < 226; y += 7) s += k.line(`M394 ${y}H438`, .4);
-      // haunch, back and chest, then the forepaws stretched out in front
-      s += k.shape('M446 191C448 182 444 176 434 176C426 176 420 174 414 172L404 186L398 186C394 186 392 189 394 191Z', 'light', { w: 1 });
-      s += k.shape('M446 191C448 184 446 180 440 179C442 184 442 188 438 191Z', 'mid', { w: 0 }) + k.shape('M404 191H428C426 188 422 186 416 186H404Z', 'mid', { w: 0 });
-      s += k.line('M394 189.4H404M396 191V188', .6);
-      // the head with its heavy mane, the muzzle forward
-      s += k.shape('M402 186C398 184 397 178 400 172C402 166 408 163 414 164C421 165 424 171 422 178C420 184 414 188 406 188Z', 'mid', { w: 1 });
-      s += k.shape('M400 172C398 172 395 174 395 177C395 180 397 181 400 181L404 180C405 176 404 173 400 172Z', 'light', { w: .8 });
-      s += k.line('M398 175h1.6M396 179.6q2 1 4 0M408 168q4 4 3 12M413 167q3 5 2 13', .6);
-      s += k.line('M446 189q8 -2 6 -9q-1 -4 3 -5', 1.2); // the tail
-      return s;
-    })();
-    return far + parl + water + traffic + bridge + quay + lion;
+    return far + hill + parl + water + traffic + bridge + road + pylon;
   },
 };

@@ -1,10 +1,24 @@
-// Storylets of op-typist, Fräulein Sauer (owner: Ops). See docs/CONTRACTS.md §5.
+// Storylets of op-typist, Fräulein Sauer (owner: Ops). See docs/CONTRACTS.md §5. The Berlin posting.
 
 const lost = (line) => [['st', 'sauer', 'arrested'], ['item', '-companion-sauer'], ['op', 'op-typist', 'fail'], ['debrief', line]];
 const southward = { subj: 'op:op-typist', claim: { heading: 'MUN' } };
 
 export default [
-  // ---------- step ----------
+  // ---------- taking up the post ----------
+  { id: 'op-typist.post', at: 'op', if: [['city', 'BER']],
+    title: 'Berlin, the last week of peace',
+    text: 'Berlin is hot and loud with rumour. Crowds wait outside the newspaper offices on Unter den Linden for each new edition, and sing when there is nothing to read. The police want your registration within the day, and this week they read registrations. Your landlady has a son in the reserve. She is watching you already.',
+    choices: [
+      { label: 'A room at the Adlon', sub: "£6; diplomats, and Falk's men among the waiters", cost: { money: 6 },
+        ok: [['legend', 0.2], ['watch', 0.15], ['record', 'register', 0.5]] },
+      { label: 'A furnished room in Schöneberg', sub: '£2; the landlady and her reservist son', cost: { money: 2 },
+        ok: [['legend', 0.15], ['record', 'register', 0.3]] },
+      { label: 'A pension by the Stettiner Bahnhof', sub: '£1; the station for the northern ferries', cost: { money: 1 },
+        ok: [['legend', 0.05], ['record', 'register', 0.2], ['flag', 'op-typist-stettin']] },
+      { label: 'Register at the police as a neutral', sub: 'Swiss papers are welcome this week', if: [['cover', 'weiss']],
+        ok: [['legend', 0.2], ['watch', -0.1], ['record', 'register', 0.4]] },
+    ] },
+
   { id: 'op-typist.meet', at: 'op', speaker: 'sauer', if: [['city', 'BER']],
     title: 'Gloves she did not buy',
     text: "Sauer is waiting in the Wertheim tea room with a parcel of gloves she did not buy. This week she has typed the same railway timetable four times: which trains, which bridges, which day. Yesterday two men from IIIb went through the typing pool's wastepaper baskets. 'I will come,' she says. 'I am frightened, so I will be quick.'",
@@ -15,6 +29,8 @@ export default [
         ok: [['trust', 'sauer', 2], ['expose', 'sauer', 0.2]] },
       { label: 'Give her a Paris hat for travelling', sub: 'Courage comes in hatboxes', if: [['item', 'couture-hat']],
         ok: [['trust', 'sauer', 2], ['item', '-couture-hat']] },
+      { label: 'Give her a bottle of Cologne water', sub: 'A small luxury; she will not forget it', if: [['item', 'eau-de-cologne']],
+        ok: [['trust', 'sauer', 1], ['item', '-eau-de-cologne']] },
     ] },
 
   // ---------- twists ----------
@@ -23,12 +39,12 @@ export default [
     text: "In a tobacconist's window you see her reflection, and behind it, at a steady forty paces, a young man in a straw boater who is looking at nothing in particular. He was outside the Wertheim too. Sauer has not seen him. If she turns now, he will know that she knows.",
     choices: [
       { label: 'Lose him in the Underground', sub: 'Two changes, one crowded platform',
-        roll: { p: 0.55, mods: [[['trust', 'sauer', '>=', 2], 0.1]] },
+        roll: { p: 0.5, mods: [[['trust', 'sauer', '>=', 2], 0.1], [['skill', 'tradecraft', '>=', 2], 0.2]] },
         ok: [['nerve', -1]], fail: [['expose', 'sauer', 0.8], ['record', 'sighting', 0.8]] },
       { label: 'Let him follow to a false address', sub: 'Two hours; he reports a flat you never use', cost: { min: 120 },
         ok: [['record', 'sighting', 0.5], ['expose', 'sauer', 0.3]] },
       { label: 'Split up; meet at the station', sub: 'He must choose whom to follow',
-        roll: { p: 0.6 },
+        roll: { p: 0.6, mods: [[['skill', 'streetwise', '>=', 2], 0.1]] },
         ok: [['trust', 'sauer', -1]],
         fail: lost('Sauer was taken alone in the Friedrichstrasse, with your train ticket in her glove.') },
     ] },
@@ -53,13 +69,28 @@ export default [
         ok: [['record', 'sighting', 0.2]] },
       { label: 'Pass her off as your maid', sub: 'Nobody questions a countess about her maid', if: [['cover', 'vessey']],
         ok: [['record', 'sighting', 0.3]] },
+      { label: 'Out through the goods yard', sub: 'Your pension backs onto the Stettiner sidings', if: [['flag', 'op-typist-stettin']],
+        roll: { p: 0.7 }, ok: [['record', 'sighting', 0.2]], fail: [['record', 'sighting', 0.8], ['expose', 'sauer', 0.4]] },
       { label: 'Buy her a permit', sub: '£12 to a clerk who has seen worse', cost: { money: 12 },
-        roll: { p: 0.65 },
+        roll: { p: 0.65, mods: [[['skill', 'paperwork', '>=', 2], 0.15]] },
         ok: [['record', 'bribe', 0.5]], fail: [['record', 'bribe', 1], ['expose', 'sauer', 0.5]] },
       { label: 'Brazen it out', sub: 'Your manner, and her nerve',
-        roll: { p: 0.4, mods: [[['trust', 'sauer', '>=', 3], 0.1]] },
+        roll: { p: 0.4, mods: [[['trust', 'sauer', '>=', 3], 0.1], [['skill', 'composure', '>=', 2], 0.15]] },
         ok: [['nerve', -1]],
         fail: [['record', 'sighting', 1], ...lost('The police took Sauer at the ticket office for want of a permit.')] },
+    ] },
+
+  { id: 'op-typist.major', at: 'op',
+    title: 'A major from the Königsplatz',
+    text: 'At Spandau a major of the General Staff gets into your compartment, sets down his sword and his dispatch case, and looks at Sauer for a long, puzzled moment. He has walked past her desk every morning for two years without once looking at her face. Now he is trying to remember where he has seen it.',
+    choices: [
+      { label: 'Talk to him, and keep talking', sub: 'Draw his eyes to you',
+        roll: { p: 0.5, mods: [[['skill', 'charm', '>=', 2], 0.2], [['skill', 'german', '>=', 2], 0.1]] },
+        ok: [['nerve', -1]], fail: [['expose', 'sauer', 0.6], ['record', 'sighting', 0.8]] },
+      { label: 'Send her to the dining car', sub: 'Out of his sight, and out of yours',
+        roll: { p: 0.6 }, ok: [['trust', 'sauer', -1]], fail: [['expose', 'sauer', 0.5]] },
+      { label: 'Change compartments at the next stop', sub: 'He will notice the change',
+        ok: [['record', 'sighting', 0.5]] },
     ] },
 
   { id: 'op-typist.pipe', at: 'op',
@@ -82,7 +113,7 @@ export default [
     text: 'Lotte is younger, louder, and engaged to a reservist of the 76th Infantry who left for his depot this morning. She will not go. She will not let Hedwig go without her. The sisters argue in whispers in a kitchen that smells of cabbage, and the clock says the Korsør boat leaves in two hours.',
     choices: [
       { label: 'Persuade Lotte to come', sub: 'Two hours, and two stubborn women',
-        roll: { p: 0.5, mods: [[['trust', 'sauer', '>=', 3], 0.2]] },
+        roll: { p: 0.5, mods: [[['trust', 'sauer', '>=', 3], 0.2], [['skill', 'charm', '>=', 2], 0.1]] },
         ok: [['trust', 'sauer', 2], ['record', 'register', 0.3], ['debrief', 'Both Sauer sisters crossed to Denmark on the Korsør boat.']],
         fail: [['trust', 'sauer', -1], ['min', 120]] },
       { label: 'Leave Lotte money and an address', sub: '£5; she may follow, one day', cost: { money: 5 },

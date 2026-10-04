@@ -84,7 +84,7 @@ export default [
 
   // AMS-COL. Down the Rhine through Emmerich.
   { id: 'ams-col-express', line: 'AMS-COL', kind: 'express', name: 'the Rhine express by Emmerich', dep: { AMS: ['08.45', '16.10'], COL: ['08.20', '15.30'] }, days: '*', hours: 5, fare: { 1: 3, 2: 2 }, sleeper: false, records: ['list'], punct: 0.9, maxDelay: 60, check: 'onboard' },
-  { id: 'ams-col-mail', line: 'AMS-COL', kind: 'mail', name: 'the Arnhem mail', dep: { AMS: ['07.05', '13.20', '22.40'], COL: ['06.50', '12.45', '23.00'] }, days: '*', hours: 6.5, fare: { 1: 2, 2: 1, 3: 1 }, sleeper: false, records: [], punct: 0.9, maxDelay: 60, check: 'station' },
+  { id: 'ams-col-mail', line: 'AMS-COL', kind: 'mail', name: 'the Arnhem mail', dep: { AMS: ['07.05', '13.20', '22.40'], COL: ['06.50', '12.45', '22.20'] }, days: '*', hours: 6.5, fare: { 1: 2, 2: 1, 3: 1 }, sleeper: false, records: [], punct: 0.9, maxDelay: 60, check: 'station' },
   { id: 'ams-col-slow', line: 'AMS-COL', kind: 'slow', name: 'the Zevenaar omnibus', dep: { AMS: ['06.05'], COL: ['06.30'] }, days: '*', hours: 8.5, fare: { 2: 1, 3: 1 }, sleeper: false, records: [], punct: 0.88, maxDelay: 90, check: 'station' },
 
   // AMS-HAM. By Bentheim and Bremen.
@@ -93,7 +93,7 @@ export default [
   { id: 'ams-ham-mail', line: 'AMS-HAM', kind: 'mail', name: 'the Oldenzaal mail', dep: { AMS: ['07.00', '13.30'], HAM: ['06.40', '13.10'] }, days: '*', hours: 11, fare: { 1: 4, 2: 2, 3: 1 }, sleeper: false, records: [], punct: 0.88, maxDelay: 90, check: 'station' },
 
   // FLU-AMS. The boat trains meet the Zeeland boats; the mail stops at every polder town.
-  { id: 'flu-ams-boat', line: 'FLU-AMS', kind: 'express', name: 'the Zeeland boat train', dep: { FLU: ['06.10', '19.40'], AMS: ['05.55', '17.30'] }, days: '*', hours: 4, fare: { 1: 2, 2: 1 }, sleeper: false, records: ['list'], punct: 0.92, maxDelay: 45, check: 'none' },
+  { id: 'flu-ams-boat', line: 'FLU-AMS', kind: 'express', name: 'the Zeeland boat train', dep: { FLU: ['06.30', '19.40'], AMS: ['05.40', '17.30'] }, days: '*', hours: 4, fare: { 1: 2, 2: 1 }, sleeper: false, records: ['list'], punct: 0.92, maxDelay: 45, check: 'none' },
   { id: 'flu-ams-mail', line: 'FLU-AMS', kind: 'mail', name: 'the Middelburg and Rotterdam mail', dep: { FLU: ['08.00', '13.15'], AMS: ['08.20', '13.00'] }, days: '*', hours: 5, fare: { 1: 1, 2: 1, 3: 1 }, sleeper: false, records: [], punct: 0.9, maxDelay: 60, check: 'none' },
 
   // COL-BER. Kessel's line: the Nord-Express by night, the Berlin D-train by day, a sleeping-car train, and an omnibus for the frugal.

@@ -1,13 +1,15 @@
-// Fräulein Sauer (owner: Ops). See docs/CONTRACTS.md §6 and docs/REGISTRY.md §7.
-// Using Sauer in op-optics (flag op-optics-sauer) makes certain she is followed now.
+// Fräulein Sauer (owner: Ops). See docs/CONTRACTS.md §6 and docs/REGISTRY.md §7 (Act III: the Berlin posting).
+// Two journeys: from Belgrade to the Berlin post, and out with Sauer to neutral ground as the frontiers close.
+// She cannot be met before the 30th: a day or two of living in Berlin first.
 
 export default {
-  id: 'op-typist', act: 3, issue: '07-27 09.00', giver: 'handler',
+  id: 'op-typist', act: 3, issue: '07-26 09.00', giver: 'handler',
   title: 'Fräulein Sauer',
-  brief: 'IIIB HUNTING A LEAK IN THE GENERAL STAFF TYPING POOL STOP SAUER IN DANGER STOP MEET HER IN BERLIN BY FRIDAY NOON STOP SHE CAN BRING THE RAILWAY ANNEX STOP GET HER AND IT TO NEUTRAL GROUND BY SUNDAY EVENING STOP FRONTIERS WILL CLOSE ASHBY',
+  brief: 'TAKE UP BERLIN POST BY WEDNESDAY STOP IIIB HUNTING A LEAK IN THE GENERAL STAFF TYPING POOL STOP CULTIVATE SAUER QUIETLY AND MEET HER BY FRIDAY NOON STOP SHE CAN BRING THE RAILWAY ANNEX STOP GET HER TO NEUTRAL GROUND BY SUNDAY STOP FRONTIERS WILL CLOSE ASHBY',
   steps: [
-    { id: 'meet', kind: 'meet', person: 'sauer', city: 'BER', by: '07-31 12.00', gives: 'companion-sauer',
-      label: 'Meet Sauer in Berlin by Friday noon', story: 'op-typist.meet' },
+    { id: 'reach', kind: 'goto', city: 'BER', by: '07-29 12.00', label: 'Take up the Berlin post by Wednesday', story: 'op-typist.post' },
+    { id: 'meet', kind: 'meet', person: 'sauer', city: 'BER', after: '07-30 08.00', by: '07-31 12.00', gives: 'companion-sauer',
+      label: 'Meet Sauer by Friday noon', story: 'op-typist.meet' },
     { id: 'annex', kind: 'act', city: 'BER', venue: 'venue:cafe', by: '08-01 06.00', gives: 'staff-papers',
       label: 'Get the railway annex out',
       ways: [
@@ -20,8 +22,8 @@ export default {
         { id: 'retype', label: 'She retypes it from her shorthand', sub: 'A night of work; slow, and safe',
           cost: { min: 480 }, risk: 0.05, rec: null,
           ok: [['debrief', 'Sauer retyped the annex from her shorthand through the night.']] },
-        { id: 'carbons', label: "Buy the carbons from the wastepaper man", sub: '£12; IIIb searches the waste too',
-          tag: 'topic:underworld', cost: { money: 12 }, risk: 0.3, rec: ['bribe', 0.6] },
+        { id: 'carbons', label: 'Buy the carbons from the wastepaper man', sub: '£12; IIIb searches the waste too',
+          tag: 'topic:underworld', cost: { money: 12 }, risk: 0.3, rec: ['bribe', 0.6], fail: [['watch', 0.2]] },
       ] },
     { id: 'out', kind: 'carry', item: 'companion-sauer', to: ['CPH', 'AMS', 'FLU', 'ZUR', 'STO'], by: '08-02 18.00',
       label: 'Get her to neutral ground by Sunday' },
@@ -29,11 +31,13 @@ export default {
       label: 'The annex to a neutral city or London' },
   ],
   twists: [
-    { if: [['op', 'op-typist', 'meet'], ['not', ['op', 'op-typist', 'out']], ['city', 'BER'], ['any', ['flag', 'op-optics-sauer'], ['chance', 0.4]]],
+    { if: [['op', 'op-typist', 'meet'], ['not', ['op', 'op-typist', 'out']], ['city', 'BER'], ['any', ['watched'], ['chance', 0.4]]],
       story: 'op-typist.followed' },
-    { if: [['op', 'op-typist', 'annex'], ['not', ['op', 'op-typist', 'out']], ['item', 'companion-sauer']], story: 'op-typist.sister' },
+    { if: [['op', 'op-typist', 'annex'], ['not', ['op', 'op-typist', 'out']], ['item', 'companion-sauer'], ['city', 'BER']], story: 'op-typist.sister' },
     { if: [['op', 'op-typist', 'meet'], ['not', ['op', 'op-typist', 'out']], ['item', 'companion-sauer'], ['nation', 'DE'], ['day', '56']],
       story: 'op-typist.permit' },
+    { if: [['op', 'op-typist', 'annex'], ['not', ['op', 'op-typist', 'out']], ['item', 'companion-sauer'], ['mode', 'rail'], ['nation', 'DE'], ['chance', 0.5]],
+      story: 'op-typist.major' },
     { if: [['op', 'op-typist', 'meet'], ['not', ['op', 'op-typist', 'out']],
       ['any', ['flag', 'op-mole-kept-brandl'], ['flag', 'op-mole-kept-ilic'], ['flag', 'op-mole-kept-amsler']]], story: 'op-typist.pipe' },
   ],

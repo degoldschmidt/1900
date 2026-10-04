@@ -164,6 +164,8 @@ export default [
     choices: [
       { label: "Go down to the cellar", sub: "Hours in the dark with your neighbours",
         ok: [["nerve", -1], ["legend", 0.1]] },
+      { label: "Leave by the road you scouted", sub: "Out past the cemetery before the gendarmes close it", if: [["flag", "ev-escape-route"]],
+        ok: [["unflag", "ev-escape-route"], ["nerve", -1], ["watch", -0.1]] },
       { label: "Shelter at the military hospital", sub: "The matron keeps a place for friends", if: [["flag", "ev-beg-matron"]],
         ok: [["unflag", "ev-beg-matron"], ["nerve", 1], ["watch", -0.1]] },
       { label: "Watch the fall of shot", sub: "Useful to London; fatal if a gendarme sees", tag: "topic:military",

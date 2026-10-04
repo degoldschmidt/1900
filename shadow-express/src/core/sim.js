@@ -409,13 +409,13 @@ function calendar(G) {
   const fresh = W.rows.filter((r) => r.t <= S.t && !S.newsSeen.includes(r.id));
   if (!fresh.length) return;
   for (const r of fresh) S.newsSeen.push(r.id);
-  const shown = fresh.filter((r) => r.fact || hearsOf(G, r));
+  const shown = fresh.filter((r) => r.fact || (r.fx.some((e) => e[0] === 'suspend') && hearsOf(G, r))); // game rows (acts, hunters) are never news
   if (shown.length) S.queue.push({ type: 'news', rows: shown.map((r) => r.id), n: ++S.cardN });
 }
 /** A fictional disruption is heard of near it, or through the guide. */
 function hearsOf(G, r) {
   const { S, W } = G;
-  if (has(G, 'bradshaw') || !r.fx.length) return true;
+  if (has(G, 'bradshaw')) return true;
   const n = S.city ? W.city.get(S.city).nation : null;
   return r.fx.some((e) => e[1] === n || (typeof e[1] === 'string' && e[1].startsWith('line:') && W.line.get(e[1].slice(5)) && [W.line.get(e[1].slice(5)).a, W.line.get(e[1].slice(5)).b].includes(S.city)));
 }
