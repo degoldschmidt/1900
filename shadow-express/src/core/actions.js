@@ -206,8 +206,22 @@ export function stash(G, id) {
 export function retrieve(G, id) {
   const { S } = G;
   const c = S.covers[id];
-  if (!c || c.carried || c.stash !== S.city) return false;
-  c.carried = true; c.stash = null;
+  if (!c || c.carried || c.stash !== S.city || (c.ready ?? 0) > S.t) return false;
+  c.carried = true; c.stash = null; c.ready = null;
+  return true;
+}
+/** Papers left with the Bureau in London can be sent for by the embassy bag: two days, a fee, and a visit to the
+ *  embassy that someone may watch. Safer than carrying a second passport through the customs. */
+export const BAG = { days: 2, fee: 3 };
+export function sendFor(G, id) {
+  const { S, I } = G;
+  const c = S.covers[id];
+  if (!c || c.burned || c.carried || c.stash !== 'LON' || !S.city || S.city === 'LON' || S.money < BAG.fee) return false;
+  S.money -= BAG.fee;
+  c.stash = S.city; c.ready = S.t + BAG.days * DAY;
+  leave(G, 'sighting', .3, { heat: .1 });
+  S.stats.decisions++;
+  log(G, `Wired the Bureau for the papers of ${coverName(G, id)}: the bag reaches ${I.city.get(S.city).name} in two days.`);
   return true;
 }
 

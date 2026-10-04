@@ -4,7 +4,7 @@
 //   exploit-*: one trick spammed (third class only, bribe everything, plant false trails, never sleep in hotels).
 
 import { advance } from '../../src/core/sim.js';
-import { board, book, bookTrip, plan, cardView, choose, walk, opActions, doWay, canLieLow, lieLow, wireFunds, switchCover, stash, retrieve, checkTail, shakeTail, setLodging, safehouseHere, contactsHere, seek, passDays, doActivity } from '../../src/core/actions.js';
+import { board, book, bookTrip, plan, cardView, choose, walk, opActions, doWay, canLieLow, lieLow, wireFunds, switchCover, stash, retrieve, sendFor, checkTail, shakeTail, setLodging, safehouseHere, contactsHere, seek, passDays, doActivity } from '../../src/core/actions.js';
 import { legendOf, stayDays } from '../../src/core/residence.js';
 import { currentStep, stepCities, activeOps } from '../../src/core/ops.js';
 import { T } from '../../src/data/time.js';
@@ -75,6 +75,7 @@ export const POLICIES = {
     way: (ways) => ways.find((w) => w.open && w.afford),
   },
   competent: {
+    start(G) { for (const c of carriedCovers(G)) if (c !== G.S.cover) stash(G, c); }, // spare papers stay with the Bureau
     card(G, v) {
       const { S } = G;
       const open = v.choices.map((c, i) => ({ c, i })).filter((x) => x.c.open && x.c.afford !== false);
@@ -99,13 +100,14 @@ export const POLICIES = {
       const tg = target(G);
       const posted = tg && tg.cities.includes(S.city);
       // spare papers are kept in the posting city, and travel with you when you move on
-      for (const [id, c] of Object.entries(S.covers)) if (!posted && !c.carried && !c.burned && c.stash === S.city) retrieve(G, id);
+      for (const [id, c] of Object.entries(S.covers)) if (!posted && S.city !== 'LON' && !c.carried && !c.burned && c.stash === S.city) retrieve(G, id);
       if (posted) for (const id of carriedCovers(G)) if (id !== S.cover) stash(G, id);
+      if (posted && S.city !== 'LON') for (const [id, c] of Object.entries(S.covers)) if (!c.burned && !c.carried && c.stash === 'LON') sendFor(G, id);
       // a name the enemy has, or a cover that has left too many sharp traces, is retired
       const named = !!S.enemy.dossiers[S.cover]?.name;
       const heat = S.records.filter((r) => r.cover === S.cover && S.t - r.t < 5 * 24 * HOUR).reduce((a, r) => a + (r.heat ?? (r.kind === 'bribe' ? .45 : r.kind === 'sighting' ? .2 : 0)) * r.fid, 0);
       if (named || heat > .45) {
-        const alts = Object.entries(S.covers).filter(([id, c]) => id !== S.cover && !c.burned && (c.carried || c.stash === S.city));
+        const alts = Object.entries(S.covers).filter(([id, c]) => id !== S.cover && !c.burned && (c.carried || (c.stash === S.city && (c.ready ?? 0) <= S.t)));
         const alt = alts.find(([id]) => !S.enemy.dossiers[id]?.name) ?? (named ? null : alts[0]);
         if (alt) {
           if (!alt[1].carried) retrieve(G, alt[0]);

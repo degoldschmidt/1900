@@ -21,6 +21,7 @@ const HOUR = 60;
 /** Advance until `limit` or until a card is queued. Returns the first card or null. */
 export function advance(G, limit) {
   const { S } = G;
+  G.endGame ??= endGame; // ops end the game through G (the UI may wrap it)
   while (!S.queue.length && !S.ended && S.t < limit) {
     const next = Math.min(limit, nextEvent(G));
     S.t = Math.max(S.t + 1, next);

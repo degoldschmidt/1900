@@ -2,7 +2,7 @@
 // Everything the player knows, and nothing the player does not: the dossier's "They know" is built from your own
 // traces and when they will arrive, never from the enemy's mind.
 
-import { board, book, bookTrip, plan, walk, contactsHere, seek, setLodging, safehouseHere, switchCover, stash, retrieve, checkTail, shakeTail, market, buy, sell, opActions, doWay, canLieLow, lieLow, wireFunds, wireQuery, mendPapers, sendCourier, useItem, usable, activities, doActivity, passDays, stopRoutine, PUNCT_WORDS } from '../core/actions.js';
+import { board, book, bookTrip, plan, walk, contactsHere, seek, setLodging, safehouseHere, switchCover, stash, retrieve, sendFor, BAG, checkTail, shakeTail, market, buy, sell, opActions, doWay, canLieLow, lieLow, wireFunds, wireQuery, mendPapers, sendCourier, useItem, usable, activities, doActivity, passDays, stopRoutine, PUNCT_WORDS } from '../core/actions.js';
 import { legendOf, watchOf, LODGINGS, needsRegistration, stayDays } from '../core/residence.js';
 import { BACKGROUNDS, TRAITS, SKILL_TEXT, AGES, BIRTH, skill, fullName } from '../core/hero.js';
 import { SKILLS, LANGUAGES } from '../core/spec.js';
@@ -253,7 +253,7 @@ export function makeLedger(root, hooks) {
       h += `<div class="cover ${id === S.cover ? 'active' : ''} ${c.burned ? 'burned' : ''}"><div class="nm">${esc(coverName(G, id))}</div><div class="lg">${esc(coverLegend(G, id))} · ${esc(NAT[d.nation] ?? d.nation)} · travels ${['', 'first', 'second', 'third'][d.cls]} class</div>
         <div class="row"><span>papers <span class="gauge"><i style="width:${Math.round(c.papers * 100)}%"></i></span></span><span>what they may know <span class="heat"><i style="left:${Math.round(lo * 100)}%;width:${Math.max(4, Math.round((hi - lo) * 100))}%"></i></span></span></div>
         <div class="affs">${fits ? `fits: ${esc(fits)}` : ''}${bad ? `<br>implausible: ${esc(bad)}` : ''}</div>
-        <div class="row">${c.burned ? '<span class="stamp">BURNED</span>' : id === S.cover ? '<span class="chip ink">in use</span>' : c.carried ? `<button class="iconbtn" data-switch="${id}" ${S.city ? '' : 'disabled'}>Become ${esc(coverName(G, id).split(' ').at(-1))}</button><button class="iconbtn" data-stash="${id}" ${S.city ? '' : 'disabled'}>Leave here</button>` : `<span class="dim">left in ${esc(I.city.get(c.stash)?.name ?? '?')}</span>${c.stash === S.city ? `<button class="iconbtn" data-retrieve="${id}">Take back</button>` : ''}`}</div></div>`;
+        <div class="row">${c.burned ? '<span class="stamp">BURNED</span>' : id === S.cover ? '<span class="chip ink">in use</span>' : c.carried ? `<button class="iconbtn" data-switch="${id}" ${S.city ? '' : 'disabled'}>Become ${esc(coverName(G, id).split(' ').at(-1))}</button><button class="iconbtn" data-stash="${id}" ${S.city ? '' : 'disabled'}>Leave here</button>` : (c.ready ?? 0) > S.t ? `<span class="dim">in the embassy bag; here ${esc(when(c.ready))}</span>` : `<span class="dim">${c.stash === 'LON' ? 'with the Bureau in London' : `left in ${esc(I.city.get(c.stash)?.name ?? '?')}`}</span>${c.stash === S.city ? `<button class="iconbtn" data-retrieve="${id}">Take back</button>` : c.stash === 'LON' && S.city ? `<button class="iconbtn" data-sendfor="${id}" ${S.money < BAG.fee ? 'disabled' : ''}>Send for them by the bag · £${BAG.fee}, two days</button>` : ''}`}</div></div>`;
     }
     return h;
   }
@@ -352,6 +352,7 @@ export function makeLedger(root, hooks) {
     q('[data-switch]').forEach((b) => b.addEventListener('click', () => { const r = switchCover(G, b.dataset.switch); if (!r.ok) hooks.toast?.(r.why, true); after(); }));
     q('[data-stash]').forEach((b) => b.addEventListener('click', () => { stash(G, b.dataset.stash); after(); }));
     q('[data-retrieve]').forEach((b) => b.addEventListener('click', () => { retrieve(G, b.dataset.retrieve); after(); }));
+    q('[data-sendfor]').forEach((b) => b.addEventListener('click', () => { sendFor(G, b.dataset.sendfor); after(); }));
     q('[data-buy]').forEach((b) => b.addEventListener('click', () => { buy(G, b.dataset.buy); after(); }));
     q('[data-sell]').forEach((b) => b.addEventListener('click', () => { sell(G, b.dataset.sell); after(); }));
     q('[data-use]').forEach((b) => b.addEventListener('click', () => { if (!useItem(G, b.dataset.use)) hooks.toast?.('Not here, not now.', true); after(); }));
