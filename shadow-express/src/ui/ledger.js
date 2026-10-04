@@ -11,7 +11,7 @@ import { currentStep, stepCities } from '../core/ops.js';
 import { when, hm, dayShort, span, T } from '../data/time.js';
 import { HEAT, SUSPECT } from '../core/enemy.js';
 import { vignetteUrl, portraitUrl, weatherAt } from './art.js';
-import { postcard, postcardInput, hasPostcard } from './postcard.js';
+import { postcard, postcardInput, hasPostcard, prefetchPostcard } from './postcard.js';
 import { albumHtml, fill as fillAlbum } from './album.js';
 import { esc } from './dom.js';
 import { oddsWord } from './cards.js';
@@ -62,6 +62,9 @@ export function makeLedger(root, hooks) {
   function cityCard(G, travelling) {
     const { S } = G;
     const id = state.tab === 'city' && !travelling && hasPostcard(S.city) ? S.city : null;
+    // on the way: the destination's card, drawn in an idle moment, so the arrival card shows at once
+    const j = S.journey;
+    if (j && hasPostcard(j.to) && j.arr - S.t < 240) { const t = Math.max(S.t, j.arr); prefetchPostcard(j.to, postcardInput(G, j.to, t, weatherAt(G, j.to, t)), Math.min(window.innerWidth - 48, 470)); }
     if (!id) { pcHost.hidden = true; return; }
     const inp = postcardInput(G, id, S.t, weatherAt(G, id, S.t));
     const was = pcHost.hidden;

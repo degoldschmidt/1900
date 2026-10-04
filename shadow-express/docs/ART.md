@@ -1,50 +1,12 @@
-# Shadow Express v2 — art guide
+# Shadow Express v2: art guide for the engravings
 
-The look is **soot and engraving**: a newspaper wood-engraving of 1900, cross-hatched ink on stained sepia paper, gritty with coal smoke. Every drawing is an SVG string built with the kit in `src/art/kit.js`. Read that file first: it is short, and its helpers are the vocabulary. `src/art/vignettes/LON.js` is the worked example.
+The look is **soot and engraving**: a newspaper wood-engraving of 1900, cross-hatched ink on stained sepia paper, gritty with coal smoke. Every engraving is an SVG string built with the kit in `src/art/kit.js`. Read that file first: it is short, and its helpers are the vocabulary.
 
-## Vignettes (`src/art/vignettes/<CITY>.js`)
+## City pictures
 
-```js
-export default { id:'PAR', draw(k, { hour, phase, weather, night }) { return '…svg elements…'; } };
-```
-- **Canvas** 640×240, y down. The frame (`src/art/frame.js`) draws the paper, the sky for the hour and weather, the night wash, lit windows, rain or fog, foxing and grain. You draw **the city layer only**: landmark, town, ground or water, people, boats, trains. Never draw sky, sun or moon.
-- **Night is automatic**: draw the daytime engraving. Windows made with `k.windows` glow at night; you rarely need `night`, though you may add a lit café or a lamp's halo.
-- **Horizon** between y≈150 and 195. Ground or water from there to the bottom edge (`k.ground(kind, y)` or `k.water(y)`).
-- **Layers**, back to front:
-  1. far town: `k.skyline(…, { far:true })`, `k.mountains(y)`, `k.haze(y, h)`;
-  2. the landmark: big, crisp, dark outlines;
-  3. the foreground: quay, bridge, boats, figures, lamps, trees.
-- **Light** comes from the upper left:
-  - faces in light: `'light'` or `'vert'` (stone);
-  - faces turned away: `'dark'`;
-  - deep shadow, doorways, undersides: `'black'`;
-  - roofs: `'tiles'` or `'dark'`;
-  - windows: `'glass'` (via `k.windows`);
-  - foliage: `'stipple'`;
-  - water: `k.water`.
-- **Distance** fades: pass `{ far:true }` for sepia, thinner lines.
-
-**Composition**
-- The landmark must be **recognisable in silhouette at 320 px wide**. Exaggerate its defining shapes: the Eiffel Tower's taper and arches, the Riesenrad's spokes, the Galata Tower's cone, the Parthenon's columns on its rock.
-- Make each city's composition **different from all the others**, not only its landmark. Vary:
-  - where the landmark sits: left, centre or right third, near or far;
-  - the viewpoint: across water, up a street, from a hill, from a quay, under a bridge;
-  - what fills the foreground: water, cobbles, steps, a market, rails, palms, a railway yard.
-  
-  A few cities may show a train or a ship; most should not.
-- Add life, sparingly: two to six small figures, a cab, a tram, a barge, smoke from chimneys. Soot is the grit: haze bands, smoke plumes and darker lower storeys.
-- **Size**: keep the returned SVG under about 120 KB at noon. Use loops for repeats, never thousands of tiny paths. Keep coordinates to one decimal; `k.f(n)` rounds.
-
-**Do not**
-- No text or lettering, except an engraver's monogram if you must.
-- No colour beyond the kit's palette. No gradients, no raster images, no external references, no `<script>`, no `<foreignObject>`.
-
-**Check your work**:
-
-```
-node tools/sheet.mjs PAR,BRU --out build/sheet-a.png      # four hours each; add --weather rain, --scale 2
-```
-Then look at the PNG. Judge each vignette at noon and at night, at full size and at half (`--scale .5`): is the landmark unmistakable, is the composition its own, is the ink weight like LON's?
+The cities are no longer engraved vignettes. Each is a living colour postcard of 1914, drawn with its own kit in
+`src/art/postcard/`; `docs/POSTCARDS.md` is the contract and `src/art/postcards/VIE.js` the worked example. The
+engraving style below still governs the portraits and the map glyphs.
 
 ## Portraits (`src/art/portraits.js`)
 

@@ -184,7 +184,7 @@ function fxOf(L, mod) {
 export function stillSvg(rc, frame = '') {
   const inner = (svg) => svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
   const spr = (z) => rc.sprites.filter((s) => s.z === z).map((s) => {
-    if (s.kind === 'cloud' || s.kind === 'mover' || s.kind === 'flag' || s.kind === 'bird') {
+    if (s.kind === 'cloud' || s.kind === 'mover' || s.kind === 'flag' || s.kind === 'bird' || s.kind === 'spin') {
       const k = s.keys?.[0], [x, y, w, h] = s.box, op = k ? k[4] : 1;
       if (op === 0) return '';
       const sc = k ? +k[3] : 1, ox = x + w * s.origin[0] / 100, oy = y + h * s.origin[1] / 100;

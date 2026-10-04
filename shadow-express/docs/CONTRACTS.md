@@ -250,25 +250,24 @@ ENEMY  = { inbox:[RECORD], dossiers:{ hale:{ susp, name, desc, photo, alerts:['D
 - **Uncertainty**: rumours, tips and sightings go through `['intel', …]` with an honest source and reliability. Some are false (`truth:false`) or planted, and the player must be able to check them.
 - **Protagonist**: address with templates; never assume the player's sex in plain text.
 
-## 9. Art kit (`src/art/kit.js`) and art modules
+## 9. Art
 
-The art is **soot and engraving**: ink cross-hatching on stained sepia paper, coal-smoke grain, no flat fills except paper. Colours come from `kit.ink` (near-black brown), `kit.paper`, `kit.sepia`, `kit.wash` (a thin indigo wash used sparingly for water and night), and `kit.blood` (only for danger marks).
+**City pictures** are living picture postcards of 1914, one module per city in `src/art/postcards/<CITY>.js`, drawn with
+the postcard kit in `src/art/postcard/` (paint, light, sprites, frame, compose) and put on the page by
+`src/ui/postcard.js`. Their contract (the module's shape, the kit, the rules and budgets, each city's greeting, flower
+and frame colours) is `docs/POSTCARDS.md`; `test/postcards.test.mjs` checks it.
+
+**Portraits and map glyphs** are **soot and engraving**: ink cross-hatching on stained sepia paper, coal-smoke grain, no
+flat fills except paper. Colours come from `kit.ink` (near-black brown), `kit.paper`, `kit.sepia`, `kit.wash` (a thin
+indigo wash used sparingly for water and night), and `kit.blood` (only for danger marks).
 
 ```js
-// kit API (SVG strings; viewBox 640×240 for vignettes, 120×150 for portraits)
+// kit API (SVG strings; viewBox 120×150 for portraits)
 kit.defs(uid)                       // <defs>: hatch patterns (h45, h45f, h135, cross, hz, stipple, waves), paper and grain filters
 kit.hatch(d, pattern, uid, opts?)   // a path filled with a hatch pattern and inked outline
 kit.outline(d, w?)                  // an inked stroke
-kit.sky(hour, weather, uid)         // the sky band: hatching density by hour, sun or moon, stars, smoke clouds
-kit.ground(kind, uid)               // foreground strip: 'cobbles' | 'quay' | 'water' | 'river' | 'hills'
-kit.smoke(x, y, scale, uid)         // a rising coal-smoke plume
-kit.windows(x, y, w, h, cols, rows, lit) // window grid, lit at night
 kit.rng(seed)                       // seeded random for jitter
-
-// src/art/vignettes/<CITY>.js — one per city, hand-written around its landmark
-export default { id:'LON', draw(kit, { hour, weather, uid }) { return '<g>…</g>'; } }   // landmark + city layer only; no sky
 
 // src/art/portraits.js
 portrait(params, uid) → '<svg viewBox="0 0 120 150">…</svg>'   // an engraved cameo, profile silhouette from PERSON.portrait
 ```
-Each vignette must be **recognisable in silhouette** (the Eiffel Tower, the Riesenrad and the Stephansdom, the Galata Tower and Hagia Sophia, the Parthenon on its rock …) and must differ from every other in composition, not only in its landmark.

@@ -6,7 +6,7 @@
 // each tram and cloud where it was. When the light changes the new card fades in over the old. Under reduced motion,
 // and for the album's stills, nothing moves: each part rests where it would be at that moment.
 
-import { cardState, renderCard, stillSvg, Z } from '../art/postcard/compose.js';
+import { cardState, renderCard, stillSvg } from '../art/postcard/compose.js';
 import { frameSvg, titleSvg } from '../art/postcard/frame.js';
 import cards from '../art/postcards/index.js';
 import { rasterise } from './art.js';
@@ -37,7 +37,7 @@ function scene(mod, st, scale) {
     const urls = {};
     for (const k of ['sky', 'back', 'mid', 'front']) urls[k] = await rasterise(rc.layers[k], 600, 400, scale);
     return { rc, urls };
-  }, 4, (v) => Object.values(v.urls).forEach(revoke));
+  }, 6, (v) => Object.values(v.urls).forEach(revoke));
 }
 const frameUrl = (mod, scale) => lru(framesC, `${mod.id}|${scale}`, () => rasterise(frameSvg(mod), 600, 400, scale), 8, revoke);
 
@@ -50,7 +50,6 @@ export function postcardInput(G, cityId, t, weather) {
 // ---------- motion ----------
 const reduced = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 let mounts = 0;
-const pct = (v, of) => `${(v / of * 100).toFixed(3)}%`;
 /** Where a keyframed part is at phase p (0..1): its transform and opacity. */
 function poseAt(keys, p) {
   const P = p * 100;
@@ -165,26 +164,28 @@ export function postcard(id, input, o = {}) {
   el.innerHTML = `<div class="pc-scenes"></div><img class="pc-frame" alt=""><div class="pc-title">${titleSvg(mod)}</div>`;
   el.setAttribute('role', 'img');
   const scenesEl = el.firstChild, frameImg = el.children[1];
-  let scale = scaleFor(o.width), cur = null, want = null, busy = false, dead = false;
+  let scale = scaleFor(o.width), cur = null, want = null, busy = false, dead = false, lastAt = 0, timer = null, lastInp = null;
   frameUrl(mod, scale).then((u) => { if (u && !dead) frameImg.src = u; });
   async function show(inp) {
-    want = cardState(mod, inp);
+    want = cardState(mod, inp); lastInp = inp;
     el.querySelectorAll('.pc-hands').forEach((h) => setHands(h, want.t));
     if (busy || dead || (cur && cur.key === want.key)) return;
+    // while the days fly past, the light changes at most every two seconds
+    const wait = lastAt + 2000 - performance.now();
+    if (cur && wait > 0) { if (!timer) timer = setTimeout(() => { timer = null; if (!dead) show(lastInp); }, wait); return; }
     busy = true;
     try {
-      while (want && (!cur || cur.key !== want.key) && !dead) {
-        const st = want, sc = await scene(mod, st, scale);
-        if (dead) return;
-        const next = sceneEl(sc, still(), `${uid}x${st.key.length}${Math.round(performance.now())}`);
-        const old = [...scenesEl.children];
-        if (old.length && !still()) { next.classList.add('pc-in'); scenesEl.append(next); next.addEventListener('animationend', () => old.forEach((x) => x.remove()), { once: true }); setTimeout(() => old.forEach((x) => x.remove()), 2500); }
-        else { old.forEach((x) => x.remove()); scenesEl.append(next); }
-        cur = st;
-        el.setAttribute('aria-label', `Postcard: ${mod.greet}`);
-        el.querySelectorAll('.pc-hands').forEach((h) => setHands(h, st.t));
-      }
+      const st = want, sc = await scene(mod, st, scale);
+      if (dead) return;
+      const next = sceneEl(sc, still(), `${uid}x${Math.round(performance.now())}`);
+      const old = [...scenesEl.children];
+      if (old.length && !still()) { next.classList.add('pc-in'); scenesEl.append(next); next.addEventListener('animationend', () => old.forEach((x) => x.remove()), { once: true }); setTimeout(() => old.forEach((x) => x.remove()), 2500); }
+      else { old.forEach((x) => x.remove()); scenesEl.append(next); }
+      cur = st; lastAt = performance.now();
+      el.setAttribute('aria-label', `Postcard: ${mod.greet}`);
+      el.querySelectorAll('.pc-hands').forEach((h) => setHands(h, st.t));
     } finally { busy = false; }
+    if (!dead && want.key !== cur?.key) show(lastInp); // the light moved on while this one was drawn
   }
   const ready = show(input);
   return {
@@ -195,7 +196,7 @@ export function postcard(id, input, o = {}) {
       const now = performance.now() / 1000;
       for (const x of el.querySelectorAll('[data-d]')) { const d = +x.dataset.d, ph = (((now + +x.dataset.o) % d) + d) % d; x.style.animationDelay = `${(-ph).toFixed(3)}s`; }
     },
-    destroy() { dead = true; el.remove(); },
+    destroy() { dead = true; clearTimeout(timer); el.remove(); },
   };
 }
 
@@ -208,6 +209,21 @@ function pump() {
   pumping = true;
   const idle = window.requestIdleCallback ? (f) => window.requestIdleCallback(f, { timeout: 400 }) : (f) => setTimeout(f, 30);
   idle(async () => { const [fn, res] = jobs.shift(); try { res(await fn()); } catch { res(null); } pumping = false; pump(); });
+}
+
+/**
+ * Draw a card ahead of time (the destination of a journey, as it will be when the train gets in), so the arrival card
+ * shows at once. width: the CSS pixels it will show at. Once per state; the work waits for an idle moment.
+ */
+const fetched = new Set();
+export function prefetchPostcard(id, input, width) {
+  const mod = MODS.get(id);
+  if (!mod) return;
+  const st = cardState(mod, input), scale = scaleFor(width), k = `${st.key}|${scale}`;
+  if (fetched.has(k)) return;
+  fetched.add(k);
+  if (fetched.size > 40) fetched.delete(fetched.values().next().value);
+  later(() => Promise.all([scene(mod, st, scale), frameUrl(mod, scale)]));
 }
 
 /** A still card as one picture (for the album): the scene with everything at rest, the frame; the greeting over it. */
