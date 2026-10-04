@@ -64,7 +64,7 @@ export default [
     choices: [
       { label: 'Wait, and pray', sub: 'The siding may hold you for hours',
         ok: [['delay', 240], ['nerve', -1]] },
-      { label: 'Walk to the village and hire a cart', sub: '£3, ten miles of dust, a better chance', cost: { money: 3 },
+      { label: 'Walk to the village for a cart', sub: '£3, ten miles of dust, a better chance', cost: { money: 3 },
         roll: { p: 0.5, mods: [[['skill', 'streetwise', '>=', 2], 0.2], [['skill', 'german', '>=', 1], 0.1]] },
         ok: [['delay', 60]], fail: [['delay', 360]] },
       { label: 'Tip the guard for the truth', sub: '£1; guards always know', cost: { money: 1 },

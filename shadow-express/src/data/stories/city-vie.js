@@ -147,6 +147,8 @@ export default [
         ok: [["watch", -0.2]] },
       { label: "Let the Hofrat vouch for you", sub: "The regulars know everybody, even the Kommissär", if: [["flag", "ev-vie-stammgast"]],
         ok: [["watch", -0.2], ["legend", 0.05]] },
+      { label: "Let your patrons vouch for you", sub: "The librarian, or the colonel at tarock", if: [["flag", "ev-vie-patron"]],
+        ok: [["watch", -0.2]] },
       { label: "Ask after his family", sub: "Charm, or impertinence",
         roll: { p: 0.5, mods: [[["skill", "charm", ">=", 2], 0.2]] }, ok: [["watch", -0.1]], fail: [["watch", 0.1]] },
     ] },
@@ -225,8 +227,8 @@ export default [
     title: "Charters at the Schottenstift",
     text: "The librarian of the Schottenstift is delighted with {a scholar|a nursing sister} from Ireland and gives you a desk by a window over the courtyard, and the run of the charters. In the next bay a young officer of the General Staff in mufti reads eighteenth-century maps of the Serbian frontier, with great attention and no Latin at all.",
     choices: [
-      { label: "Work the charters, day after day", sub: "Patience makes a scholar of anyone", tag: "venue:archive", cost: { min: 240 },
-        ok: [["legend", 0.15], ["nerve", 1]] },
+      { label: "Work the charters, day after day", sub: "Patience makes a scholar; the librarian notices", tag: "venue:archive", cost: { min: 240 },
+        ok: [["legend", 0.15], ["nerve", 1], ["flag", "ev-vie-patron"]] },
       { label: "Look over the officer's shoulder", sub: "Frontier maps, read in a monastery",
         roll: { p: 0.45, mods: [[["skill", "observation", ">=", 2], 0.2], [["legend", ">=", 0.5], 0.1]] },
         ok: [["intel", { subj: "city:VIE", claim: { note: "The General Staff is studying the Drina and Sava crossings in old maps at the Schottenstift." }, src: "seen", rel: 0.8, truth: true }], ["standing", 2]],
@@ -238,7 +240,7 @@ export default [
     choices: [
       { label: "Take the fourth chair at tarock", sub: "£3 stake; a colonel's confidences", tag: "venue:club", cost: { money: 3 },
         roll: { p: 0.5, mods: [[["skill", "charm", ">=", 2], 0.15], [["aff", "venue:club", ">=", 1], 0.1]] },
-        ok: [["legend", 0.15], ["money", 5]], fail: [["legend", 0.05], ["nerve", -1]] },
+        ok: [["legend", 0.15], ["money", 5], ["flag", "ev-vie-patron"]], fail: [["legend", 0.05], ["nerve", -1]] },
       { label: "Ask the colonel about harvest leave", sub: "Hungarians talk about Hungary", tag: "topic:military",
         roll: { p: 0.45, mods: [[["legend", ">=", 0.5], 0.2], [["skill", "german", ">=", 2], 0.1]] },
         ok: [["intel", { subj: "city:VIE", claim: { note: "Harvest leave ends on the twenty-fifth; the hussars are told to be ready after it." }, src: "rumour", rel: 0.7, truth: true }], ["standing", 2]],

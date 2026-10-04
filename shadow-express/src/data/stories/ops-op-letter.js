@@ -40,7 +40,7 @@ export default [
         ok: [['op', 'op-letter', 'fail'], ['trust', 'odile', -3], ['debrief', "You gave Odile's letter to the captain's wife."]] },
       { label: 'Say you have the wrong house', sub: 'She will remember your face',
         ok: [['record', 'sighting', 0.3]] },
-      { label: 'Say it is a bill from his tailor', sub: 'Lilac paper, for a tailor',
+      { label: 'Call it a bill from his tailor', sub: 'Lilac paper, for a tailor',
         roll: { p: 0.5, mods: [[['skill', 'composure', '>=', 2], 0.2], [['skill', 'french', '>=', 1], 0.1]] },
         ok: [['nerve', 1]], fail: [['op', 'op-letter', 'fail'], ['trust', 'odile', -2]] },
     ] },

@@ -67,10 +67,21 @@ export default [
       { label: "Listen from the next table", sub: "If the major notices, he will not forget",
         roll: { p: 0.5, mods: [[["skill", "slavic", ">=", 1], 0.2], [["skill", "observation", ">=", 2], 0.1]] },
         ok: [["intel", { subj: "city:BEG", claim: { note: "Officers at the Golden Sturgeon boast that the Sarajevo pistols came from Serbian army stores." }, src: "rumour", rel: 0.5, truth: true }], ["standing", 2]],
-        fail: [["watch", 0.15], ["record", "sighting", 0.5]] },
+        fail: [["watch", 0.15], ["record", "sighting", 0.5], ["later", 10, "ev.then.sturgeon-callers"]] },
       { label: "Buy the students a round", sub: "£1; students talk more than officers", cost: { money: 1 },
         roll: { p: 0.5 }, ok: [["legend", 0.05], ["standing", 1]], fail: [["watch", 0.1]] },
       { label: "Leave before the major looks up", sub: "Some rooms are better left", ok: [["nerve", -1]] },
+    ] },
+
+  { id: "ev.then.sturgeon-callers", at: "then", if: [["city", "BEG"]], title: "Two Young Men in Student Caps",
+    text: "Two young men in student caps are waiting under the lime tree opposite your lodging, smoking, in no hurry. They are not police; the police wear better boots. When you come out one of them falls in behind you, close enough to be heard, whistling a tune they were singing at the Golden Sturgeon.",
+    choices: [
+      { label: "Walk to the police station", sub: "The police dislike the major's boys, a little",
+        ok: [["watch", 0.1], ["record", "register", 0.4], ["nerve", -1]] },
+      { label: "Turn and offer them cigarettes", sub: "Courage, or a very good imitation",
+        roll: { p: 0.5, mods: [[["skill", "composure", ">=", 2], 0.15], [["skill", "slavic", ">=", 1], 0.15]] },
+        ok: [["nerve", 1], ["intel", { subj: "city:BEG", claim: { note: "The officers' society has its own watchers in Belgrade, and they suspect you." }, src: "seen", rel: 0.8, truth: true }]],
+        fail: [["nerve", -2], ["money", -3]] },
     ] },
 
   // ---------- watched ----------
@@ -112,6 +123,8 @@ export default [
       { label: "Send him to the tavla players", sub: "The merchant will swear you lose honestly", if: [["flag", "ev-beg-tavla"]],
         ok: [["watch", -0.2], ["legend", 0.05]] },
       { label: "Send him to the hospital matron", sub: "Nobody doubts the matron", if: [["flag", "ev-beg-matron"]],
+        ok: [["watch", -0.2]] },
+      { label: "Refer him to the Ministry of War", sub: "Your captain of engineers wants his lenses", if: [["flag", "ev-beg-patron"]],
         ok: [["watch", -0.2]] },
       { label: "Hint you are no friend of Vienna", sub: "True, but is it true of your cover?",
         roll: { p: 0.5, mods: [[["cover", "vessey"], -0.4], [["cover", "marchand"], 0.2]] },
@@ -198,7 +211,7 @@ export default [
     choices: [
       { label: "Take his order and his confidences", sub: "A sale makes the legend", tag: "topic:technical",
         roll: { p: 0.55, mods: [[["skill", "commerce", ">=", 1], 0.15], [["aff", "topic:technical", ">=", 1], 0.1]] },
-        ok: [["legend", 0.15], ["intel", { subj: "city:BEG", claim: { note: "The Serbian army has almost no rangefinders and expects to fight within the month." }, src: "rumour", rel: 0.8, truth: true }]],
+        ok: [["legend", 0.15], ["flag", "ev-beg-patron"], ["intel", { subj: "city:BEG", claim: { note: "The Serbian army has almost no rangefinders and expects to fight within the month." }, src: "rumour", rel: 0.8, truth: true }]],
         fail: [["legend", 0.05]] },
       { label: "Decline: your firm sells to neither side", sub: "Prudent, Swiss, and remembered", ok: [["legend", 0.05], ["watch", -0.05]] },
     ] },

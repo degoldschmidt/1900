@@ -271,7 +271,14 @@ export default [
         ok: [["intel", { subj: "city:ROM", claim: { note: "Austria's embassy to the Holy See passes its post through a priest in the Library." }, src: "seen", rel: 0.6, truth: true }], ["standing", 1]],
         fail: [["record", "sighting", 0.5], ["nerve", -1]] },
       { label: "Tell the prefect the psalter is unread", sub: "Let the Church tidy its own house",
-        ok: [["standing", 1], ["record", "meeting", 0.3]] },
+        ok: [["standing", 1], ["record", "meeting", 0.3], ["later", 24, "ev.then.rom-prefect"]] },
+    ] },
+
+  { id: "ev.then.rom-prefect", at: "then", title: "The Prefect Was Discreet",
+    text: "The prefect of the reading room has been discreet, as prefects are. The Tyrolean priest has been sent home to Innsbruck with a flea in his ear, and the Austrian embassy has lost a postman. It has also asked the Vatican, very politely, for the name of the reader who complained.",
+    choices: [
+      { label: "Hope the Vatican keeps its secrets", sub: "It usually does",
+        roll: { p: 0.7 }, ok: [["standing", 2]], fail: [["standing", 2], ["record", "meeting", 0.7]] },
     ] },
 
   // ---------- Venice ----------

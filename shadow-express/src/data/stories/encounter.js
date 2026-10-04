@@ -114,7 +114,7 @@ export default [
   // ---------- any hunter ----------
   { id: "ev.encounter.known-face", at: "encounter", if: [["flag", "ev-tail-spotted"], ["not", ["mode", "rail"]]], w: 5,
     title: "You Know That Walk Now",
-    text: "It is the one from the night train, whose mud you saw on the corridor carpet: you would know that walk anywhere now. You have not been seen yet. The question is being put to the porter, and the porter is pointing up the stairs, towards your room.",
+    text: "It is the one who has been following you: you learned that walk, that hat, that way of standing, and you would know them anywhere now. You have not been seen yet. A question is being put to the porter, and the porter is pointing up the stairs, towards your room.",
     choices: [
       { label: "Leave by the other stairs", sub: "You saw first; use it",
         roll: { p: 0.6, mods: [[["skill", "observation", ">=", 2], 0.1], [["skill", "tradecraft", ">=", 2], 0.15]] },
