@@ -23,6 +23,11 @@ const BANNED = [/\bokay\b/i, /\bOK\b/, /\bteenager/i, /\bLeica\b/, /\bballpoint/
   /\bguys?\b/i, /\bcool\b/i, /\bfocus on\b/i, /\bdeadline/i];
 const AMERICAN = [/\bcolor/i, /\bhonor/i, /\bfavor/i, /\bcenter\b/i, /\btheater\b/i, /\bgray\b/i, /\bharbor/i, /\barmor/i, /\bneighbor/i];
 
+/** Flags the engine sets: '<opId>-won' and '<opId>-failed' when an operation ends, '<coverId>-burned' when a cover is burned. */
+export function engineFlags(D) {
+  return [...(D.ops || []).flatMap((o) => [`${o.id}-won`, `${o.id}-failed`]), ...(D.covers || []).map((c) => `${c.id}-burned`)];
+}
+
 export function validate(D, opts = {}) {
   const errors = [], warnings = [];
   const err = (w, m) => errors.push(`${w}: ${m}`);
@@ -614,7 +619,7 @@ export function validate(D, opts = {}) {
     else if (n < 4) warn(`person:${p.id}`, `only ${n} storylets`);
   }
   // flags
-  for (const [f, w] of flagRead) if (!flagSet.has(f) && !(opts.engineFlags || []).includes(f)) err(w, `reads flag ${f}, which nothing sets`);
+  for (const [f, w] of flagRead) if (!flagSet.has(f) && !engineFlags(D).includes(f)) err(w, `reads flag ${f}, which nothing sets`);
   for (const [f, w] of flagSet) if (!flagRead.has(f)) warn(w, `sets flag ${f}, which nothing reads`);
   // persistence: share of travel and city storylets that leave a consequence for later
   const road = [...ST.values()].filter((s) => s.at === 'train' || s.at === 'city');

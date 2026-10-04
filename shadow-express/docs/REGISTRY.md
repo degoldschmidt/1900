@@ -31,7 +31,9 @@ The story and op indexes (`src/data/stories/index.js`, `src/data/ops/index.js`, 
 - Events: `ev-…`.
 - Ops: `<opId>-…` (e.g. `op-cable-burned`).
 
-Read only your own flags, plus the shared unlock flags `kowal-path` and `ilic-path`; for everything else use `st`, `trust`, `op` and `item` conditions. The engine sets no flags.
+Read only your own flags, plus these shared flags; for everything else use `st`, `trust`, `op` and `item` conditions:
+- the unlock flags `kowal-path` and `ilic-path` (People set them);
+- the flags the engine sets: `<opId>-won` and `<opId>-failed` when an operation ends (e.g. `op-cable-won`), and `<coverId>-burned` when a cover is burned (e.g. `hale-burned`).
 
 ## 3. Cities (30) and their specialities
 
@@ -135,6 +137,24 @@ Each person appears in at least two places. A person's `city` and `train` storyl
 | `kessel` | Rittmeister von Kessel | train:COL-BER, train:BER-MUN, COL | a talkative Prussian cavalry officer. Remembers faces; in Act III he is at Cologne with the troop trains (op-troops) | self | intel |
 | `platt` | Lyman Platt | PAR, BER, VIE, train:PAR-VIE | an American newspaperman, friendly and nosy. Trades rumours, some false; an unwitting carrier of a false trail | self | intel |
 | `morel` | Dr Achille Morel | MAR, train:PAR-MAR, train:ROM-MAR | a dentist from Lyon who photographs stations and asks odd questions. A red herring: harmless, but he looks like a hunter | self | (none) |
+
+**Gifts.** These are fixed so People (`likes`) and Ops (`gift:` tags) agree:
+
+| person | likes |
+|---|---|
+| ashby | `dutch-cigars`, `port-wine` |
+| jovan | `bradshaw` |
+| brandl | `bohemian-glass`, `tokaji`, `opera-tickets` |
+| sauer | `couture-hat`, `eau-de-cologne` |
+| kowal | `dutch-cigars`, `slivovitz` |
+| novak | `vest-camera` |
+| amsler | `porcelain`, `antiquities` |
+| ilic | `tokaji`, `browning` |
+| odile | `silk-brocade`, `lace` |
+| agathe | `lace` |
+| kessel | `punsch`, `dutch-cigars`, `caviar` |
+| platt | `amber`, `caviar`, `opera-tickets` |
+| morel | `saffron`, `porcelain` |
 
 | hunter | service | nation · ground | start | from | look |
 |---|---|---|---|---|---|

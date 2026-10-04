@@ -1,0 +1,165 @@
+// Cards over the globe: storylets, frontier controls, encounters, telegrams, newspapers, arrival postcards, debriefs.
+// Each choice shows its stakes; after a roll the card says how it went and what changed.
+
+import { cardView, choose } from '../core/actions.js';
+import { context, text, coverName } from '../core/game.js';
+import { chanceOf } from '../core/storylet.js';
+import { when, longDate, hm } from '../data/time.js';
+import { vignetteUrl, portraitUrl, glyphSvg } from './art.js';
+import { esc } from './dom.js';
+
+export const oddsWord = (p) => (p >= .85 ? 'all but certain' : p >= .65 ? 'likely' : p >= .45 ? 'even chances' : p >= .25 ? 'unlikely' : 'a long shot');
+
+/** What changed between two snapshots of the state, in a few words each. */
+export function changes(G, a, b) {
+  const out = [];
+  const d = (x, y, f) => (y !== x ? f(y - x) : null);
+  out.push(d(a.money, b.money, (n) => [`${n > 0 ? '+' : '−'}£${Math.abs(Math.round(n))}`, n < 0 ? 'bad' : 'good']));
+  out.push(d(a.nerve, b.nerve, (n) => [`nerve ${n > 0 ? '+' : '−'}${Math.abs(n)}`, n < 0 ? 'bad' : 'good']));
+  out.push(d(a.standing, b.standing, (n) => [`standing ${n > 0 ? '+' : '−'}${Math.abs(n)}`, n < 0 ? 'bad' : 'good']));
+  for (const [id, p] of Object.entries(b.people)) {
+    const q = a.people[id];
+    if (q.trust !== p.trust) out.push([`${G.I.person.get(id).name.split(' ').at(-1)}: trust ${p.trust > q.trust ? '+' : '−'}${Math.abs(p.trust - q.trust)}`, p.trust < q.trust ? 'bad' : 'good']);
+    if (q.st !== p.st) out.push([`${G.I.person.get(id).name}: ${p.st}`, ['compromised', 'arrested', 'dead'].includes(p.st) ? 'bad' : 'good']);
+  }
+  const items = (s) => s.case.map((x) => x.id).sort().join(',');
+  if (items(a) !== items(b)) {
+    const ai = a.case.map((x) => x.id), bi = b.case.map((x) => x.id);
+    for (const id of bi.filter((x) => !ai.includes(x) || bi.filter((y) => y === x).length > ai.filter((y) => y === x).length)) out.push([`+ ${G.I.item.get(id)?.name}`, 'good']);
+    for (const id of ai.filter((x) => !bi.includes(x))) out.push([`− ${G.I.item.get(id)?.name}`, 'bad']);
+  }
+  for (const id of Object.keys(b.covers)) if (!a.covers[id]) out.push([`new papers: ${coverName(G, id)}`, 'good']);
+  const recs = b.records.length - a.records.length;
+  if (recs > 0) out.push([recs === 1 ? 'you left a trace' : `you left ${recs} traces`, 'warn']);
+  if (b.intel.length > a.intel.length) out.push(['a note for the dossier', '']);
+  if (b.later.length > a.later.length) out.push(['this may come back', 'warn']);
+  const mins = Math.max(b.busyUntil, b.t) - Math.max(a.busyUntil, a.t);
+  if (mins >= 30) out.push([mins >= 120 ? `${Math.round(mins / 60)} hours` : `${mins} minutes`, '']);
+  return out.filter(Boolean);
+}
+
+const snap = (S) => JSON.parse(JSON.stringify({ money: S.money, nerve: S.nerve, standing: S.standing, people: S.people, case: S.case, covers: S.covers, records: S.records.map((r) => r.id), intel: S.intel.map((e) => e.id), later: S.later, busyUntil: S.busyUntil, t: S.t }));
+
+export function makeCards(root, hooks) {
+  const veil = document.createElement('div');
+  veil.className = 'veil';
+  veil.hidden = true;
+  const card = document.createElement('div');
+  card.className = 'card paper';
+  card.setAttribute('role', 'dialog');
+  card.setAttribute('aria-modal', 'true');
+  veil.appendChild(card);
+  root.appendChild(veil);
+  let shownN = null, resultShown = false;
+
+  function render(G) {
+    const v = cardView(G);
+    if (!v) { veil.hidden = true; shownN = null; return false; }
+    if (shownN === v.card.n && !veil.hidden) return true;
+    shownN = v.card.n; resultShown = false;
+    veil.hidden = false;
+    veil.classList.toggle('withledger', !!hooks.ledgerOpen?.());
+    card.className = 'card paper';
+    card.innerHTML = body(G, v) + choicesHtml(G, v);
+    wire(G, v);
+    card.scrollTop = 0;
+    card.querySelector('.choice:not(:disabled)')?.focus({ preventScroll: true });
+    return true;
+  }
+
+  function body(G, v) {
+    const { S, I } = G;
+    const c = v.card, st = v.story;
+    const t = (s) => esc(text(G, s, c)).replace(/\n/g, '<br>');
+    if (c.type === 'telegram') {
+      const o = I.op.get(c.op);
+      card.classList.add('telegram');
+      const giver = o.giver === 'handler' ? 'ASHBY LONDON' : (I.person.get(o.giver)?.name ?? '').toUpperCase();
+      return `<div class="form"><div class="hd"><span>TELEGRAM</span><span>${esc(when(S.t).toUpperCase())}</span></div><div class="kick">${esc(o.side ? 'A favour' : `Act ${o.act}`)} · ${esc(giver)}</div><h2 class="sc">${esc(o.title)}</h2><p>${esc(o.brief)}</p></div>`;
+    }
+    if (c.type === 'news') {
+      card.classList.add('news');
+      const rows = c.rows.map((id) => G.W.rows.find((r) => r.id === id)).filter(Boolean);
+      return `<div class="mast">The Continental Herald</div><div class="dateline"><span>${esc(longDate(S.t))}</span><span>One penny</span></div>${rows.map((r) => `<div class="head">${esc(r.news)}</div><div class="col"><p>${esc(r.text)}</p></div>`).join('')}`;
+    }
+    if (c.type === 'arrive') {
+      const city = I.city.get(c.city);
+      const late = c.delay > 20 ? ` · ${Math.round(c.delay)} minutes late` : '';
+      setTimeout(() => vignetteUrl(c.city, (S.t % 1440) / 60).then((u) => { const im = card.querySelector('.wide img'); if (u && im) im.src = u; }), 0);
+      return `<div class="kick">Arrived · ${esc(when(S.t))}${esc(late)}</div><div class="wide"><img alt="${esc(city.name)}" src="data:image/gif;base64,R0lGODlhAQABAAAAACw="></div><h2>${esc(city.name)}</h2><p class="it">${esc(city.line)}</p>`;
+    }
+    if (c.type === 'debrief') {
+      const o = I.op.get(c.op);
+      const lines = S.debrief.filter((d) => d.op === c.op).map((d) => `<p>${esc(d.text)}</p>`).join('');
+      card.classList.add('debrief');
+      return `<div class="kick">Debrief · ${esc(when(S.t))}</div><span class="stamp ${c.won ? 'ok' : ''}" style="float:right">${c.won ? 'ACCOMPLISHED' : 'FAILED'}</span><h2>${esc(o.title)}</h2>${lines}<div class="rule"></div><p class="it">${esc(o.debrief)}</p>`;
+    }
+    if (c.type === 'note') return `<div class="kick">${esc(when(S.t))}</div><h2>${esc(c.title)}</h2><p>${esc(c.text)}</p>`;
+    if (c.type === 'end') return endText(G, c);
+    // storylets, controls, encounters
+    let kick = '', art = '';
+    const speaker = st?.speaker ? (I.person.get(st.speaker) ?? I.hunter.get(st.speaker)) : null;
+    if (c.type === 'control') kick = `Frontier control · ${c.name}`;
+    else if (c.type === 'encounter') kick = `${I.hunter.get(c.hunter).name}`;
+    else if (speaker) kick = `${speaker.name}${speaker.role ? ` · ${speaker.role}` : ''}`;
+    else kick = S.journey ? `${G.W.service.get(S.journey.svc).name}` : I.city.get(S.city)?.name ?? '';
+    const face = c.type === 'encounter' ? I.hunter.get(c.hunter) : speaker;
+    if (face?.portrait) { art = `<div class="art"><img alt="" data-portrait="${esc(face.id)}"></div>`; setTimeout(() => portraitUrl(face.id, face.portrait).then((u) => { const im = card.querySelector(`[data-portrait="${face.id}"]`); if (u && im) im.src = u; }), 0); }
+    else if (c.type === 'control') art = `<div class="art">${glyphSvg('sentry')}</div>`;
+    if (c.type === 'encounter' || c.type === 'control') card.classList.add('danger');
+    const title = st?.title ?? (c.type === 'control' ? 'Your papers, please' : c.type === 'encounter' ? 'A hand on your sleeve' : '');
+    const def = c.type === 'control' ? `The ${c.papers ? 'commissioner works down the corridor, asking for papers' : 'customs men come aboard with chalk and a lamp'}${c.search ? '; the cases come down from the racks' : ''}.`
+      : c.type === 'encounter' ? `${I.hunter.get(c.hunter).look[0].toUpperCase()}${I.hunter.get(c.hunter).look.slice(1)}. He has found you.` : '';
+    return `<div class="kick">${esc(kick)}</div>${art}<h2>${esc(title)}</h2><p>${st ? t(st.text) : esc(def)}</p>${c.type === 'control' && st ? `<p class="dim">${esc(def)}</p>` : ''}`;
+  }
+
+  function choicesHtml(G, v) {
+    const ctx = context(G, v.card);
+    return `<div class="choices">${v.choices.map((c, i) => {
+      const p = c.std ? c.p : c.roll ? chanceOf(c.roll, ctx) : null;
+      const cost = [c.cost?.money ? `£${c.cost.money}` : null, c.cost?.nerve ? `nerve ${c.cost.nerve}` : null, c.cost?.min >= 60 ? `${Math.round(c.cost.min / 60)}h` : c.cost?.min ? `${c.cost.min} min` : null].filter(Boolean).join(' · ');
+      const sub = [c.sub ? text(G, c.sub, v.card) : null, cost && !(c.sub ?? '').includes('£') ? cost : null].filter(Boolean).join(' — ');
+      return `<button class="choice" data-i="${i}" ${c.open === false || c.afford === false ? 'disabled' : ''}>${p !== null && p !== undefined ? `<span class="odds">${oddsWord(p)}</span>` : ''}<b>${esc(text(G, c.label, v.card))}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</button>`;
+    }).join('')}</div>`;
+  }
+
+  function wire(G, v) {
+    card.querySelectorAll('.choice').forEach((b) => b.addEventListener('click', () => {
+      if (resultShown) return;
+      const c = v.choices[Number(b.dataset.i)];
+      const before = snap(G.S);
+      const res = choose(G, Number(b.dataset.i));
+      if (!res) { hooks.toast?.('Not possible now.', true); return; }
+      const ch = changes(G, before, G.S);
+      const rolled = c.roll || (c.std && c.p !== undefined && c.p < 1);
+      const typeEnd = G.S.ended;
+      if ((rolled || ch.length) && !['telegram', 'news', 'arrive', 'note', 'debrief'].includes(v.card.type) && !typeEnd) {
+        resultShown = true;
+        const word = rolled ? (res.success ? 'It goes as you hoped.' : 'It does not go your way.') : 'Done.';
+        card.querySelector('.choices').innerHTML = `<p class="result">${esc(word)}</p><div class="chips" style="justify-content:flex-start">${ch.map(([s, k]) => `<span class="chip ${k}">${esc(s)}</span>`).join('')}</div><button class="choice" id="cardCont"><b>Continue</b></button>`;
+        card.querySelector('#cardCont').addEventListener('click', () => { resultShown = false; shownN = null; hooks.after?.(); });
+        card.querySelector('#cardCont').focus({ preventScroll: true });
+        return;
+      }
+      shownN = null;
+      hooks.after?.();
+    }));
+  }
+
+  function endText(G, c) {
+    const { S, I } = G;
+    const why = {
+      home: 'You came home before the lamps went out.', stranded: 'The last boat sailed without you.', time: 'The war overtook you on the road.',
+      arrested: 'Arrested.', captured: 'Taken.', exposed: 'Every name you had is known to them.', recalled: 'The Bureau has recalled you.',
+    }[c.why] ?? 'The end.';
+    const won = Object.values(S.ops).filter((o) => o.status === 'won').length;
+    const people = G.D.people.filter((p) => S.people[p.id].st !== 'unknown').map((p) => {
+      const st = S.people[p.id];
+      const fate = { recruited: 'stood by you to the end', cultivated: 'remembers you kindly', met: 'never quite knew who you were', compromised: 'lives under watch', arrested: 'was taken, and talked', dead: 'is dead', turned: 'works for the other side now' }[st.st] ?? st.st;
+      return `<p><b class="sc">${esc(p.name)}</b> ${esc(fate)}.</p>`;
+    }).join('');
+    return `<div class="kick">${esc(longDate(S.t))} · ${esc(hm(S.t))}</div><h1>${esc(why)}</h1><div class="rule"></div><p>Operations accomplished: ${won} of ${G.D.ops.filter((o) => !o.side).length}. Standing with the Bureau: ${S.standing}.</p>${people}`;
+  }
+
+  return { render, isOpen: () => !veil.hidden, el: veil };
+}
