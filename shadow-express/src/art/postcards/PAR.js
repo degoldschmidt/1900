@@ -51,69 +51,77 @@ export default {
   back(P, T) {
     let s = '';
     // the left bank beyond the river: the roofs of the Gros-Caillou, pale with distance
-    s += P.far(.78, () => P.row(26, 600, 266, { hMin: 12, hMax: 22, wMin: 14, wMax: 26, style: 'paris', seed: 31, walls: ['#d9cfbd', '#cfc3ad', '#e0d6c4'], roofC: '#8a93a2', placard: false, flagSpot: false }));
-    s += P.far(.7, () => invalides(P, 238, 262, 1));
-    s += P.smoke(120, 246, .6) + P.smoke(372, 248, .55);
+    s += P.far(.8, () => clotilde(P, 150, 258, .9));
+    s += P.far(.78, () => P.row(26, 600, 266, { hMin: 12, hMax: 24, wMin: 14, wMax: 26, style: 'paris', seed: 31, walls: ['#d9cfbd', '#cfc3ad', '#e0d6c4'], roofC: '#8a93a2', placard: false, flagSpot: false, lit: 1.5 }));
+    s += P.far(.7, () => invalides(P, 252, 262, 1.05));
+    s += P.smoke(120, 246, .6) + P.smoke(392, 248, .55);
     // the Grande Roue: its pylons here, the wheel turns over them
-    s += P.far(.62, () => roueStand(P, 352, 270, 40));
-    s += P.far(.62, () => P.spin(roue(P, 40), { x: 352, y: 214, dur: 150, dir: 1 }));
+    s += P.far(.62, () => roueStand(P, 356, 268, 40));
+    s += P.far(.62, () => P.spin(roue(P, 40), { x: 356, y: 212, dur: 150, dir: 1 }));
     // the Eiffel Tower
-    s += P.far(.34, () => eiffel(P, 486, 271, 187));
+    // the École Militaire at the far end of the Champ de Mars, framed by the tower's legs
+    s += P.far(.72, () => ecole(P, 486, 262, .9));
+    s += P.far(.34, () => eiffel(P, 486, 270, 188));
+    // the Champ de Mars' chestnuts round the tower's feet
+    s += P.far(.42, () => { let d = ''; for (const [x, k] of [[412, .8], [436, .95], [536, .9], [562, .75], [450, .7], [522, .7]]) d += P.tree(x, 268, k, 'round'); return d; });
     // the Quai Branly: its wall, a row of young trees, the river
     s += P.far(.55, () => {
-      let d = P.fill(P.rect(20, 268, 562, 11), 'stone2', { w: .5 }) + P.lite(P.rect(20, 268, 562, 2), 'stone2', .3);
-      for (let x = 30; x < 580; x += 18) d += P.line(`M${x} 270V279`, 'stone2', .4, { op: .5 });
-      for (const x of [44, 78, 112, 148, 182, 286, 318, 400, 548, 574]) d += P.tree(x, 268, .46, 'round');
-      d += P.crowd(150, 420, 268, 7, { s: .3, seed: 12 });
+      let d = P.fill(P.rect(20, 264, 562, 10), 'stone2', { w: .5 }) + P.lite(P.rect(20, 264, 562, 2), 'stone2', .3);
+      for (let x = 30; x < 580; x += 18) d += P.line(`M${x} 266V274`, 'stone2', .4, { op: .5 });
+      for (const x of [40, 74, 108, 144, 178, 300, 330, 412, 556, 580]) d += P.tree(x, 264, .46, 'round');
+      d += P.crowd(150, 430, 264, 7, { s: .3, seed: 12 });
       return d;
     });
-    s += P.water(279, 314, { seed: 6, shimmer: 7, x0: 140, x1: 560 });
-    s += reflect(P, 466, 506, 280, 26, '#9c6c3f', 3) + reflect(P, 60, 440, 280, 10, '#d8ccb4', 8);
+    s += P.water(274, 314, { seed: 6, shimmer: 8, x0: 160, x1: 560 });
+    s += reflect(P, 466, 506, 275, 30, '#9c6c3f', 3) + reflect(P, 60, 440, 275, 12, '#d8ccb4', 8) + reflect(P, 236, 268, 275, 16, '#d8aa3a', 5);
     // on the river: the bateau-mouche, and a tug towing a péniche upstream
-    s += P.cross(T.steamer({ s: .5, dir: -1, hull: '#2b3034', house: '#f1ead8', funnel: ['#2a2724', '#c8a24a'], paddle: false, flag: 'FR' }), { y: 302, dir: -1, dur: 70, rest: .3, offset: 12 });
-    s += P.cross(convoy(P, 1, .78), { y: 296, dir: 1, dur: 150, rest: .2, offset: 60 });
+    s += P.cross(T.steamer({ s: .62, dir: -1, hull: '#2b3034', house: '#f1ead8', funnel: ['#2a2724', '#c8a24a'], paddle: false, flag: 'FR' }), { y: 304, dir: -1, dur: 64, rest: .3, offset: 12 });
+    s += P.cross(convoy(P, 1, .78), { y: 293, dir: 1, dur: 150, rest: .2, offset: 60 });
     return s;
   },
 
   mid(P, T) {
     let s = '';
     // the river-side pavement and its parapet, the bouquinistes' boxes along the top
-    s += P.flat(P.rect(20, 318, 562, 8), 'walk') + P.line('M20 326H582', '#8a8070', .7);
-    s += P.fill(P.rect(20, 310, 562, 9), 'stone', { w: .6 }) + P.lite(P.rect(20, 310, 562, 2), 'stone', .35) + P.shade(P.rect(20, 316, 562, 3), 'stone', .15);
-    for (let x = 34; x < 580; x += 22) s += P.line(`M${x} 312.5V318.5`, 'stone2', .45, { op: .6 });
-    s += bouquinistes(P, [[150, 1], [178, 0], [206, 1], [234, 1], [262, 0], [372, 1], [400, 0], [428, 1]], 310);
+    s += P.flat(P.rect(20, 320, 562, 9), 'walk') + P.line('M20 329H582', '#8a8070', .7);
+    s += P.fill(P.rect(20, 312, 562, 9), 'stone', { w: .6 }) + P.lite(P.rect(20, 312, 562, 2), 'stone', .35) + P.shade(P.rect(20, 318, 562, 3), 'stone', .15);
+    for (let x = 34; x < 580; x += 22) s += P.line(`M${x} 314.5V320.5`, 'stone2', .45, { op: .6 });
+    s += bouquinistes(P, [[166, 1], [193, 0], [220, 1], [247, 1], [392, 1], [419, 0], [446, 1]], 312);
     // the bouquiniste on his stool, the people who browse
-    s += P.person(292, 324, .62, 'gent', { c: '#4a4038', hat: '#3a3026' }) + P.person(196, 325, .64, 'boater', { c: '#2f3440' }) + P.person(212, 325, .62, 'lady', { c: '#c9d6e6' });
-    s += P.person(388, 325, .63, 'gent', { c: '#2a2c30' }) + P.person(442, 325, .6, 'girl', { c: '#efe3c3' }) + P.person(454, 325, .64, 'lady', { c: '#e8b9b3', parasol: '#f3eee2' });
-    s += P.crowd(470, 560, 325, 4, { s: .62, seed: 19 });
-    for (const x of [324, 500]) s += P.lamp(x, 312, .62, 'single');
+    s += stool(P, 276, 327, .66) + P.person(206, 327, .66, 'boater', { c: '#2f3440' }) + P.person(232, 327, .64, 'lady', { c: '#c9d6e6' });
+    s += P.person(406, 327, .65, 'gent', { c: '#2a2c30' }) + P.person(462, 327, .6, 'girl', { c: '#efe3c3' }) + P.person(474, 327, .66, 'lady', { c: '#e8b9b3', parasol: '#f3eee2' });
+    s += P.crowd(500, 570, 327, 3, { s: .64, seed: 19 }) + P.crowd(300, 372, 327, 3, { s: .64, seed: 23 });
+    for (const x of [336, 512]) s += P.lamp(x, 314, .64, 'single') + P.flagAt(x + 1, 288);
     // plane trees on the left, the quai's road, our pavement
-    s += P.tree(44, 326, 2.2, 'plane') + P.tree(150, 326, 1.6, 'plane');
-    s += P.paving(326, 354, { vx: 300, seed: 7 });
-    s += P.flat(P.rect(20, 354, 562, 26), 'walk') + P.fill(P.rect(20, 352, 562, 3), 'stone2', { w: .5 });
-    for (let k = 0; k < 4; k++) s += P.line(`M20 ${360 + k * 5 + k * k}H582`, '#9a8f7a', .4, { op: .45 });
-    if (P.L.snow) s += P.flat(P.rect(20, 354, 562, 26), '#f2f5f8', { op: .7 });
-    if (P.L.wet) s += P.flat(P.ellipse(220, 364, 40, 2.4), P.L.sky.low, { op: .35, raw: 1 }) + P.flat(P.ellipse(430, 370, 30, 2), P.L.sky.low, { op: .3, raw: 1 });
-    // the traffic of the quai: taxis, a fiacre; at war, soldiers
-    s += P.setStreet(346, 20, 580, .88);
-    s += P.cross(T.motorcar({ s: .82, c: '#7c2a26' }), { y: 348, dir: 1, dur: 22, rest: .45, offset: 3 });
-    s += P.cross(T.motorcar({ s: .8, c: '#2c3a4a' }), { y: 342, dir: -1, dur: 26, rest: .5, offset: 15 });
-    s += P.cross(T.fiacre({ s: .74, horses: 1, body: '#262a2c', hood: '#2f2b28' }), { y: 340, dir: -1, dur: 48, rest: .25, offset: 30 });
-    s += P.cross(T.walkers({ kinds: ['boater', 'lady'], s: .66, dir: 1, seed: 8 }), { y: 326, dir: 1, dur: 120, offset: 44, z: 'street' });
+    s += P.tree(40, 329, 2.3, 'plane') + P.tree(146, 329, 1.6, 'plane');
+    s += P.paving(329, 354, { vx: 300, seed: 7 });
+    s += P.flat(P.rect(20, 355, 562, 26), 'walk') + P.fill(P.rect(20, 353, 562, 3), 'stone2', { w: .5 });
+    for (let k = 0; k < 4; k++) s += P.line(`M20 ${361 + k * 4 + k * k}H582`, '#9a8f7a', .4, { op: .45 });
+    if (P.L.snow) s += P.flat(P.rect(20, 355, 562, 26), '#f2f5f8', { op: .7 });
+    if (P.L.wet) s += P.flat(P.ellipse(220, 366, 40, 2.4), P.L.sky.low, { op: .35, raw: 1 }) + P.flat(P.ellipse(410, 372, 30, 2), P.L.sky.low, { op: .3, raw: 1 });
+    // the traffic of the quai: taxis, the autobus, a fiacre; at war, soldiers
+    s += P.setStreet(347, 20, 580, .9);
+    s += P.cross(taxi(P, 1, .9, '#8a2e26'), { y: 350, dir: 1, dur: 20, rest: .5, offset: 3 });
+    s += P.cross(taxi(P, -1, .86, '#26323e'), { y: 343, dir: -1, dur: 24, rest: .55, offset: 13 });
+    s += P.cross(autobus(P, -1, .92), { y: 343, dir: -1, dur: 34, rest: .45, offset: 27 });
+    s += P.cross(T.fiacre({ s: .76, horses: 1, body: '#262a2c', hood: '#2f2b28', dir: 1 }), { y: 349, dir: 1, dur: 46, rest: .3, offset: 34 });
+    s += P.cross(T.cart({ s: .82, load: '#d9c48a', horse: '#8a6a4a', c: '#6a4a32', dir: -1 }), { y: 345, dir: -1, dur: 60, rest: .4, offset: 50 });
+    s += P.cross(T.walkers({ kinds: ['boater', 'lady'], s: .66, dir: 1, seed: 8 }), { y: 328, dir: 1, dur: 120, offset: 44, z: 'street' });
     return s;
   },
 
   front(P, T) {
     let s = '';
-    s += metro(P, 44, 372, 1);
-    s += morris(P, 412, 369, 1.02);
-    s += P.lamp(232, 366, 1.12, 'single', { h: 78 });
-    // a sergent de ville, a lady and her girl, a painter at his easel before the tower
-    s += agent(P, 190, 370, 1.12);
-    s += P.person(330, 366, 1.14, 'lady', { c: '#f1ebdc', parasol: '#e8b9c4', dir: -1 }) + P.person(344, 366, .9, 'child', { c: '#b9322c', dir: -1 });
-    s += painter(P, 474, 368, 1.12);
-    s += P.cross(T.walkers({ kinds: ['gent', 'lady'], s: 1.12, dir: -1, seed: 15, dresses: ['#d9c6e6', '#f3eee2'] }), { y: 372, dir: -1, dur: 80, offset: 20, z: 'fore' });
-    s += P.cross(T.walkers({ kinds: ['boater', 'girl'], s: 1.1, dir: 1, seed: 21 }), { y: 376, dir: 1, dur: 90, offset: 60, z: 'fore' });
+    s += metro(P, 62, 370, 1.12);
+    s += morris(P, 408, 371, 1.05);
+    s += P.lamp(236, 368, 1.14, 'single', { h: 80 }) + P.flagAt(238, 300);
+    // a sergent de ville, a flower girl, a lady and her little boy, a painter at his easel before the tower
+    s += agent(P, 196, 372, 1.14);
+    s += P.person(268, 370, 1.06, 'peasant', { c: '#7a5a8a', hat: '#e8dcc6' }) + flowerBasket(P, 274, 360, 1.06);
+    s += P.person(356, 368, 1.14, 'lady', { c: '#f1ebdc', parasol: '#e8b9c4', dir: -1 }) + P.person(369, 369, .9, 'child', { c: '#2f4a6e', dir: -1 });
+    s += painter(P, 470, 404, 1.02);
+    s += P.cross(T.walkers({ kinds: ['gent', 'lady'], s: 1.14, dir: -1, seed: 15, dresses: ['#d9c6e6', '#f3eee2'] }), { y: 374, dir: -1, dur: 80, offset: 20, z: 'fore' });
+    s += P.cross(T.walkers({ kinds: ['boater', 'girl'], s: 1.12, dir: 1, seed: 21 }), { y: 378, dir: 1, dur: 90, offset: 60, z: 'fore' });
     return s;
   },
 };
@@ -128,8 +136,6 @@ function eiffel(P, cx, by, H) {
   const X = (z, side, inner) => cx + side * (inner ? at(IN, z) : at(OUT, z)) * H, Y = (z) => by - z * H;
   const c = 'tower';
   let s = '';
-  // the wireless aerials, run down from the summit to the Champ de Mars
-  for (const k of [0, 1, 2]) s += P.line(`M${f(cx - 2)} ${f(Y(.9))}L${f(cx - 150 - k * 26)} ${f(by - 2)}`, '#5a4a3a', .35, { op: .45 });
   // legs: outer and inner edges, from the ground to where they meet above the second platform
   const leg = (side) => {
     const pts = [];
@@ -201,6 +207,26 @@ function roueStand(P, cx, by, r) {
   for (const k of [-1, 1]) {
     d += P.line(`M${f(cx + k * r * .62)} ${by}L${f(cx + k * 3)} ${f(hy)}M${f(cx + k * r * .42)} ${by}L${f(cx + k * 2)} ${f(hy + 4)}`, '#5c4a3e', 1.2);
     for (let i = 1; i < 8; i++) { const t = i / 8; d += P.line(`M${f(cx + k * (r * .62 * (1 - t) + 3 * t))} ${f(by - (by - hy) * t)}L${f(cx + k * (r * .42 * (1 - t + .1) + 2 * t))} ${f(by - (by - hy) * (t + .07))}`, '#5c4a3e', .4); }
+  }
+  return d;
+}
+
+/** The École Militaire: its long front and the square dome over the pediment. */
+function ecole(P, cx, by, s) {
+  const f = P.f;
+  let d = P.fill(P.rect(cx - 46 * s, by - 14 * s, 92 * s, 14 * s), 'wall', { w: .35 }) + P.windows(cx - 44 * s, by - 12 * s, 88 * s, 10 * s, 14, 1, { ww: .4, lit: .5 });
+  d += P.fill(P.rect(cx - 12 * s, by - 22 * s, 24 * s, 22 * s), 'wall', { w: .4 }) + P.fill(P.gable(cx - 13 * s, by - 22 * s, 26 * s, 6 * s), 'wall', { w: .35 });
+  d += P.fill(P.dome(cx, by - 26 * s, 9 * s, 9 * s), 'roof', { w: .4 }) + P.line(`M${cx} ${f(by - 38 * s)}v${f(-4 * s)}`, 'roof', .8);
+  return d;
+}
+
+/** Sainte-Clotilde's two spires over the roofs. */
+function clotilde(P, cx, by, s) {
+  let d = P.fill(P.rect(cx - 16 * s, by - 26 * s, 32 * s, 26 * s), 'wall', { w: .4 }) + P.fill(P.gable(cx - 9 * s, by - 26 * s, 18 * s, 10 * s), 'wall', { w: .4 });
+  for (const k of [-1, 1]) {
+    const x = cx + k * 12 * s;
+    d += P.fill(P.rect(x - 4 * s, by - 46 * s, 8 * s, 46 * s), 'wall', { w: .4 }) + P.fill(P.spire(x, by - 46 * s, 8.4 * s, 26 * s), '#8a93a2', { w: .35 });
+    d += P.fill(P.gothic(x - 1.6 * s, by - 42 * s, 3.2 * s, 9 * s), 'glass', { w: .2 });
   }
   return d;
 }
@@ -308,26 +334,24 @@ function metro(P, x, by, s) {
 
 /** A Morris column: green drum and dome, theatre bills round it; the crisis pastes its own over them. */
 function morris(P, x, by, s) {
-  const f = P.f, S = (k) => f(k * s), c = 'iron', r = 10 * s, top = by - 82 * s;
-  let d = P.fill(P.rect(x - r - 1.5 * s, by - 7 * s, 2 * r + 3 * s, 7 * s), c, { w: .6 });
+  const f = P.f, S = (k) => f(k * s), c = 'iron', r = 12.5 * s, top = by - 76 * s;
+  let d = P.fill(P.rect(x - r - 1.5 * s, by - 7 * s, 2 * r + 3 * s, 7 * s), c, { w: .6 }) + P.lite(P.rect(x - r - 1.5 * s, by - 7 * s, 2 * r + 3 * s, 1.4 * s), c, .3);
   d += P.fill(P.rect(x - r, top + 12 * s, 2 * r, by - 7 * s - top - 12 * s), '#ece2c8', { w: .6 });
-  // the bills, in bands round the drum
-  const bills = [['#c8463a', '#f2e6c8'], ['#e2b84a', '#2a2622'], ['#3d6a9a', '#f2e6c8'], ['#efe6d2', '#8a2a2a'], ['#5a7a4a', '#f2e6c8'], ['#d88a4a', '#2a2622']];
-  let k = 0;
-  for (let yy = top + 14 * s; yy < by - 12 * s; yy += 13 * s) {
-    for (let xx = x - r + .6; xx < x + r - 2; xx += 7 * s) {
-      const [bg, fg] = bills[(k++ * 5 + Math.round(yy)) % bills.length], w = Math.min(6.4 * s, x + r - .6 - xx);
-      d += P.fill(P.rect(xx, yy, w, 11.4 * s), bg, { w: .3 }) + P.line(`M${f(xx + 1)} ${f(yy + 3 * s)}h${f(w - 2)}M${f(xx + 1)} ${f(yy + 6 * s)}h${f(w * .6)}`, fg, .8 * s, { op: .9 });
-    }
+  // the bills: a play, an opera, a café-concert, a soap; their type in lines
+  const bills = [[x - r + .6, top + 13.5 * s, 11 * s, 22 * s, '#d8b44a', '#2a2622', 'OPÉRA'], [x + .8, top + 13.5 * s, r - 1.4, 14 * s, '#c8463a', '#f6ecd0', 'BAL'], [x + .8, top + 28.5 * s, r - 1.4, 12 * s, '#efe6d2', '#2f3a5a', ''], [x - r + .6, top + 36.5 * s, 13.4 * s, 13 * s, '#3d6a9a', '#f6ecd0', 'CIRQUE'], [x + 3 * s, top + 41.5 * s, r - 3.6 * s, 19 * s, '#e8a24a', '#2a2622', ''], [x - r + .6, top + 50.5 * s, 13.4 * s, 13 * s, '#efe6d2', '#8a2a2a', 'SAVON']];
+  for (const [bx, byy, w, h, bg, fg, t] of bills) {
+    d += P.fill(P.rect(bx, byy, w, h), bg, { w: .35 });
+    if (t) d += `<text x="${f(bx + w / 2)}" y="${f(byy + 4.4 * s)}" font-family="Georgia,serif" font-weight="bold" font-size="${S(3.8)}" text-anchor="middle" fill="${P.ink(fg)}" textLength="${f(w * .8)}" lengthAdjust="spacingAndGlyphs">${t}</text>`;
+    for (let i = 0; i < Math.floor(h / (3.6 * s)) - 1; i++) d += P.line(`M${f(bx + 1.4)} ${f(byy + (t ? 7.6 : 3) * s + i * 3 * s)}h${f(w * (i % 3 === 2 ? .45 : .75))}`, fg, .55 * s, { op: .75 });
   }
-  d += P.shade(P.rect(x + r * .35, top + 12 * s, r * .65, by - 7 * s - top - 12 * s), '#ece2c8', .3, { op: .55 });
-  d += P.wall(x - r + 2, top + 30 * s, 2 * r - 6, 26 * s);
+  d += P.shade(P.rect(x + r * .4, top + 12 * s, r * .6, by - 7 * s - top - 12 * s), '#ece2c8', .3, { op: .5 });
+  d += P.wall(x - r + 2, top + 22 * s, 2 * r - 6, 28 * s);
   // the cornice, the dome of fish-scale zinc, the finial
-  d += P.fill(P.rect(x - r - 2 * s, top + 8 * s, 2 * r + 4 * s, 4.4 * s), c, { w: .55 }) + P.line(`M${f(x - r - 1.4 * s)} ${f(top + 10 * s)}h${f(2 * r + 2.8 * s)}`, '#c8a24a', .6);
-  d += P.fill(P.dome(x, top + 8 * s, r * .92, 8 * s), c, { w: .55 }) + P.shade(`M${f(x + r * .2)} ${f(top + 8 * s)}C${f(x + r * .4)} ${f(top - 1 * s)} ${f(x + r * .8)} ${f(top + 1 * s)} ${f(x + r * .92)} ${f(top + 8 * s)}Z`, c, .3);
-  for (const yy of [top + 5.6 * s, top + 3 * s]) d += P.line(`M${f(x - r * .7)} ${f(yy)}Q${f(x)} ${f(yy - 1.5 * s)} ${f(x + r * .7)} ${f(yy)}`, P.light(c, .25), .5, { dash: '1.4 1' });
-  d += P.line(`M${x} ${f(top - 2 * s)}v${S(-6)}`, c, 1.2 * s) + `<circle cx="${x}" cy="${f(top - 8.6 * s)}" r="${S(1.4)}" fill="${P.ink('#c8a24a')}"/>`;
-  if (P.L.snow) d += P.flat(P.dome(x, top + 7 * s, r * .9, 7 * s), '#f4f7fa', { op: .85 });
+  d += P.fill(P.rect(x - r - 2.4 * s, top + 8 * s, 2 * r + 4.8 * s, 4.6 * s), c, { w: .55 }) + P.line(`M${f(x - r - 1.6 * s)} ${f(top + 10.2 * s)}h${f(2 * r + 3.2 * s)}`, '#c8a24a', .6);
+  d += P.fill(P.dome(x, top + 8 * s, r * .96, 9 * s), c, { w: .55 }) + P.shade(`M${f(x + r * .25)} ${f(top + 8 * s)}C${f(x + r * .45)} ${f(top - 2 * s)} ${f(x + r * .85)} ${f(top)} ${f(x + r * .96)} ${f(top + 8 * s)}Z`, c, .3);
+  for (const yy of [top + 5.4 * s, top + 2.4 * s]) d += P.line(`M${f(x - r * .72)} ${f(yy)}Q${f(x)} ${f(yy - 1.6 * s)} ${f(x + r * .72)} ${f(yy)}`, P.light(c, .25), .5, { dash: '1.4 1' });
+  d += P.line(`M${x} ${f(top - 3 * s)}v${S(-6)}`, c, 1.2 * s) + `<circle cx="${x}" cy="${f(top - 9.6 * s)}" r="${S(1.5)}" fill="${P.ink('#c8a24a')}"/>`;
+  if (P.L.snow) d += P.flat(P.dome(x, top + 7 * s, r * .92, 8 * s), '#f4f7fa', { op: .85 });
   return d;
 }
 
@@ -340,19 +364,99 @@ function agent(P, x, by, s) {
   return d;
 }
 
-/** A painter in a smock and a soft hat at his easel, the tower on his canvas. */
+/** A painter seen from behind in his smock and soft hat, at his easel; on the canvas, the tower. */
 function painter(P, x, by, s) {
-  const f = P.f, S = (k) => f(k * s);
+  const f = P.f, S = (k) => f(k * s), X = (k) => f(x + k * s), Y = (k) => f(by - k * s);
   let d = '';
-  // the easel and canvas
-  d += P.line(`M${f(x + 9 * s)} ${by}L${f(x + 13 * s)} ${f(by - 30 * s)}M${f(x + 19 * s)} ${by}L${f(x + 14.5 * s)} ${f(by - 30 * s)}M${f(x + 14 * s)} ${f(by - 2 * s)}L${f(x + 14 * s)} ${f(by - 22 * s)}`, '#6a4a2a', .9 * s);
-  d += P.fill(P.rect(x + 8 * s, by - 31 * s, 13 * s, 10 * s), '#f2ead6', { w: .5 }) + P.flat(P.rect(x + 8.6 * s, by - 26 * s, 11.8 * s, 4.4 * s), '#9ab8c8');
-  d += P.line(`M${f(x + 14.5 * s)} ${f(by - 22 * s)}l${S(-2)} ${S(-7)}l${S(-1)} ${S(7)}M${f(x + 14.5 * s)} ${f(by - 29 * s)}l${S(2)} ${S(7)}`, '#9c6c3f', .7);
-  d += P.line(`M${f(x + 8 * s)} ${f(by - 21 * s)}h${S(13)}`, '#6a4a2a', .8 * s);
-  // the painter: smock, soft hat, brush raised
-  d += P.person(x, by, s, 'worker', { c: '#c8d4dc', legs: '#3a3a40', hat: '#2a2826', dir: 1 });
-  d += `<path d="M${f(x - 3.4 * s)} ${f(by - 25.6 * s)}h${S(6.8)}l${S(-1.2)} ${S(-2.6)}h${S(-4.4)}Z" fill="${P.ink('#2a2826')}"/>`;
-  d += P.line(`M${f(x + 2 * s)} ${f(by - 18 * s)}l${S(5)} ${S(-5)}`, '#c8d4dc', 1.4 * s) + P.line(`M${f(x + 7 * s)} ${f(by - 23 * s)}l${S(1.6)} ${S(-1.4)}`, '#4a3a2a', .5);
-  d += `<ellipse cx="${f(x - 3 * s)}" cy="${f(by - 15 * s)}" rx="${S(3.4)}" ry="${S(1.4)}" fill="${P.ink('#c8a46a')}" stroke="${P.keyC()}" stroke-width=".4"/><circle cx="${f(x - 4 * s)}" cy="${f(by - 15.4 * s)}" r="${S(.6)}" fill="${P.ink('#c8463a')}"/><circle cx="${f(x - 2.4 * s)}" cy="${f(by - 15.2 * s)}" r="${S(.6)}" fill="${P.ink('#3d6a9a')}"/>`;
+  // the easel's back leg, the figure, then the canvas and the front legs
+  d += P.line(`M${X(34)} ${Y(0)}L${X(30)} ${Y(92)}`, '#6a4a2a', 1.4 * s);
+  d += P.figure(x, by, s, 'gent', { c: '#c2ced6', legs: '#3a3a40', hat: '#2e2a26', arm: 24 });
+  // a soft wide-brimmed hat over the bowler
+  d += `<path d="M${X(-11)} ${Y(97.5)}Q${X(0)} ${Y(94)} ${X(11)} ${Y(97.5)}Q${X(8)} ${Y(100)} ${X(6)} ${Y(100)}Q${X(5)} ${Y(109)} ${X(0)} ${Y(109)}Q${X(-5)} ${Y(109)} ${X(-6)} ${Y(100)}Q${X(-8)} ${Y(100)} ${X(-11)} ${Y(97.5)}Z" fill="${P.ink('#3a3430')}" stroke="${P.keyC()}" stroke-width=".7"/>`;
+  // the palette on his left arm
+  d += `<ellipse cx="${X(-17)}" cy="${Y(52)}" rx="${S(7)}" ry="${S(3)}" fill="${P.ink('#c8a46a')}" stroke="${P.keyC()}" stroke-width=".6"/>`;
+  for (const [k, c] of [[-21, '#c8463a'], [-18, '#3d6a9a'], [-15, '#e2c24a'], [-12.5, '#f2efe6']]) d += `<circle cx="${X(k)}" cy="${Y(52.6)}" r="${S(1.1)}" fill="${P.ink(c)}"/>`;
+  // the canvas: a little tower against a blue sky, in its frame
+  const cx0 = x + 16 * s, cy0 = by - 96 * s, cw = 26 * s, ch = 32 * s;
+  d += P.fill(P.rect(cx0 - 1.2 * s, cy0 - 1.2 * s, cw + 2.4 * s, ch + 2.4 * s), '#8a6a3a', { w: .6 }) + P.flat(P.rect(cx0, cy0, cw, ch * .62), '#8fb6d6') + P.flat(P.rect(cx0, cy0 + ch * .62, cw, ch * .38), '#a9b98a');
+  d += P.flat(P.rect(cx0, cy0 + ch * .58, cw, ch * .06), '#d8cdb0') + P.flat(`M${f(cx0 + cw * .3)} ${f(cy0 + ch * .2)}q${S(3)} ${S(-1)} ${S(5)} ${S(-3)}q${S(2)} ${S(2)} ${S(5)} ${S(3)}Z`, '#f4f2ea', { op: .9 });
+  d += P.flat(`M${f(cx0 + cw * .62)} ${f(cy0 + ch * .1)}L${f(cx0 + cw * .54)} ${f(cy0 + ch * .64)}H${f(cx0 + cw * .7)}Z`, '#9c6c3f');
+  d += P.line(`M${f(cx0 + cw * .56)} ${f(cy0 + ch * .5)}h${f(cw * .12)}M${f(cx0 + cw * .58)} ${f(cy0 + ch * .36)}h${f(cw * .08)}`, '#6a4a2a', .5);
+  d += P.line(`M${X(14)} ${Y(0)}L${X(20)} ${Y(66)}M${X(44)} ${Y(0)}L${X(38)} ${Y(66)}M${X(14)} ${Y(64)}H${X(44)}`, '#7a5a34', 1.3 * s);
+  // the brush hand raised to the canvas
+  d += P.line(`M${X(18)} ${Y(60)}l${S(4)} ${S(14)}`, '#4a3a2a', .9 * s);
   return d;
+}
+
+/** The bouquiniste on his folding stool, in his cap and a long grey coat, reading. */
+function stool(P, x, by, s) {
+  const f = P.f, S = (k) => f(k * s);
+  let d = P.line(`M${f(x - 4 * s)} ${by}L${f(x + 3 * s)} ${f(by - 9 * s)}M${f(x + 4 * s)} ${by}L${f(x - 3 * s)} ${f(by - 9 * s)}`, '#5a4632', .9 * s);
+  d += P.fill(`M${f(x - 4 * s)} ${f(by - 9 * s)}h${S(8)}v${S(-1.4)}h${S(-8)}Z`, '#7a5a3a', { w: .4 });
+  // seated: the coat over the knees, legs down, the paper held up
+  d += P.fill(`M${f(x - 3 * s)} ${f(by - 10 * s)}L${f(x - 3.2 * s)} ${f(by - 22 * s)}Q${f(x)} ${f(by - 24 * s)} ${f(x + 3.2 * s)} ${f(by - 22 * s)}L${f(x + 7 * s)} ${f(by - 10 * s)}Z`, '#6a6460', { w: .5 });
+  d += P.line(`M${f(x + 6 * s)} ${f(by - 10 * s)}V${f(by - 1 * s)}`, '#3a3634', 1.6 * s);
+  d += `<circle cx="${f(x)}" cy="${f(by - 26 * s)}" r="${S(2.4)}" fill="${P.ink('#e2c19c')}" stroke="${P.keyC()}" stroke-width=".45"/><path d="M${f(x - 2.6 * s)} ${f(by - 27 * s)}q${S(2.6)} ${S(-3.4)} ${S(5.2)} 0h${S(1.6)}Z" fill="${P.ink('#3a3430')}"/>`;
+  d += P.fill(`M${f(x + 3 * s)} ${f(by - 22 * s)}h${S(5)}v${S(6)}h${S(-5)}Z`, '#efe8d6', { w: .4 });
+  return d;
+}
+
+/** A flower girl's basket of roses and violets on her arm. */
+function flowerBasket(P, x, y, s) {
+  const f = P.f;
+  let d = P.fill(`M${f(x - 4 * s)} ${f(y)}h${f(9 * s)}l${f(-1.4 * s)} ${f(4 * s)}h${f(-6.2 * s)}Z`, '#b08a52', { w: .45 }) + P.line(`M${f(x - 3.4 * s)} ${f(y)}q${f(4 * s)} ${f(-7 * s)} ${f(8 * s)} 0`, '#8a6a3a', .6);
+  const R = P.rng(Math.round(x));
+  for (let i = 0; i < 7; i++) d += `<circle cx="${f(x - 3 * s + R() * 7 * s)}" cy="${f(y - .4 * s - R() * 2 * s)}" r="${f(1.1 * s)}" fill="${P.ink(['#d8576a', '#7a5ab0', '#f2ead6', '#e88a9a'][i % 4])}"/>`;
+  return d;
+}
+
+/** A Renault taxi of the G7, the bonnet like a coal-scuttle, the driver in the open, the fare under the hood. */
+function taxi(P, dir, s, c) {
+  const W = 56 * s, H = 34 * s, S = (k) => P.f(k * s), f = P.f;
+  const lampOn = P.L.lamps > .05;
+  let b = '';
+  // the landaulet body behind, its hood folded half down
+  b += P.fill(`M${S(4)} ${S(26)}V${S(14)}Q${S(4)} ${S(11)} ${S(8)} ${S(11)}H${S(28)}V${S(26)}Z`, c, { w: .55 });
+  b += P.fill(`M${S(6)} ${S(12)}Q${S(7)} ${S(3)} ${S(18)} ${S(3)}H${S(28)}V${S(12)}Z`, '#1f1d1c', { w: .5 });
+  b += `<path d="M${S(17)} ${S(5)}H${S(26)}V${S(11)}H${S(17)}Z" fill="${P.L.windows > .2 ? P.glow('#ffd88a') : P.ink('#4a5868')}" stroke="${P.keyC()}" stroke-width=".4"/>`;
+  b += P.line(`M${S(8)} ${S(19)}H${S(27)}`, P.light(c, .35), .5 * s) + P.shade(`M${S(4)} ${S(22)}H${S(28)}V${S(26)}H${S(4)}Z`, c, .25);
+  // the driver on the open seat, in his cap and coat
+  b += P.fill(`M${S(30)} ${S(20)}L${S(31)} ${S(10)}H${S(36)}L${S(36.5)} ${S(20)}Z`, '#2a2c30', { w: .45 });
+  b += `<circle cx="${S(33.4)}" cy="${S(7.6)}" r="${S(2)}" fill="${P.ink('#e2bf9c')}"/><path d="M${S(31.2)} ${S(6.8)}q${S(2.2)} ${S(-2.8)} ${S(4.4)} 0h${S(1.2)}Z" fill="${P.ink('#2a2622')}"/>`;
+  b += P.fill(`M${S(28)} ${S(26)}V${S(17)}H${S(38)}V${S(26)}Z`, c, { w: .5 });
+  // the coal-scuttle bonnet, the radiator behind it, the lamps
+  b += P.fill(`M${S(38)} ${S(26)}V${S(16)}Q${S(48)} ${S(15)} ${S(52)} ${S(22)}V${S(26)}Z`, '#2a2826', { w: .55 }) + P.lite(`M${S(39)} ${S(17)}Q${S(46)} ${S(16)} ${S(49)} ${S(19)}`, '#2a2826', .3);
+  b += P.line(`M${S(37.6)} ${S(16)}V${S(25)}`, '#b8963e', 1.2 * s);
+  b += `<circle cx="${S(50)}" cy="${S(19.4)}" r="${S(1.6)}" fill="${lampOn ? P.glow('#fff2c0') : P.ink('#d9b45a')}"/>`;
+  if (lampOn) b += `<circle cx="${S(51)}" cy="${S(19.4)}" r="${S(6)}" fill="${P.glow('#ffe2a0')}" opacity="${f(.3 * P.L.lamps)}"/>`;
+  // the flag of the meter, and wheels
+  b += P.fill(`M${S(36)} ${S(13)}h${S(3)}v${S(2)}h${S(-3)}Z`, '#c8463a', { w: .3 });
+  for (const wx of [12, 44]) b += `<circle cx="${S(wx)}" cy="${S(28)}" r="${S(5.2)}" fill="${P.ink('#2b2622')}"/><circle cx="${S(wx)}" cy="${S(28)}" r="${S(3.2)}" fill="${P.ink('#b8963e')}"/><circle cx="${S(wx)}" cy="${S(28)}" r="${S(1.1)}" fill="${P.ink('#2b2622')}"/>`;
+  return { svg: doc(f(W), f(H), flip(dir, f(W), b)), w: W, h: H, ax: W / 2, ay: 33 * s };
+}
+
+/** A Schneider autobus of the Compagnie Générale des Omnibus: green and cream, the platform behind, a board on top. */
+function autobus(P, dir, s) {
+  const W = 78 * s, H = 44 * s, S = (k) => P.f(k * s), f = P.f;
+  const lit = P.L.windows > .2;
+  let b = '';
+  // the saloon
+  b += P.fill(`M${S(10)} ${S(36)}V${S(12)}Q${S(10)} ${S(8)} ${S(14)} ${S(8)}H${S(56)}Q${S(60)} ${S(8)} ${S(60)} ${S(12)}V${S(36)}Z`, '#2f5a46', { w: .6 });
+  b += P.fill(`M${S(10)} ${S(13)}H${S(60)}V${S(24)}H${S(10)}Z`, '#ece0c0', { w: .45 });
+  for (let i = 0; i < 6; i++) b += `<rect x="${S(12 + i * 8)}" y="${S(14.4)}" width="${S(6.4)}" height="${S(8)}" fill="${lit ? P.glow('#ffd88a') : P.ink('#46566a')}" stroke="${P.keyC()}" stroke-width=".35"/>` + (lit || i % 2 ? '' : `<circle cx="${S(15.2 + i * 8)}" cy="${S(19.6)}" r="${S(1.6)}" fill="${P.ink('#2c2a30')}"/>`);
+  b += P.shade(`M${S(10)} ${S(32)}H${S(60)}V${S(36)}H${S(10)}Z`, '#2f5a46', .25) + P.line(`M${S(12)} ${S(27)}H${S(58)}`, '#d8b45a', .5 * s);
+  // the destination board on the roof
+  b += P.fill(`M${S(16)} ${S(8)}V${S(4)}H${S(54)}V${S(8)}Z`, '#efe4c6', { w: .4 });
+  b += `<text x="${S(35)}" y="${S(7.2)}" font-family="Georgia,serif" font-size="${S(3.4)}" font-weight="bold" text-anchor="middle" fill="${P.ink('#2f3a5a')}" textLength="${S(34)}" lengthAdjust="spacingAndGlyphs">MADELEINE - BASTILLE</text>`;
+  // the rear platform, its rail and the conductor
+  b += P.fill(`M${S(2)} ${S(36)}V${S(31)}H${S(10)}V${S(36)}Z`, '#2f5a46', { w: .45 }) + P.line(`M${S(3)} ${S(31)}V${S(14)}H${S(10)}`, '#2a2622', .7 * s);
+  b += P.fill(`M${S(4.4)} ${S(31)}L${S(5)} ${S(20)}H${S(9)}L${S(9.4)} ${S(31)}Z`, '#2a3346', { w: .4 }) + `<circle cx="${S(7)}" cy="${S(17.6)}" r="${S(1.9)}" fill="${P.ink('#e2bf9c')}"/><path d="M${S(5)} ${S(16.6)}h${S(4)}v${S(-1.6)}h${S(-4)}Z" fill="${P.ink('#2a3346')}"/>`;
+  // the bonnet and the driver under the canopy
+  b += P.fill(`M${S(60)} ${S(36)}V${S(22)}H${S(72)}Q${S(75)} ${S(24)} ${S(75)} ${S(28)}V${S(36)}Z`, '#2f5a46', { w: .55 }) + P.line(`M${S(64)} ${S(26)}h${S(8)}M${S(64)} ${S(29)}h${S(8)}`, '#1f3a2e', .5 * s);
+  b += P.fill(`M${S(60)} ${S(10)}H${S(68)}V${S(12)}H${S(60)}Z`, '#2a2622', { w: .35 }) + P.line(`M${S(67)} ${S(12)}V${S(22)}`, '#2a2622', .6 * s);
+  b += `<circle cx="${S(64)}" cy="${S(15)}" r="${S(1.9)}" fill="${P.ink('#e2bf9c')}"/><path d="M${S(62)} ${S(14)}h${S(4)}v${S(-1.4)}h${S(-4)}Z" fill="${P.ink('#2a3346')}"/>` + P.fill(`M${S(61.6)} ${S(22)}L${S(62)} ${S(17)}H${S(66)}L${S(66.4)} ${S(22)}Z`, '#2a3346', { w: .35 });
+  b += `<circle cx="${S(74)}" cy="${S(26)}" r="${S(1.5)}" fill="${P.L.lamps > .05 ? P.glow('#fff2c0') : P.ink('#d9b45a')}"/>`;
+  b += P.fill(`M${S(4)} ${S(36)}H${S(76)}V${S(37.6)}H${S(4)}Z`, '#2a2622', { w: .3 });
+  for (const wx of [18, 64]) b += `<circle cx="${S(wx)}" cy="${S(38)}" r="${S(5.4)}" fill="${P.ink('#2b2622')}"/><circle cx="${S(wx)}" cy="${S(38)}" r="${S(3.4)}" fill="${P.ink('#a8382e')}"/><circle cx="${S(wx)}" cy="${S(38)}" r="${S(1.2)}" fill="${P.ink('#2b2622')}"/>`;
+  return { svg: doc(f(W), f(H), flip(dir, f(W), b)), w: W, h: H, ax: W / 2, ay: 43 * s };
 }

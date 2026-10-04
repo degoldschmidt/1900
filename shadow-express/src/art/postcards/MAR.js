@@ -59,49 +59,55 @@ export default {
     return s;
   },
 
-  mid(P, T) {
+  mid(P, T, st) {
     let s = '';
     // the Rive Neuve: tall quay houses under the rock, the far quay and its forest of masts
-    s += P.far(.34, () => P.row(14, 324, 264, { hMin: 22, hMax: 38, wMin: 13, wMax: 21, style: 'south', seed: 9, walls: ['#f1dbb2', '#e8bf98', '#efe6cf', '#e6cfa8'] }));
-    s += P.far(.32, () => P.fill('M14 262H392V268H14Z', 'quay', { w: .5 }));
-    s += reflect(P, 30, 320, 268, 34, '#e8cfa6', 4) + reflect(P, 150, 250, 268, 24, '#ece0c2', 6);
+    s += P.far(.34, () => P.row(14, 324, 264, { hMin: 26, hMax: 46, wMin: 12, wMax: 19, style: 'south', seed: 9, walls: ['#f1dbb2', '#e8bf98', '#efe6cf', '#e6cfa8'] }));
+    s += P.far(.33, () => { let d = ''; for (let x = 16; x < 322; x += 7) d += P.flat(P.rect(x, 255, 4, 7), '#4a3a30'); return d; });
+    s += P.far(.32, () => P.fill('M14 262H392V268H14Z', 'quay', { w: .5 }) + P.flagAt(52, 232) + P.flagAt(168, 228) + P.flagAt(262, 234));
+    s += reflect(P, 30, 320, 268, 30, '#e8cfa6', 4) + reflect(P, 160, 250, 268, 22, '#ece0c2', 6);
     s += P.far(.3, () => mooredFleet(P));
     // Fort Saint-Nicolas at the left of the mouth, Fort Saint-Jean and King René's tower at the right
     s += P.far(.3, () => fortNicolas(P) + fortJean(P));
     // the transporter bridge
     s += P.far(.28, () => transporter(P));
+    // a tartane at her mooring in mid-port, a man in a rowing boat beside her
+    s += P.far(.15, () => tartane(P, 262, 296, .8));
+    // lamps along the far quay
+    s += P.far(.3, () => { let d = ''; for (const x of [44, 118, 196, 274]) d += P.lamp(x, 264, .34, 'single'); return d; });
     // across the port: pointus under their lateen sails, a rowing boat, the little steam ferry
-    s += P.cross(T.sail({ s: .78, rig: 'lateen', sailC: '#f3ead4', hull: '#2f6f8e', strake: '#d04a32', dir: 1 }), { y: 300, dir: 1, dur: 118, offset: 20 });
-    s += P.cross(T.sail({ s: .96, rig: 'lateen', sailC: '#efe2c6', hull: '#c9452f', strake: '#f1e6cf', dir: -1 }), { y: 322, dir: -1, dur: 96, rest: .2, offset: 64 });
-    s += P.cross(T.rowboat({ s: .8, hull: '#3b6f5a', shirt: '#e9e4d6', dir: 1 }), { y: 286, dir: 1, dur: 150, offset: 90 });
-    s += P.mover(ferry(P, -1), { path: [[566, 318, 1, 0, 0], [548, 314, .96, .04, 1], [330, 284, .66, .58, 1], [312, 281, .62, .64, 0], [312, 281, .62, 1, 0]], dur: 70, offset: 30 });
+    s += P.cross(T.sail({ s: .74, rig: 'lateen', sailC: '#f3ead4', hull: '#2f6f8e', strake: '#d04a32', dir: 1 }), { y: 286, dir: 1, dur: 118, offset: 20 });
+    s += P.cross(T.sail({ s: .92, rig: 'lateen', sailC: '#efe2c6', hull: '#c9452f', strake: '#f1e6cf', dir: -1 }), { y: 310, dir: -1, dur: 96, rest: .2, offset: 64 });
+    s += P.cross(T.rowboat({ s: .72, hull: '#3b6f5a', shirt: '#e9e4d6', dir: 1 }), { y: 276, dir: 1, dur: 150, offset: 90 });
+    s += P.mover(ferry(P, -1), { path: [[566, 310, 1, 0, 0], [548, 306, .96, .04, 1], [348, 281, .64, .58, 1], [330, 279, .6, .64, 0], [330, 279, .6, 1, 0]], dur: 70, offset: 30 });
+    // the near quay: coping, bollards, paving
+    s += P.fill('M14 322H586V331H14Z', 'quay', { w: .8 }) + P.lite('M14 322H586V324.5H14Z', 'quay', .35) + P.shade('M14 328.5H586V331H14Z', 'quay', .22);
+    for (let x = 40; x < 586; x += 31) s += P.line(`M${x} 324.5V328.5`, '#8a7e66', .5, { op: .6 });
+    s += P.paving(331, 380, { vx: 300, seed: 6 });
+    for (const x of [158, 300, 420]) s += bollard(P, x, 331);
+    s += P.line('M158 326Q150 330 140 326', '#6a5034', .8) + anchor(P, 346, 344, .9);
+    // the fish market under its umbrella, the newspaper kiosk where the bills go up, a plane tree, the candelabra
+    s += fishStall(P, 214, 354, st.season);
+    s += kiosk(P, 392, 356);
+    s += P.tree(552, 352, 2.2, 'plane');
+    s += P.lamp(124, 362, 1.05, 'iron', { h: 72 }) + P.lamp(450, 350, .9, 'iron', { h: 66 });
+    // people of the quay
+    s += P.person(318, 348, .92, 'sailor', { c: '#1f2a44', legs: '#1f2a44' }) + P.person(330, 349, .9, 'worker', { c: '#6a5a46', legs: '#4a4038', dir: -1 });
+    s += P.person(424, 344, .86, 'lady', { c: '#f3eee2', parasol: '#e8b9c4', dir: -1 }) + P.person(434, 344, .88, 'boater', { c: '#3d4a3c', dir: -1 });
+    s += P.person(268, 362, 1.02, 'newsboy', { c: '#5a4a3a' }) + P.person(158, 362, 1.04, 'priest', { c: '#1d1d22', legs: '#1d1d22' });
+    // strollers on the quay; at war the soldiers march here
+    s += P.setStreet(370, 80, 480, 1.04);
+    s += P.cross(T.walkers({ kinds: ['gent', 'lady'], s: 1.06, dir: 1, seed: 5, dresses: ['#f3eee2', '#c9d6e6'] }), { y: 376, dir: 1, dur: 74, offset: 8 });
+    s += P.cross(T.walkers({ kinds: ['sailor', 'boater', 'lady'], s: 1, dir: -1, seed: 15, coats: ['#1f2a44', '#3d4a3c'] }), { y: 368, dir: -1, dur: 88, offset: 46 });
     return s;
   },
 
-  front(P, T) {
+  front(P, T, st) {
     let s = '';
     // a pointu moored stern-to at the near quay, its yard and furled sail rising across the port
-    s += pointu(P, 74, 334, 1.35);
-    // the quay: coping, bollards, paving
-    s += P.fill('M14 332H586V341H14Z', 'quay', { w: .8 }) + P.lite('M14 332H586V334.5H14Z', 'quay', .35) + P.shade('M14 338.5H586V341H14Z', 'quay', .22);
-    for (let x = 40; x < 586; x += 31) s += P.line(`M${x} 334.5V338.5`, '#8a7e66', .5, { op: .6 });
-    s += P.paving(341, 380, { vx: 300, seed: 6 });
-    for (const x of [150, 266, 362, 500]) s += bollard(P, x, 340);
-    // the fish market under its umbrellas
-    s += fishStall(P, 168, 362, P.st?.season);
-    // the newspaper kiosk, where the bills go up
-    s += kiosk(P, 470, 364);
-    // a plane tree at the right, candelabra along the quay
-    s += P.tree(560, 356, 1.75, 'plane');
-    s += P.lamp(116, 366, 1.02, 'iron', { h: 70 }) + P.lamp(404, 362, .95, 'iron', { h: 66 });
-    // people of the quay
-    s += P.person(300, 356, .9, 'sailor', { c: '#1f2a44', legs: '#1f2a44' }) + P.person(312, 357, .88, 'worker', { c: '#6a5a46', legs: '#4a4038' });
-    s += P.person(374, 362, .98, 'lady', { c: '#f3eee2', parasol: '#e8b9c4', dir: -1 }) + P.person(386, 362, 1, 'boater', { c: '#3d4a3c', dir: -1 });
-    s += P.person(520, 370, 1.06, 'gent', { c: '#2a2c34', hat: '#1b1b20' }) + P.person(236, 368, 1, 'newsboy', { c: '#5a4a3a' });
-    s += P.setStreet(364, 90, 540, 1);
-    s += P.cross(T.walkers({ kinds: ['gent', 'lady'], s: 1.04, dir: 1, seed: 5, dresses: ['#f3eee2', '#c9d6e6'] }), { y: 376, dir: 1, dur: 74, offset: 8, z: 'fore' });
-    s += P.cross(T.walkers({ kinds: ['sailor', 'boater'], s: .98, dir: -1, seed: 15, coats: ['#1f2a44', '#3d4a3c'] }), { y: 368, dir: -1, dur: 88, offset: 46, z: 'fore' });
-    s += P.cross(T.cart({ s: .95, load: '#c9cdd2', c: '#6a4a2e', horse: '#8a6a4a', dir: -1 }), { y: 358, dir: -1, dur: 70, rest: .35, offset: 60 });
+    s += pointu(P, 82, 319, 1.25);
+    // a couple come to watch the gondola cross
+    s += P.figure(492, 402, 1.02, 'gent', { c: '#2c2f38', hat: '#d8c896', arm: 16 }) + P.figure(530, 405, 1.0, 'lady', { c: '#eef0f2', sash: '#4a7aa0', parasol: '#f4e6d8', flowers: ['#7a5aa8', '#a88ad0', '#e8c25a'] });
     return s;
   },
 };
@@ -131,45 +137,60 @@ function islands(P) {
 function garde(P) {
   const { f } = P, lf = P.L.leaf;
   let s = '';
-  const hill = 'M10 232C40 216 76 206 104 200C124 196 136 193 146 191L152 184H258L266 190C288 196 304 206 318 218C332 230 344 246 356 264H10Z';
+  const hill = 'M10 226C40 208 76 196 104 188C122 183 134 180 144 178L152 171H262L272 177C292 186 306 198 320 212C334 226 346 244 356 264H10Z';
   s += P.fill(hill, 'rock');
-  s += P.shade('M258 184L266 190C288 196 304 206 318 218C332 230 344 246 356 264H316C310 238 290 210 270 196Z', 'rock', .18);
-  s += P.stipple(hill, 'rock', 90, { box: [10, 184, 346, 80], op: .35 });
-  // limestone ledges
+  s += P.shade('M262 171L272 177C292 186 306 198 320 212C334 226 346 244 356 264H318C312 238 294 206 276 186Z', 'rock', .18);
+  s += P.stipple(hill, 'rock', 100, { box: [10, 171, 346, 93], op: .35 });
+  // limestone ledges and the dark seams between them
   const r = P.rng(31);
-  let ledge = '';
-  for (let i = 0; i < 22; i++) { const x = 40 + r() * 290, y = 200 + r() * 40; ledge += `M${f(x)} ${f(y)}q${f(4 + r() * 6)} ${f(-1 - r() * 2)} ${f(10 + r() * 8)} ${f(r() * 2)}`; }
-  s += `<path d="${ledge}" fill="none" stroke="${P.light('rock', .45)}" stroke-width="1.2" stroke-linecap="round"/>`;
-  // Aleppo pines and garrigue on the slopes
-  const pine = lf.ever, scrub = lf.leaf ?? P.dark(lf.ever, .1);
-  for (let i = 0; i < 16; i++) {
-    const x = 30 + r() * 300, y = 204 + r() * 34;
-    if (x > 140 && x < 270 && y < 212) continue;
-    s += `<path d="${P.blob(x, y, 4 + r() * 4, 2.6 + r() * 2, 7, 40 + i)}" fill="${P.ink(i % 3 ? scrub : pine)}" stroke="${P.keyC()}" stroke-width=".4"/>`;
+  let ledge = '', seam = '';
+  for (let i = 0; i < 26; i++) { const x = 30 + r() * 300, y = 186 + r() * 54; ledge += `M${f(x)} ${f(y)}q${f(4 + r() * 6)} ${f(-1 - r() * 2)} ${f(10 + r() * 8)} ${f(r() * 2)}`; seam += `M${f(x + 2)} ${f(y + 2)}l${f(-1 + r() * 2)} ${f(3 + r() * 5)}`; }
+  s += `<path d="${ledge}" fill="none" stroke="${P.light('rock', .45)}" stroke-width="1.2" stroke-linecap="round"/><path d="${seam}" fill="none" stroke="${P.dark('rock2', .2)}" stroke-width=".7" stroke-linecap="round" opacity=".7"/>`;
+  // Aleppo pines and garrigue on the slopes, and a few white bastides among them
+  const pine = lf.ever, scrub = lf.leaf ?? lf.ever;
+  for (let i = 0; i < 18; i++) {
+    const x = 24 + r() * 310, y = 192 + r() * 42;
+    if (x > 136 && x < 284 && y < 204) continue;
+    s += `<path d="${P.blob(x, y, 2.6 + r() * 3, 1.8 + r() * 1.4, 7, 40 + i)}" fill="${P.ink(i % 3 ? pine : scrub)}" stroke="${P.keyC()}" stroke-width=".35"/>`;
+    if (i % 5 === 2) s += P.fill(P.rect(x + 6, y - 4, 7, 5), 'wall3', { w: .35 }) + P.fill(P.poly([[x + 5.5, y - 4], [x + 9.5, y - 6.5], [x + 13.5, y - 4]]), 'roof', { w: .3 });
   }
-  // the old fort's ramparts round the summit, with the drawbridge ramp
-  s += P.fill('M140 192L148 170H254L264 192Z', 'stone2') + P.shade('M232 170H254L264 192H236Z', 'stone2', .2);
-  s += P.line('M146 176H258M144 184H260', '#9c8a66', .5, { op: .7 });
-  for (let x = 152; x < 252; x += 9) s += P.flat(P.rect(x, 166.5, 5, 3.5), 'stone2');
-  s += P.fill('M262 192L276 200L290 199L282 192Z', 'stone2', { w: .45 });
+  // the road climbing to the sanctuary
+  s += P.line('M300 232Q270 222 252 214Q236 208 262 198Q282 190 268 182', '#efe4c8', 1.6, { op: .8 });
+  // the basilica, drawn at its own size and set on the summit
+  const k = .82, ox = 228, oy = 91;
+  s += `<g transform="translate(${f(ox * (1 - k))} ${f(oy * (1 - k))}) scale(${k})">${basilica(P)}</g>`;
+  return s;
+}
+function basilica(P) {
+  const { f } = P;
+  let s = '';
+  const win = () => (P.wr() < P.L.windows * .8 ? P.glow('#ffd88a') : P.ink('glass'));
+  // the old fort's ramparts round the summit: a battered wall with buttresses, the drawbridge
+  s += P.fill('M136 194L146 170H256L268 194Z', 'stone2') + P.shade('M234 170H256L268 194H240Z', 'stone2', .22);
+  for (let x = 156; x < 252; x += 14) s += P.line(`M${x} 172L${x - 3} 193`, '#9c8a66', .7, { op: .8 });
+  s += P.line('M144 177H259', '#9c8a66', .6, { op: .8 });
+  for (let x = 150; x < 254; x += 8) s += P.flat(P.rect(x, 166.5, 4.4, 3.5), 'stone2');
+  s += P.fill(P.arch(196, 180, 9, 14), '#3a3430', { w: .4 });
   // the crypt storey, a terrace of arches
   s += P.fill(P.rect(150, 156, 96, 14), 'stone') + P.shade(P.rect(232, 156, 14, 14), 'stone', .18);
-  for (let x = 156; x < 240; x += 8) s += P.fill(P.arch(x, 159, 4, 9), 'glass', { w: .3 });
-  // the upper church: the apse, the striped nave, the dome on its drum
-  s += P.fill(P.arch(140, 136, 16, 22), 'stone', { w: .7 }) + stripes(P, 'M140 158V144A8 8 0 0 1 156 144V158Z', 140, 136, 16, 22);
-  s += P.fill(P.rect(152, 132, 66, 26), 'stone') + stripes(P, P.rect(152, 132, 66, 26), 152, 132, 66, 26);
-  s += P.shade(P.rect(204, 132, 14, 26), 'stone', .14);
-  for (const x of [158, 168, 196, 206]) s += P.fill(P.arch(x, 138, 5, 12), 'glass', { w: .35 });
-  s += P.fill(P.poly([[150, 133], [156, 126], [214, 126], [220, 133]]), 'stone2', { w: .6 });
-  // the transept gable
-  s += P.fill(P.rect(172, 124, 24, 34), 'stone') + stripes(P, P.rect(172, 124, 24, 34), 172, 124, 24, 34) + P.fill(P.gable(171, 125, 26, 8), 'stone2', { w: .55 });
-  s += P.fill(P.arch(178, 132, 12, 16), 'glass', { w: .4 }) + P.line('M184 132V148', 'stone', .5);
-  // the dome: a drum of little windows, a cupola striped in its ribs, the lantern and cross
-  s += P.fill(P.rect(175, 108, 18, 10), 'stone') + stripes(P, P.rect(175, 108, 18, 10), 175, 108, 18, 10);
-  for (const x of [177.5, 182.5, 187.5]) s += P.fill(P.arch(x, 110, 3, 6), 'glass', { w: .3 });
-  s += P.fill(P.dome(184, 108.5, 10, 12), 'stone') + P.shade('M184 96.5C189 97 193 101 194 108.5H186Z', 'stone', .18);
-  s += P.line('M178 108C178 101 181 98 184 97M190 108C190 101 187 98 184 97', 'green', .9);
-  s += P.fill(P.rect(182, 91, 4, 6), 'stone', { w: .4 }) + P.fill(P.dome(184, 91.5, 2.6, 2.6), 'gold', { w: .35 }) + P.line('M184 88.5V85M182.6 86.4H185.4', 'gold', .7);
+  for (let x = 156; x < 240; x += 8) s += `<path d="${P.arch(x, 159, 4, 9)}" fill="${win()}" stroke="${P.keyC()}" stroke-width=".3"/>`;
+  s += P.fill(P.rect(148, 154.5, 100, 2.4), 'stone2', { w: .4 });
+  // the upper church: the apse, the striped nave, the transept and the dome on its drum
+  s += P.fill(P.arch(140, 134, 16, 22), 'stone', { w: .7 }) + stripes(P, 'M140 156V142A8 8 0 0 1 156 142V156Z', 140, 134, 16, 22);
+  s += P.fill(P.dome(148, 135, 8, 7), 'stone2', { w: .5 });
+  s += P.fill(P.rect(152, 130, 66, 26), 'stone') + stripes(P, P.rect(152, 130, 66, 26), 152, 130, 66, 26);
+  s += P.shade(P.rect(204, 130, 14, 26), 'stone', .14);
+  for (const x of [157, 165, 199, 207]) s += `<path d="${P.arch(x, 137, 4.4, 12)}" fill="${win()}" stroke="${P.keyC()}" stroke-width=".35"/>`;
+  s += P.fill(P.poly([[150, 131], [156, 124], [214, 124], [220, 131]]), 'stone2', { w: .6 });
+  s += P.fill(P.rect(172, 120, 24, 36), 'stone') + stripes(P, P.rect(172, 120, 24, 36), 172, 120, 24, 36) + P.fill(P.gable(171, 121, 26, 8), 'stone2', { w: .55 });
+  s += `<circle cx="184" cy="133" r="5" fill="${P.ink('glass')}" stroke="${P.ink('stone2')}" stroke-width="1.2"/>` + P.line('M184 128V138M179 133H189', 'stone2', .6);
+  for (const x of [176, 189]) s += P.fill(P.arch(x, 142, 3.4, 9), 'glass', { w: .3 });
+  // the drum and the dome, ribbed, a gilded lantern
+  s += P.fill(P.rect(175, 104, 18, 10), 'stone') + stripes(P, P.rect(175, 104, 18, 10), 175, 104, 18, 10) + P.fill(P.rect(173.5, 112, 21, 2.4), 'stone2', { w: .4 });
+  for (const x of [177.5, 182.5, 187.5]) s += P.fill(P.arch(x, 106, 3, 6), 'glass', { w: .3 });
+  s += P.fill(P.dome(184, 104.5, 10, 12), 'stone') + P.shade('M184 92.5C189 93 193 97 194 104.5H186Z', 'stone', .18);
+  s += P.line('M178.5 104C178.5 97 181 94 184 93M189.5 104C189.5 97 187 94 184 93M184 93V104', 'green', .8);
+  s += P.fill(P.rect(182, 87, 4, 6), 'stone', { w: .4 }) + P.fill(P.dome(184, 87.5, 2.6, 2.6), 'gold', { w: .35 }) + P.line('M184 84.5V81M182.6 82.4H185.4', 'gold', .7);
   // the bell tower, striped, its belfry arcade, the drum, and the gilded Virgin holding the Child
   const tx = 218, tw = 20, cx = tx + tw / 2;
   s += P.fill(P.rect(tx, 128, tw, 42), 'stone') + stripes(P, P.rect(tx, 128, tw, 42), tx, 128, tw, 42) + P.shade(P.rect(tx + 14, 128, 6, 42), 'stone', .18);
@@ -178,7 +199,7 @@ function garde(P) {
   s += P.fill(P.rect(tx + 1, 112, tw - 2, 14), 'stone') + P.shade(P.rect(tx + 13, 112, 6, 14), 'stone', .2);
   for (const x of [tx + 3.4, tx + 10.4]) s += P.fill(P.arch(x, 114, 4.6, 11), '#3a3430', { w: .35 });
   s += P.fill(P.rect(tx - 1, 110, tw + 2, 2.6), 'stone2', { w: .45 });
-  for (const k of [-1, 1]) s += P.fill(P.rect(cx + k * 9 - 1.5, 106, 3, 4.4), 'stone2', { w: .35 });
+  for (const k of [-1, 1]) s += P.fill(P.rect(cx + k * 9 - 1.5, 106, 3, 4.4), 'stone2', { w: .35 }) + P.fill(P.dome(cx + k * 9, 106.4, 1.9, 2), 'gold', { w: .3 });
   s += P.fill(P.rect(cx - 5, 103, 10, 7.5), 'stone', { w: .5 }) + P.line(`M${cx - 2.5} 104V110M${cx} 104V110M${cx + 2.5} 104V110`, 'stone2', .5);
   s += P.fill(P.rect(cx - 6, 101.5, 12, 2), 'stone2', { w: .4 });
   s += virgin(P, cx, 101.5);
@@ -256,6 +277,7 @@ function transporter(P) {
     s += `<path d="${lat}" fill="none" stroke="${k}" stroke-width="1.5" opacity=".55"/><path d="${lat}" fill="none" stroke="${ink}" stroke-width=".8"/>`;
     s += P.fill(P.rect(x - 4.5, top - 4, 9, 5), c, { w: .5 }) + P.line(`M${x} ${top - 4}v-5`, c, .8);
     s += P.fill(P.rect(x - 11, base - 4, 22, 5), 'stone2', { w: .5 });
+    if (P.war === 'war') s += P.flag(x, top - 8, .7, 'FR', { h: 14 });
   }
   // the girder: chords and a lattice of diagonals
   const x0 = xl - 18, x1 = xr + 18;
@@ -360,4 +382,21 @@ function kiosk(P, x, by) {
   s += P.flat(P.rect(x - 15, by - 40, 30, 2), '#d9ad3c');
   s += P.wall(x - 13, by - 31, 7, 10) + P.wall(x + 6, by - 31, 7, 10);
   return s;
+}
+
+/** A tartane at her mooring: two masts, the big lateen yard lowered and furled, a rowing boat alongside. */
+function tartane(P, x, wl, s) {
+  const { f } = P, X = (n) => f(x + n * s), Y = (n) => f(wl + n * s);
+  let d = P.line(`M${X(-6)} ${Y(-4)}L${X(-5)} ${Y(-64)}M${X(16)} ${Y(-4)}L${X(17)} ${Y(-40)}`, '#5a4432', 1.4 * s);
+  d += P.line(`M${X(-34)} ${Y(-26)}L${X(22)} ${Y(-70)}`, '#5a4432', 1.1 * s) + P.line(`M${X(-30)} ${Y(-28)}L${X(18)} ${Y(-66)}`, '#efe6d2', 2.4 * s, { op: .95 });
+  d += P.line(`M${X(-5)} ${Y(-64)}L${X(-36)} ${Y(-4)}M${X(-5)} ${Y(-64)}L${X(30)} ${Y(-4)}M${X(17)} ${Y(-40)}L${X(36)} ${Y(-4)}`, '#4a3a2c', .4, { op: .8 });
+  d += P.fill(`M${X(-36)} ${Y(-8)}Q${X(-38)} ${Y(-14)} ${X(-40)} ${Y(-16)}H${X(38)}Q${X(36)} ${Y(-8)} ${X(30)} ${Y(0)}H${X(-30)}Q${X(-35)} ${Y(-2)} ${X(-36)} ${Y(-8)}Z`, '#3a5a6e');
+  d += P.line(`M${X(-38)} ${Y(-13)}H${X(37)}`, '#e2b23a', 1.2 * s) + P.shade(`M${X(-32)} ${Y(-2)}H${X(30)}L${X(33)} ${Y(-6)}H${X(-35)}Z`, '#3a5a6e', .3);
+  d += P.fill(`M${X(32)} ${Y(4)}H${X(52)}L${X(49)} ${Y(8)}H${X(35)}Z`, '#8a5a3a', { w: .4 }) + P.person(x + 42 * s, wl + 4 * s, .55 * s, 'worker', { c: '#e9e4d6', legs: '#3a3a44' });
+  d += reflect(P, x - 36 * s, x + 36 * s, wl + 1, 10, '#3a5a6e', 21);
+  return d;
+}
+function anchor(P, x, y, s) {
+  const { f } = P;
+  return P.line(`M${x} ${f(y - 14 * s)}V${f(y)}M${f(x - 8 * s)} ${f(y - 5 * s)}Q${f(x - 7 * s)} ${f(y + 1 * s)} ${x} ${f(y + 1 * s)}Q${f(x + 7 * s)} ${f(y + 1 * s)} ${f(x + 8 * s)} ${f(y - 5 * s)}M${f(x - 4 * s)} ${f(y - 11 * s)}H${f(x + 4 * s)}`, '#2a2a2c', 1.8 * s) + `<circle cx="${x}" cy="${f(y - 15.5 * s)}" r="${f(1.6 * s)}" fill="none" stroke="${P.ink('#2a2a2c')}" stroke-width="${f(1 * s)}"/>`;
 }
