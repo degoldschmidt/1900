@@ -133,6 +133,32 @@ export const POLICIES = {
     },
     way: (ways) => ways.filter((w) => w.open && w.afford).sort((a, b) => a.risk + (a.way.cost?.money ?? 0) / 60 - (b.risk + (b.way.cost?.money ?? 0) / 60))[0],
   },
+  'exploit-plant': { // careful otherwise, but lays a false trail through anyone who offers one
+    start(G) { POLICIES.competent.start(G); },
+    card(G, v) {
+      const { S } = G;
+      // one trail at a time, laid from lodgings in a city, never from a train
+      const ready = S.city && S.lodging?.city === S.city && (S.quietUntil ?? 0) <= S.t;
+      const i = ready ? v.choices.findIndex((c) => c.open && c.afford !== false && (c.ok ?? []).some((e) => e[0] === 'plant' && !String(e[1]?.subj ?? '').startsWith('op:'))) : -1;
+      if (i >= 0) return i;
+      // otherwise the careful choice, but nothing that leaves a mark while a trail is pending
+      if ((S.quietUntil ?? 0) > S.t) {
+        const quiet = v.choices.map((c, k) => ({ c, k })).filter((x) => x.c.open && x.c.afford !== false && !(x.c.ok ?? []).some((e) => ['record', 'plant', 'expose'].includes(e[0])));
+        if (quiet.length && !['control', 'encounter', 'inspector', 'missed'].includes(v.card.type)) return quiet[0].k;
+      }
+      return POLICIES.competent.card(G, v);
+    },
+    city(G) {
+      const { S } = G;
+      // a trail holds only while nothing places you elsewhere: keep to the rooms until the hour it names
+      if (S.lodging?.city !== S.city) setLodging(G, safehouseHere(G) ? 'safehouse' : 'pension');
+      if ((S.quietUntil ?? 0) > S.t) { if (doActivity(G, 'rest')) { advance(G, Math.min(S.quietUntil + 1, S.t + 12 * HOUR)); return true; } }
+      const people = contactsHere(G);
+      if (people.length && rand(S) < .5) { seek(G, people[Math.floor(rand(S) * people.length)].person.id); return true; }
+      return POLICIES.competent.city(G);
+    },
+    way: (ways) => POLICIES.competent.way(ways),
+  },
   'exploit-third': {
     card: (G, v) => v.choices.findIndex((c) => c.open && c.afford !== false),
     city(G) { return goTo(G, 'cheapest', 3) || idle(G, false); },

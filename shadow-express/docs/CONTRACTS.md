@@ -233,6 +233,7 @@ ENEMY  = { inbox:[RECORD], dossiers:{ hale:{ susp, name, desc, photo, alerts:['D
            assoc:{ kowal:0..1 }, plans:[{ city, from, to, conf }], scepticism:0..1, belief:[{ city, t, w }],
            roles:{ falk:{ role:'tail'|'guard'|'watch', target } } }
 ```
+**False trails** (`['plant', …]` about the agent): the person lays the trail by travelling as you, which exposes them. The enemy rejects a trail when a fresher genuine record makes it impossible on the timetable (so the agent must lie quiet until the claimed hour; the engine says so in a note). Otherwise it believes the trail with chance 1 − scepticism. Every trail received adds 0.3 to scepticism, believed or not; each one exposed adds 0.25 more. Measured with the `exploit-plant` bot: the first trail is believed about 70% of the time, the third under 20%.
 
 ## 8. Writing style (all text)
 

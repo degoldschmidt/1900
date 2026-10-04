@@ -1,7 +1,7 @@
 // The game object: data, world, state and indexes; a new campaign; the storylet context (conditions and effects).
 // State S is plain JSON (saved as is). The world W and the indexes are rebuilt from the data and the seed.
 
-import { T, DAY, clock } from '../data/time.js';
+import { T, DAY, clock, when as dateText } from '../data/time.js';
 import { buildWorld } from './world.js';
 import { hash, rand, weighted } from './rng.js';
 import { newEnemy } from './enemy.js';
@@ -270,17 +270,19 @@ function plant(G, o) {
     return;
   }
   if (!city) return;
-  const from = S.city ?? S.journey?.to ?? 'LON';
-  const r = earliest(W, from, S.t, { horizon: 4 * DAY });
-  const when = r.get(city)?.t ?? S.t + DAY;
+  const from = S.city ?? S.journey?.to ?? 'LON', t0 = S.city ? S.t : S.journey ? S.journey.arr : S.t; // on a train: from where it arrives, when it arrives
+  const r = earliest(W, from, t0, { horizon: 4 * DAY });
+  const when = r.get(city)?.t ?? t0 + DAY;
   const cover = o.subj === 'cover:active' ? S.cover : o.subj.slice(6);
   leave(G, 'sighting', .7, { city, t: when, cover, person: o.via, planted: true });
   p.exp = Math.min(1, p.exp + .3);
+  S.quietUntil = Math.max(S.quietUntil ?? 0, when);
+  note(G, 'A false trail', `${G.I.person.get(o.via)?.name ?? 'Your friend'} will be seen as ${coverName(G, cover)} in ${G.I.city.get(city)?.name ?? city} about ${dateText(when)}. Until then nothing must place you anywhere else: keep to your rooms, and see no one.`);
 }
 
-/** Operation control from effects: start, finish a step, win, fail. */
 /** What the Bureau wires with each main order, for tickets and rooms. */
 export const EXPENSES = 8;
+/** Operation control from effects: start, finish a step, win, fail. */
 export function opControl(G, id, a) {
   const { S } = G;
   const o = S.ops[id];

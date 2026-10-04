@@ -12,6 +12,7 @@ const DESC = { sighting: .25, meeting: .3, photo: 1, bribe: .2, frontier: .08, r
 
 export const SUSPECT = .3; // the trail of a cover this suspect is followed
 export const ALERT = .55;  // a name this suspect is posted on frontier alerts
+export const DOUBT = .3;   // scepticism added by every false trail received, believed or not (exposure adds .25 more)
 
 export function newEnemy(D) {
   const hunters = {};
@@ -101,6 +102,7 @@ function plant(E, r, ctx, t) {
     d.susp = Math.max(d.susp, SUSPECT);
     note(E, t, `believes ${r.cover} is at ${r.city}`);
   }
+  E.scepticism = Math.min(1, E.scepticism + DOUBT); // a sighting that arrives so conveniently breeds doubt of the next
   if (r.person) E.assoc[r.person] = Math.min(1, (E.assoc[r.person] ?? 0) + .15);
 }
 
