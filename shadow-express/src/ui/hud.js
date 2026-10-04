@@ -56,8 +56,12 @@ export function makeHud(app, hooks) {
     if (G?.S.routine && !G.S.journey && !G.S.booked) { hooks.stopRoutine(); last = ''; return; }
     hooks.setPaused(!hooks.paused()); last = '';
   });
+  // render() runs every frame: write to the DOM only what changed
   const set = (e, v) => { if (e.textContent !== v) e.textContent = v; };
-  let last = '', faceKey = '', coKey = '', co = null;
+  const attr = (e, k, v) => { if (e.getAttribute(k) !== v) e.setAttribute(k, v); };
+  const styled = new Map();
+  const css = (e, k, v) => { const key = `${k}`; const m = styled.get(e) ?? {}; if (m[key] !== v) { m[key] = v; styled.set(e, m); if (k.startsWith('--')) e.style.setProperty(k, v); else e.style[k] = v; } };
+  let last = '', faceKey = '', coKey = '', co = null, heatKey = '';
 
   /** Heat of a cover: how much the other side may hold on it (0–1), from the records left under it. */
   function heatOf(G, id) {
@@ -91,8 +95,8 @@ export function makeHud(app, hooks) {
     const S = G.S, d = dateOf(S.t), inset = hooks.inset();
     const phone = innerWidth < 900;
     const moving = !!S.journey || !!S.booked || !!S.routine || S.t < S.busyUntil;
-    root.style.setProperty('--gr', `${inset.right}px`);
-    root.style.setProperty('--gb', `${inset.bottom}px`);
+    css(root, '--gr', `${Math.round(inset.right)}px`);
+    css(root, '--gb', `${Math.round(inset.bottom)}px`);
     root.classList.toggle('sheet', phone && hooks.ledgerOpen());
     root.classList.toggle('moving', moving);
     // the pill
@@ -107,11 +111,12 @@ export function makeHud(app, hooks) {
     set(E.stand, String(Math.round(S.standing)));
     E.nerveBox.classList.toggle('low', S.nerve <= 2);
     set(E.coverName, coverName(G));
-    E.heat.style.width = `${Math.round(heatOf(G, S.cover) * 100)}%`;
-    E.kase.setAttribute('aria-pressed', String(hooks.ledgerOpen()));
+    const hk = `${S.cover}|${S.recN}|${S.records.length}|${!!S.covers[S.cover]?.burned}`;
+    if (hk !== heatKey) { heatKey = hk; css(E.heat, 'width', `${Math.round(heatOf(G, S.cover) * 100)}%`); }
+    attr(E.kase, 'aria-pressed', String(hooks.ledgerOpen()));
     const fk = S.hero ? `hero-${JSON.stringify(S.hero.portrait)}` : '';
     if (fk && fk !== faceKey) { faceKey = fk; portraitUrl(fk, S.hero.portrait).then((u) => { if (u && faceKey === fk) E.img.src = u; }); }
-    E.hero.hidden = !fk;
+    if (E.hero.hidden !== !fk) E.hero.hidden = !fk;
     // the status bar
     const key = [Math.floor(S.t), speed, paused, !!S.journey, !!S.booked, !!S.routine, S.busyUntil].join('|');
     if (key !== last) { last = key; status(G, speed, paused, moving); }
