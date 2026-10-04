@@ -125,6 +125,8 @@ export default {
   },
 };
 
+/** Black crape for the Archduke in the weeks after 28 June, until the war takes the flags out. */
+const mourning = (P) => P.war !== 'war' && (P.st?.day ?? 0) < 30;
 const svg = (w, h, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${Math.round(w * 10) / 10} ${Math.round(h * 10) / 10}" width="${Math.round(w * 10) / 10}" height="${Math.round(h * 10) / 10}">${body}</svg>`;
 const quad = (P, pts) => P.poly(pts.map(([X, Y, Z]) => pr(X, Y, Z)));
 
@@ -204,7 +206,7 @@ function vijecnica(P) {
   for (const x of [x0 - 2, x1 - 8, 299, 323]) s += P.fill(P.rect(x, top - 12, 8, 12), 'ochre', { w: .45 }) + P.flat(`M${x} ${top - 8}h8v1.6h-8Z`, 'brick') + P.fill(P.dome(x + 4, top - 12, 4.4, 5), '#7f9a98', { w: .4 }) + P.line(`M${x + 4} ${top - 18}v-3`, 'gold', .5);
   s += P.fill(P.rect(x0 - 3, by - 2, x1 - x0 + 6, 2), 'stone2', { w: .3 });
   // the flag over the portal: in mourning these weeks, the black and gold at war
-  s += P.war === 'war' ? P.flag(314, top - 18, .7, 'AH', { h: 14 }) : P.line(`M314 ${top - 18}v-14`, '#5a4a3a', .9) + P.fill(`M314 ${top - 31}q5 1 9 0v11q-4 1 -9 0Z`, '#1d1c20', { w: .3 });
+  s += !mourning(P) ? P.flag(314, top - 18, .7, 'AH', { h: 14 }) : P.line(`M314 ${top - 18}v-14`, '#5a4a3a', .9) + P.fill(`M314 ${top - 31}q5 1 9 0v11q-4 1 -9 0Z`, '#1d1c20', { w: .3 });
   return s;
 }
 function southBank(P) {
@@ -326,7 +328,7 @@ function quayHouses(P) {
   // the far houses toward the Vijećnica
   for (const [z0, z1, h, c] of [[66, 50, 11, 'wall4'], [50, 42, 13, 'wall2']]) s += house(P, z0, z1, h, c, { floors: 3, shop: false });
   // the corner of Franz Joseph Street: Schiller's shop on the ground floor, crape at the windows in July
-  s += house(P, 38, 27, 11, 'wall', { floors: 2, shop: ['#7a2a2a', '#efe2c4'], corner: true, mourning: P.war !== 'war' });
+  s += house(P, 38, 27, 11, 'wall', { floors: 2, shop: ['#7a2a2a', '#efe2c4'], corner: true, mourning: mourning(P) });
   s += house(P, 27, 15.5, 15, 'wall3', { floors: 3, shop: ['#2f5a4a', '#efe2c4'] });
   s += house(P, 15.5, 4, 17, 'wall2', { floors: 4, shop: ['#7a5a2a', '#f2e6cc'] });
   return s;

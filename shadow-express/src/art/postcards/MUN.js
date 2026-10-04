@@ -1,5 +1,5 @@
 // Munich: Marienplatz. The New Town Hall fills the square's north side, Gothic to its pinnacles, its tower climbing
-// past the Glockenspiel (whose knights ride and coopers dance at eleven, noon and five) to the Münchner Kindl; the
+// past the Glockenspiel (its knights joust and its coopers dance on their turntables) to the Münchner Kindl; the
 // Frauenkirche's two green domes rise over its roof; the golden Virgin stands on her column. A blue-and-white tram,
 // a Hofbräu dray with its barrels, a man in loden and a chamois-beard hat.
 
@@ -56,14 +56,14 @@ export default {
     return s;
   },
 
-  mid(P, T, st) {
+  mid(P, T) {
     let s = '';
     // the square
     s += P.paving(GB - 2, 380, { vx: 300, seed: 17 });
     // the west side of the square, lower, gabled
     s += P.far(.3, () => westSide(P));
     // the New Town Hall and its tower
-    s += P.far(.2, () => rathaus(P, st));
+    s += P.far(.2, () => rathaus(P));
     // the Mariensäule
     s += P.far(.12, () => mariensaeule(P, 238, 344));
     // people about the square, lamps
@@ -93,7 +93,7 @@ export default {
 };
 
 // ---------- the New Town Hall ----------
-function rathaus(P, st) {
+function rathaus(P) {
   const { f } = P;
   let s = '';
   const x0 = 196, x1 = 600, top = 252, by = GB, tx = 380;
@@ -125,11 +125,11 @@ function rathaus(P, st) {
   const lf = P.L.leaf;
   if (lf.leaf) for (let x = x0 + 7; x < x1; x += 13) s += P.flat(P.rect(x, top + 30, 8, 2), lf.dark) + `<circle cx="${x + 2}" cy="${top + 29.6}" r="1.1" fill="${P.ink(P.L.season === 'autumn' ? '#c8732a' : '#cc3333')}"/><circle cx="${x + 6}" cy="${top + 29.6}" r="1.1" fill="${P.ink(P.L.season === 'spring' ? '#e8a8c0' : '#cc3333')}"/>`;
   // the tower
-  s += tower(P, tx, st);
+  s += tower(P, tx);
   s += P.wall(212, by - 46, 9, 12) + P.flagAt(f(260), f(top + 14)) + P.flagAt(f(520), f(top + 14));
   return s;
 }
-function tower(P, cx, st) {
+function tower(P, cx) {
   const { f } = P;
   let s = '';
   const w = 36, base = GB, t1 = 160;
@@ -146,16 +146,15 @@ function tower(P, cx, st) {
   }
   for (const k of [-1, 0, 1]) s += P.line(`M${cx + k * (gw / 2 - 2)} ${gy - 26}V${gy + 2}`, 'stone2', 1.1);
   s += P.fill(`M${cx - gw / 2 - 2} ${gy - 30}L${cx} ${gy - 36}L${cx + gw / 2 + 2} ${gy - 30}Z`, 'slate', { w: .5 });
-  // its figures: at eleven, noon and five they turn; otherwise they stand
-  const hour = ((((st?.t ?? 720) / 60) % 24) + 24) % 24, playing = (hour >= 11 && hour < 13) || (hour >= 17 && hour < 18);
-  const knights = [['#2f5a9a', '#f2efe6'], ['#b8322c', '#f2efe6']], coopers = ['#c8342e', '#2e5a3a', '#c8342e'];
-  if (playing) {
-    for (const [i, cl] of knights.entries()) P.mover(rider(P, { c: cl[0], c2: cl[1], dir: i ? -1 : 1, s: .5 }), { path: i ? [[cx + 9, gy - 13, 1, 0, 0], [cx + 7, gy - 13, 1, .08, 1], [cx - 7, gy - 13, 1, .42, 1], [cx - 9, gy - 13, 1, .5, 0], [cx - 9, gy - 13, 1, 1, 0]] : [[cx - 9, gy - 13, 1, 0, 0], [cx - 7, gy - 13, 1, .08, 1], [cx + 7, gy - 13, 1, .42, 1], [cx + 9, gy - 13, 1, .5, 0], [cx + 9, gy - 13, 1, 1, 0]], dur: 9, offset: i * 4.5 });
-    for (let i = 0; i < 3; i++) P.mover(cooper(P, { c: coopers[i], s: .44 }), { path: [[cx - 10, gy + 2, 1, 0, 0], [cx - 8, gy + 2, 1, .1, 1], [cx + 8, gy + 2, 1, .9, 1], [cx + 10, gy + 2, 1, 1, 0]], dur: 7.5, offset: i * 2.5 });
-  } else {
-    for (const [i, cl] of knights.entries()) s += T_place(rider(P, { c: cl[0], c2: cl[1], dir: i ? -1 : 1, s: .5 }), cx + (i ? 6 : -6), gy - 13);
-    for (let i = 0; i < 3; i++) s += T_place(cooper(P, { c: coopers[i], s: .44 }), cx - 8 + i * 8, gy + 2);
-  }
+  // its figures on their turntables: the knights joust above, the coopers dance below, each passing across its opening
+  // and round behind the pillars (paths that loop; at a cycle's start each stands where a still card shows it)
+  const ring = (sp, p, y, dir, dur) => {
+    const V = .6, te = (10 - p) / 20 * V, a = dir > 0 ? cx + 10 : cx - 10, b = dir > 0 ? cx - 10 : cx + 10, x = cx + dir * p;
+    P.mover(sp, { path: [[x, y, 1, 0, 1], [a, y, 1, te, 1], [a, y, 1, te + .02, 0], [b, y, 1, te + .38, 0], [b, y, 1, te + .4, 1], [x, y, 1, 1, 1]], dur });
+  };
+  ring(rider(P, { c: '#2f5a9a', c2: '#f2efe6', dir: 1, s: .5 }), -5, gy - 13, 1, 16);
+  ring(rider(P, { c: '#b8322c', c2: '#f2efe6', dir: -1, s: .5 }), -5, gy - 13, -1, 16);
+  for (const [i, p] of [-7, 0, 7].entries()) ring(cooper(P, { c: ['#c8342e', '#2e5a3a', '#c8342e'][i], s: .44 }), p, gy + 2, 1, 12);
   // the clock, the gallery with its corner turrets, the octagon, the open crown and the Kindl
   s += P.clock(cx, 178, 8.6, { tz: 0, face: '#f2ecd8', rim: '#d8a83a' });
   s += P.fill(P.rect(cx - w / 2 - 3, t1 - 4, w + 6, 5), 'stone2', { w: .55 });
@@ -184,8 +183,6 @@ function bavarian(P, x, y) {
   for (let i = -3; i < 6; i++) for (let j = -1; j < 4; j++) if ((i + j) % 2 === 0) lz += `<path d="M${f(x - w + i * 3.6)} ${f(top + j * 3.4 + 1.7)}l1.8 -1.7l1.8 1.7l-1.8 1.7Z" fill="${P.ink('#3b78c4')}"/>`;
   return P.line(`M${x} ${y}V${top - 1}`, '#5a4a3a', 1) + `<circle cx="${x}" cy="${top - 1.6}" r="1" fill="${P.ink('gold')}"/>` + `<clipPath id="${id}"><path d="${wave}"/></clipPath><g clip-path="url(#${id})">${lz}</g><path d="${wave}" fill="none" stroke="${P.keyC()}" stroke-width=".5"/>`;
 }
-/** Draw a sprite standing still where its anchor falls. */
-function T_place(sp, x, y) { return `<g transform="translate(${Math.round((x - sp.ax) * 10) / 10} ${Math.round((y - sp.ay) * 10) / 10})">${(sp.frames ?? [sp.svg])[0].replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '')}</g>`; }
 const svgDoc = (P, w, h, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${P.f(w)} ${P.f(h)}" width="${P.f(w)}" height="${P.f(h)}">${body}</svg>`;
 const facing = (P, dir, w, body) => (dir < 0 ? `<g transform="translate(${P.f(w)} 0) scale(-1 1)">${body}</g>` : body);
 /** A knight of the Glockenspiel, lance couched, on his caparisoned horse. */
@@ -198,13 +195,16 @@ function rider(P, o) {
   b += P.line(`M${S(6)} ${S(4.6)}L${S(19.6)} ${S(2.6)}`, '#8a6a3a', .7 * s);
   return { svg: svgDoc(P, W, H, facing(P, o.dir ?? 1, W, b)), w: W, h: H, ax: W / 2, ay: 15 * s };
 }
-/** A cooper in red jacket and white stockings, his hoop held high. */
+/** A cooper in red jacket and white stockings, swinging his hoop high and low (two frames). */
 function cooper(P, o) {
   const { f } = P, s = o.s ?? 1, W = 10 * s, H = 16 * s, S = (k) => f(k * s);
-  let b = P.line(`M${S(4)} ${S(15)}V${S(10)}M${S(6)} ${S(15)}V${S(10)}`, '#f2efe6', 1.1 * s) + P.fill(`M${S(3)} ${S(10.4)}V${S(5)}H${S(7)}V${S(10.4)}Z`, o.c, { w: .3 });
-  b += `<circle cx="${S(5)}" cy="${S(3.6)}" r="${S(1.3)}" fill="${P.ink('#e2bf9c')}"/><path d="M${S(3.6)} ${S(2.6)}h${S(2.8)}" stroke="${P.ink('#2a2a2a')}" stroke-width="${S(.9)}"/>`;
-  b += `<ellipse cx="${S(5)}" cy="${S(1)}" rx="${S(3.6)}" ry="${S(.9)}" fill="none" stroke="${P.ink('#c8a23a')}" stroke-width="${S(.6)}"/>`;
-  return { svg: svgDoc(P, W, H, b), w: W, h: H, ax: W / 2, ay: 15 * s };
+  const frame = (st) => {
+    let b = P.line(`M${S(4)} ${S(15)}V${S(10)}M${S(6)} ${S(15)}V${S(10)}`, '#f2efe6', 1.1 * s) + P.fill(`M${S(3)} ${S(10.4)}V${S(5)}H${S(7)}V${S(10.4)}Z`, o.c, { w: .3 });
+    b += `<circle cx="${S(5)}" cy="${S(3.6)}" r="${S(1.3)}" fill="${P.ink('#e2bf9c')}"/><path d="M${S(3.6)} ${S(2.6)}h${S(2.8)}" stroke="${P.ink('#2a2a2a')}" stroke-width="${S(.9)}"/>`;
+    b += `<ellipse cx="${S(5)}" cy="${S(st ? 1 : 5.6)}" rx="${S(3.6)}" ry="${S(.9)}" fill="none" stroke="${P.ink('#c8a23a')}" stroke-width="${S(.6)}"/>`;
+    return b;
+  };
+  return { frames: [svgDoc(P, W, H, frame(0)), svgDoc(P, W, H, frame(1))], fps: 2, w: W, h: H, ax: W / 2, ay: 15 * s };
 }
 
 // ---------- the Frauenkirche and the square's west side ----------

@@ -23,9 +23,10 @@ export default {
   // an olive spray: grey-green willowy leaves, silver beneath, a cluster of black and green olives
   flowerArt(F) {
     const I = F.I;
-    let s = F.stem('M-18 10Q-4 2 6 -4Q12 -8 18 -14', '#6a5a40', 1.6);
-    for (const [x, y, a, c] of [[-14, 8, 210, '#7f9a6a'], [-10, 6, 140, '#a8b894'], [-4, 3, 230, '#8aa274'], [0, 1, 120, '#b4c4a0'], [5, -2, 240, '#7f9a6a'], [9, -5, 130, '#a8b894'], [13, -9, 220, '#8aa274'], [16, -12, 150, '#b4c4a0'], [-7, 4, 70, '#8aa274'], [3, -1, 300, '#a8b894']]) s += F.at(x, y, F.leaf(16, 4.2, a, c, { shape: 'lance', vein: '#e8eadc' }));
-    for (const [x, y, c] of [[-2, 9, '#2a2a30'], [3, 11, '#3a3a2e'], [-6, 13, '#6a7a3a'], [1, 15, '#2a2a30']]) s += F.berry(x, y, 3, c);
+    let s = F.stem('M-20 12Q-4 3 6 -4Q12 -8 19 -15', '#5a4a34', 1.8);
+    for (const [x, y, a, c] of [[-16, 10, 200, '#7f9a6a'], [-12, 7, 130, '#a9ba96'], [-6, 4, 222, '#8aa274'], [-2, 2, 112, '#b6c6a2'], [4, -2, 236, '#7f9a6a'], [8, -5, 122, '#a9ba96'], [12, -9, 214, '#8aa274'], [15, -12, 140, '#b6c6a2'], [18, -14, 60, '#8aa274'], [-9, 5, 62, '#8aa274'], [1, 0, 300, '#a9ba96'], [10, -7, 318, '#7f9a6a']]) s += F.at(x, y, F.leaf(17, 5.6, a, c, { shape: 'lance', vein: '#eef0e2' }));
+    s += F.stem('M-3 3Q-2 8 0 11', '#5a4a34', .8);
+    for (const [x, y, c, r] of [[-3, 11, '#2a2a34', 3.2], [2.6, 12.4, '#3a3a2e', 3.4], [-6.4, 14.6, '#6f7f3a', 3], [0, 16.6, '#2a2a34', 3.1], [4.6, 17, '#7f8c42', 2.8]]) s += F.berry(x, y, r, c);
     return s;
   },
   // an anemone: scarlet cupped petals, a black boss ringed with dark stamens
