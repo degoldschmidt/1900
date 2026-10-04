@@ -4,8 +4,10 @@ A single-page browser spy game in the manner of the great travel-and-choice game
 
 **Version 2, "July 1914"**
 - **Setting**: the July Crisis, from the shots in Sarajevo on 28 June to Britain's declaration of war on 4 August.
-- **The player**: a freelance agent of the Secret Service Bureau, a man or a woman. They cross Europe by named trains and steamers under borrowed names, and cultivate, deceive, recruit, protect or betray the people they meet.
-- **The operations**: nine of them, in three acts.
+- **The player**: a freelance agent of the Secret Service Bureau, made in an RPG-style creator: name and engraved likeness, a past that brings two borrowed names, skills and languages bought with points, virtues and vices, a starting kit, an old acquaintance.
+- **Living under cover**: postings in Vienna, Belgrade and Berlin, days or weeks at a time. A legend for each name in each city, lodgings that keep registers, a local police watch that rises with every slip and falls with quiet days.
+- **Journeys**: rarer and riskier. Whole itineraries are booked at once, delays show only on the way, connections can be missed, and frontier controls, station police and departure shadows all leave traces.
+- **The operations**: nine orders from London in three acts (one of them optional) and three favours asked by the people you meet.
 - **The hunters**: three of them, working from what the enemy actually knows: hotel registers, passenger lists, frontier books, wires, bribes, faces.
 
 Original art, text and name. The dates and headlines are real; the people are invented, and so is what the crisis does to each train, frontier and price.

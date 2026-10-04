@@ -204,6 +204,7 @@ function about() {
   t.innerHTML = `<div class="card paper"><div class="kick">About</div><h2>Shadow Express</h2><div class="rule"></div>
     <p>A spy journey through the July Crisis of 1914. The dates and headlines in the newspapers are real; the people you meet are invented, and so is what the crisis does to each train, frontier and price: that is the game's design, not history.</p>
     <p>What you know is in the dossier: what you have seen, what you only suspect, and the traces you have left behind you, with your guess at when each will reach the other side. Hunters on the map are drawn as you last heard of them; the dotted rings are where they could be by now.</p>
+    <p>Living under cover: every name you use has a legend in every city, which grows while you work it and wears thin when you do not. The local police watch you more closely after each slip and less after each quiet day; past a point they follow you, search your rooms, or call. Spare papers are safest left with the Bureau in London and sent for by the embassy bag.</p>
     <p class="dim">An original game in the manner of the great travel-and-choice games. Art, words and code made for this prototype.</p>
     <div class="choices"><button class="choice" data-close><b>Back to the game</b></button><button class="choice" data-new><b>Begin a new campaign</b><span>this one will be lost</span></button></div></div>`;
   app.appendChild(t);
@@ -217,7 +218,7 @@ function title(onStart) {
   t.dataset.v = '2';
   t.innerHTML = `<div class="card paper"><div class="kick">Europe, summer 1914</div><h1>Shadow Express</h1><div class="rule"></div>
     <p>Sunday, the twenty-eighth of June. In Sarajevo, the heir to the Austrian throne has been shot. In London, a commander of the Secret Service Bureau sends for you.</p>
-    <p>For five weeks you will cross Europe by named trains under borrowed names, with papers that may not bear inspection. You will cultivate people who may betray you, and betray some who trust you. Three hunters work from whatever you leave behind: a hotel register, a passenger list, a frontier book, a face.</p>
+    <p>For five weeks you will live under borrowed names in Vienna, Belgrade and Berlin, working a legend by day and listening in cafés by night. Now and then the Bureau sends you on a journey where a late train, a missed connection or a commissioner with a list can undo weeks of patience. You will cultivate people who may betray you, and betray some who trust you. Three hunters work from whatever you leave behind: a hotel register, a passenger list, a frontier book, a face.</p>
     <p class="dim">Drag the globe to turn it; pinch or scroll to look closer. Tap a city for its trains. Every choice may come back.</p>
     <div class="choices"><button class="choice" data-new><b>Make your agent</b><span>name, looks, past, talents, faults and kit</span></button><button class="choice" data-quick><b>Begin at once</b><span>with a ready-made agent</span></button></div></div>`;
   app.appendChild(t);
