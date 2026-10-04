@@ -5,7 +5,10 @@
 const FORGED = ['not', ['loyal', 'amsler', 'enemy:orlova']];
 const GENUINE = ['loyal', 'amsler', 'enemy:orlova'];
 const note = (text, src, rel, truth) => ['intel', { subj: 'op:op-cable', claim: { note: text }, src, rel, truth }];
-const lost = [['item', '-sarajevo-cable'], ['record', 'frontier', 1], ['susp', 'active', 0.3]];
+const lost = [['item', '-sarajevo-cable'], ['record', 'frontier', 1], ['susp', 'active', 0.3], ['op', 'op-cable', 'fail']];
+const brod = ['later', 20, 'op-cable.brod'];
+const search = ['later', 1, 'op-cable.search'];
+const met = ['op', 'op-cable', 'step:meet'];
 
 export default [
   // ---------- taking up the post ----------
@@ -14,18 +17,18 @@ export default [
     text: 'Vienna takes its time with strangers. Within three days of arriving you must fill in a Meldezettel for the police: name, faith, profession, last address. The hall porter will read it before the police do. Where you live will decide who you meet, and who meets you.',
     choices: [
       { label: 'Rooms at the Hotel Sacher', sub: '£6; officers, diplomats, and their eyes', cost: { money: 6 },
-        ok: [['legend', 0.2], ['watch', 0.1], ['record', 'register', 0.5]] },
+        ok: [['legend', 0.2], ['watch', 0.1], ['record', 'register', 0.5], brod] },
       { label: 'A furnished room in the Josefstadt', sub: '£2; a landlady who notices everything', cost: { money: 2 },
-        ok: [['legend', 0.15], ['record', 'register', 0.3]] },
+        ok: [['legend', 0.15], ['record', 'register', 0.3], brod] },
       { label: 'A pension by the Südbahnhof', sub: 'Cheap, anonymous, full of travellers', cost: { money: 1 },
-        ok: [['legend', 0.05], ['record', 'register', 0.2]] },
+        ok: [['legend', 0.05], ['record', 'register', 0.2], brod] },
       { label: 'Fill in a false Meldezettel', sub: 'No true trace of you; a crime if caught',
         roll: { p: 0.55, mods: [[['skill', 'paperwork', '>=', 2], 0.25], [['skill', 'german', '>=', 2], 0.1]] },
-        ok: [['watch', -0.1]], fail: [['watch', 0.3], ['record', 'register', 1]] },
+        ok: [['watch', -0.1], brod], fail: [['watch', 0.3], ['record', 'register', 1], brod] },
     ] },
 
   // ---------- the run to Sarajevo ----------
-  { id: 'op-cable.brod', at: 'op',
+  { id: 'op-cable.brod', at: 'then', if: [['mode', 'rail'], ['op', 'op-cable', 'reach'], ['not', ['op', 'op-cable', 'meet']], ['nation', 'AH']],
     title: 'Gendarmes at Bosanski Brod',
     text: 'At Bosanski Brod, where the narrow gauge begins, gendarmes board the Sarajevo train and work down the corridor with lanterns. Since the shots, nobody enters Bosnia without a reason the gendarmes believe. The sergeant reads papers slowly, moving his lips, and asks every foreigner the same question: what business can anyone have in Sarajevo this week?',
     choices: [
@@ -40,7 +43,7 @@ export default [
         roll: { p: 0.35, mods: [[['class', 1], 0.2]] }, ok: [['nerve', 1]], fail: [['record', 'frontier', 1], ['nerve', -1]] },
     ] },
 
-  { id: 'op-cable.sarajevo', at: 'op',
+  { id: 'op-cable.sarajevo', at: 'op', if: [['city', 'SAR']],
     title: 'Sarajevo in mourning',
     text: "Black flags hang from the Konak. Serb shops along the Ferhadija have no windows left, and the Hotel Europe's are boarded. Gendarmes march students past in pairs, roped at the wrist. Jovan Marić is said to be hiding, and so is everyone who ever knew him. Where will you lay your head?",
     choices: [
@@ -72,22 +75,23 @@ export default [
         ok: [['expose', 'jovan', 0.6], ['record', 'meeting', 0.6]] },
     ] },
 
-  { id: 'op-cable.jovan', at: 'op', speaker: 'jovan', if: [['city', 'SAR']],
+  { id: 'op-cable.jovan', at: 'op', speaker: 'jovan',
     title: "The bookbinder's back room",
     text: "Jovan is younger than you expected, with ink on his cuffs and a fever-bright stare. Two of his friends were taken last night. The cable is sewn into the spine of a law book. 'It came from a man at the Belgrade telegraph office,' he says. 'Take it to people who will read it. What are you giving in return?'",
     choices: [
       { label: 'Promise to get him out', sub: 'He will hold you to it',
-        ok: [['trust', 'jovan', 2], ['flag', 'op-cable-promise'], ['debrief', 'You promised Jovan Marić a way out when the time came.']] },
+        ok: [met, search, ['record', 'meeting', 0.4], ['trust', 'jovan', 2], ['flag', 'op-cable-promise'],
+          ['debrief', 'You promised Jovan Marić a way out when the time came.']] },
       { label: "Pay him, for his friends' families", sub: '£5', cost: { money: 5 },
-        ok: [['trust', 'jovan', 1]] },
+        ok: [met, search, ['record', 'meeting', 0.4], ['trust', 'jovan', 1]] },
       { label: 'Ask who else knows of it', sub: 'Names cost him; he gives them anyway',
-        ok: [['trust', 'jovan', -1],
+        ok: [met, search, ['record', 'meeting', 0.4], ['trust', 'jovan', -1],
           ['intel', { subj: 'person:ilic', claim: { note: 'Jovan says Lieutenant Ilić told half of Belgrade the cable existed.' }, src: 'person:jovan', rel: 0.7, truth: true }]] },
       { label: 'Take it and go at once', sub: 'He will remember how you left',
-        ok: [['trust', 'jovan', -2], ['later', 30, 'op-cable.taken']] },
+        ok: [met, search, ['record', 'meeting', 0.2], ['trust', 'jovan', -2], ['later', 30, 'op-cable.taken']] },
     ] },
 
-  { id: 'op-cable.search', at: 'op',
+  { id: 'op-cable.search', at: 'then', if: [['mode', 'rail'], ['item', 'sarajevo-cable']],
     title: 'A search on the Bosnian line',
     text: 'Two hours out of Sarajevo the train halts in a cutting. Soldiers this time, not gendarmes, with a lieutenant who has orders to find letters going to Serbia. They are opening every case in your carriage, one by one, and reading whatever paper they find. The cable is in yours.',
     choices: [
@@ -99,7 +103,7 @@ export default [
       { label: 'Bribe the lieutenant', sub: '£5, and he looks offended first', cost: { money: 5 },
         roll: { p: 0.45 }, ok: [['record', 'bribe', 0.6]], fail: [...lost, ['record', 'bribe', 1]] },
       { label: 'Drop it from the window', sub: 'Lose the cable, keep your liberty',
-        ok: [['item', '-sarajevo-cable'], ['debrief', 'You threw the Sarajevo cable into a Bosnian cutting rather than be found with it.']] },
+        ok: [['debrief', 'You threw the Sarajevo cable into a Bosnian cutting rather than be found with it.'], ['item', '-sarajevo-cable'], ['op', 'op-cable', 'fail']] },
     ] },
 
   // ---------- ways of judging the cable in Vienna ----------

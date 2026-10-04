@@ -1,25 +1,11 @@
 // Storylets of op-lastboat, The Last Boat (owner: Ops). See docs/CONTRACTS.md §5. The run home.
+// Reaching London ends the campaign, so there is no scene there: the run itself is the last act.
 
 const semlinGone = ['intel', { subj: 'line:BUD-BEG', claim: { closed: [null, null] }, src: 'seen', rel: 0.95, truth: 'auto' }];
 
 export default [
-  // ---------- home ----------
-  { id: 'op-lastboat.home', at: 'op', speaker: 'ashby', if: [['city', 'LON']],
-    title: 'Whitehall, in the crowd',
-    text: 'Whitehall is full of people who do not know why they have come: clerks, shopgirls, a man selling little flags. They sing, fall silent, and sing again. Ashby is waiting at the hotel with a kettle on a spirit lamp and a list of everything you were sent to fetch. He reads it aloud, item by item.',
-    choices: [
-      { label: 'Hand over everything you carry', sub: 'Whatever survived the journey',
-        ok: [['standing', 2], ['debrief', 'You came home with what you carried, and handed it all over.']] },
-      { label: 'Ask what becomes of your people', sub: 'Some of them will not live through this',
-        ok: [['nerve', -1], ['debrief', 'Ashby promised to try for Sauer, Jovan and the rest. He meant it, and could do little.']] },
-      { label: 'Ask for the next posting', sub: 'There will be one, and soon',
-        ok: [['standing', 3], ['nerve', -2]] },
-      { label: 'Thank him for vouching at the quay', sub: 'He did not enjoy it', if: [['flag', 'op-lastboat-vouched']],
-        ok: [['trust', 'ashby', 1], ['standing', -1]] },
-    ] },
-
   // ---------- twists on the run ----------
-  { id: 'op-lastboat.quay', at: 'op',
+  { id: 'op-lastboat.quay', at: 'then', if: [['op', 'op-lastboat'], ['any', ['city', 'FLU'], ['city', 'AMS']]],
     title: 'The last civilian sailing',
     text: "The quay is a wall of trunks and families: English governesses, German waiters going the other way, Americans waving letters of credit that nobody will cash. The next boat's berths were sold out at noon. A steward with a gold tooth is selling places in the crew's mess at ten times the fare. A sailor is signing on deckhands.",
     choices: [
@@ -29,6 +15,9 @@ export default [
         ok: [['record', 'list', 0.4]] },
       { label: "Join the nuns' party", sub: 'Twelve sisters and a chaplain; one more is nothing', if: [['cover', 'doyle']],
         ok: [['record', 'list', 0.2]] },
+      { label: 'Ask the purser for your berth', sub: 'Held in your cover name, by London',
+        if: [['any', ['flag', 'op-lastboat-berth'], ['flag', 'op-lastboat-listed'], ['flag', 'op-lastboat-vouched']]],
+        ok: [['record', 'list', 0.3], ['nerve', 1]] },
       { label: 'Queue for the morning boat', sub: 'Twelve hours on a trunk', cost: { min: 720 },
         ok: [['nerve', -1]] },
     ] },
@@ -46,7 +35,7 @@ export default [
         ok: [['nerve', -1]], fail: [['susp', 'vessey', 0.3], ['record', 'frontier', 1]] },
     ] },
 
-  { id: 'op-lastboat.semlin', at: 'op',
+  { id: 'op-lastboat.semlin', at: 'then', if: [['any', ['city', 'BEG'], ['city', 'BUD']], ['war', 'AH', 'RS']],
     title: 'The bridge at Semlin is gone',
     text: 'The Sava railway bridge went up at half past one in the morning, and the Austrian monitors on the Danube have been shelling Belgrade since. Nothing will cross at Semlin again this year. The way home lies south and east, through Nish and Sofia to Constantinople, and then by sea.',
     choices: [
@@ -58,7 +47,8 @@ export default [
         ok: [semlinGone, ['intel', { subj: 'city:BEG', claim: { note: 'The legation says the Constantinople line still runs, slowly, behind the troop trains.' }, src: 'bureau', rel: 0.7, truth: true }]] },
     ] },
 
-  { id: 'op-lastboat.siding', at: 'op',
+  { id: 'op-lastboat.siding', at: 'then',
+    if: [['op', 'op-lastboat'], ['mode', 'rail'], ['any', ['nation', 'DE'], ['nation', 'BE'], ['nation', 'NL'], ['nation', 'FR']]],
     title: 'Shunted for the troop trains',
     text: 'Twenty minutes out, your train stops in a siding and stays there. Every half hour a troop train thunders past the other way, garlanded and singing. The guard says the military timetable has precedence over everything, including you. Your connection leaves in four hours, from a station forty miles on.',
     choices: [

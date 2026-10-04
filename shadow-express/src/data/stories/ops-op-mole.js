@@ -3,8 +3,6 @@
 // by four channels of falling honesty: your own eyes, the legation's telegrams, the newspapers, the kafanas.
 
 const plantIlic = ['plant', { via: 'ilic', subj: 'op:op-mole', claim: { at: 'BEG' } }];
-const plantBrandl = ['plant', { via: 'brandl', subj: 'op:op-mole', claim: { at: 'BUD' } }];
-const plantAmsler = ['plant', { via: 'amsler', subj: 'op:op-mole', claim: { at: 'TRI' } }];
 const loyalty = (who, claim, src, rel) => ['intel', { subj: `person:${who}`, claim: { loyal: claim }, src, rel, truth: 'auto' }];
 const fed = ['op', 'op-mole', 'step:feed'];
 const named = ['op', 'op-mole', 'step:name'];
@@ -14,18 +12,18 @@ const ILIC = ['loyal', 'ilic', 'enemy:heller'];
 const AMSLER = ['loyal', 'amsler', 'enemy:orlova'];
 
 export default [
-  // ---------- the journey and the post ----------
+  // ---------- the post ----------
   { id: 'op-mole.express', at: 'op',
     title: 'A commercial traveller from Graz',
-    text: 'The man in the corner seat says he travels in enamelware, and knows nothing about enamelware. He asks where you are staying in Belgrade, whom you know there, and whether you have been before. His questions are friendly, idle, and arranged in exactly the order a police form would arrange them.',
+    text: 'The man who shared your compartment from Budapest has taken the room next to yours. He says he travels in enamelware, and knows nothing about enamelware. He asks whom you know in Belgrade and whether you have been before. His questions are friendly, idle, and arranged in exactly the order of a police form.',
     choices: [
       { label: 'Answer with your legend, fully', sub: 'A good legend survives questions',
         roll: { p: 0.55, mods: [[['skill', 'composure', '>=', 2], 0.15], [['skill', 'german', '>=', 1], 0.1]] },
         ok: [['nerve', 1]], fail: [['record', 'sighting', 0.8]] },
       { label: 'Give him a false address', sub: 'He will check it, and the lie goes on file',
         ok: [['record', 'sighting', 0.3], ['susp', 'active', 0.1]] },
-      { label: 'Change compartments at Semlin', sub: 'He will notice that too',
-        ok: [['record', 'sighting', 0.5]] },
+      { label: 'Change your hotel tomorrow', sub: '£1; he will notice that too', cost: { money: 1 },
+        ok: [['record', 'sighting', 0.5], ['watch', -0.1]] },
       { label: 'Ask him about enamelware', sub: 'Let him do the lying',
         roll: { p: 0.5, mods: [[['skill', 'observation', '>=', 2], 0.2]] },
         ok: [['intel', { subj: 'hunter:heller', claim: { knows: 'desc' }, src: 'seen', rel: 0.5, truth: 'auto' }]],
@@ -57,26 +55,6 @@ export default [
         ok: [plantIlic, ['trust', 'ilic', 1], ['record', 'meeting', 0.5], fed] },
       { label: 'Let him talk; say nothing yet', sub: 'Another evening, another kafana',
         ok: [['trust', 'ilic', 1], ['min', 120]] },
-    ] },
-
-  { id: 'op-mole.brandl', at: 'op', speaker: 'brandl',
-    title: 'Tokay with Dr Brandl',
-    text: 'Brandl pours two glasses of Tokay and listens, as he always listens, with his fingertips together. Now is the moment to let slip, as if by accident, that a Bureau courier changes trains at Budapest on the seventeenth. He never asks questions. That may be discretion. It may be something else.',
-    choices: [
-      { label: 'Let slip the Budapest courier', sub: 'Once said, it cannot be unsaid',
-        ok: [plantBrandl, ['flag', 'op-mole-brandl'], ['record', 'meeting', 0.3]] },
-      { label: 'Talk only of his patients', sub: 'Write to him from Belgrade instead',
-        ok: [['trust', 'brandl', 1], ['min', 60]] },
-    ] },
-
-  { id: 'op-mole.amsler', at: 'op', speaker: 'amsler',
-    title: "Herr Amsler's neat hand",
-    text: "Amsler receives you in a panelled room where money is never mentioned aloud. This is the moment to ask him to hold funds for a Bureau courier, who will draw them at his Trieste correspondent's on the seventeenth. He would write the instruction in a small, neat hand, blot it, and ask after your health.",
-    choices: [
-      { label: 'Ask him to hold the funds', sub: '£5 deposited, to make it real', cost: { money: 5 },
-        ok: [plantAmsler, ['flag', 'op-mole-amsler'], ['record', 'meeting', 0.2]] },
-      { label: 'Discuss only your own account', sub: 'Write to him from Belgrade instead',
-        ok: [['trust', 'amsler', 1], ['min', 60]] },
     ] },
 
   // ---------- the watch ----------

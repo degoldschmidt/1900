@@ -1,5 +1,7 @@
 // Coincidence (owner: Ops). See docs/CONTRACTS.md §6 and docs/REGISTRY.md §7 (Act I: the Vienna posting).
 // No journey: the Arsenal is trialling the rangefinder in Vienna. Case it, find an insider, photograph, send home.
+// Two days of casing must start by the 9th; the window closes after op-diamonds' carry, so that an agent who took
+// the stones goes on to Petersburg instead of turning back to a Vienna job that can no longer be done.
 
 export default {
   id: 'op-optics', act: 1, issue: '07-03 09.00', giver: 'handler',
@@ -7,7 +9,7 @@ export default {
   brief: 'VIENNA ARSENAL TRIALLING NEW COINCIDENCE RANGEFINDER FOR FIELD ARTILLERY STOP DRAWINGS IN ITS DRAWING OFFICE SIXTH TO ELEVENTH STOP CASE THE PLACE FIRST STOP PHOTOGRAPH THEM AND SEND PLATES HOME BY TWELFTH STOP HELLER KEEPS A MAN AT THE GATE ASHBY',
   steps: [
     { id: 'reach', kind: 'goto', city: 'VIE', by: '07-06 18.00', label: 'Be in Vienna' },
-    { id: 'case', kind: 'wait', city: 'VIE', min: 2880, by: '07-09 18.00', label: 'Case the Arsenal for two days', story: 'op-optics.case' },
+    { id: 'case', kind: 'wait', city: 'VIE', min: 2880, by: '07-11 14.00', label: 'Case the Arsenal for two days', story: 'op-optics.case' },
     { id: 'photo', kind: 'act', city: 'VIE', venue: 'venue:barracks', after: '07-06 08.00', by: '07-11 18.00', gives: 'rangefinder-plates',
       label: 'Photograph the drawings at the Arsenal',
       ways: [
@@ -25,7 +27,7 @@ export default {
         { id: 'keys', label: 'The drawing office by night', sub: 'Skeleton keys, a dark lantern, a sentry',
           tag: 'venue:barracks', if: [['item', 'skeleton-keys'], ['clock', '22.00', '04.00']], risk: 0.4, rec: ['sighting', 0.5], story: 'op-optics.night' },
       ] },
-    { id: 'home', kind: 'act', city: 'VIE', venue: 'venue:embassy', by: '07-12 18.00', label: 'Send the plates home by the twelfth',
+    { id: 'home', kind: 'act', city: 'VIE', venue: 'venue:telegraph', by: '07-12 18.00', label: 'Send the plates home by the twelfth',
       ways: [
         { id: 'bag', label: 'The embassy bag to London', sub: 'Safe; you are seen going in',
           tag: 'venue:embassy', if: [['item', 'rangefinder-plates']], risk: 0.1, rec: ['sighting', 0.5], ok: [['item', '-rangefinder-plates']], fail: [['watch', 0.2]] },
@@ -36,13 +38,15 @@ export default {
           if: [['item', 'rangefinder-plates'], ['any', ['st', 'kowal', 'recruited'], ['st', 'agathe', 'recruited']]], risk: 0.1, rec: null, ok: [['item', '-rangefinder-plates']] },
         { id: 'post', label: 'Post them registered to London', sub: 'A shilling; the censor may open the packet',
           if: [['item', 'rangefinder-plates']], cost: { money: 1 }, risk: 0.35, rec: ['register', 0.4], ok: [['item', '-rangefinder-plates']],
-          fail: [['item', '-rangefinder-plates'], ['susp', 'active', 0.2], ['debrief', 'A postal censor opened your packet of plates to the light.']] },
+          fail: [['item', '-rangefinder-plates'], ['susp', 'active', 0.2], ['debrief', 'A postal censor opened your packet of plates to the light.'], ['op', 'op-optics', 'fail']] },
       ] },
   ],
   twists: [
-    { if: [['op', 'op-optics', 'photo'], ['not', ['op', 'op-optics', 'home']], ['chance', 0.4]], story: 'op-optics.buyer' },
+    // the Russians watch the Arsenal too: whoever cased it was seen casing it
+    { if: [['op', 'op-optics', 'photo'], ['not', ['op', 'op-optics', 'home']], ['any', ['flag', 'op-optics-scouted'], ['flag', 'op-optics-lenz']]],
+      story: 'op-optics.buyer' },
     { if: [['op', 'op-optics', 'reach'], ['not', ['op', 'op-optics', 'photo']], ['city', 'VIE'], ['watched']], story: 'op-optics.gate' },
-    { if: [['op', 'op-optics'], ['not', ['op', 'op-optics', 'home']], ['city', 'VIE'], ['not', ['st', 'platt', 'unknown']], ['chance', 0.35]],
+    { if: [['op', 'op-optics', 'case'], ['not', ['op', 'op-optics', 'home']], ['city', 'VIE'], ['not', ['st', 'platt', 'unknown']]],
       story: 'op-optics.platt' },
   ],
   win: [['standing', 12], ['money', 20]],

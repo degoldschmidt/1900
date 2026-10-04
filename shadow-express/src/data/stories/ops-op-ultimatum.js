@@ -10,7 +10,7 @@ export default [
   // ---------- the delivery ----------
   { id: 'op-ultimatum.note', at: 'op', if: [['city', 'BEG']],
     title: "Six o'clock, Thursday",
-    text: "At six the Austrian minister's carriage draws up at the Serbian Foreign Ministry, and a secretary carries in an envelope. The Prime Minister is away electioneering; his deputy receives it. The minister is back at his legation by a quarter past, ordering his trunks packed. Belgrade has forty-eight hours, and knows it within the hour.",
+    text: "By two the word is in every café on Knez Mihailova: the Austrian minister has asked to be received at the Foreign Ministry at six. The Prime Minister is away electioneering; his deputy will have to take whatever it is. Belgrade spends the afternoon guessing. You have four hours to choose where to stand when the carriage comes.",
     choices: [
       { label: 'Watch from the café opposite', sub: 'A view of the door, and of the watchers',
         ok: [['record', 'sighting', 0.3],

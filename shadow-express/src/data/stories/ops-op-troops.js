@@ -1,6 +1,7 @@
 // Storylets of op-troops, Count the Trains (owner: Ops). See docs/CONTRACTS.md §5.
 
-const tallyLost = [['item', '-troop-tally'], ['susp', 'active', 0.4], ['record', 'frontier', 1]];
+const tallyLost = [['item', '-troop-tally'], ['susp', 'active', 0.4], ['record', 'frontier', 1], ['op', 'op-troops', 'fail']];
+const OUT = ['later', 1, 'op-troops.border'];
 
 export default [
   // ---------- steps ----------
@@ -41,11 +42,11 @@ export default [
     text: "Kessel is magnificent in field-grey and drunk on the war before it has begun. 'Two thousand trains in a fortnight, over this one bridge!' he cries, banging the table. 'Liège in a week, Paris in six.' He remembers your face perfectly, and seems delighted that you, of all people, should be here to see it.",
     choices: [
       { label: 'Write down every boast later', sub: 'He talks; you remember',
-        ok: [['op', 'op-troops', 'step:count'], ['record', 'meeting', 0.5],
+        ok: [['op', 'op-troops', 'step:count'], OUT, ['record', 'meeting', 0.5],
           ['intel', { subj: 'op:op-troops', claim: { note: 'Kessel: two thousand trains over the bridge in a fortnight, and Liège within a week.' }, src: 'person:kessel', rel: 0.7, truth: true }]] },
       { label: 'Ask him for a bridge pass', sub: 'He might; he might wonder why',
         roll: { p: 0.5, mods: [[['trust', 'kessel', '>=', 3], 0.2]] },
-        ok: [['op', 'op-troops', 'step:count'], ['standing', 4], ['record', 'meeting', 0.6]],
+        ok: [['op', 'op-troops', 'step:count'], OUT, ['standing', 4], ['record', 'meeting', 0.6]],
         fail: [['trust', 'kessel', -2], ['record', 'meeting', 1], ['susp', 'active', 0.2]] },
     ] },
 
@@ -76,7 +77,7 @@ export default [
         ok: [['record', 'sighting', 0.8], ['trust', 'kessel', -1]] },
     ] },
 
-  { id: 'op-troops.border', at: 'op',
+  { id: 'op-troops.border', at: 'then', if: [['item', 'troop-tally'], ['nation', 'DE'], ['day', '2'], ['clock', '08.00', '23.59']],
     title: 'The frontier at war',
     text: 'German troops crossed into Belgium at dawn. Every train to the frontier is searched now, by soldiers rather than customs men, who tip out cases on the platform and read every scrap of paper. Whoever carries a pencilled list of troop trains will not be fined. They shoot such people against the station wall.',
     choices: [
@@ -88,7 +89,7 @@ export default [
         roll: { p: 0.6, mods: [[['aff', 'topic:religion', '>=', 1], 0.2]] },
         ok: [['nerve', -1]], fail: tallyLost },
       { label: 'Learn it by heart and burn it', sub: 'Your memory will have to do',
-        ok: [['item', '-troop-tally'], ['standing', 3], ['op', 'op-troops', 'fail'],
-          ['debrief', 'You burned the tally on the platform. What you remembered reached London a week late.']] },
+        ok: [['debrief', 'You burned the tally on the platform. What you remembered reached London a week late.'],
+          ['item', '-troop-tally'], ['standing', 3], ['op', 'op-troops', 'fail']] },
     ] },
 ];

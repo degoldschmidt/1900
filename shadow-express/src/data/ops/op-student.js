@@ -1,7 +1,10 @@
 // Get Jovan Out (owner: Ops). See docs/CONTRACTS.md §6 and docs/REGISTRY.md §7 (Act II: the Belgrade posting).
-// Jovan has fled to Belgrade. Trace him through the people you have cultivated, meet him, then the one journey:
-// escort him yourself (east by Tsaribrod to Constantinople, or north over Semlin) or give him to a recruited courier.
-// Ilić's help is a trap when Ilić is Heller's man; a promise made in op-cable opens the easiest way.
+// Jovan has fled to Belgrade. Trace him through the people you have cultivated, find him, then the one journey:
+// escort him yourself (east by Tsaribrod to Constantinople, or north over Semlin to Italy) or hand him to a courier.
+// The scenes of the way out are `later` continuations armed when you find him. Ilić's help is a trap when Ilić is Heller's man.
+// Venice is the exit that still lets you take up the Berlin post (op-typist) in time; Constantinople costs you Berlin.
+
+const ROAD = [['later', 0.5, 'op-student.informer'], ['later', 2, 'op-student.semlin'], ['later', 4, 'op-student.tsaribrod'], ['later', 6, 'op-student.enlist']];
 
 export default {
   id: 'op-student', act: 2, issue: '07-21 09.00', giver: 'handler',
@@ -23,20 +26,17 @@ export default {
           tag: 'topic:police', cost: { money: 8 }, risk: 0.25, rec: ['bribe', 0.6],
           ok: [['intel', { subj: 'hunter:heller', claim: { at: 'BEG' }, src: 'police', rel: 0.6, truth: 'auto' }]] },
       ] },
-    { id: 'find', kind: 'meet', person: 'jovan', city: 'BEG', by: '07-25 20.00', gives: 'companion-jovan',
-      label: 'Find Jovan by Saturday', story: 'op-student.find' },
+    { id: 'find', kind: 'meet', person: 'jovan', city: 'BEG', by: '07-25 20.00', gives: 'companion-jovan', label: 'Find Jovan by Saturday',
+      ways: [
+        { id: 'cellar', label: 'Go down to him by night', sub: "A cooper's cellar by the Sava; come alone", risk: 0.1, story: 'op-student.find' },
+        { id: 'carter', label: 'Have him brought to your rooms', sub: '£2 to a carter; Jovan under the sacks',
+          cost: { money: 2 }, risk: 0.3, rec: ['sighting', 0.4],
+          ok: [['trust', 'jovan', -1], ...ROAD], fail: [['expose', 'jovan', 0.4]] },
+      ] },
     { id: 'out', kind: 'carry', item: 'companion-jovan', to: ['IST', 'ATH', 'ROM', 'VEN', 'LON'], by: '07-28 23.00',
       label: 'Get him out by Tuesday night' },
   ],
   twists: [
-    { if: [['op', 'op-student', 'find'], ['not', ['op', 'op-student', 'out']], ['city', 'BEG'], ['flag', 'op-student-ilic'], ['loyal', 'ilic', 'enemy:heller']],
-      story: 'op-student.informer' },
-    { if: [['op', 'op-student', 'find'], ['not', ['op', 'op-student', 'out']], ['item', 'companion-jovan'], ['any', ['city', 'BEG'], ['city', 'BUD']]],
-      story: 'op-student.semlin' },
-    { if: [['op', 'op-student', 'find'], ['not', ['op', 'op-student', 'out']], ['item', 'companion-jovan'], ['day', '0126'], ['chance', 0.5]],
-      story: 'op-student.enlist' },
-    { if: [['op', 'op-student', 'find'], ['not', ['op', 'op-student', 'out']], ['item', 'companion-jovan'], ['mode', 'rail'], ['nation', 'BG']],
-      story: 'op-student.tsaribrod' },
     { if: [['op', 'op-student'], ['not', ['op', 'op-student', 'out']],
       ['any', ['flag', 'op-mole-kept-brandl'], ['flag', 'op-mole-kept-ilic'], ['flag', 'op-mole-kept-amsler']]], story: 'op-student.pipe' },
   ],

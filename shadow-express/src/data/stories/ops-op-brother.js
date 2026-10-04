@@ -1,6 +1,7 @@
 // Storylets of op-brother, The Brother (owner: Ops). See docs/CONTRACTS.md §5.
 
 const freed = ['op', 'op-brother', 'step:free'];
+const ROAD = ['later', 1, 'op-brother.visegrad'];
 const ilicSold = ['intel', { subj: 'person:ilic', claim: { loyal: 'enemy' }, src: 'seen', rel: 0.9, truth: 'auto' }];
 const sprung = [['op', 'op-brother', 'fail'], ilicSold];
 
@@ -11,12 +12,12 @@ export default [
     choices: [
       { label: 'Walk him out as your server', sub: 'He carries the lantern; you bless the warder',
         roll: { p: 0.55, mods: [[['item', 'blessing-letter'], 0.15], [['skill', 'composure', '>=', 2], 0.1]] },
-        ok: [freed, ['record', 'register', 0.4]], fail: [['record', 'register', 1], ['susp', 'active', 0.2], ['nerve', -2]] },
+        ok: [freed, ROAD, ['record', 'register', 0.4]], fail: [['record', 'register', 1], ['susp', 'active', 0.2], ['nerve', -2]] },
       { label: 'Certify him with a fever', sub: 'The military hospital has no bars; it takes a day', cost: { min: 600 },
-        ok: [freed, ['record', 'register', 0.3]] },
+        ok: [freed, ROAD, ['record', 'register', 0.3]] },
       { label: 'Leave him a file in a breviary', sub: 'He escapes tonight, alone, or does not',
         roll: { p: 0.4 },
-        ok: [freed, ['debrief', 'Pavle filed his way out alone, with the tool you left in a breviary.']],
+        ok: [freed, ROAD, ['debrief', 'Pavle filed his way out alone, with the tool you left in a breviary.']],
         fail: [['op', 'op-brother', 'fail'], ['debrief', 'Pavle was caught with your file, and moved to Tuzla in chains.']] },
     ] },
 
@@ -25,12 +26,12 @@ export default [
     text: "The warder counts your money twice in the back room of a čevabdžinica. 'The hostages go to Tuzla on Thursday,' he says. 'One may fall off the cart. It happens. For another five pounds, he falls off near the Goat's Bridge, where your friends can be waiting.'",
     choices: [
       { label: 'Pay the extra five', sub: 'Five pounds, and his word', cost: { money: 5 },
-        ok: [freed, ['record', 'bribe', 0.5]] },
+        ok: [freed, ROAD, ['record', 'bribe', 0.5]] },
       { label: 'Pay nothing more; trust luck', sub: 'Carts are slow; luck is cheaper',
-        roll: { p: 0.5 }, ok: [freed], fail: [['record', 'bribe', 1], ['nerve', -1]] },
+        roll: { p: 0.5 }, ok: [freed, ROAD], fail: [['record', 'bribe', 1], ['nerve', -1]] },
       { label: 'Threaten to report him', sub: 'Get your money back, or make an enemy',
         roll: { p: 0.35, mods: [[['item', 'browning'], 0.15], [['skill', 'streetwise', '>=', 2], 0.15]] },
-        ok: [freed, ['money', 10]], fail: [['record', 'bribe', 1], ['susp', 'active', 0.2]] },
+        ok: [freed, ROAD, ['money', 10]], fail: [['record', 'bribe', 1], ['susp', 'active', 0.2]] },
     ] },
 
   { id: 'op-brother.trap', at: 'op',
@@ -48,7 +49,7 @@ export default [
         ok: [...sprung, ['record', 'register', 0.8]], fail: [...sprung, ['susp', 'active', 0.4]] },
     ] },
 
-  { id: 'op-brother.visegrad', at: 'op',
+  { id: 'op-brother.visegrad', at: 'then', if: [['op', 'op-brother'], ['not', ['op', 'op-brother', 'cross']], ['mode', 'road']],
     title: 'Gendarmes at Višegrad',
     text: 'The coach stops at the Višegrad bridge, the old Turkish one of eleven arches, and Austrian gendarmes look in with lanterns. Pavle sits beside you in a borrowed coat, hands deep in his pockets, pretending to sleep. The sergeant counts heads twice and frowns, because there is one more than on his list.',
     choices: [
@@ -72,6 +73,6 @@ export default [
         ok: [['legend', 0.05]], fail: [['watch', 0.2], ['record', 'register', 0.6]] },
       { label: 'Let him answer for himself', sub: 'He is nineteen, and angry',
         roll: { p: 0.5 },
-        ok: [['nerve', 1]], fail: [['delay', 240], ['watch', 0.1], ['trust', 'ilic', -1]] },
+        ok: [['nerve', 1]], fail: [['min', 240], ['watch', 0.1], ['trust', 'ilic', -1]] },
     ] },
 ];

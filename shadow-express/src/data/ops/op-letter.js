@@ -26,7 +26,8 @@ export default {
       ] },
   ],
   twists: [
-    { if: [['op', 'op-letter', 'open'], ['not', ['op', 'op-letter', 'deliver']], ['city', 'BRU'], ['chance', 0.4]], story: 'op-letter.wife' },
+    // in the morning the captain is at the barracks, and his wife answers the door
+    { if: [['op', 'op-letter', 'open'], ['not', ['op', 'op-letter', 'deliver']], ['city', 'BRU'], ['clock', '09.00', '12.00']], story: 'op-letter.wife' },
   ],
   win: [['trust', 'odile', 2], ['standing', 2]],
   fail: [['trust', 'odile', -2]],

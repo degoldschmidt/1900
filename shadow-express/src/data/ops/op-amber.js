@@ -1,6 +1,9 @@
 // Amber for Berlin (owner: Ops). Side op, started by Kowal (People) in Berlin with ['op', 'op-amber', 'start'].
 // See docs/CONTRACTS.md §6. One journey: Warsaw and back across the Russian frontier, which closes on 31 July.
 // The parcel is amber, and under the amber the plans of the Novogeorgievsk forts, sold to IIIb.
+// The Russian customs at Alexandrowo is a `later` continuation armed when you collect; the carry hands the parcel over.
+
+const ROAD = ['later', 1, 'op-amber.customs'];
 
 export default {
   id: 'op-amber', act: 3, issue: null, giver: 'kowal', side: true,
@@ -10,30 +13,28 @@ export default {
     { id: 'parcel', kind: 'act', city: 'WAR', venue: 'venue:market', gives: 'amber', label: 'Collect the parcel in Warsaw',
       ways: [
         { id: 'asis', label: 'Take it as it is', sub: "A smuggler's trust is a currency too",
-          risk: 0, rec: ['meeting', 0.2], ok: [['trust', 'kowal', 1]] },
+          risk: 0, rec: ['meeting', 0.2], ok: [['trust', 'kowal', 1], ROAD] },
         { id: 'open', label: 'Open it in the cab', sub: 'He tied the string a particular way',
           risk: 0.3, rec: null, story: 'op-amber.open' },
         { id: 'seams', label: "Feel the seams at a jeweller's", sub: '£1; amber is light, and this is not',
           tag: 'topic:trade', cost: { money: 1 }, risk: 0.1, rec: ['meeting', 0.2],
-          ok: [['intel', { subj: 'op:op-amber', claim: { note: 'The parcel has a false bottom, and something flat and stiff inside it.' }, src: 'seen', rel: 0.8, truth: true }]] },
+          ok: [ROAD, ['intel', { subj: 'op:op-amber', claim: { note: 'The parcel has a false bottom, and something flat and stiff inside it.' }, src: 'seen', rel: 0.8, truth: true }]] },
       ] },
     { id: 'deliver', kind: 'carry', item: 'amber', to: 'BER', label: 'Carry it back to Berlin' },
     { id: 'handover', kind: 'act', city: 'BER', venue: 'venue:cafe', label: 'Hand it to the jeweller',
       ways: [
         { id: 'asis', label: 'Hand it over as agreed', sub: 'Gold, and no questions either way',
-          if: [['item', 'amber']], risk: 0.1, rec: ['meeting', 0.3], ok: [['item', '-amber'], ['money', 12]] },
+          risk: 0.1, rec: ['meeting', 0.3], ok: [['money', 12]] },
         { id: 'keep', label: 'Keep what was hidden in it', sub: 'London gets the forts; Kowal gets amber',
-          if: [['item', 'amber'], ['flag', 'op-amber-opened']], risk: 0.2, rec: ['meeting', 0.4],
-          ok: [['item', '-amber'], ['standing', 5], ['trust', 'kowal', -2],
+          if: [['flag', 'op-amber-opened']], risk: 0.2, rec: ['meeting', 0.4],
+          ok: [['standing', 5], ['trust', 'kowal', -2],
             ['debrief', 'You kept the Novogeorgievsk plans for London and gave the jeweller only amber.']] },
         { id: 'follow', label: 'Watch who collects it', sub: 'From across the street, through glasses',
-          if: [['item', 'amber'], ['item', 'field-glasses']], risk: 0.15, rec: ['sighting', 0.3],
-          ok: [['item', '-amber'], ['money', 12], ['intel', { subj: 'hunter:falk', claim: { at: 'BER' }, src: 'seen', rel: 0.8, truth: 'auto' }]] },
+          if: [['item', 'field-glasses']], risk: 0.15, rec: ['sighting', 0.3],
+          ok: [['money', 12], ['intel', { subj: 'hunter:falk', claim: { at: 'BER' }, src: 'seen', rel: 0.8, truth: 'auto' }]] },
       ] },
   ],
-  twists: [
-    { if: [['op', 'op-amber', 'parcel'], ['not', ['op', 'op-amber', 'deliver']], ['item', 'amber'], ['mode', 'rail']], story: 'op-amber.customs' },
-  ],
+  twists: [],
   win: [['trust', 'kowal', 2], ['money', 8]],
   fail: [['trust', 'kowal', -2]],
   debrief: 'Kowal sold to whoever paid, and IIIb paid best: the plans of the Novogeorgievsk forts went to Berlin by way of a Friedrichstrasse jeweller who kept the amber for his trouble. Kowal never asked what you had done with the parcel. Smugglers do not ask. They remember.',

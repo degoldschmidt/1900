@@ -4,15 +4,14 @@
 // Exactly one of them is the enemy each campaign; the hunters go where their informant sent them.
 
 const TOLD_ILIC = [['plant', { via: 'ilic', subj: 'op:op-mole', claim: { at: 'BEG' } }]];
-const LETTERS = [['plant', { via: 'brandl', subj: 'op:op-mole', claim: { at: 'BUD' } }], ['plant', { via: 'amsler', subj: 'op:op-mole', claim: { at: 'TRI' } }],
-  ['flag', 'op-mole-brandl'], ['flag', 'op-mole-amsler']];
+const LETTERS = [['plant', { via: 'brandl', subj: 'op:op-mole', claim: { at: 'BUD' } }], ['plant', { via: 'amsler', subj: 'op:op-mole', claim: { at: 'TRI' } }]];
 
 export default {
   id: 'op-mole', act: 2, issue: '07-13 09.00', giver: 'handler',
   title: 'The Mole',
   brief: 'Take up the Belgrade post by the fifteenth. Heller knew our Sarajevo business within the week; Brandl, Ilić and Amsler all knew it too. Tell Ilić in person that our courier lands at the Belgrade quay on the seventeenth; write Brandl that it is Budapest, Amsler that it is Trieste. Watch. Wire me the name by the twentieth. A.',
   steps: [
-    { id: 'reach', kind: 'goto', city: 'BEG', by: '07-15 12.00', label: 'Take up the Belgrade post by the fifteenth', story: 'op-mole.post' },
+    { id: 'reach', kind: 'wait', city: 'BEG', min: 120, by: '07-15 12.00', label: 'Take up the Belgrade post by the fifteenth', story: 'op-mole.post' },
     { id: 'feed', kind: 'act', city: 'BEG', venue: 'venue:cafe', by: '07-16 12.00', label: 'Tell Ilić of the courier, in person',
       ways: [
         { id: 'kafana', label: 'Over rakija in his kafana', sub: 'He talks; that is why it may work',
@@ -35,8 +34,6 @@ export default {
         { id: 'attendant', label: 'Give them to a sleeping-car attendant', sub: '£3; posted in Budapest, out of Serbia',
           cost: { money: 3 }, risk: 0.2, rec: ['bribe', 0.3],
           ok: LETTERS, fail: [['nerve', -1]] },
-        { id: 'told', label: 'Both told already, in person', sub: 'On your way south',
-          if: [['flag', 'op-mole-brandl'], ['flag', 'op-mole-amsler']], risk: 0, rec: null },
       ] },
     { id: 'watch', kind: 'wait', city: 'BEG', min: 2880, by: '07-19 12.00', label: 'Watch Belgrade for two days', story: 'op-mole.watch' },
     { id: 'name', kind: 'act', city: 'BEG', venue: 'venue:telegraph', after: '07-17 18.00', by: '07-20 18.00', label: 'Wire the name to London',
@@ -48,11 +45,7 @@ export default {
       ] },
   ],
   twists: [
-    { if: [['op', 'op-mole'], ['not', ['op', 'op-mole', 'reach']], ['mode', 'rail'], ['chance', 0.5]], story: 'op-mole.express' },
-    { if: [['op', 'op-mole'], ['not', ['op', 'op-mole', 'feed-2']], ['not', ['flag', 'op-mole-brandl']], ['not', ['st', 'brandl', 'unknown']],
-      ['any', ['city', 'VIE'], ['city', 'BUD']]], story: 'op-mole.brandl' },
-    { if: [['op', 'op-mole'], ['not', ['op', 'op-mole', 'feed-2']], ['not', ['flag', 'op-mole-amsler']], ['not', ['st', 'amsler', 'unknown']],
-      ['any', ['city', 'ZUR'], ['city', 'PAR']]], story: 'op-mole.amsler' },
+    { if: [['op', 'op-mole', 'reach'], ['not', ['op', 'op-mole', 'feed-2']], ['city', 'BEG'], ['stay', '<', 2]], story: 'op-mole.express' },
     { if: [['op', 'op-mole', 'feed-2'], ['not', ['op', 'op-mole', 'name']], ['city', 'BEG'], ['day', '56']], story: 'op-mole.seventeenth' },
   ],
   win: [['standing', 15], ['money', 10], ['item', '+diplomatic-bag']],

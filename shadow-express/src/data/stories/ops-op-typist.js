@@ -1,6 +1,10 @@
 // Storylets of op-typist, Fräulein Sauer (owner: Ops). See docs/CONTRACTS.md §5. The Berlin posting.
 
-const lost = (line) => [['st', 'sauer', 'arrested'], ['item', '-companion-sauer'], ['op', 'op-typist', 'fail'], ['debrief', line]];
+const lost = (line) => [['debrief', line], ['st', 'sauer', 'arrested'], ['item', '-companion-sauer'], ['op', 'op-typist', 'fail']];
+const met = ['op', 'op-typist', 'step:meet'];
+const WITH = ['item', 'companion-sauer'];
+// after the proclamation of the state of danger of war (Friday 31 July, 16.00): Friday evening, or the days after
+const AFTER_KG = ['any', ['day', '601'], ['not', ['any', ['not', ['day', '5']], ['not', ['clock', '16.00', '23.59']]]]];
 const southward = { subj: 'op:op-typist', claim: { heading: 'MUN' } };
 
 export default [
@@ -19,18 +23,18 @@ export default [
         ok: [['legend', 0.2], ['watch', -0.1], ['record', 'register', 0.4]] },
     ] },
 
-  { id: 'op-typist.meet', at: 'op', speaker: 'sauer', if: [['city', 'BER']],
+  { id: 'op-typist.meet', at: 'op', speaker: 'sauer',
     title: 'Gloves she did not buy',
     text: "Sauer is waiting in the Wertheim tea room with a parcel of gloves she did not buy. This week she has typed the same railway timetable four times: which trains, which bridges, which day. Yesterday two men from IIIb went through the typing pool's wastepaper baskets. 'I will come,' she says. 'I am frightened, so I will be quick.'",
     choices: [
       { label: 'Leave tonight, as you are', sub: 'Quick; she leaves her whole life behind',
-        ok: [['trust', 'sauer', -1], ['nerve', 1]] },
+        ok: [met, ['trust', 'sauer', -1], ['nerve', 1]] },
       { label: 'Give her a day to settle', sub: 'Steadier, and a day for IIIb', cost: { min: 720 },
-        ok: [['trust', 'sauer', 2], ['expose', 'sauer', 0.2]] },
+        ok: [met, ['trust', 'sauer', 2], ['expose', 'sauer', 0.2]] },
       { label: 'Give her a Paris hat for travelling', sub: 'Courage comes in hatboxes', if: [['item', 'couture-hat']],
-        ok: [['trust', 'sauer', 2], ['item', '-couture-hat']] },
+        ok: [met, ['trust', 'sauer', 2], ['item', '-couture-hat']] },
       { label: 'Give her a bottle of Cologne water', sub: 'A small luxury; she will not forget it', if: [['item', 'eau-de-cologne']],
-        ok: [['trust', 'sauer', 1], ['item', '-eau-de-cologne']] },
+        ok: [met, ['trust', 'sauer', 1], ['item', '-eau-de-cologne']] },
     ] },
 
   // ---------- twists ----------
@@ -49,15 +53,15 @@ export default [
         fail: lost('Sauer was taken alone in the Friedrichstrasse, with your train ticket in her glove.') },
     ] },
 
-  { id: 'op-typist.permit', at: 'op',
+  { id: 'op-typist.permit', at: 'then', if: [WITH, ['nation', 'DE'], AFTER_KG],
     title: 'Papers, Fräulein',
-    text: 'Since noon the Empire has been in a state of imminent danger of war; the posters say so on every pillar. At the ticket office a police officer asks every German traveller for a permit to leave, and he looks with particular interest at young women travelling with foreigners.',
+    text: 'The Empire is in a state of threatening danger of war; the posters say so on every pillar. At every station and on every train the police ask German travellers for a permit to leave, and they look with particular interest at young women travelling with foreigners.',
     choices: [
       { label: 'Dress her as a nursing sister', sub: "A spare habit, and your order's name", if: [['cover', 'doyle']],
         ok: [['record', 'sighting', 0.2]] },
       { label: 'Pass her off as your maid', sub: 'Nobody questions a {count|countess} about servants', if: [['cover', 'vessey']],
         ok: [['record', 'sighting', 0.3]] },
-      { label: 'Out through the goods yard', sub: 'Your pension backs onto the Stettiner sidings', if: [['flag', 'op-typist-stettin']],
+      { label: 'Out through the goods yard', sub: 'Your pension backs onto the Stettiner sidings', if: [['flag', 'op-typist-stettin'], ['city', 'BER']],
         roll: { p: 0.7 }, ok: [['record', 'sighting', 0.2]], fail: [['record', 'sighting', 0.8], ['expose', 'sauer', 0.4]] },
       { label: 'Buy her a permit', sub: '£12 to a clerk who has seen worse', cost: { money: 12 },
         roll: { p: 0.65, mods: [[['skill', 'paperwork', '>=', 2], 0.15]] },
@@ -65,12 +69,12 @@ export default [
       { label: 'Brazen it out', sub: 'Your manner, and her nerve',
         roll: { p: 0.4, mods: [[['trust', 'sauer', '>=', 3], 0.1], [['skill', 'composure', '>=', 2], 0.15]] },
         ok: [['nerve', -1]],
-        fail: [['record', 'sighting', 1], ...lost('The police took Sauer at the ticket office for want of a permit.')] },
+        fail: [['record', 'sighting', 1], ['expose', 'sauer', 0.8], ['nerve', -2]] },
     ] },
 
-  { id: 'op-typist.major', at: 'op',
+  { id: 'op-typist.major', at: 'then', if: [WITH, ['mode', 'rail'], ['nation', 'DE']],
     title: 'A major from the Königsplatz',
-    text: 'At Spandau a major of the General Staff gets into your compartment, sets down his sword and his dispatch case, and looks at Sauer for a long, puzzled moment. He has walked past her desk every morning for two years without once looking at her face. Now he is trying to remember where he has seen it.',
+    text: 'At the first stop a major of the General Staff gets into your compartment, sets down his sword and his dispatch case, and looks at Sauer for a long, puzzled moment. He has walked past her desk every morning for two years without once looking at her face. Now he is trying to remember where he has seen it.',
     choices: [
       { label: 'Talk to him, and keep talking', sub: 'Draw his eyes to you',
         roll: { p: 0.5, mods: [[['skill', 'charm', '>=', 2], 0.2], [['skill', 'german', '>=', 2], 0.1]] },

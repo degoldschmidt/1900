@@ -1,6 +1,7 @@
 // Storylets of op-diamonds, Stones for Petersburg (owner: Ops). See docs/CONTRACTS.md §5.
 
 const buy = ['op', 'op-diamonds', 'step:buy'];
+const road = [['later', 3, 'op-diamonds.tip'], ['later', 6, 'op-diamonds.nord']];
 const amslerSold = (src, rel) => ['intel', { subj: 'person:amsler', claim: { loyal: 'enemy' }, src, rel, truth: 'auto' }];
 
 export default [
@@ -11,13 +12,13 @@ export default [
     choices: [
       { label: 'Test each one under a loupe', sub: "An optician's eye, and an hour", cost: { min: 60 },
         if: [['aff', 'topic:technical', '>=', 1]],
-        ok: [buy, ['money', 3], ['debrief', 'You caught Cardozo salting the parcel with glass; he knocked three pounds off the price.']] },
+        ok: [buy, ...road, ['money', 3], ['debrief', 'You caught Cardozo salting the parcel with glass; he knocked three pounds off the price.']] },
       { label: 'Haggle like a merchant', sub: 'Cheaper, if you know the trade',
         roll: { p: 0.45, mods: [[['aff', 'topic:trade', '>=', 1], 0.15], [['skill', 'commerce', '>=', 2], 0.25]] },
-        ok: [buy, ['money', 5]], fail: [buy, ['flag', 'op-diamonds-paste']] },
+        ok: [buy, ...road, ['money', 5]], fail: [buy, ...road, ['flag', 'op-diamonds-paste']] },
       { label: 'Pay his price and trust him', sub: 'He has an honest face; they all do',
         roll: { p: 0.5 },
-        ok: [buy], fail: [buy, ['flag', 'op-diamonds-paste']] },
+        ok: [buy, ...road], fail: [buy, ...road, ['flag', 'op-diamonds-paste']] },
     ] },
 
   // ---------- twists ----------
@@ -33,7 +34,7 @@ export default [
         ok: [['unflag', 'op-diamonds-paste'], ['standing', -2], ['debrief', 'You admitted the glass. The colonel liked your honesty better than your stones.']] },
     ] },
 
-  { id: 'op-diamonds.tip', at: 'op',
+  { id: 'op-diamonds.tip', at: 'then', if: [['nation', 'DE'], ['item', 'diamonds']],
     title: 'A porter with a warning',
     text: "A porter carries your case further than he needs to and lowers his voice. 'The Russians at the frontier have been told about a traveller with stones,' he murmurs. 'For a mark more I will tell you which train they are watching.' He has the honest, anxious face of a man who has said this many times before.",
     choices: [
@@ -45,7 +46,7 @@ export default [
         ok: [['record', 'sighting', 0.2]] },
     ] },
 
-  { id: 'op-diamonds.tipped', at: 'op',
+  { id: 'op-diamonds.tipped', at: 'then', if: [['loyal', 'amsler', 'enemy:orlova'], ['item', 'diamonds'], ['nation', 'DE']],
     title: 'Ashby wires a warning',
     text: "A telegram at the hotel desk, in the Bureau's commercial code: RUSSIAN CUSTOMS TOLD TO EXPECT STONES ON YOUR TRAIN STOP SOURCE IN ZURICH STOP TAKE CARE. Only one man in Zurich knew which train you meant to take, because his correspondent booked it for you.",
     choices: [
@@ -59,23 +60,23 @@ export default [
         ok: [['nerve', -1], amslerSold('bureau', 0.6)] },
     ] },
 
-  { id: 'op-diamonds.search', at: 'op',
+  { id: 'op-diamonds.search', at: 'then', if: [['nation', 'RU'], ['item', 'diamonds'], ['loyal', 'amsler', 'enemy:orlova'], ['not', ['flag', 'op-diamonds-hidden']]],
     title: 'The customs knew',
     text: 'Two Russian customs officers and a gendarme in a white tunic are waiting, and they search nobody else. They unpack your case shirt by shirt, slit the lining of your hat and feel the seams of your coat with practised fingers. The senior one smiles. Somebody has told them exactly what to look for.',
     choices: [
       { label: 'Offer the senior one a gift', sub: '£15 in roubles, folded small', cost: { money: 15 },
         roll: { p: 0.5, mods: [[['skill', 'slavic', '>=', 1], 0.15]] },
         ok: [['record', 'bribe', 0.6]],
-        fail: [['item', '-diamonds'], ['record', 'bribe', 1], amslerSold('seen', 0.7)] },
+        fail: [['item', '-diamonds'], ['record', 'bribe', 1], amslerSold('seen', 0.7), ['op', 'op-diamonds', 'fail']] },
       { label: 'Protest loudly, in French', sub: 'Officials fear a scene with a foreign newspaper',
         roll: { p: 0.3, mods: [[['aff', 'topic:diplomatic', '>=', 1], 0.2], [['skill', 'composure', '>=', 2], 0.15]] },
         ok: [['record', 'frontier', 0.6]],
-        fail: [['item', '-diamonds'], ['record', 'frontier', 1], amslerSold('seen', 0.7)] },
+        fail: [['item', '-diamonds'], ['record', 'frontier', 1], amslerSold('seen', 0.7), ['op', 'op-diamonds', 'fail']] },
       { label: 'Let them find the stones', sub: 'Lose them, but keep your liberty',
         ok: [['item', '-diamonds'], ['record', 'frontier', 0.8], amslerSold('seen', 0.7),
-          ['debrief', 'The Russian customs took the stones, exactly as somebody in Zurich had arranged.']] },
+          ['debrief', 'The Russian customs took the stones, exactly as somebody in Zurich had arranged.'], ['op', 'op-diamonds', 'fail']] },
     ] },
-  { id: 'op-diamonds.nord', at: 'op',
+  { id: 'op-diamonds.nord', at: 'then', if: [['mode', 'rail'], ['item', 'diamonds']],
     title: 'Every berth is taken',
     text: 'Every berth on the night express is taken by officers recalled from leave. The sleeping-car attendant offers the last one, his own, for a consideration, and collects passports for the frontier, as attendants do, keeping them overnight in his pantry. The alternative is the slow train, which stops everywhere and arrives a day later.',
     choices: [
