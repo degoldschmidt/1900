@@ -160,7 +160,7 @@ export default [
         ok: [['intel', { subj: 'person:amsler', claim: { note: 'Amsler watched a widow in black leave the train at Belfort.' }, src: 'seen', rel: 0.9, truth: true }], ['later', 48, 'amsler.statement']] },
     ] },
 
-  { id: 'amsler.closing', at: 'interlude', if: [['act', 3], ['flag', 'amsler-account']], once: true,
+  { id: 'amsler.closing', from: 'amsler', at: 'interlude', if: [['act', 3], ['flag', 'amsler-account']], once: true,
     title: 'EXCHANGES CLOSING',
     text: "A telegram from Zurich, prepaid reply: EXCHANGES CLOSING STOP CREDIT LETTERS WORTHLESS FROM TOMORROW STOP CAN WIRE TWENTY IN GOLD TODAY AT FOUR PER CENT STOP OR NOTHING STOP AMSLER. Even in telegraphese he has found room for his commission.",
     choices: [

@@ -102,9 +102,11 @@ export function makeCards(root, hooks) {
     if (c.type === 'end') return endText(G, c);
     // storylets, controls, encounters
     let kick = '', art = '';
-    const speaker = st?.speaker ? (I.person.get(st.speaker) ?? I.hunter.get(st.speaker)) : null;
+    const who = st?.speaker ?? st?.from;
+    const speaker = who ? (I.person.get(who) ?? I.hunter.get(who)) : null;
     if (c.type === 'control') kick = `Frontier control · ${c.name}`;
     else if (c.type === 'encounter') kick = `${I.hunter.get(c.hunter).name}`;
+    else if (speaker && st.from) kick = `From ${speaker.name}${speaker.role ? ` · ${speaker.role}` : ''}`;
     else if (speaker) kick = `${speaker.name}${speaker.role ? ` · ${speaker.role}` : ''}`;
     else kick = S.journey ? `${G.W.service.get(S.journey.svc).name}` : I.city.get(S.city)?.name ?? '';
     const face = c.type === 'encounter' ? I.hunter.get(c.hunter) : speaker;

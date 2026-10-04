@@ -564,7 +564,9 @@ export function validate(D, opts = {}) {
   // ---------- storylets ----------
   for (const s of ST.values()) {
     const w = `story:${s.id}`;
-    keysOnly(s, ['id', 'at', 'if', 'w', 'once', 'speaker', 'title', 'text', 'choices'], w);
+    keysOnly(s, ['id', 'at', 'if', 'w', 'once', 'speaker', 'from', 'title', 'text', 'choices'], w);
+    if (s.from !== undefined && !P.has(s.from) && !H.has(s.from)) err(w, `no person or hunter ${s.from}`);
+    if (s.from !== undefined && s.speaker !== undefined) err(w, 'a storylet has a speaker or a sender, not both');
     if (!STORY_ID.test(s.id)) err(w, 'story ids are lowercase words joined by dots');
     if (!S.STORY_AT.includes(s.at)) err(w, `bad at ${s.at}`);
     stats.byAt[s.at] = (stats.byAt[s.at] || 0) + 1;

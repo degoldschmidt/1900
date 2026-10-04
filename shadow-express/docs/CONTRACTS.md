@@ -117,7 +117,8 @@ One format for everything the player reads and answers.
 STORY = { id:'kowal.meet', at:'city'|'train'|'person'|'op'|'interlude'|'control'|'encounter'|'then',
           if:[ ['city','WAR'], ['st','kowal','unknown'] ],     // all must hold
           w?:1, once?:true,                                      // weight among eligible storylets; fire at most once
-          speaker?:'kowal', title:'Short heading', text:'…',
+          speaker?:'kowal', title:'Short heading', text:'…',   // a speaker must be present for the card to fire
+          from?:'ashby',                                         // or: the sender of a letter or wire (portrait, no presence needed)
           choices:[ { label:'Buy him a vodka', sub?:'£1, half an hour', tag?:'venue:cafe',
                       if?:[ … ], cost?:{ money:1, min:30, nerve:0 },
                       roll?:{ p:.6, mods:[ [['aff','topic:underworld','>=',1], .2], [['item','amber'], .2] ] },
