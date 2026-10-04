@@ -6,12 +6,13 @@
 //     game()     the running game, or null        openTab(key)  show a ledger tab (the links in a hint's text)
 //     save()     persist after a change           busy()        a card, the creator or the About page is on screen
 //     pause(on)  accepted, never used: nothing runs while a hint can show (it needs an idle game)
-//   returns { check, reset, enabled, setEnabled, isOpen }; the caller runs check() after every refresh and about once a second.
+//   returns { check, reset, enabled, setEnabled, isOpen, dismiss }; the caller runs check() after every refresh and about once a second.
 //
 // State lives in the campaign: G.S.hints = { off, seen: { [id]: campaign minute } }, made when first needed, so older
 // saves load unchanged.
 
 import { esc } from './dom.js';
+import { iconSVG } from './icons.js';
 
 const HOUR = 60;
 export const GAP_MS = 3000;     // real time between one hint closing and the next opening
@@ -129,7 +130,8 @@ export function makeHints(app, hooks = {}, opts = {}) {
     card.dataset.hint = id;
     card.setAttribute('role', 'status');
     card.setAttribute('aria-label', 'Instructions to Agents Abroad');
-    card.innerHTML = `<div class="kick">Instructions to Agents Abroad · §${h.n}</div><p>${html(h.text)}</p><div class="hint-actions"><button type="button" class="hint-off">No more hints</button><button type="button" class="hint-ok">Understood</button></div>`;
+    card.innerHTML = `<button type="button" class="card-x" aria-label="Close" title="Close">${iconSVG('close')}</button><div class="kick">Instructions to Agents Abroad · §${h.n}</div><p>${html(h.text)}</p><div class="hint-actions"><button type="button" class="hint-off">No more hints</button><button type="button" class="hint-ok">Understood</button></div>`;
+    card.querySelector('.card-x').addEventListener('click', () => close('ok'));
     card.querySelector('.hint-ok').addEventListener('click', () => close('ok'));
     card.querySelector('.hint-off').addEventListener('click', () => close('off'));
     card.querySelectorAll('.hint-tab').forEach((b) => b.addEventListener('click', () => { hooks.openTab?.(b.dataset.tab); close('done'); }));
@@ -199,5 +201,7 @@ export function makeHints(app, hooks = {}, opts = {}) {
       if (!on) { hide(); pending = null; } else later(SETTLE_MS);
     },
     isOpen: () => !!card,
+    /** Close the card as if "Understood" had been pressed (for a caller's Escape key). */
+    dismiss: () => close('ok'),
   };
 }

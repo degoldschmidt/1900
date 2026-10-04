@@ -118,15 +118,16 @@ async function spend(s) {
   const work = s.p.locator('[data-activity="work"]');
   await ((await work.isEnabled().catch(() => false)) ? work : s.p.locator('[data-activity="rest"]')).click();
 }
-/** Live in the city, a watch at a time, until the hint comes. */
-async function spendUntilHint(s, id, tries) {
-  for (let i = 0; i < tries; i++) {
-    if (await waitHint(s, id, i ? 3500 : 1500)) return true;
+/** Live in the city, a watch at a time, until it has been `minutes` since arriving; then the hint should come. */
+async function spendUntilHint(s, id, minutes) {
+  for (let i = 0; i < 12; i++) {
     await tab(s, 'city');
     await idle(s, 20000);
+    const since = await s.p.evaluate(() => { const S = window.__shadow.G.S; return S.t - S.cityArrived; });
+    if (since >= minutes) return waitHint(s, id, 9000);
     await spend(s);
   }
-  return waitHint(s, id, 4000);
+  return false;
 }
 const tab = (s, key) => s.p.locator(`.ledger .tab[data-tab="${key}"]`).click();
 const seen = (s) => s.p.evaluate(() => ({ ...(window.__shadow.G.S.hints?.seen ?? {}) }));
@@ -183,21 +184,37 @@ async function checkCard(s, id, label) {
     const box = (e) => { const b = e.getBoundingClientRect(); return { l: b.left, r: b.right, t: b.top, b: b.bottom, w: b.width, h: b.height }; };
     const xs = [], ys = [];
     for (let i = 1; i < 10; i++) { xs.push(Math.round(innerWidth * i / 10)); ys.push(Math.round(innerHeight * i / 10)); }
-    const pts = xs.flatMap((x) => ys.map((y) => [x, y])), hb = h.getBoundingClientRect();
-    const outside = pts.filter(([x, y]) => x < hb.left - 2 || x > hb.right + 2 || y < hb.top - 2 || y > hb.bottom + 2);
+    const x = h.querySelector('.card-x'), xb = x ? box(x) : null;
+    const hb = h.getBoundingClientRect();
+    const L = Math.min(hb.left, xb ? xb.l : Infinity), T = Math.min(hb.top, xb ? xb.t : Infinity), R = Math.max(hb.right, xb ? xb.r : -Infinity), B = Math.max(hb.bottom, xb ? xb.b : -Infinity);
+    const pts = xs.flatMap((x) => ys.map((y) => [x, y]));
+    const outside = pts.filter(([x, y]) => x < L - 2 || x > R + 2 || y < T - 2 || y > B + 2);
     const topWith = outside.map(([x, y]) => { const e = document.elementFromPoint(x, y); return e ? (e.id || e.className || e.tagName) : null; });
     h.style.visibility = 'hidden';
     const topWithout = outside.map(([x, y]) => { const e = document.elementFromPoint(x, y); return e ? (e.id || e.className || e.tagName) : null; });
     h.style.visibility = '';
-    return { id: h.dataset.hint, box: box(h), lg: box(lg), open: lg.dataset.open === 'true', vw: innerWidth, vh: innerHeight, parent: h.parentElement.id, pos: getComputedStyle(h).position,
+    // every button on the screen that is not the ledger's, a card's or the globe's callout: the card must keep off them
+    const vis = (e) => { const cs = getComputedStyle(e); return cs.display !== 'none' && cs.visibility !== 'hidden' && e.getClientRects().length > 0; };
+    const union = (e) => { let l = Infinity, t = Infinity, r = -Infinity, b = -Infinity; for (const n of [e, ...e.querySelectorAll('*')]) { if (!vis(n)) continue; const q = n.getBoundingClientRect(); if (!q.width || !q.height) continue; l = Math.min(l, q.left); t = Math.min(t, q.top); r = Math.max(r, q.right); b = Math.max(b, q.bottom); } return { l, t, r, b }; };
+    const furniture = [...document.querySelectorAll('#app button, #app [role=button]')].filter((e) => !e.closest('.hint, .ledger, .veil, .title, .callout, .toasts') && vis(e)).map((e) => ({ name: (e.className || e.getAttribute('aria-label') || e.tagName).toString(), ...union(e) }));
+    return { id: h.dataset.hint, box: box(h), x: xb && { ...xb, label: x.getAttribute('aria-label'), reachable: (() => { const e = document.elementFromPoint((xb.l + xb.r) / 2, (xb.t + xb.b) / 2); return e === x || x.contains(e); })() },
+      lg: box(lg), open: lg.dataset.open === 'true', vw: innerWidth, vh: innerHeight, parent: h.parentElement.id, pos: getComputedStyle(h).position,
       kick: h.querySelector('.kick').textContent, text: h.querySelector('p').textContent, buttons: [...h.querySelectorAll('.hint-actions button')].map((b) => b.textContent),
-      tabs: [...document.querySelectorAll('.ledger .tab')].map(box), blocked: outside.filter((_, i) => topWith[i] !== topWithout[i]).length, globe: topWithout.filter((x) => x === 'globe').length, n: document.querySelectorAll('.hint').length };
+      tabs: [...document.querySelectorAll('.ledger .tab')].map(box), furniture, blocked: outside.filter((_, i) => topWith[i] !== topWithout[i]).length, globe: topWithout.filter((x) => x === 'globe').length, n: document.querySelectorAll('.hint').length };
   });
   const b = r.box;
   check(r.id === id, `${label}: ${id} is up (got ${r.id})`);
   check(r.n === 1, `${label}: one hint at a time (${r.n})`);
   check(/^Instructions to Agents Abroad · §[1-8]$/.test(r.kick), `${label}: the kicker reads "${r.kick}"`);
   check(JSON.stringify(r.buttons) === JSON.stringify(['No more hints', 'Understood']), `${label}: buttons ${r.buttons.join(' / ')}`);
+  check(!!r.x && r.x.label === 'Close', `${label}: a Close button in the corner (${r.x?.label})`);
+  if (r.x) {
+    check(r.x.r - r.x.l >= 30 && r.x.b - r.x.t >= 30, `${label}: the Close button is big enough to touch (${Math.round(r.x.r - r.x.l)}×${Math.round(r.x.b - r.x.t)})`);
+    check(r.x.l >= 0 && r.x.r <= r.vw && r.x.t >= 0 && r.x.b <= r.vh, `${label}: the Close button lies inside the screen (${Math.round(r.x.l)}..${Math.round(r.x.r)} of ${r.vw})`);
+    check(r.x.reachable, `${label}: nothing covers the Close button`);
+    check(r.x.r > b.r - 30 && r.x.t < b.t + 30, `${label}: the Close button sits on the top right corner`);
+  }
+  for (const f of r.furniture) check(f.r <= b.l + 2 || f.l >= b.r - 2 || f.b <= b.t + 2 || f.t >= b.b - 2, `${label}: the card covers the HUD's ${f.name} (${Math.round(f.l)}..${Math.round(f.r)} × ${Math.round(f.t)}..${Math.round(f.b)} against the card's ${Math.round(b.l)}..${Math.round(b.r)} × ${Math.round(b.t)}..${Math.round(b.b)})`);
   const words = r.text.trim().split(/\s+/).length;
   check(words <= 45 && words >= 20, `${label}: ${words} words`);
   check(r.parent === 'app' && r.pos === 'absolute', `${label}: a plain card in #app, not an overlay (${r.parent}, ${r.pos})`);
@@ -319,18 +336,21 @@ async function openingPlay(s, name) {
   await p.locator('.hint .hint-ok').click();
 
   // time spent in the city, a watch of the day at a time: the traces, then the days
-  check(await spendUntilHint(s, 'traces', 6), 'a few hours in the city bring the hint on the traces left');
+  check(await spendUntilHint(s, 'traces', 3 * 60), 'a few hours in the city bring the hint on the traces left');
   await checkCard(s, 'traces', `${name} traces`);
   await p.locator('.hint .hint-tab[data-tab="dossier"]').click();
   await p.waitForTimeout(250);
   const ds = await p.evaluate(() => [...document.querySelectorAll('.ledger .subtabs button')].map((b) => b.textContent));
   check(JSON.stringify(ds) === JSON.stringify(['Known', 'Suspected', 'They know']), `the Dossier has Known, Suspected and They know (${ds.join(', ')})`);
-  check(await spendUntilHint(s, 'days', 8), 'half a day in the city brings the hint on the days');
+  check(await spendUntilHint(s, 'days', 12 * 60), 'half a day in the city brings the hint on the days');
   await checkCard(s, 'days', `${name} days`);
   await tab(s, 'city');
   const cd = await bodyText(s);
   check(/Let the days pass/.test(cd) && /Keep to your rooms|Sleep/.test(cd), 'City offers "Let the days pass" and "Keep to your rooms" (by night "Sleep"), as the hint says');
-  await p.locator('.hint .hint-ok').click();
+  await p.locator('.hint .card-x').click(); // the corner X closes it like "Understood"
+  await p.waitForTimeout(100);
+  check((await p.locator('.hint').count()) === 0, 'the Close button closes the hint');
+  check((await seen(s)).days > 0, 'and marks it read');
 
   // the departures again, after a frontier
   await tab(s, 'board');
