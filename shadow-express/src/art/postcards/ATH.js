@@ -22,7 +22,6 @@ export default {
 
   // an olive spray: grey-green willowy leaves, silver beneath, a cluster of black and green olives
   flowerArt(F) {
-    const I = F.I;
     let s = F.stem('M-20 12Q-4 3 6 -4Q12 -8 19 -15', '#5a4a34', 1.8);
     for (const [x, y, a, c] of [[-16, 10, 200, '#7f9a6a'], [-12, 7, 130, '#a9ba96'], [-6, 4, 222, '#8aa274'], [-2, 2, 112, '#b6c6a2'], [4, -2, 236, '#7f9a6a'], [8, -5, 122, '#a9ba96'], [12, -9, 214, '#8aa274'], [15, -12, 140, '#b6c6a2'], [18, -14, 60, '#8aa274'], [-9, 5, 62, '#8aa274'], [1, 0, 300, '#a9ba96'], [10, -7, 318, '#7f9a6a']]) s += F.at(x, y, F.leaf(17, 5.6, a, c, { shape: 'lance', vein: '#eef0e2' }));
     s += F.stem('M-3 3Q-2 8 0 11', '#5a4a34', .8);
@@ -68,7 +67,9 @@ export default {
     s += P.tree(52, 372, 2.6, 'palm') + olive(P, 132, 370, 1.3);
     s += P.lamp(196, 372, 1.05, 'single', { h: 70 });
     s += sentryBox(P, 520, 372) + evzone(P, 498, 372, 1.15, { dir: 1 });
-    s += P.person(232, 374, 1.12, 'priest', { c: '#1f1d22', dir: 1 }) + P.person(412, 374, 1.1, 'lady', { c: '#f2ede2', parasol: '#d9c0e8', dir: -1 }) + P.person(428, 374, 1.1, 'boater', { c: '#3a3f4a', dir: -1 });
+    s += P.person(232, 374, 1.12, 'priest', { c: '#1f1d22', dir: 1 }) + P.person(436, 374, 1.1, 'lady', { c: '#f2ede2', parasol: '#d9c0e8', dir: -1 }) + P.person(452, 374, 1.1, 'boater', { c: '#3a3f4a', dir: -1 });
+    // a couple of travellers at the foot of the hill, looking up at the Parthenon
+    s += P.figure(272, 410, 1.08, 'gent', { arm: 16, c: '#3a3a40', hat: '#e9d9a0' }) + P.figure(308, 412, 1.06, 'lady', { c: '#f4efe2', hat: '#efe0c6', flowers: ['#1f5fa8', '#f4f4f0', '#1f5fa8'], sash: '#1f5fa8', parasol: '#f2e8d8' });
     s += P.cross(T.walkers({ kinds: ['boater', 'lady', 'child'], s: 1.05, dir: 1, seed: 17, dresses: ['#f4efe4', '#e6eef4'] }), { y: 380, dir: 1, dur: 74, offset: 22, z: 'fore' });
     s += P.wall(456, 334, 13, 18);
     return s;
@@ -152,7 +153,6 @@ function parthenon(P, x0, by) {
   for (let i = 0; i < 8; i++) s += doric(P, x0 + 4 + i * (ew - 8) / 7, by - 1, ch, cw);
   s += P.fill(P.rect(x0 - 1, by - ch - 9, ew + 2, 9), 'marble') + P.shade(P.rect(x0 - 1, by - ch - 4.6, ew + 2, 4.6), 'marble', .1) + triglyphs(P, x0, by - ch - 4.6, fx, by - ch - 4.6);
   s += P.fill(P.poly([[x0 - 3, by - ch - 9], [x0 + ew / 2, by - ch - 21], [fx + 3, by - ch - 9]]), 'marble') + P.fill(P.poly([[x0 + 4, by - ch - 10.4], [x0 + ew / 2, by - ch - 18.6], [fx - 4, by - ch - 10.4]]), 'marble2', { w: .4 });
-  s += P.flat(P.poly([[fx - 14, by - ch - 13], [fx + 3, by - ch - 9.4], [fx - 6, by - ch - 9.4]]), '#9ab8d8', { op: .0 });
   s += P.lite(P.rect(x0, by - ch - 9, ew, 1.6), 'marble', .3);
   // a few figures among the ruins for scale
   s += P.person(fx + 24, by - 1, .26, 'gent', { c: '#2f3440' }) + P.person(fx + 30, by - 1.4, .25, 'lady', { c: '#f2ece0' });
@@ -173,7 +173,6 @@ function erechtheion(P, x0, by) {
   return s;
 }
 function propylaea(P, x0, by) {
-  const { f } = P;
   // the gate building's Doric front, its wings; Athena Nike's little temple on the bastion beyond
   let s = P.fill(P.rect(x0, by - 26, 44, 24), 'marble2') + P.shade(P.rect(x0 + 30, by - 26, 14, 24), 'marble2', .16);
   for (let i = 0; i < 6; i++) s += doric(P, x0 + 4 + i * 7.2, by - 2, 22, 4.4);
@@ -211,7 +210,7 @@ function plaka(P) {
     for (let i = 0; i < 4; i++) { const tx = 40 + r() * 520, k = .45 + ri * .12; s += P.tree(tx, by - 1, k, r() < .55 ? 'cypress' : r() < .5 ? 'palm' : 'round'); }
   });
   // a Byzantine church: brick and stone, its tiled drum and dome
-  const cx = 360, by = 297;
+  const cx = 438, by = 297;
   s += P.fill(P.rect(cx - 20, by - 22, 40, 22), 'wall2') + P.shade(P.rect(cx + 10, by - 22, 10, 22), 'wall2', .15);
   let br = '';
   for (let y = by - 20; y < by; y += 4) br += `M${cx - 20} ${y}h40`;
@@ -221,7 +220,6 @@ function plaka(P) {
   return s;
 }
 function road(P) {
-  const { f } = P;
   let s = '';
   // a low wall along the road, a café's awning and tables, pepper trees
   s += P.fill('M24 318H580V326H24Z', 'wall', { w: .5 }) + P.lite('M24 318H580V319.6H24Z', 'wall', .2);
@@ -242,14 +240,13 @@ function road(P) {
   return s;
 }
 function olive(P, x, y, s) {
-  const { f } = P, lf = P.L.leaf, c = lf.ever ?? '#6a7a50';
+  const { f } = P;
   // an old olive: a twisted trunk, a loose silvery crown that keeps its leaves all year
   let d = P.fill(`M${f(x - 4 * s)} ${f(y)}Q${f(x - 1 * s)} ${f(y - 10 * s)} ${f(x - 5 * s)} ${f(y - 20 * s)}L${f(x - 1 * s)} ${f(y - 22 * s)}Q${f(x + 3 * s)} ${f(y - 12 * s)} ${f(x + 4 * s)} ${f(y)}Z`, '#6a5844', { w: .5 });
   for (const [dx, dy, rx] of [[-10, -30, 13], [6, -34, 14], [-2, -42, 12], [14, -26, 9]]) {
     d += `<path d="${P.blob(x + dx * s, y + dy * s, rx * s, rx * .6 * s, 9, Math.round(x + dx))}" fill="${P.ink('olive')}" stroke="${P.keyC()}" stroke-width=".55"/>`;
     d += `<path d="${P.blob(x + dx * s - 2, y + dy * s - 2, rx * .5 * s, rx * .3 * s, 6, Math.round(x - dx))}" fill="${P.ink('#b8c4a4')}" opacity=".7"/>`;
   }
-  void c;
   return d;
 }
 
@@ -281,7 +278,7 @@ function evzone(P, x, y, s, o = {}) {
   return d;
 }
 function evzones(P, o = {}) {
-  const f = P.f, s = o.s ?? 1, dir = o.dir ?? 1, n = o.n ?? 2, gap = 9 * s, W = (n - 1) * gap + 22 * s, H = 38 * s;
+  const s = o.s ?? 1, dir = o.dir ?? 1, n = o.n ?? 2, gap = 9 * s, W = (n - 1) * gap + 22 * s, H = 38 * s;
   const frame = (st) => flip(P, dir, W, Array.from({ length: n }, (_, i) => evzone(P, 10 * s + i * gap, 36 * s, s, { dir: 1, stride: (st + i) % 2 })).join(''));
   return { frames: [svg(W, H, frame(0)), svg(W, H, frame(1))], fps: 3, w: W, h: H, ax: W / 2, ay: 36 * s };
 }

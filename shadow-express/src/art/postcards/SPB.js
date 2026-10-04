@@ -47,6 +47,8 @@ export default {
     // St Isaac's gilded dome over the roofs, the Admiralty's needle, the Hermitage, the Winter Palace
     s += P.far(.66, () => isaac(P, 512, WL - 30));
     s += P.far(.55, () => P.row(452, 600, WL - 2, { hMin: 18, hMax: 26, wMin: 22, wMax: 34, style: 'south', seed: 21, walls: ['#e6d8b6', '#d9c6a0', '#e8dcc4'], roofC: '#4e675c', placard: false }));
+    // the Alexander Garden's limes over the Admiralty's river wing
+    s += P.far(.56, () => P.tree(368, WL - 6, 1.05, 'round') + P.tree(388, WL - 8, 1.2, 'round') + P.tree(424, WL - 8, 1.15, 'round') + P.tree(446, WL - 6, 1, 'round'));
     s += P.far(.5, () => admiralty(P, 360, 454, WL - 2));
     s += P.far(.5, () => hermitage(P, 26, 140, WL - 2));
     s += P.far(.42, () => winterPalace(P, 138, 356, WL - 2));

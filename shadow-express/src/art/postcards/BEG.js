@@ -127,7 +127,6 @@ function island(P) {
   return s;
 }
 function zemun(P) {
-  const { f } = P;
   let s = '';
   // Zemun on its loess hill across the water: roofs, a church tower, the round tower of 1896 on the Gardoš
   s += P.fill('M24 236C40 222 70 214 100 216C120 218 132 228 140 236Z', '#a3ae8a');
@@ -211,7 +210,6 @@ function kalemegdan(P) {
 
 // ---------- the town's slope and the Cathedral ----------
 function slope(P) {
-  const { f } = P;
   let s = '';
   // the near slope: houses stepping down to the port, poplars, a stair
   const r = P.rng(19);
@@ -228,7 +226,6 @@ function slope(P) {
   return s;
 }
 function cathedral(P, cx, by) {
-  const { f } = P;
   let s = '';
   // the nave behind, its roof, a row of tall windows
   s += P.fill(P.rect(cx + 8, by - 34, 70, 34), 'church') + P.shade(P.rect(cx + 64, by - 34, 14, 34), 'church', .15);
@@ -250,18 +247,17 @@ function cathedral(P, cx, by) {
   // the belfry with its round-arched openings, then the spire
   s += P.fill(P.rect(x0 + 4, by - 108, w - 8, 16), 'church') + P.fill(P.arch(cx - 3.5, by - 106, 7, 12), '#3a3530');
   s += P.fill(P.rect(x0 + 3, by - 110, w - 6, 3), '#e2d2aa', { w: .4 });
-  s += P.fill(`M${cx - 7} ${by - 110}Q${cx - 6} ${by - 118} ${cx - 3} ${by - 121}L${cx} ${by - 150}L${cx + 3} ${by - 121}Q${cx + 6} ${by - 118} ${cx + 7} ${by - 110}Z`, 'copper') + P.shade(`M${cx} ${by - 150}L${cx + 3} ${by - 121}Q${cx + 6} ${by - 118} ${cx + 7} ${by - 110}H${cx + 1}Z`, 'copper', .25);
-  s += `<circle cx="${cx}" cy="${by - 120}" r="2.4" fill="${P.ink('gold')}" stroke="${P.keyC()}" stroke-width=".4"/>` + P.line(`M${cx} ${by - 150}v-9M${cx - 2.6} ${by - 155}h5.2`, 'gold', 1);
+  s += P.fill(`M${cx - 7} ${by - 110}Q${cx - 6} ${by - 117} ${cx - 3} ${by - 119}L${cx} ${by - 138}L${cx + 3} ${by - 119}Q${cx + 6} ${by - 117} ${cx + 7} ${by - 110}Z`, 'copper') + P.shade(`M${cx} ${by - 138}L${cx + 3} ${by - 119}Q${cx + 6} ${by - 117} ${cx + 7} ${by - 110}H${cx + 1}Z`, 'copper', .25);
+  s += `<circle cx="${cx}" cy="${by - 119}" r="2.2" fill="${P.ink('gold')}" stroke="${P.keyC()}" stroke-width=".4"/>` + P.line(`M${cx} ${by - 138}v-7M${cx - 2.4} ${by - 142}h4.8`, 'gold', 1);
   return s;
 }
 
 // ---------- the quay ----------
 function quay(P) {
-  const { f } = P;
   let s = '';
   // the landing stage on its pontoon, a gangway to the quay; the stone quay edge with its mooring rings
   s += P.fill('M60 304H178V312H60Z', '#3e352e', { w: .5 }) + P.fill('M70 290H150V304H70Z', '#ece2c8', { w: .5 }) + P.windows(74, 292, 70, 9, 6, 1, { ww: .5 });
-  s += P.fill(P.poly([[66, 290], [110, 280], [156, 290]]), 'roof', { w: .45 }) + P.line('M110 280v-8', '#5a4a3a', .8) + `<g transform="translate(110 272)">${''}</g>`;
+  s += P.fill(P.poly([[66, 290], [110, 280], [156, 290]]), 'roof', { w: .45 });
   s += P.flag(110, 281, .55, 'RS', { h: 12 });
   s += P.fill('M24 314H580V322H24Z', 'stone2') + P.lite('M24 314H580V316H24Z', 'stone2', .3);
   for (let x = 40; x < 580; x += 30) s += P.line(`M${x} 316v6`, '#7a6e58', .5, { op: .6 });
@@ -292,7 +288,7 @@ function peasantMan(P, x, y, s, o = {}) {
   return d;
 }
 function peasantWalkers(P, o = {}) {
-  const f = P.f, s = o.s ?? 1, dir = o.dir ?? 1, kinds = o.kinds ?? ['man', 'woman'], gap = 8.4 * s, W = (kinds.length - 1) * gap + 22 * s, H = 38 * s;
+  const s = o.s ?? 1, dir = o.dir ?? 1, kinds = o.kinds ?? ['man', 'woman'], gap = 8.4 * s, W = (kinds.length - 1) * gap + 22 * s, H = 38 * s;
   const frame = (st) => flip(P, dir, W, kinds.map((k, i) => (k === 'man' ? peasantMan(P, 10 * s + i * gap, 36 * s, s, { dir: 1, stride: (st + i) % 2 }) : P.person(10 * s + i * gap, 36 * s, s * .96, 'peasant', { c: i % 2 ? '#f2ede0' : '#e8dccb', hat: i % 2 ? '#c8302a' : '#2f4a7a', dir: 1, stride: (st + i) % 2 }))).join(''));
   return { frames: [svg(W, H, frame(0)), svg(W, H, frame(1))], fps: 3, w: W, h: H, ax: W / 2, ay: 36 * s };
 }

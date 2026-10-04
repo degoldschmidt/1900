@@ -1,5 +1,5 @@
 // Odessa from the grain harbour: the Boulevard Steps climbing the wooded escarpment between their parapets, the Duc
-// de Richelieu in his toga at the top between the two crescent buildings, the Vorontsov colonnade and the Exchange
+// de Richelieu in his toga at the top between the two crescent buildings, the Vorontsov colonnade and the City Duma
 // along the cliff, the funicular's two cars passing on their loop beside the steps, acacias in flower in June; a
 // tram and grain carts on the harbour street, a barque and a Black Sea steamer moored, boats and gulls on the water.
 
@@ -49,10 +49,10 @@ export default {
 
   back(P) {
     let s = '';
-    // the city along the cliff top: roofs, a cathedral's dome, the Exchange, the Vorontsov colonnade
+    // the city along the cliff top: roofs, a cathedral's dome, the City Duma, the Vorontsov colonnade
     s += P.far(.66, () => P.row(24, 600, 182, { hMin: 16, hMax: 32, wMin: 18, wMax: 30, style: 'paris', seed: 9, walls: ['#e8c27e', '#efe1c0', '#dcae6c', '#e6d2c0'], roofC: '#7b8b88', placard: false, flagSpot: false }));
     s += P.far(.6, () => P.fill(P.rect(110, 136, 26, 34), 'trim') + P.fill(P.dome(123, 136, 14, 14), '#6a9a7a') + P.fill(P.rect(120, 112, 6, 7), 'trim', { w: .4 }) + P.fill(P.onion(123, 112, 8, 9), '#d8ac3c', { w: .4 }) + P.line('M123 103v-5M120.6 100.6h4.8', 'gold', .7) + P.fill(P.rect(104, 150, 38, 22), 'trim', { w: .5 }));
-    s += P.far(.5, () => exchange(P, 30, 186) + colonnade(P, 448, 184));
+    s += P.far(.5, () => duma(P, 30, 186) + colonnade(P, 448, 184));
     s += P.smoke(160, 160, .5) + P.smoke(560, 172, .55);
     return s;
   },
@@ -67,11 +67,9 @@ export default {
     s += P.far(.2, () => stairs(P) + funicular(P));
     // the funicular's two cars, passing on the loop halfway
     const along = (t, dx) => [f(FB.x + (FT.x - FB.x) * t + dx * (1 - Math.abs(t - .5) * 2)), f(FB.y + (FT.y - FB.y) * t), f(1 - t * .48)];
-    const up = [[...along(0, 0), 0, 1], [...along(0, 0), .1], [...along(1, 0), .55], [...along(1, 0), 1]].map((p, i) => [p[0] + (i > 1 ? 0 : 0), p[1], p[2], p[3]]);
     const pathOf = (rev) => { const pts = []; for (let k = 0; k <= 10; k++) { const t = k / 10; pts.push([...along(rev ? 1 - t : t, rev ? -3.2 : 3.2), .1 + t * .45]); } return [[...along(rev ? 1 : 0, 0), 0], ...pts, [...along(rev ? 0 : 1, 0), 1]]; };
     s += P.mover(funCar(P, { s: .95, n: 1 }), { path: pathOf(false), dur: 60, offset: 0 });
     s += P.mover(funCar(P, { s: .95, n: 2 }), { path: pathOf(true), dur: 60, offset: 0 });
-    void up;
     // the harbour street: warehouses, the stairs' foot, the tram and the grain carts
     s += P.far(.12, () => harbourStreet(P));
     // the quay's edge is where the newsboy cries the news and, at war, the soldiers march down to the transports
@@ -100,11 +98,12 @@ export default {
 const svg = (w, h, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${Math.round(w * 10) / 10} ${Math.round(h * 10) / 10}" width="${Math.round(w * 10) / 10}" height="${Math.round(h * 10) / 10}">${body}</svg>`;
 
 // ---------- the cliff top ----------
-function exchange(P, x0, by) {
-  // the Exchange, Venetian Gothic, at the left end of the boulevard
-  let s = P.fill(P.rect(x0, by - 40, 70, 40), 'ochre2') + P.windows(x0 + 4, by - 36, 62, 30, 6, 2, { gothic: true, ww: .45, wh: .7 });
-  for (const x of [x0, x0 + 64]) s += P.fill(P.rect(x, by - 52, 8, 52), 'ochre2', { w: .5 }) + P.fill(P.spire(x + 4, by - 52, 10, 12), 'roof2', { w: .45 });
-  s += P.fill(P.rect(x0 - 1, by - 42, 72, 3), 'trim', { w: .4 });
+function duma(P, x0, by) {
+  // the City Duma, the old Exchange, at the boulevard's end: a portico of columns between two wings, a low dome over it
+  let s = P.fill(P.rect(x0, by - 34, 76, 34), 'trim') + P.shade(P.rect(x0 + 64, by - 34, 12, 34), 'trim', .15);
+  s += P.windows(x0 + 2, by - 30, 18, 24, 2, 2, { arched: true, ww: .45 }) + P.windows(x0 + 56, by - 30, 18, 24, 2, 2, { arched: true, ww: .45 });
+  s += P.flat(P.rect(x0 + 22, by - 30, 32, 28), '#5a5450', { op: .45 }) + P.columns(x0 + 24, by - 2, 28, 28, 6, 'trim');
+  s += P.fill(P.rect(x0 - 1, by - 37, 78, 4), 'trim', { w: .45 }) + P.fill(P.dome(x0 + 38, by - 37, 11, 9), '#6a9a7a', { w: .5 }) + P.line(`M${x0 + 38} ${by - 49}v-4`, 'gold', .6);
   return s;
 }
 function colonnade(P, x0, by) {
@@ -115,7 +114,6 @@ function colonnade(P, x0, by) {
   return s;
 }
 function crescents(P) {
-  const { f } = P;
   let s = '';
   // the two crescent buildings that embrace the head of the steps: yellow, pilastered, their centres porticoed
   for (const [x0, x1, k] of [[186, 286, -1], [314, 414, 1]]) {
@@ -134,7 +132,6 @@ function crescents(P) {
 }
 /** The Duc de Richelieu in his toga on the granite pedestal, his right hand stretched out toward the harbour. */
 function duke(P, cx, by) {
-  const { f } = P;
   let s = '';
   s += P.fill(P.rect(cx - 9, by - 6, 18, 6), 'granite', { w: .5 }) + P.fill(P.rect(cx - 6.5, by - 30, 13, 24), 'granite') + P.shade(P.rect(cx + 2, by - 30, 4.5, 24), 'granite', .2) + P.fill(P.rect(cx - 8, by - 32, 16, 3), 'granite', { w: .45 });
   for (const k of [-1, 1]) s += P.fill(P.rect(cx + k * 4.6 - 1.4, by - 25, 2.8, 10), '#6a7a6a', { w: .3 });
@@ -249,7 +246,6 @@ function funCar(P, o = {}) {
 
 // ---------- the harbour ----------
 function harbourStreet(P) {
-  const { f } = P;
   let s = '';
   // warehouses and the customs house either side of the steps' foot, the street's setts
   s += P.facade(24, 304, 70, 40, { c: 'ochre2', roof: 'flat', side: 8, cols: 6, floors: 2, shop: ['#2f4a6a', '#efe2c4'] });
@@ -270,7 +266,6 @@ function harbourStreet(P) {
   return s;
 }
 function barque(P) {
-  const { f } = P;
   let s = '';
   // a grain barque at the quay: black hull, three masts, yards across, sails furled
   s += P.fill('M24 330H156L148 352H40Q28 350 24 340Z', 'hull') + P.line('M26 336H152', '#c9b27a', 1) + P.fill('M24 326H158V331H24Z', '#6b5040', { w: .45 });
@@ -283,7 +278,6 @@ function barque(P) {
   return s;
 }
 function steamer(P) {
-  const { f } = P;
   let s = '';
   // a Black Sea steamer of the Russian line moored at the right: its bow, the bridge, the funnel with its band
   s += P.line('M560 330V170M560 190L520 330', '#4a3a2a', 1.4);

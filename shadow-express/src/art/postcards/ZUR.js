@@ -63,6 +63,8 @@ export default {
     let s = '';
     // the Quaibrücke and the Münsterbrücke across the river
     s += P.far(.6, () => quaiBridge(P));
+    // the Bauschänzli, the old bastion in the river, under its chestnuts
+    s += P.far(.5, () => P.fill('M330 243L336 238H384L392 243Z', 'stone2', { w: .4 }) + P.tree(342, 241, .5, 'round') + P.tree(360, 240, .56, 'round') + P.tree(378, 241, .5, 'round'));
     s += P.far(.45, () => muensterBridge(P));
     // the right bank: St Peter's great clock, the Fraumünster's needle, the Meisen, the houses of the Schipfe
     s += P.far(.42, () => stPeter(P, 470, 214));

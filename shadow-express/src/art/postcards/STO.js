@@ -51,7 +51,7 @@ export default {
     s += P.far(.5, () => tyskaKyrkan(P, 70, WL - 30));
     s += P.far(.42, () => skeppsbron(P));
     // Riddarholmen's spire, the Riksdag on Helgeandsholmen, Norrbro and the Strömparterre
-    s += P.far(.55, () => riddarholmen(P, 416, WL - 34));
+    s += P.far(.55, () => riddarholmen(P, 368, WL - 34));
     s += P.far(.4, () => riksdag(P, 352, 456, WL));
     // Storkyrkan's tower behind the palace, and the palace
     s += P.far(.42, () => storkyrkan(P, 196, 176));

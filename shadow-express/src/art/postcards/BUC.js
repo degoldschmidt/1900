@@ -177,9 +177,15 @@ function hotel(P) {
   s += P.fill(P.rect(x0, top, x1 - x0, by - top), 'hotel') + P.stipple(P.rect(x0, top, x1 - x0, by - top), 'hotel', 40, { box: [x0, top, x1 - x0, by - top], op: .2 });
   s += P.fill(P.rect(x0, by - 22, x1 - x0, 22), 'hotel2');
   for (let x = x0 + 4; x < x1 - 8; x += 16) s += P.fill(P.arch(x, by - 20, 11, 20), '#3e3a36') + (P.L.windows > .2 ? `<path d="${P.arch(x + 1, by - 19, 9, 18)}" fill="${P.glow('#ffcf7a')}" opacity=".85"/>` : '');
+  // the bays: pilasters between them, pediments over the first floor, a long iron balcony on the second, the Café's
+  // awnings at the street, the hotel's name along the frieze
   s += P.windows(x0 + 2, top + 8, x1 - x0 - 30, by - top - 34, 9, 5, { ww: .45, wh: .62 });
-  for (let k = 1; k < 5; k += 2) { const y = top + 8 + (by - top - 34) * k / 5 + 2; s += P.line(`M${x0 + 3} ${f(y)}H${x1 - 30}`, 'iron', .9) + P.line(`M${x0 + 3} ${f(y - 2.6)}H${x1 - 30}`, 'iron', .4); }
+  const bw = (x1 - x0 - 30) / 9, fh = (by - top - 34) / 5;
+  for (let i = 0; i <= 9; i += 3) s += P.fill(P.rect(x0 + 2 + i * bw - 1.6, top + 4, 3.2, by - top - 26), 'hotel2', { w: .35 });
+  for (let i = 0; i < 9; i++) { const cx = x0 + 2 + (i + .5) * bw, y = top + 8 + fh * 4 + fh * .2 - 1; s += P.fill(P.poly([[cx - bw * .32, y], [cx, y - 3], [cx + bw * .32, y]]), 'hotel2', { w: .35 }); }
+  for (const k of [2, 4]) { const y = top + 8 + fh * k + fh * .82; s += P.fill(P.rect(x0 + 3, y, x1 - x0 - 33, 1.6), 'iron', { w: .25 }) + P.line(`M${x0 + 3} ${f(y - 3.4)}H${x1 - 30}`, 'iron', .5); let bal = ''; for (let x = x0 + 4; x < x1 - 30; x += 2.2) bal += `M${f(x)} ${f(y)}v-3.4`; s += P.line(bal, 'iron', .3, { op: .8 }); }
   for (let k = 0; k <= 5; k++) s += P.line(`M${x0} ${f(top + 6 + (by - top - 28) * k / 5)}H${x1 - 22}`, 'hotel2', .6);
+  s += P.fill(P.rect(x0 + 10, top + 2, 92, 5), 'hotel', { w: .3 }) + `<text x="${x0 + 56}" y="${top + 6.2}" font-family="Georgia,'Times New Roman',serif" font-size="4.6" letter-spacing="1.2" text-anchor="middle" fill="${P.ink('#7a6a4a')}">ATHÉNÉE PALACE</text>`;
   // the rounded corner and its dome
   s += P.fill(P.rect(x1 - 30, top - 8, 30, by - top + 8), 'hotel') + P.shade(P.rect(x1 - 10, top - 8, 10, by - top + 8), 'hotel', .16);
   s += P.windows(x1 - 28, top, 26, by - top - 26, 2, 6, { ww: .45, wh: .6 });
@@ -191,10 +197,10 @@ function hotel(P) {
   s += P.fill(P.rect(x0 - 2, top - 2, x1 - x0 - 26, 3), 'hotel2', { w: .45 });
   s += P.flag(x1 - 15, top - 38, .7, 'RO', { h: 12 });
   s += P.wall(x0 + 30, by - 44, 14, 19) + P.flagAt(x0 + 64, top + 40);
+  if (P.war !== 'peace') s += P.person(x0 + 30, by + 6, .72, 'gent', { c: '#2f3440', dir: -1 }) + P.person(x0 + 40, by + 6, .7, 'worker', { c: '#5a4a3a', dir: -1 }) + P.person(x0 + 48, by + 7, .7, 'lady', { c: '#e9dcc8', dir: -1 });
   return s;
 }
 function palace(P) {
-  const { f } = P;
   let s = '';
   // a boyar's palace in the French taste: a rusticated ground floor, balconies on consoles, a mansard
   const x0 = 470, x1 = 580, by = 318, top = 196;

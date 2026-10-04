@@ -148,7 +148,7 @@ function pinnacle(P, x, by, w, h, c = 'stone2') {
   return P.fill(P.spire(x, by, w, h), c, { w: .4 }) + P.line(`M${P.f(x)} ${P.f(by - h)}v-2`, c, .45);
 }
 function parliament(P) {
-  const { f } = P, cx = 204, wl = 240, base = 229;
+  const cx = 204, wl = 240, base = 229;
   let s = '';
   // the twin towers of the square front, behind
   for (const k of [-1, 1]) { const tx = cx + k * 34; s += P.fill(P.rect(tx - 3.4, 132, 6.8, 60), 'stone') + P.shade(P.rect(tx + 1, 132, 2.4, 60), 'stone', .2) + P.fill(P.spire(tx, 133, 9, 28), 'roof') + P.line(`M${tx} 105v-5`, 'gold', .8); for (const j of [-1, 1]) s += pinnacle(P, tx + j * 3.8, 134, 2.6, 8); }
@@ -329,6 +329,8 @@ function chainBridge(P) {
   s += P.fill(P.rect(504, 274, 70, 18), 'stone2', { w: .6 }) + P.lite(P.rect(504, 274, 70, 2.4), 'stone2', .3) + P.fill(P.rect(501, 272, 76, 3), 'stone', { w: .5 });
   s += P.flat(P.rect(512, 279, 54, 9), 'stone2', { op: .5 }) + P.line('M512 279h54v9h-54Z', '#8a7f68', .5, { op: .7 });
   s += lion(P, 540, 272, 1.18, -1);
+  // people and a cab on the deck, small with distance, behind the parapet
+  for (const [x, k, kind, c] of [[416, .3, 'gent', '#2f3440'], [424, .32, 'lady', '#f2ece0'], [436, .36, 'boater', '#3d4a3c'], [441, .36, 'lady', '#e8b9b3']]) s += P.far(.25, () => P.person(x, top(x) + 1, k, kind, { c, dir: x % 2 ? 1 : -1 }));
   if (P.war === 'war') s += P.flag(458, 189, .8, 'HU', { h: 16 }) + P.flag(484, 187, .8, 'HU', { h: 16 });
   // lamps along the deck
   for (const [x, k] of [[412, .3], [430, .38]]) s += P.far(.3, () => P.lamp(x, top(x) + 1, k, 'single', { h: 40 }));

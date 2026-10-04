@@ -128,7 +128,6 @@ export default {
 /** Black crape for the Archduke in the weeks after 28 June, until the war takes the flags out. */
 const mourning = (P) => P.war !== 'war' && (P.st?.day ?? 0) < 30;
 const svg = (w, h, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${Math.round(w * 10) / 10} ${Math.round(h * 10) / 10}" width="${Math.round(w * 10) / 10}" height="${Math.round(h * 10) / 10}">${body}</svg>`;
-const quad = (P, pts) => P.poly(pts.map(([X, Y, Z]) => pr(X, Y, Z)));
 
 // ---------- the far valley ----------
 function hills(P) {
@@ -166,7 +165,6 @@ function minaret(P, x, by, h, w) {
   return s;
 }
 function oldTown(P) {
-  const { f } = P;
   let s = '';
   // roofs of the čaršija behind the quay houses, the great minaret of the Begova mosque among them
   const r = P.rng(5);
@@ -323,7 +321,6 @@ function quay(P) {
   return s;
 }
 function quayHouses(P) {
-  const { f } = P;
   let s = '';
   // the far houses toward the Vijećnica
   for (const [z0, z1, h, c] of [[66, 50, 11, 'wall4'], [50, 42, 13, 'wall2']]) s += house(P, z0, z1, h, c, { floors: 3, shop: false });

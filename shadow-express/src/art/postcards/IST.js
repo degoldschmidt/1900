@@ -47,6 +47,7 @@ export default {
     s += P.far(.78, () => P.fill('M24 236C50 206 110 190 170 190C240 190 290 194 330 210L360 236Z', '#b6b29a') + P.fill('M386 236C410 206 450 176 500 168C540 162 566 170 580 178V236Z', '#b8b09a'));
     s += P.far(.7, () => big(P, 486, 236, 1.28, () => galata(P)));
     s += P.flag(497, 166, .6, 'OT', { h: 13 });
+    s += P.far(.72, () => { let d = P.fill('M384 231H440V234H384Z', '#5a5650', { w: .3 }); for (let x = 386; x < 440; x += 3.4) d += P.flat(P.rect(x, 229.4, .9, 1.8), x % 2 ? '#2a2a30' : '#7a3a2a'); return d + P.line('M384 230.6H440', '#8a8478', .4); });
     s += P.far(.62, () => big(P, 356, 236, 1.25, () => P.fill(P.rect(330, 200, 18, 12), 'stone') + leadDome(P, 339, 200, 10, 10) + minaret(P, 324, 212, 26, 2.2, 1) + minaret(P, 354, 212, 26, 2.2, 1)));
     s += P.far(.55, () => big(P, 330, 236, 1.22, () => `<g transform="translate(14 0)">${seraglio(P)}</g>`));
     s += P.far(.5, () => big(P, 122, 232, 1.36, () => blueMosque(P, 122, 228)));
@@ -90,7 +91,9 @@ export default {
     s += fountain(P, 186, 372);
     s += gull(P, 236, 334, 1) + gull(P, 252, 333, -1) + gull(P, 316, 334, 1);
     // a simit seller, ladies in çarşaf, a gentleman of Pera
-    s += simitci(P, 360, 374, 1.12) + carsaf(P, 290, 376, 1.1, { c: '#2a2630' }) + carsaf(P, 306, 376, 1.04, { c: '#6a4a6a' }) + P.person(232, 376, 1.12, 'gent', { c: '#2c3038', dir: 1 });
+    s += simitci(P, 380, 374, 1.12) + carsaf(P, 352, 376, 1.04, { c: '#2a2630' }) + P.person(420, 376, 1.12, 'gent', { c: '#2c3038', dir: -1 });
+    // an efendi in his stambouline and fez and his wife in a lilac çarşaf, come down to the water to watch the boats
+    s += efendi(P, 226, 406, 1.12) + hanim(P, 266, 408, 1.08);
     s += P.wall(214, 340, 12, 16);
     return s;
   },
@@ -209,7 +212,6 @@ function galata(P) {
 
 // ---------- the strait ----------
 function maidensTower(P, cx, by) {
-  const { f } = P;
   let s = '';
   // the rock and its little quay, the lodge, the tower with its lead cap and lantern
   s += P.fill(`M${cx - 34} ${by}Q${cx - 30} ${by - 8} ${cx - 18} ${by - 9}H${cx + 22}Q${cx + 32} ${by - 8} ${cx + 36} ${by}Z`, '#9a9488') + P.shade(`M${cx + 10} ${by - 9}H${cx + 22}Q${cx + 32} ${by - 8} ${cx + 36} ${by}H${cx + 12}Z`, '#9a9488', .2);
@@ -240,7 +242,7 @@ function ferry(P, o = {}) {
   for (let a = 0; a < 7; a++) { const q = Math.PI * (a + .5) / 7; b += `<path d="M${S(58)} ${S(36)}L${S(58 - Math.cos(q) * 10)} ${S(36 - Math.sin(q) * 10)}" stroke="${P.ink('#b8a888')}" stroke-width="${S(.5)}"/>`; }
   b += `<text x="${S(58)}" y="${S(34.4)}" font-family="Georgia,serif" font-size="${S(4)}" font-weight="bold" text-anchor="middle" fill="${P.ink('#8a1a1a')}">64</text>`;
   // the stern flag
-  b += `<path d="M${S(6)} ${S(32)}V${S(17)}" stroke="${P.ink('#3a2a1e')}" stroke-width="${S(.7)}"/><g transform="translate(${S(6)} ${S(17)}) scale(-1 1)"><rect width="${S(8)}" height="${S(5.4)}" fill="${P.ink('#c8102e')}"/><circle cx="${S(3.4)}" cy="${S(2.7)}" r="${S(1.4)}" fill="${P.ink('#ffffff')}"/><circle cx="${S(3.8)}" cy="${S(2.7)}" r="${S(1.1)}" fill="${P.ink('#c8102e')}"/></g>`;
+  b += `<path d="M${S(6)} ${S(32)}V${S(17)}" stroke="${P.ink('#3a2a1e')}" stroke-width="${S(.7)}"/><g transform="translate(${S(6)} ${S(17)}) scale(-1 1)"><rect width="${S(8)}" height="${S(5.4)}" fill="${P.ink('#c8102e')}"/><circle cx="${S(3.4)}" cy="${S(2.7)}" r="${S(1.4)}" fill="${P.ink('#ffffff')}"/><circle cx="${S(3.8)}" cy="${S(2.7)}" r="${S(1.1)}" fill="${P.ink('#c8102e')}"/><circle cx="${S(5.4)}" cy="${S(2.7)}" r="${S(.55)}" fill="${P.ink('#ffffff')}"/></g>`;
   b += `<path d="M${S(110)} ${S(40)}q${S(5)} ${S(1)} ${S(9)} ${S(4)}M${S(2)} ${S(40)}q${S(-5)} ${S(1)} ${S(-8)} ${S(3)}" stroke="${P.light('#ffffff', 0)}" stroke-width="${S(.9)}" fill="none" opacity=".7"/>`;
   if (P.L.lamps > .05) b += `<circle cx="${S(60)}" cy="${S(6)}" r="${S(1.2)}" fill="${P.glow('#fff2c0')}"/>`;
   return { svg: svg(W, H, flip(P, dir, W, b)), w: W, h: H, ax: W / 2, ay: 39 * s, puffs: [[dir > 0 ? 60 * s : W - 60 * s, 4 * s, s * 1.1, true, -dir]] };
@@ -260,7 +262,7 @@ function quay(P) {
   return s;
 }
 function coffeeHouse(P) {
-  const { f } = P, lf = P.L.leaf;
+  const lf = P.L.leaf;
   let s = '';
   // the wooden kahvehane: its open front, the vine on the trellis, stools and low tables, the smokers
   s += P.fill('M470 300H580V350H470Z', 'wood') + P.shade('M560 300H580V350H560Z', 'wood', .2);
@@ -334,7 +336,7 @@ function carsaf(P, x, y, s, o = {}) {
   return d;
 }
 function fezWalkers(P, o = {}) {
-  const f = P.f, s = o.s ?? 1, dir = o.dir ?? 1, kinds = o.kinds ?? ['fez', 'carsaf'], gap = 8 * s, W = (kinds.length - 1) * gap + 20 * s, H = 38 * s;
+  const s = o.s ?? 1, dir = o.dir ?? 1, kinds = o.kinds ?? ['fez', 'carsaf'], gap = 8 * s, W = (kinds.length - 1) * gap + 20 * s, H = 38 * s;
   const coats = ['#3a3a40', '#4a3a2e', '#2f3a4a'];
   const frame = (st) => flip(P, dir, W, kinds.map((k, i) => (k === 'carsaf' ? carsafSmall(P, 10 * s + i * gap, 36 * s, s * .96, 1, '#3a2a40', { stride: (st + i) % 2 }) : fezMan(P, 10 * s + i * gap, 36 * s, s, { c: coats[i % 3], dir: 1, stride: (st + i) % 2 }))).join(''));
   return { frames: [svg(W, H, frame(0)), svg(W, H, frame(1))], fps: 3, w: W, h: H, ax: W / 2, ay: 36 * s };
@@ -348,6 +350,41 @@ function hamal(P, o = {}) {
     return flip(P, -dir, W, b);
   };
   return { frames: [svg(W, H, frame(0)), svg(W, H, frame(1))], fps: 2.4, w: W, h: H, ax: W / 2, ay: 42 * s };
+}
+/** An efendi seen from behind: the long dark stambouline coat, his fez with its swinging tassel, prayer beads. */
+function efendi(P, x, by, s) {
+  const f = P.f, X = (k) => f(x + k * s), Y = (k) => f(by - k * s), key = P.keyC(), w = f(.8);
+  const path = (d, c) => `<path d="${d}" fill="${P.ink(c)}" stroke="${key}" stroke-width="${w}" stroke-linejoin="round"/>`;
+  const coat = '#23252e', skin = '#d9b08c';
+  let out = path(`M${X(-6)} ${Y(30)}L${X(-9)} ${Y(1)}H${X(-4)}L${X(-.5)} ${Y(24)}Z`, '#2e2c30') + path(`M${X(.5)} ${Y(24)}L${X(4)} ${Y(1)}H${X(9)}L${X(6)} ${Y(30)}Z`, '#26242a');
+  out += path(`M${X(-12)} ${Y(26)}L${X(-11)} ${Y(56)}Q${X(-12)} ${Y(74)} ${X(-13)} ${Y(82)}Q${X(0)} ${Y(88)} ${X(13)} ${Y(82)}Q${X(12)} ${Y(74)} ${X(11)} ${Y(56)}L${X(12)} ${Y(26)}Q${X(0)} ${Y(23)} ${X(-12)} ${Y(26)}Z`, coat);
+  out += P.lite(`M${X(-12)} ${Y(80)}Q${X(-6)} ${Y(85)} ${X(-1)} ${Y(85)}L${X(-4)} ${Y(30)}H${X(-11)}Z`, coat, .1) + `<path d="M${X(0)} ${Y(84)}V${Y(26)}" stroke="${P.dark(coat, .3)}" stroke-width="${f(.8 * s)}"/>`;
+  out += path(`M${X(-13)} ${Y(82)}Q${X(-17)} ${Y(66)} ${X(-15)} ${Y(50)}L${X(-11)} ${Y(51)}Q${X(-12)} ${Y(66)} ${X(-10)} ${Y(78)}Z`, coat) + path(`M${X(13)} ${Y(82)}Q${X(17)} ${Y(68)} ${X(15)} ${Y(52)}L${X(11)} ${Y(53)}Q${X(12)} ${Y(66)} ${X(10)} ${Y(78)}Z`, coat);
+  out += path(`M${X(-15.6)} ${Y(51.5)}q${f(1.6 * s)} ${f(-2.6 * s)} ${f(3.4 * s)} ${f(-.6 * s)}`, skin) + path(`M${X(11.6)} ${Y(53)}q${f(1.6 * s)} ${f(-2.6 * s)} ${f(3.4 * s)} ${f(-.6 * s)}`, skin);
+  out += `<path d="M${X(13.5)} ${Y(50)}q${f(1 * s)} ${f(-6 * s)} ${f(-1 * s)} ${f(-9 * s)}" fill="none" stroke="${P.ink('#c9a23a')}" stroke-width="${f(1.1 * s)}" stroke-dasharray="${f(.9 * s)} ${f(.5 * s)}"/>`;
+  out += path(`M${X(-5)} ${Y(84)}Q${X(0)} ${Y(87)} ${X(5)} ${Y(84)}V${Y(88)}H${X(-5)}Z`, '#f2efe6') + path(`M${X(-4.6)} ${Y(87.5)}Q${X(-5.4)} ${Y(96)} ${X(0)} ${Y(97)}Q${X(5.4)} ${Y(96)} ${X(4.6)} ${Y(87.5)}Z`, '#2a2018');
+  out += path(`M${X(-6.4)} ${Y(95.5)}L${X(-5.2)} ${Y(107)}Q${X(0)} ${Y(108.4)} ${X(5.2)} ${Y(107)}L${X(6.4)} ${Y(95.5)}Q${X(0)} ${Y(94)} ${X(-6.4)} ${Y(95.5)}Z`, '#b22a2a') + P.shade(`M${X(2)} ${Y(95)}L${X(2.6)} ${Y(107.4)}Q${X(4)} ${Y(107.3)} ${X(5.2)} ${Y(107)}L${X(6.4)} ${Y(95.5)}Z`, '#b22a2a', .2);
+  out += `<path d="M${X(0)} ${Y(107.6)}Q${X(-6)} ${Y(106)} ${X(-7)} ${Y(99)}" fill="none" stroke="${P.ink('#1d1a17')}" stroke-width="${f(1.4 * s)}"/>`;
+  return out;
+}
+/** A hanım seen from behind in a lilac çarşaf: the cape over head and shoulders, the long skirt, her parasol. */
+function hanim(P, x, by, s) {
+  const f = P.f, X = (k) => f(x + k * s), Y = (k) => f(by - k * s), key = P.keyC(), w = f(.8);
+  const path = (d, c) => `<path d="${d}" fill="${P.ink(c)}" stroke="${key}" stroke-width="${w}" stroke-linejoin="round"/>`;
+  const c = '#9a7aa8';
+  let out = '';
+  // the parasol over her right shoulder
+  const hx = x + 26 * s, hy = by - 100 * s;
+  out += `<path d="M${X(5)} ${Y(60)}L${f(hx)} ${f(hy)}" stroke="${P.ink('#4a3a30')}" stroke-width="${f(1.1 * s)}"/>`;
+  out += path(`M${f(hx - 24 * s)} ${f(hy + 6 * s)}Q${f(hx - 20 * s)} ${f(hy - 17 * s)} ${f(hx)} ${f(hy - 18 * s)}Q${f(hx + 20 * s)} ${f(hy - 17 * s)} ${f(hx + 24 * s)} ${f(hy + 6 * s)}Q${f(hx + 12 * s)} ${f(hy + 2 * s)} ${f(hx)} ${f(hy + 6 * s)}Q${f(hx - 12 * s)} ${f(hy + 2 * s)} ${f(hx - 24 * s)} ${f(hy + 6 * s)}Z`, '#f2e6c8');
+  for (const k of [-16, -8, 0, 8, 16]) out += `<path d="M${f(hx)} ${f(hy - 18 * s)}L${f(hx + k * s)} ${f(hy + 4 * s)}" stroke="${P.dark('#f2e6c8', .2)}" stroke-width="${f(.5 * s)}"/>`;
+  // the skirt, the cape, the hood
+  out += path(`M${X(-7)} ${Y(56)}C${X(-11)} ${Y(36)} ${X(-15)} ${Y(12)} ${X(-17)} ${Y(-1)}Q${X(0)} ${Y(-4)} ${X(17)} ${Y(-1)}C${X(15)} ${Y(12)} ${X(11)} ${Y(36)} ${X(7)} ${Y(56)}Z`, c);
+  out += P.shade(`M${X(2)} ${Y(55)}C${X(8)} ${Y(36)} ${X(13)} ${Y(12)} ${X(17)} ${Y(-1)}Q${X(12)} ${Y(-3)} ${X(8)} ${Y(-2)}C${X(7)} ${Y(14)} ${X(5)} ${Y(36)} ${X(2)} ${Y(55)}Z`, c, .14);
+  out += path(`M${X(-13)} ${Y(50)}Q${X(-14)} ${Y(70)} ${X(-8)} ${Y(86)}Q${X(-6)} ${Y(97)} ${X(0)} ${Y(99)}Q${X(6)} ${Y(97)} ${X(8)} ${Y(86)}Q${X(14)} ${Y(70)} ${X(13)} ${Y(50)}Q${X(0)} ${Y(46)} ${X(-13)} ${Y(50)}Z`, c);
+  out += P.lite(`M${X(-11)} ${Y(52)}Q${X(-11)} ${Y(70)} ${X(-6)} ${Y(86)}Q${X(-4)} ${Y(70)} ${X(-5)} ${Y(50)}Z`, c, .14);
+  for (const k of [-5, 0, 5]) out += `<path d="M${X(k * .4)} ${Y(50)}Q${X(k * .9)} ${Y(26)} ${X(k * 1.4)} ${Y(2)}" stroke="${P.dark(c, .16)}" stroke-width="${f(.6 * s)}" fill="none"/>`;
+  return out;
 }
 /** A simit seller with his tray of sesame rings on his head. */
 function simitci(P, x, y, s) {
