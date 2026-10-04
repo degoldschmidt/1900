@@ -6,7 +6,7 @@ import { context, text, coverName, aff } from '../core/game.js';
 import { chanceOf } from '../core/storylet.js';
 import { postmortem } from '../core/postmortem.js';
 import { when, longDate, hm, span } from '../data/time.js';
-import { vignetteUrl, portraitUrl, glyphSvg, weatherAt } from './art.js';
+import { portraitUrl, glyphSvg, weatherAt } from './art.js';
 import { esc } from './dom.js';
 import { iconSVG } from './icons.js';
 import { postcard, postcardInput, hasPostcard } from './postcard.js';
@@ -135,17 +135,14 @@ export function makeCards(root, hooks) {
     if (c.type === 'arrive') {
       const city = I.city.get(c.city);
       const late = c.delay > 20 ? ` · ${Math.round(c.delay)} minutes late` : '';
-      if (hasPostcard(c.city)) { // the city's postcard, living: the hour, the weather, the news
-        setTimeout(() => {
-          const host = card.querySelector('.pc-wide');
-          if (!host || pc) return;
-          pc = postcard(c.city, postcardInput(G, c.city, S.t, weatherAt(G, c.city, S.t)), { width: host.clientWidth || 440 });
-          host.append(pc.el);
-        }, 0);
-        return `<div class="kick">Arrived · ${esc(when(S.t))}${esc(late)}</div><div class="wide pc-wide"></div><h2>${esc(city.name)}</h2><p class="it">${esc(city.line)}</p>`;
-      }
-      setTimeout(() => vignetteUrl(c.city, (S.t % 1440) / 60, weatherAt(G, c.city, S.t)).then((u) => { const im = card.querySelector('.wide img'); if (!im) return; if (u) im.src = u; else im.closest('.wide').hidden = true; }), 0);
-      return `<div class="kick">Arrived · ${esc(when(S.t))}${esc(late)}</div><div class="wide"><img alt="${esc(city.name)}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div><h2>${esc(city.name)}</h2><p class="it">${esc(city.line)}</p>`;
+      // the city's postcard, living: the hour, the weather, the news
+      if (hasPostcard(c.city)) setTimeout(() => {
+        const host = card.querySelector('.pc-wide');
+        if (!host || pc) return;
+        pc = postcard(c.city, postcardInput(G, c.city, S.t, weatherAt(G, c.city, S.t)), { width: host.clientWidth || 440 });
+        host.append(pc.el);
+      }, 0);
+      return `<div class="kick">Arrived · ${esc(when(S.t))}${esc(late)}</div>${hasPostcard(c.city) ? '<div class="wide pc-wide"></div>' : ''}<h2>${esc(city.name)}</h2><p class="it">${esc(city.line)}</p>`;
     }
     if (c.type === 'debrief') {
       const o = I.op.get(c.op);

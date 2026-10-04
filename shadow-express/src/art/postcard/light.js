@@ -119,7 +119,8 @@ export function lightAt({ t = 12 * 60, lon = 15, lat = 48, weather = 'clear', se
       body: night > .5 ? mix('#3a4570', '#596389', 1 - night) : e < 4 ? mix('#fbe0c8', '#ffffff', clamp(e / 4)) : weather === 'rain' || weather === 'storm' ? '#9aa3ad' : '#ffffff',
       shade: night > .5 ? '#232c4e' : e < 4 ? '#c99aa0' : weather === 'rain' || weather === 'storm' ? '#6e7883' : '#b9c9dc',
     },
-    amb, desat: clamp(night * .45 + dz), windows, lamps, leaf, snow: season === 'winter',
+    // winter snow lies north of the Mediterranean shores; Rome, Lisbon, Athens and Constantinople get a grey winter
+    amb, desat: clamp(night * .45 + dz), windows, lamps, leaf, snow: season === 'winter' && lat > 43.5,
   };
   return L;
 }

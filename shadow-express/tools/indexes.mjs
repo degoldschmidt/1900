@@ -1,5 +1,4 @@
-// Writes the generated indexes: every file in src/data/stories, src/data/ops, src/art/vignettes and src/art/postcards
-// is imported.
+// Writes the generated indexes: every file in src/data/stories, src/data/ops and src/art/postcards is imported.
 // Run by test/validate.mjs and build.mjs, so a new file is picked up without editing anything else.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -25,15 +24,12 @@ export function writeIndexes() {
   const ops = list(path.join(ROOT, 'src/data/ops'));
   write(path.join(ROOT, 'src/data/ops/index.js'), HEAD + ops.map((f, i) => `import o${i} from './${f}';\n`).join('')
     + `\nexport default [${ops.map((_, i) => `o${i}`).join(', ')}];\n`);
-  const vig = list(path.join(ROOT, 'src/art/vignettes'));
-  write(path.join(ROOT, 'src/art/vignettes/index.js'), HEAD + vig.map((f, i) => `import v${i} from './${f}';\n`).join('')
-    + `\nexport default [${vig.map((_, i) => `v${i}`).join(', ')}];\n`);
   const pc = path.join(ROOT, 'src/art/postcards');
   fs.mkdirSync(pc, { recursive: true });
   const cards = list(pc);
   write(path.join(pc, 'index.js'), HEAD + cards.map((f, i) => `import c${i} from './${f}';\n`).join('')
     + `\nexport default [${cards.map((_, i) => `c${i}`).join(', ')}];\n`);
-  return { stories: stories.length, ops: ops.length, vignettes: vig.length, postcards: cards.length };
+  return { stories: stories.length, ops: ops.length, postcards: cards.length };
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) console.log(writeIndexes());

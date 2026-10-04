@@ -3,7 +3,8 @@
 //   node build.mjs            → build/dev.html (for testing)
 //   node build.mjs --release  → index.html (the published page)
 //   node build.mjs --out f    → write the page to f instead (parallel work uses its own file)
-// Guards: no '</script' or '<!--' in the bundle, no hosts outside the allowlist, page ≤ 1.5 MB.
+// Guards: no '</script' or '<!--' in the bundle, no hosts outside the allowlist, page ≤ 2 MB (thirty living postcards
+// take more room than the engravings they replaced; the artifact's own limit is 16 MB).
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -15,7 +16,7 @@ const require = createRequire(path.join(ROOT, '../prototype/package.json'));
 const esbuild = require('esbuild');
 const release = process.argv.includes('--release');
 const ALLOWED = ['cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com', 'www.w3.org'];
-const LIMIT = 1.5 * 1024 * 1024;
+const LIMIT = 2 * 1024 * 1024;
 
 writeIndexes();
 const res = await esbuild.build({

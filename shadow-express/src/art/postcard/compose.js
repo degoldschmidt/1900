@@ -22,14 +22,14 @@ export const Z = ['sky', 'back', 'street', 'fore'];
 export function cardState(mod, { t = 720, lon = 15, lat = 48, weather = 'clear', season = 'summer', progress = null, war = 'peace' } = {}) {
   const sun = sunStep(t, lon, lat);
   const pq = season === 'summer' ? Math.round((progress ?? summerAt(t)) * 5) / 5 : 0;
-  return { id: mod.id, t, sun, weather, season, progress: pq, war, day: Math.floor(t / 1440), key: `${mod.id}|${sun.key}|${weather}|${season}|${pq}|${war}` };
+  return { id: mod.id, t, lat, sun, weather, season, progress: pq, war, day: Math.floor(t / 1440), key: `${mod.id}|${sun.key}|${weather}|${season}|${pq}|${war}` };
 }
 
 /** Draw a card. Returns { key, L, layers: { sky back mid front } (SVG strings), sprites (records), fx, glows }. */
 export function renderCard(mod, st) {
-  const L = lightAt({ t: st.t, weather: st.weather, season: st.season, progress: st.progress, sun: st.sun });
+  const L = lightAt({ t: st.t, lat: st.lat ?? 48, weather: st.weather, season: st.season, progress: st.progress, sun: st.sun });
   const seed = seedOf(mod.id);
-  const P = makePaint({ pal: mod.pal, L, seed, uid: mod.id.toLowerCase(), war: st.war, nation: mod.nation, flag: mod.flag });
+  const P = makePaint({ pal: mod.pal, L, seed, uid: mod.id.toLowerCase(), war: st.war, nation: mod.nation, flag: mod.flag, bills: mod.bills });
   P.st = st;
   const T = makeSprites(P);
   const layer = (name, fn) => { P.layer = name; P.depth = 0; return fn ? fn.call(mod, P, T, st) ?? '' : ''; };
@@ -38,7 +38,7 @@ export function renderCard(mod, st) {
   const sprites = living(P, T, mod, st);
   const glows = L.lamps > .05 ? P.glows.map((g) => ({ x: g.x, y: g.y, r: g.r, o: f(Math.min(1, L.lamps) * (1 - (g.depth ?? 0) * .5)) })) : [];
   const stats = { placards: P._placards, windowFlags: P._wflags, flags: P.sprites.filter((g) => g.kind === 'flag').map((g) => g.nation), movers: P.sprites.filter((g) => g.kind === 'mover').length, lamps: P.glows.length, street: !!P.street };
-  return { key: st.key, L, layers: { sky: doc(sky), back: doc(back), mid: doc(mid), front: doc(front) }, sprites, fx: fxOf(L, mod), glows, stats };
+  return { key: st.key, t: st.t, L, layers: { sky: doc(sky), back: doc(back), mid: doc(mid), front: doc(front) }, sprites, fx: fxOf(L, mod), glows, stats };
 }
 
 // ---------- the sky ----------
@@ -144,12 +144,12 @@ function living(P, T, mod, st) {
   const S = P.street;
   if (S && st.war === 'tension') {
     const sp = T.walkers({ kinds: ['newsboy'], s: S.s, dir: -wind, crisis: false });
-    add('street', 'mover', sp, [[wind > 0 ? S.x1 + 30 : S.x0 - 30, S.y, 1, 0], [wind > 0 ? S.x0 - 30 : S.x1 + 30, S.y, 1, .8], [wind > 0 ? S.x0 - 30 : S.x1 + 30, S.y, 1, 1]], { dur: 50, offset: 7 });
+    add('street', 'mover', sp, [[wind > 0 ? S.x1 + 30 : S.x0 - 30, S.y, 1, 0], [wind > 0 ? S.x0 - 30 : S.x1 + 30, S.y, 1, .8], [wind > 0 ? S.x0 - 30 : S.x1 + 30, S.y, 1, 1]], { dur: 50, offset: 7 }).role = 'newsboy';
   }
   if (S && st.war === 'war') {
     const sp = T.column({ s: S.s * .95, dir: wind, n: 7 });
     const a = wind > 0 ? S.x0 - sp.w : S.x1 + sp.w, b = wind > 0 ? S.x1 + sp.w : S.x0 - sp.w;
-    add('street', 'mover', sp, [[a, S.y, 1, 0], [b, S.y, 1, .72], [b, S.y, 1, 1]], { dur: 64, offset: 20 });
+    add('street', 'mover', sp, [[a, S.y, 1, 0], [b, S.y, 1, .72], [b, S.y, 1, 1]], { dur: 64, offset: 20 }).role = 'column';
   }
   return out;
 }
@@ -184,6 +184,11 @@ function fxOf(L, mod) {
 export function stillSvg(rc, frame = '') {
   const inner = (svg) => svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
   const spr = (z) => rc.sprites.filter((s) => s.z === z).map((s) => {
+    if (s.kind === 'hands') { // the hands at the card's own minute
+      const [x, y, w] = s.box, cx = x + w / 2, cy = y + w / 2, r = w / 2, m = (((rc.t + s.tz) % 720) + 720) % 720;
+      const hand = (deg, len, wd) => { const a = deg * Math.PI / 180; return `<path d="M${f(cx)} ${f(cy)}L${f(cx + Math.sin(a) * r * len)} ${f(cy - Math.cos(a) * r * len)}" stroke="${s.c}" stroke-width="${f(Math.max(.6, r * wd))}" stroke-linecap="round"/>`; };
+      return hand(m / 2, .55, .16) + hand((m % 60) * 6, .8, .1);
+    }
     if (s.kind === 'cloud' || s.kind === 'mover' || s.kind === 'flag' || s.kind === 'bird' || s.kind === 'spin') {
       const k = s.keys?.[0], [x, y, w, h] = s.box, op = k ? k[4] : 1;
       if (op === 0) return '';

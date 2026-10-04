@@ -101,7 +101,7 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
     await p.waitForTimeout(2500);
     const city = await p.evaluate(() => window.__shadow.G.S.city);
     const pc = await p.evaluate(() => { const h = document.querySelector('.ledger .pc-host:not([hidden]) .pc'); return h ? { layers: [...h.querySelectorAll('.pc-l')].filter((i) => i.complete && i.naturalWidth > 0).length } : null; });
-    if (!pc) { if (!(await p.locator('.ledger .vignette').count())) errors.push(`no picture of ${city} in the City tab`); }
+    if (!pc) errors.push(`no postcard of ${city} in the City tab`);
     else {
       if (pc.layers < 4) errors.push(`the postcard of ${city} did not load (${pc.layers} of 4 pictures)`);
       const tf = () => p.evaluate(() => [...document.querySelectorAll('.ledger .pc-host .pc-s')].filter((e) => getComputedStyle(e).animationName !== 'none').slice(0, 10).map((e) => getComputedStyle(e).transform).join('|'));

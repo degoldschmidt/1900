@@ -128,7 +128,8 @@ test('the crisis reaches the street: bills in the tension, posters, flags and so
     assert.ok(war.stats.windowFlags >= 1 || war.stats.flags.length >= 1, `${m.id}: a flag at war`);
     const flag = m.flag ?? m.nation;
     assert.ok(war.stats.flags.every((n) => n === flag || n !== m.nation) || war.stats.flags.includes(flag), `${m.id}: flies its own flag`);
-    assert.ok(war.sprites.some((s) => s.kind === 'mover' && s.frames[0].includes('stroke-width') && s.box[2] > 60), `${m.id}: soldiers march at war`);
+    assert.ok(war.sprites.some((s) => s.role === 'column'), `${m.id}: soldiers march at war`);
+    assert.ok(tension.sprites.some((s) => s.role === 'newsboy'), `${m.id}: a newsboy cries the news in the tension`);
   }
 });
 

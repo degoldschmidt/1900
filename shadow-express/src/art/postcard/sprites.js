@@ -9,15 +9,19 @@
 import { FLAGS, f, rng } from './paint.js';
 import { mix, shadow, lit } from './color.js';
 
-const doc = (w, h, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(w)} ${f(h)}" width="${f(w)}" height="${f(h)}">${body}</svg>`;
+export const doc = (w, h, body) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${f(w)} ${f(h)}" width="${f(w)}" height="${f(h)}">${body}</svg>`;
 /** Mirror a drawing made facing right so it faces left. */
-const face = (dir, w, body) => (dir < 0 ? `<g transform="translate(${f(w)} 0) scale(-1 1)">${body}</g>` : body);
+export const face = (dir, w, body) => (dir < 0 ? `<g transform="translate(${f(w)} 0) scale(-1 1)">${body}</g>` : body);
 
 let flagN = 0;
 export function makeSprites(P) {
   const L = P.L, T = {};
   const one = (w, h, ax, ay, body, o = {}) => ({ svg: doc(w, h, body), w, h, ax, ay, ...o });
   const many = (w, h, ax, ay, bodies, fps, o = {}) => ({ frames: bodies.map((b) => doc(w, h, b)), fps, w, h, ax, ay, ...o });
+  /** For a card's own moving parts: one picture, or several frames, w × h with the anchor at (ax, ay). */
+  T.one = one; T.many = many;
+  /** A horse in profile facing right (two frames of the trot: st 0 or 1); x, y the withers. */
+  T.horse = (x, y, s, c, st = 0) => horseAt(P, x, y, s, c, st);
   const lamp = () => L.lamps > .05;
   const glass = (c = '#3d4d5e') => (L.windows > .2 ? P.glow('#ffd88a') : P.ink(c));
   const halo = (x, y, r) => (lamp() ? `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${P.glow('#ffe2a0')}" opacity="${f(.25 * L.lamps)}"/><circle cx="${f(x)}" cy="${f(y)}" r="${f(r * .45)}" fill="${P.glow('#fff1c8')}" opacity="${f(.5 * L.lamps)}"/>` : '');
@@ -257,8 +261,8 @@ export function makeSprites(P) {
     if (P.war === 'war' && o.crisis !== false && r() < .5) kinds = kinds.map((k, i) => (i === 0 && k !== 'lady' ? 'soldier' : k));
     const dresses = o.dresses ?? ['#f3eee2', '#e8b9b3', '#c9d6e6', '#efe3c3'], coats = o.coats ?? ['#2f3440', '#4a3a30', '#3d4a3c'];
     const gap = 8 * s, W = (kinds.length - 1) * gap + 20 * s, H = 36 * s;
-    const looks = kinds.map((k) => ({ k, c: k === 'lady' || k === 'girl' ? dresses[Math.floor(r() * dresses.length)] : coats[Math.floor(r() * coats.length)], parasol: k === 'lady' && r() < .4 ? dresses[Math.floor(r() * dresses.length)] : null }));
-    const frame = (st) => face(dir, W, looks.map((p, i) => P.person(10 * s + i * gap, 34 * s, s * (p.k === 'child' ? 1 : .96 + (i % 2) * .06), p.k, { c: p.c, dir: 1, stride: (st + i) % 2, parasol: p.parasol })).join(''));
+    const looks = kinds.map((k) => ({ k, c: k === 'lady' || k === 'girl' ? dresses[Math.floor(r() * dresses.length)] : coats[Math.floor(r() * coats.length)], parasol: k === 'lady' && r() < .4 ? dresses[Math.floor(r() * dresses.length)] : null, umbrella: r() < .7 }));
+    const frame = (st) => face(dir, W, looks.map((p, i) => P.person(10 * s + i * gap, 34 * s, s * (p.k === 'child' ? 1 : .96 + (i % 2) * .06), p.k, { c: p.c, dir: 1, stride: (st + i) % 2, parasol: p.parasol, umbrella: p.umbrella })).join(''));
     return many(W, H, W / 2, 34 * s, [frame(0), frame(1)], o.fps ?? 3.2);
   };
   /** A column of soldiers marching in step, an officer at their head, a flag carried. o: { n, s, nation, flag } */
@@ -331,7 +335,7 @@ export function makeSprites(P) {
 }
 
 /** A horse in profile facing right, trotting (st 0 or 1); x, y: the withers. */
-function horseAt(P, x, y, s, c, st) {
+export function horseAt(P, x, y, s, c, st) {
   const S = (k) => f(k * s), X = (k) => f(x + k * s), Y = (k) => f(y + k * s);
   let b = '';
   const leg = (hx, a, back) => `<path d="M${X(hx)} ${Y(8)}L${X(hx + a)} ${Y(15)}L${X(hx + a * .4)} ${Y(21)}" fill="none" stroke="${back ? P.dark(c, .2) : P.ink(c)}" stroke-width="${S(2)}" stroke-linecap="round"/><path d="M${X(hx + a * .4 - 1)} ${Y(21)}h${S(2.4)}" stroke="${P.ink('#1d1a17')}" stroke-width="${S(1.2)}"/>`;

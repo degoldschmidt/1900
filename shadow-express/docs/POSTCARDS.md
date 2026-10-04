@@ -63,6 +63,7 @@ export default {
   horizon: 292, clouds: 4, wind: 1,          // clouds: how many on a clear day; wind: which way clouds and smoke go
   birds: { c: '#f6f5ef', n: 4 },             // optional: gulls (a colour) instead of swifts
   pal: { key, wall, stone, roof, glass, sash, ground, water, iron, … },    // the card's inks, by name
+  bills: { tension: 'EXTRAAUSGABE', war: ['AN MEINE VÖLKER', 'AI MIEI POPOLI'] },  // optional: the city's own wording on the walls
   flowerArt(F) { … },          // the corner flower, centred on 0,0, about 20 px in radius
   flowerArt2(F) { … },         // the foot flower
   back(P, T, st) { … },        // far things: skyline, distant landmarks, water, boats behind piers
@@ -148,8 +149,10 @@ thicken with it and the key lines thin.
 - `P.tree(x, y, s, kind)`, where kind is `round`, `plane`, `poplar`, `cypress`, `palm`, `pine`, `birch` or `willow`.
   Leaves follow the season and are bare in winter; evergreens keep `L.leaf.ever`.
 - `P.hedge(x0, x1, y, h)`
-- `P.water(y0, y1, { seed, shimmer, x0, x1 })`, with glints that move.
-- `P.paving(y0, y1, { vx, seed })`, which grows puddles in rain and snow in winter.
+- `P.water(y0, y1, { seed, shimmer, x0, x1, fx0, fx1 })`, with glints that move. `x0`/`x1` bound the glints; `fx0`/`fx1`
+  bound the water itself, for a river that ends at a bank.
+- `P.paving(y0, y1, { vx, seed, fx0, fx1 })`, which grows puddles in rain and snow in winter.
+- `P.reflect(x0, x1, y0, h, c, seed)` is a reflection: broken strokes of a colour under something on the water.
 
 **People.**
 
@@ -158,7 +161,13 @@ thicken with it and the key lines thin.
   - clergy and the sea: `priest`, `nun`, `sailor`;
   - uniforms, by nation: `soldier`, `officer`.
 
-  Options: `{ c, legs, hat, parasol, dir, stride }`.
+  Options: `{ c, legs, hat, hatKind, parasol, umbrella, dir, stride }`. `hatKind` overrides the hat: `bowler`, `boater`,
+  `cap`, `kepi`, `fez` and others.
+- **Dress follows the season.** The kit turns light summer clothes into autumn browns and winter coats, swaps boaters
+  for bowlers, and folds the parasols away in autumn and winter.
+  - In rain a parasol (or anyone given `umbrella: true`) becomes a black umbrella. `P.crowd` and `T.walkers` hand out
+    umbrellas on their own.
+  - `P.dress(c)` gives the season's version of a colour, for people you draw yourself.
 - `P.figure(x, by, s, 'gent'|'lady', o)` is a large figure seen from behind (about 100 px at s = 1), for the foreground.
 - `P.crowd(x0, x1, y, n, { s, seed, kinds })` is a scatter of strollers. In the crisis it takes in newsboys, then
   soldiers.
@@ -169,7 +178,8 @@ thicken with it and the key lines thin.
   after dusk.
 - `P.flag(x, y, s, nation)` is a staff whose flag waves.
 - `P.smoke(x, y, s, { dark })` is a rising plume.
-- `P.clock(x, y, r, { tz })` is a dial whose hands keep the game's time. `tz` is minutes from CET, so London is -60.
+- `P.clock(x, y, r, { tz, face, rim, marks, hands })` is a dial whose hands keep the game's time. `tz` is minutes from
+  CET, so London is -60. `marks` colours the hour marks; use it on a dark dial.
 - `P.spin(sprite, { x, y, dur, dir })` turns a part about its anchor (windmill sails, a wheel).
 
 **The crisis.**
@@ -185,7 +195,8 @@ thicken with it and the key lines thin.
 **Movers.**
 
 - `P.mover(sprite, { path, dur, offset })` follows a path. Each path point is `[x, y, scale, t (0..1), opacity]`.
-- `P.cross(sprite, { y, s, dir, dur, rest, offset, x0, x1, z })` crosses on a level from off one side to off the other.
+- `P.cross(sprite, { y, s, dir, dur, rest, offset, x0, x1, z, fade })` crosses on a level from off one side to off the
+  other. With `fade`, it fades in at `x0` and out at `x1` instead, for a part that comes and goes in plain sight.
 - Make paths whose ends are hidden: off the window, behind a building, or faded at the vanishing point.
 
 ## Moving parts (`T`)
@@ -210,6 +221,13 @@ thicken with it and the key lines thin.
 Every sprite takes `s` (scale) and `dir` (1 to the right, -1 to the left).
 
 `T.place(sprite, x, y)` draws a sprite standing still into a layer, such as a fiacre waiting.
+
+For a card's own moving parts:
+- `T.one(w, h, ax, ay, body)` makes one picture;
+- `T.many(w, h, ax, ay, [bodies], fps)` makes frames;
+- `T.horse(x, y, s, c, st)` draws a trotting horse.
+
+`sprites.js` also exports `doc`, `face` and `horseAt`.
 
 The parts come out lit by the same light. Draw a bespoke moving part (a funicular car, a transporter bridge's gondola)
 as a sprite object `{ svg, w, h, ax, ay }`. Copy the shape of sprites.js: a standalone `<svg>` drawn with `P`'s inks.
@@ -255,8 +273,21 @@ that reads at 30 px.
   - Windows must light at night: `P.facade`, `P.windows` or your own windows with `P.wr()` (two draws a window, as in
     VIE's `leftHouse`).
   - At least one lamp must glow.
-- **Seasons.** Spring, summer, autumn and winter must all look right. The kit does the trees and the snow on roofs and
-  paving. Bespoke greenery must use `P.L.leaf` (`leaf`, `dark`, `light`, `ever`), and in winter `leaf` is null.
+- **Seasons.** Spring, summer, autumn and winter must all look right.
+  - The kit does the trees, the people's clothes, and the snow on roofs and paving. Snow falls only north of 43.5°, so
+    Rome, Lisbon, Athens and Constantinople get a grey winter.
+  - Bespoke greenery must use `P.L.leaf` (`leaf`, `dark`, `light`, `ever`). In winter `leaf` is null.
+- **The cache.** The still layers are drawn once per light and cached by:
+  - the sun's height, in steps;
+  - the weather;
+  - the season and the summer's progress;
+  - peace or war.
+
+  They are not cached by the exact hour or day, so draw nothing into a layer that depends on the hour beyond its light.
+  Anything that must change with the hour must be a moving part: a clock's hands (`P.clock`), a spinning wheel, a
+  mover's timing.
+- **The crisis in the street.** compose finds the marching column and the newsboy by their role, so any street scale
+  works.
 - **Budget.** A card must take under 120 ms to draw in Node and stay under 420 KB of SVG across its layers. It may have
   at most 70 moving parts and must have at least 3 movers.
 - **Style.** Draw in chromolithograph:

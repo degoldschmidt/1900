@@ -10,7 +10,7 @@ import { coverName, coverLegend, coverData, aff, caseSize, CASE_SIZE, has, act a
 import { currentStep, stepCities } from '../core/ops.js';
 import { when, hm, dayShort, span, T } from '../data/time.js';
 import { HEAT, SUSPECT } from '../core/enemy.js';
-import { vignetteUrl, portraitUrl, weatherAt } from './art.js';
+import { portraitUrl, weatherAt } from './art.js';
 import { postcard, postcardInput, hasPostcard, prefetchPostcard } from './postcard.js';
 import { albumHtml, fill as fillAlbum } from './album.js';
 import { esc } from './dom.js';
@@ -90,16 +90,13 @@ export function makeLedger(root, hooks) {
         <p class="dim">Travelling as ${esc(coverName(G))}, ${esc(coverLegend(G))}.</p>`;
     }
     const c = I.city.get(S.city);
-    const card = hasPostcard(S.city);
-    if (!card) setTimeout(() => vignetteUrl(S.city, (S.t % 1440) / 60, weatherAt(G, S.city, S.t)).then((u) => { const im = body.querySelector('.vignette img'); if (!im || im.dataset.city !== S.city) return; if (u) im.src = u; else im.closest('.vignette').hidden = true; }), 0);
     const ops = opActions(G);
     const people = contactsHere(G);
     const lie = canLieLow(G);
     const L = legendOf(G), days = stayDays(G), w = watchOf(S.t);
     const signs = signsHere(G);
     const lodging = S.lodging?.city === S.city ? LODGINGS[S.lodging.kind].label.toLowerCase() : 'none yet: an hotel tonight';
-    let h = `${card ? '' : `<div class="vignette"><img alt="${esc(c.name)}" data-city="${esc(S.city)}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>`}
-      <h2>${esc(c.name)}</h2><p class="cityline">${esc(c.line)}</p>
+    let h = `<h2>${esc(c.name)}</h2><p class="cityline">${esc(c.line)}</p>
       ${S.expelled?.city === S.city ? `<p class="red"><b>Ordered to leave</b> by ${esc(when(S.expelled.by))}.</p>` : ''}
       <div class="daybar"><span>${esc(dayShort(S.t))}, ${esc(w.name)} · ${days ? `${days} day${days === 1 ? '' : 's'} here` : 'just arrived'} · lodging: ${esc(lodging)}</span></div>
       <div class="daybar"><span class="meter" title="How established ${esc(coverName(G))} is here">your legend here <span class="gauge"><i style="width:${Math.round(L * 100)}%"></i></span></span><span class="signs">${esc(signs)}</span></div>`;

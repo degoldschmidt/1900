@@ -5,7 +5,7 @@
 // While a city draws, it also registers its living parts on the kit: lamps (glows), lit windows, movers, smoke,
 // flags, water shimmer, walls for placards and spots for flags; compose.js turns them into the animated layers.
 
-import { mix, shadow, lit } from './color.js';
+import { mix, shadow, lit, lum } from './color.js';
 import { inkOf, glowOf } from './light.js';
 
 export const CW = 600, CH = 400;
@@ -69,8 +69,8 @@ function star(cx, cy, r) { let d = ''; for (let i = 0; i < 10; i++) { const a = 
  * A kit for one card. pal: the city's inks (keys or hex); L: the light (light.js); war: peace tension war;
  * nation: the city's nation (flags, uniforms, placards).
  */
-export function makePaint({ pal = {}, L, seed = 1, uid = 'pc', war = 'peace', nation = 'GB', flag = null } = {}) {
-  const P = { pal, L, war, nation, flagNation: flag ?? nation, uid, f, seed, depth: 0 };
+export function makePaint({ pal = {}, L, seed = 1, uid = 'pc', war = 'peace', nation = 'GB', flag = null, bills = null } = {}) {
+  const P = { pal, L, war, nation, flagNation: flag ?? nation, uid, f, seed, depth: 0, bills };
   P.r = rng(seed);
   P.wr = rng(seed * 7 + 1);   // lit windows: always two draws a window, so the lit set only grows as the light goes
   P.xr = rng(seed * 13 + 5);  // war dressing: placards, bills, flags from windows
@@ -253,28 +253,43 @@ export function makePaint({ pal = {}, L, seed = 1, uid = 'pc', war = 'peace', na
   };
   /** Water from y0 to y1: bands, a sky reflection, and shimmer that compose animates. */
   P.water = (y0, y1, o = {}) => {
-    const c = o.c ?? pal.water ?? '#3f86a6';
-    let s = P.flat(P.rect(WIN.x - 2, y0, WIN.w + 4, y1 - y0), c);
-    s += P.flat(P.rect(WIN.x - 2, y0, WIN.w + 4, Math.min(8, (y1 - y0) * .25)), lit(P.c(c), .25), { op: .7 });
+    const c = o.c ?? pal.water ?? '#3f86a6', fx0 = o.fx0 ?? WIN.x - 2, fw = (o.fx1 ?? WIN.x + WIN.w + 2) - fx0;
+    let s = P.flat(P.rect(fx0, y0, fw, y1 - y0), c);
+    s += P.flat(P.rect(fx0, y0, fw, Math.min(8, (y1 - y0) * .25)), lit(P.c(c), .25), { op: .7 });
     const r = rng(o.seed ?? 9);
-    for (let i = 0; i < 26; i++) { const y = y0 + 4 + r() * (y1 - y0 - 6), x = WIN.x + r() * WIN.w, w = 8 + r() * 26 * ((y - y0) / (y1 - y0) + .4); s += P.line(`M${f(x)} ${f(y)}h${f(w)}`, shadow(P.c(c), .25), .8, { op: .7 }); }
-    s += P.line(`M${WIN.x - 2} ${f(y0)}H${WIN.x + WIN.w + 2}`, null, .8);
+    for (let i = 0; i < 26; i++) { const y = y0 + 4 + r() * (y1 - y0 - 6), w = 8 + r() * 26 * ((y - y0) / (y1 - y0) + .4), x = fx0 + r() * Math.max(0, fw - w); s += P.line(`M${f(x)} ${f(y)}h${f(w)}`, shadow(P.c(c), .25), .8, { op: .7 }); }
+    s += P.line(`M${f(fx0)} ${f(y0)}h${f(fw)}`, null, .8);
     for (let i = 0; i < (o.shimmer ?? 7); i++) P.sprites.push({ kind: 'shimmer', x: (o.x0 ?? WIN.x + 20) + r() * ((o.x1 ?? WIN.x + WIN.w - 40) - (o.x0 ?? WIN.x + 20)), y: y0 + 4 + r() * (y1 - y0 - 8), w: (14 + r() * 24) * (o.glint ?? 1), z: P.zOf(), c: L.night > .5 ? P.glow('#ffd98a') : lit(P.c(c), .55), seed: i });
     return s;
   };
-  /** Paving from y0 to the bottom, with joints running to a vanishing point. o: { c, vx, rails: [x…] at the bottom edge } */
+  /**
+   * Paving from y0 to the bottom, with joints running to a vanishing point. o: { c, vx, rails: [x…] at the bottom edge,
+   * fx0, fx1 (where the paving stops, if not at the window's edges) }
+   */
   P.paving = (y0, y1 = WIN.y + WIN.h, o = {}) => {
-    const c = o.c ?? pal.ground ?? '#d8c8a2', vx = o.vx ?? 300;
-    let s = P.flat(P.rect(WIN.x - 2, y0, WIN.w + 4, y1 - y0 + 2), c);
-    s += P.flat(P.rect(WIN.x - 2, y0, WIN.w + 4, 6), shadow(P.c(c), .12), { op: .6 });
+    const c = o.c ?? pal.ground ?? '#d8c8a2', vx = o.vx ?? 300, fx0 = o.fx0 ?? WIN.x - 2, fw = (o.fx1 ?? WIN.x + WIN.w + 2) - fx0;
+    const id = `pv${uid}${++P._st}`;
+    let s = `<clipPath id="${id}"><path d="${P.rect(fx0, y0 - 1, fw, y1 - y0 + 3)}"/></clipPath><g clip-path="url(#${id})">`;
+    s += P.flat(P.rect(fx0, y0, fw, y1 - y0 + 2), c);
+    s += P.flat(P.rect(fx0, y0, fw, 6), shadow(P.c(c), .12), { op: .6 });
     // joints in perspective, and courses closer together toward the horizon
     for (let x = WIN.x - 300; x < WIN.x + WIN.w + 300; x += 34) s += P.line(`M${f(vx + (x - vx) * .08)} ${f(y0)}L${f(x)} ${f(y1)}`, shadow(P.c(c), .2), .5, { op: .55 });
     for (let k = 1; k < 9; k++) { const y = y0 + (y1 - y0) * Math.pow(k / 9, 1.6); s += P.line(`M${WIN.x - 2} ${f(y)}H${WIN.x + WIN.w + 2}`, shadow(P.c(c), .16), .45, { op: .55 }); }
     for (const rx of o.rails ?? []) s += P.line(`M${f(vx + (rx - vx) * .08)} ${f(y0)}L${f(rx)} ${f(y1)}`, '#6d6a66', 1.3) + P.line(`M${f(vx + (rx + 16 - vx) * .08)} ${f(y0)}L${f(rx + 16)} ${f(y1)}`, '#6d6a66', 1.3);
     const pr = rng(o.seed ?? 11);
     if (L.wet) for (let i = 0; i < 9; i++) { const x = WIN.x + pr() * WIN.w, y = y0 + 8 + pr() * (y1 - y0 - 10); s += P.flat(P.ellipse(x, y, 16 + pr() * 22, 2.4), lit(P.c(L.sky.low), .2), { op: .55 }); }
-    if (L.snow) s += P.flat(P.rect(WIN.x - 2, y0, WIN.w + 4, y1 - y0 + 2), '#f2f5f8', { op: .75 });
-    return s;
+    if (L.snow) s += P.flat(P.rect(fx0, y0, fw, y1 - y0 + 2), '#f2f5f8', { op: .75 });
+    return s + '</g>';
+  };
+  /** A reflection: broken strokes of a colour under something on the water, thinning and breaking up with distance. */
+  P.reflect = (x0, x1, y0, h, c, seed = 1, o = {}) => {
+    const r = rng(seed);
+    let d = '';
+    for (let y = y0 + 1; y < y0 + h; y += 2.6) {
+      const k = (y - y0) / h;
+      for (let x = x0; x < x1;) { const w = 4 + r() * 16 * (1 - k * .6); if (r() < .78 - k * .4) d += `M${f(x + (r() - .5) * 3)} ${f(y)}h${f(w)}`; x += w + 1 + r() * 5 * (1 + k * 2); }
+    }
+    return `<path d="${d}" stroke="${P.ink(c, .3)}" stroke-width="${f(o.w ?? 1.6)}" opacity="${o.op ?? .55}" stroke-linecap="round"/>`;
   };
 
   // ---------- people and things ----------
@@ -289,7 +304,9 @@ export function makePaint({ pal = {}, L, seed = 1, uid = 'pc', war = 'peace', na
    * s = 1 is about 100 px from the ground to the hat. o: { c (coat, dress), hat, flowers, parasol, sash, stride, arm }
    */
   P.figure = (x, by, s = 1, kind = 'gent', o = {}) => figure(P, x, by, s, kind, o);
-  /** A row of strolling people between x0 and x1 on y. */
+  /** A colour of clothes as the season would have it: light summer dresses turn to autumn browns, then winter coats. */
+  P.dress = (c, salt = 0) => seasonal(P, c, salt);
+  /** A row of strolling people between x0 and x1 on y. In rain most carry umbrellas; in autumn and winter, none a parasol. */
   P.crowd = (x0, x1, y, n, o = {}) => {
     const r = rng(o.seed ?? 5);
     let kinds = o.kinds ?? ['gent', 'lady', 'boater', 'lady', 'gent', 'girl'];
@@ -301,7 +318,7 @@ export function makePaint({ pal = {}, L, seed = 1, uid = 'pc', war = 'peace', na
     for (const x of pts) {
       const k = kinds[Math.floor(r() * kinds.length)];
       const c = k === 'lady' || k === 'girl' ? dresses[Math.floor(r() * dresses.length)] : coats[Math.floor(r() * coats.length)];
-      s += P.person(x, y + r() * (o.jitter ?? 2), (o.s ?? 1) * (.9 + r() * .2), k, { c, dir: r() < .5 ? 1 : -1, parasol: k === 'lady' && r() < .35 ? dresses[Math.floor(r() * dresses.length)] : null });
+      s += P.person(x, y + r() * (o.jitter ?? 2), (o.s ?? 1) * (.9 + r() * .2), k, { c, dir: r() < .5 ? 1 : -1, parasol: k === 'lady' && r() < .35 ? dresses[Math.floor(r() * dresses.length)] : null, umbrella: r() < .65 });
     }
     return s;
   };
@@ -341,11 +358,12 @@ export function makePaint({ pal = {}, L, seed = 1, uid = 'pc', war = 'peace', na
   /**
    * A clock face whose hands keep the game's time (the page turns them): centre, radius, and the city's offset from
    * Central European Time in minutes (London -60, St Petersburg +61 …). Draws the dial; the hands are live.
+   * o: { tz, face, rim, marks (the hour marks' ink), hands (their colour) }
    */
   P.clock = (x, y, r, o = {}) => {
     P.sprites.push({ kind: 'hands', x, y, r, tz: o.tz ?? 0, z: o.z ?? P.zOf(), c: o.hands ?? '#1d1a17' });
     let d = `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r)}" fill="${P.ink(o.face ?? '#f4efdc')}" stroke="${P.ink(o.rim ?? '#d4a73a')}" stroke-width="${f(Math.max(.8, r * .14))}"/>`;
-    for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; d += `<path d="M${f(x + Math.sin(a) * r * .72)} ${f(y - Math.cos(a) * r * .72)}L${f(x + Math.sin(a) * r * .88)} ${f(y - Math.cos(a) * r * .88)}" stroke="${P.ink('#2a2622')}" stroke-width="${f(Math.max(.4, r * (i % 3 ? .05 : .1)))}"/>`; }
+    for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; d += `<path d="M${f(x + Math.sin(a) * r * .72)} ${f(y - Math.cos(a) * r * .72)}L${f(x + Math.sin(a) * r * .88)} ${f(y - Math.cos(a) * r * .88)}" stroke="${P.ink(o.marks ?? '#2a2622')}" stroke-width="${f(Math.max(.4, r * (i % 3 ? .05 : .1)))}"/>`; }
     if (L.lamps > .3) d += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(r * .9)}" fill="${P.glow('#ffe7a8')}" opacity="${f(.55 * L.lamps)}"/>`;
     return d;
   };
@@ -360,11 +378,11 @@ export function makePaint({ pal = {}, L, seed = 1, uid = 'pc', war = 'peace', na
    * A mover crossing the picture on a level: from off one side to off the other along y, at scale s, over dur
    * seconds, then a rest of `rest` (a fraction of the cycle) before it comes again. dir 1: to the right.
    */
-  P.cross = (sprite, { y, s = 1, dir = 1, dur = 40, rest = 0, offset = 0, x0 = WIN.x - 4, x1 = WIN.x + WIN.w + 4, z, bob } = {}) => {
-    const half = sprite.w * s;
-    const a = dir > 0 ? x0 - half : x1 + half, b = dir > 0 ? x1 + half : x0 - half;
-    const path = [[a, y, s, 0], [b, y, s, 1 - rest]];
-    if (rest) path.push([b, y, s, 1]);
+  P.cross = (sprite, { y, s = 1, dir = 1, dur = 40, rest = 0, offset = 0, x0 = WIN.x - 4, x1 = WIN.x + WIN.w + 4, z, bob, fade = false } = {}) => {
+    const half = fade ? 0 : sprite.w * s; // a part that fades in and out may start and end in plain sight
+    const a = dir > 0 ? x0 - half : x1 + half, b = dir > 0 ? x1 + half : x0 - half, end = 1 - rest, at = (t) => a + (b - a) * (t / end);
+    const path = fade ? [[a, y, s, 0, 0], [at(.04 * end), y, s, .04 * end, 1], [at(.96 * end), y, s, .96 * end, 1], [b, y, s, end, 0]] : [[a, y, s, 0], [b, y, s, end]];
+    if (rest) path.push([b, y, s, 1, fade ? 0 : 1]);
     return P.mover(sprite, { path, dur, offset, bob, ...(z ? { z } : {}) });
   };
   /** A sprite turning about its anchor at (x, y): a windmill's sails, a wheel. dur: seconds a turn; dir -1 turns back. */
@@ -396,13 +414,15 @@ export function makePaint({ pal = {}, L, seed = 1, uid = 'pc', war = 'peace', na
 
 // ---------- the crisis on the walls ----------
 const BILL = { GB: 'WAR CRISIS', DE: 'EXTRABLATT', AH: 'EXTRAAUSGABE', CH: 'EXTRABLATT', FR: 'DERNIÈRE HEURE', BE: 'DERNIÈRE HEURE', NL: 'EXTRA', IT: 'STRAORDINARIO', ES: 'ÚLTIMA HORA', PT: 'ÚLTIMA HORA', DK: 'EKSTRABLAD', SE: 'EXTRA', RU: 'ТЕЛЕГРАММЫ', RS: 'ВАНРЕДНО', RO: 'EDIȚIE SPECIALĂ', GR: 'ΕΚΤΑΚΤΟΝ', OT: 'HAVADİS' };
-const POSTER = { GB: 'PROCLAMATION', DE: 'MOBILMACHUNG', AH: 'AN MEINE VÖLKER', CH: 'MOBILMACHUNG', FR: 'MOBILISATION', BE: 'MOBILISATION', NL: 'MOBILISATIE', IT: 'MOBILITAZIONE', RU: 'МОБИЛИЗАЦIЯ', RS: 'МОБИЛИЗАЦИЈА', RO: 'MOBILIZARE', GR: 'ΕΠΙΣΤΡΑΤΕΥΣΙΣ', OT: 'SEFERBERLİK' };
+const POSTER = { GB: 'PROCLAMATION', DE: 'MOBILMACHUNG', AH: 'AN MEINE VÖLKER', CH: 'MOBILMACHUNG', FR: 'MOBILISATION', BE: 'MOBILISATION', NL: 'MOBILISATIE', IT: 'MOBILITAZIONE', RU: 'МОБИЛИЗАЦIЯ', RS: 'МОБИЛИЗАЦИЈА', RO: 'MOBILIZARE', GR: 'ΕΠΙΣΤΡΑΤΕΥΣΙΣ', OT: 'SEFERBERLİK', ES: 'MOVILIZACIÓN', PT: 'MOBILIZAÇÃO', DK: 'SIKRINGSSTYRKEN', SE: 'MOBILISERING' };
+/** A card's own wording for its bills (tension) or posters (war): a string, or several taken in turn. */
+const words = (P, k) => { const w = P.bills?.[k]; return Array.isArray(w) ? w[(P._placards - 1 + w.length) % w.length] : w ?? null; };
 const SERIF = `font-family="Georgia,'Times New Roman',serif"`;
 /** A newspaper bill: a pale sheet, a black headline, lines of type. */
 function bill(P, x, y, w, h) {
   const f = P.f;
   let s = P.fill(P.rect(x, y, w, h), '#f1ead6', { w: .45 }) + P.shade(P.rect(x + w * .8, y, w * .2, h), '#f1ead6', .12);
-  s += `<text x="${f(x + w / 2)}" y="${f(y + h * .3)}" ${SERIF} font-size="${f(w * .17)}" font-weight="bold" text-anchor="middle" fill="${P.ink('#1d1a17')}" textLength="${f(w * .84)}" lengthAdjust="spacingAndGlyphs">${BILL[P.nation] ?? 'EXTRA'}</text>`;
+  s += `<text x="${f(x + w / 2)}" y="${f(y + h * .3)}" ${SERIF} font-size="${f(w * .17)}" font-weight="bold" text-anchor="middle" fill="${P.ink('#1d1a17')}" textLength="${f(w * .84)}" lengthAdjust="spacingAndGlyphs">${words(P, 'tension') ?? BILL[P.nation] ?? 'EXTRA'}</text>`;
   for (let i = 0; i < 4; i++) s += P.line(`M${f(x + w * .14)} ${f(y + h * (.45 + i * .13))}h${f(w * (i === 3 ? .4 : .72))}`, '#3a3530', .7 * w / 14, { op: .7 });
   return s;
 }
@@ -417,9 +437,29 @@ function poster(P, x, y, w, h) {
     s += `<path d="M${f(cx)} ${f(cy - r)}l${f(r * .5)} ${f(r * .5)}l${f(r * 1.4)} ${f(-r * .6)}l${f(-r * .7)} ${f(r * 1.3)}l${f(-r * .5)} ${f(r * .1)}l${f(-r * .7)} ${f(r * .8)}l${f(-r * .7)} ${f(-r * .8)}l${f(-r * .5)} ${f(-r * .1)}l${f(-r * .7)} ${f(-r * 1.3)}l${f(r * 1.4)} ${f(r * .6)}Z" fill="${P.ink(n === 'AH' || n === 'RU' ? '#1a1a1a' : '#1a1a1a')}"/>`;
     if (n === 'AH') s += P.flat(P.rect(x + .6, y + .6, w - 1.2, h * .045), '#e8c23a') + P.flat(P.rect(x + .6, y + h - h * .045 - .6, w - 1.2, h * .045), '#e8c23a');
   } else s += `<g transform="translate(${f(x + w * .2)} ${f(y + h * .06)})">${fl(w * .6, h * .14)}</g>`;
-  s += `<text x="${f(x + w / 2)}" y="${f(y + h * .38)}" ${SERIF} font-size="${f(w * .13)}" font-weight="bold" text-anchor="middle" fill="${P.ink('#1d1a17')}" textLength="${f(w * .86)}" lengthAdjust="spacingAndGlyphs">${POSTER[n] ?? 'MOBILISATION'}</text>`;
+  s += `<text x="${f(x + w / 2)}" y="${f(y + h * .38)}" ${SERIF} font-size="${f(w * .13)}" font-weight="bold" text-anchor="middle" fill="${P.ink('#1d1a17')}" textLength="${f(w * .86)}" lengthAdjust="spacingAndGlyphs">${words(P, 'war') ?? POSTER[n] ?? 'MOBILISATION'}</text>`;
   for (let i = 0; i < 7; i++) s += P.line(`M${f(x + w * .12)} ${f(y + h * (.47 + i * .068))}h${f(w * (i === 6 ? .36 : .76))}`, '#4a4440', .45 * w / 14, { op: .65 });
   return s;
+}
+
+// ---------- the season's clothes ----------
+const AUTUMN = ['#a8794a', '#8a6a4a', '#b98a5a', '#7a5a3a', '#9a6a52', '#6a5a4a'];
+const WINTER = ['#4a3a4a', '#3a4a5a', '#5a4a3a', '#2f3440', '#6a3a3a', '#44524a'];
+/** Light summer clothes turned to the season's: autumn browns (some keep their light dress), winter coats. */
+function seasonal(P, c, salt = 0) {
+  const se = P.L.season;
+  if (se !== 'winter' && se !== 'autumn') return c;
+  const hex = P.c(c);
+  if (typeof hex !== 'string' || hex[0] !== '#' || lum(hex) < .55) return c;
+  const h = [...hex].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) >>> 0, salt + 7);
+  if (se === 'autumn' && h % 3 === 0) return c;
+  return (se === 'winter' ? WINTER : AUTUMN)[h % 6];
+}
+/** What a person carries over the head: a parasol on a dry summer day, a black umbrella in the rain, nothing else. */
+function overhead(P, o) {
+  if (P.L.rain > 0) return o.parasol || o.umbrella ? '#26262c' : null;
+  if (P.L.season === 'winter' || P.L.season === 'autumn') return null;
+  return o.parasol || null;
 }
 
 // ---------- large figures ----------
@@ -429,10 +469,11 @@ function figure(P, x, by, s, kind, o) {
   const skin = '#e3c19c', hair = o.hair ?? '#5a3a24';
   let out = '';
   if (kind === 'lady') {
-    const dress = o.c ?? '#f4efe3', sash = o.sash ?? '#d9a2a0', st = o.stride ?? 0;
-    // the parasol behind her, over her shoulder
-    if (o.parasol !== false) {
-      const pc = o.parasol ?? '#f7f2e6', hx = x + 30 * s, hy = by - 104 * s;
+    const dress = seasonal(P, o.c ?? '#f4efe3', 3), sash = o.sash ?? '#d9a2a0', st = o.stride ?? 0;
+    // the parasol behind her, over her shoulder (a black umbrella in the rain; none in autumn or winter)
+    const pc = o.parasol === false ? null : overhead(P, { parasol: o.parasol ?? '#f7f2e6' });
+    if (pc) {
+      const hx = x + 30 * s, hy = by - 104 * s;
       out += `<path d="M${X(6)} ${Y(62)}L${f(hx)} ${f(hy)}" stroke="${P.ink('#4a3a30')}" stroke-width="${f(1.2 * s)}"/>`;
       out += path(`M${f(hx - 30 * s)} ${f(hy + 8 * s)}Q${f(hx - 26 * s)} ${f(hy - 20 * s)} ${f(hx)} ${f(hy - 22 * s)}Q${f(hx + 26 * s)} ${f(hy - 20 * s)} ${f(hx + 30 * s)} ${f(hy + 8 * s)}Q${f(hx + 20 * s)} ${f(hy + 3 * s)} ${f(hx + 10 * s)} ${f(hy + 8 * s)}Q${f(hx)} ${f(hy + 3 * s)} ${f(hx - 10 * s)} ${f(hy + 8 * s)}Q${f(hx - 20 * s)} ${f(hy + 3 * s)} ${f(hx - 30 * s)} ${f(hy + 8 * s)}Z`, pc);
       out += P.shade(`M${f(hx)} ${f(hy - 22 * s)}Q${f(hx + 26 * s)} ${f(hy - 20 * s)} ${f(hx + 30 * s)} ${f(hy + 8 * s)}Q${f(hx + 20 * s)} ${f(hy + 3 * s)} ${f(hx + 10 * s)} ${f(hy + 8 * s)}Z`, pc, .1);
@@ -459,7 +500,7 @@ function figure(P, x, by, s, kind, o) {
     out += P.shade(`M${X(-17)} ${Y(96)}Q${X(0)} ${Y(91)} ${X(17)} ${Y(96)}Q${X(0)} ${Y(94)} ${X(-17)} ${Y(96)}Z`, hc, .25);
     const fl = o.flowers ?? ['#d8576a', '#f08ea0', '#e8c25a'];
     const R = P.rng(Math.round(x * 3));
-    for (let i = 0; i < 7; i++) { const fx = -9 + i * 3 + R() * 1.4, fy = 100 + R() * 4; out += `<circle cx="${X(fx)}" cy="${Y(fy)}" r="${f((1.8 + R() * 1) * s)}" fill="${P.ink(i % 3 === 2 ? '#7da05a' : fl[i % fl.length])}" stroke="${key}" stroke-width="${f(.4)}"/>`; }
+    if (P.L.season !== 'winter') for (let i = 0; i < 7; i++) { const fx = -9 + i * 3 + R() * 1.4, fy = 100 + R() * 4; out += `<circle cx="${X(fx)}" cy="${Y(fy)}" r="${f((1.8 + R() * 1) * s)}" fill="${P.ink(i % 3 === 2 ? '#7da05a' : fl[i % fl.length])}" stroke="${key}" stroke-width="${f(.4)}"/>`; }
     return out;
   }
   // the gentleman: trousers in step, a frock coat with its vent, broad shoulders, a bowler, his cane
@@ -481,6 +522,12 @@ function figure(P, x, by, s, kind, o) {
   const hc = o.hat ?? '#1b1b20';
   out += path(`M${X(-9)} ${Y(97)}Q${X(0)} ${Y(95)} ${X(9)} ${Y(97)}Q${X(9.6)} ${Y(98.6)} ${X(6.4)} ${Y(98.4)}Q${X(6)} ${Y(108)} ${X(0)} ${Y(108)}Q${X(-6)} ${Y(108)} ${X(-6.4)} ${Y(98.4)}Q${X(-9.6)} ${Y(98.6)} ${X(-9)} ${Y(97)}Z`, hc);
   out += `<path d="M${X(-4)} ${Y(105)}q${f(2 * s)} ${f(-1.6 * s)} ${f(4 * s)} 0" stroke="${P.light(hc, .3)}" stroke-width="${f(.8 * s)}" fill="none"/>`;
+  // in the rain, a black umbrella over him
+  if (P.L.rain > 0 && o.umbrella !== false) {
+    const ux = x - 6 * s, uy = by - 118 * s;
+    out += `<path d="M${X(-14)} ${Y(50)}L${f(ux)} ${f(uy)}" stroke="${P.ink('#3a2a1e')}" stroke-width="${f(1.2 * s)}"/>`;
+    out += path(`M${f(ux - 26 * s)} ${f(uy + 9 * s)}Q${f(ux - 22 * s)} ${f(uy - 16 * s)} ${f(ux)} ${f(uy - 18 * s)}Q${f(ux + 22 * s)} ${f(uy - 16 * s)} ${f(ux + 26 * s)} ${f(uy + 9 * s)}Q${f(ux + 13 * s)} ${f(uy + 4 * s)} ${f(ux)} ${f(uy + 9 * s)}Q${f(ux - 13 * s)} ${f(uy + 4 * s)} ${f(ux - 26 * s)} ${f(uy + 9 * s)}Z`, '#26262c');
+  }
   return out;
 }
 
@@ -490,8 +537,9 @@ function person(P, x, y, s, kind, o) {
   const f = P.f, S = (n) => f(n * s), dir = o.dir ?? 1, D = (n) => f(n * s * dir);
   const skin = '#e8c4a0', key = P.keyC(), w = f(.55 * (1 - P.depth * .4));
   const uni = kind === 'soldier' || kind === 'officer' ? UNIFORM[o.nation ?? P.nation] ?? UNIFORM.GB : null;
-  const coat = uni ? uni.coat : o.c ?? (kind === 'lady' ? '#f3eee2' : '#2f3440');
-  const legs = uni ? uni.legs : o.legs ?? (kind === 'boater' ? '#d8cfb8' : '#2a2a30');
+  const cold = P.L.season === 'winter';
+  const coat = uni ? uni.coat : seasonal(P, o.c ?? (kind === 'lady' ? '#f3eee2' : '#2f3440'), Math.round(x));
+  const legs = uni ? uni.legs : o.legs ?? (kind === 'boater' && !cold ? '#d8cfb8' : '#2a2a30');
   const fem = kind === 'lady' || kind === 'girl' || kind === 'nun' || kind === 'peasant';
   const h = kind === 'child' ? 18 : kind === 'girl' ? 25 : 30;
   const top = y - h * s;
@@ -513,7 +561,9 @@ function person(P, x, y, s, kind, o) {
   if (!fem) out += `<path d="M${f(x - 3 * s)} ${f(y - h * .4 * s)}L${f(x - 2.6 * s)} ${f(top + 7 * s)}Q${f(x)} ${f(top + 6 * s)} ${f(x + 2.6 * s)} ${f(top + 7 * s)}L${f(x + 3 * s)} ${f(y - h * .4 * s)}Z" fill="${P.ink(coat)}" stroke="${key}" stroke-width="${w}"/>`;
   // head
   out += `<circle cx="${f(x)}" cy="${f(top + 4.2 * s)}" r="${S(2.4)}" fill="${P.ink(skin)}" stroke="${key}" stroke-width="${w}"/>`;
-  const hat = uni ? uni.hat : HATS[kind] ?? 'bowler', hatC = uni ? uni.hatC : o.hat ?? (fem ? '#d9a7a0' : '#25252a');
+  let hat = uni ? uni.hat : o.hatKind ?? HATS[kind] ?? 'bowler';
+  if (hat === 'boater' && (cold || P.L.season === 'autumn')) hat = 'bowler';
+  const hatC = uni ? uni.hatC : o.hat ?? (hat === 'fez' ? '#b8282e' : fem ? '#d9a7a0' : '#25252a');
   const hy = top + 2.8 * s;
   if (hat === 'bowler') out += `<path d="M${f(x - 3.4 * s)} ${f(hy)}h${S(6.8)}M${f(x - 2.2 * s)} ${f(hy)}q${S(2.2)} ${S(-4.4)} ${S(4.4)} 0Z" fill="${P.ink(hatC)}" stroke="${P.ink(hatC)}" stroke-width="${S(1)}"/>`;
   if (hat === 'boater') out += `<path d="M${f(x - 4 * s)} ${f(hy)}h${S(8)}M${f(x - 2.4 * s)} ${f(hy)}v${S(-2.4)}h${S(4.8)}v${S(2.4)}" fill="${P.ink('#e9d9a0')}" stroke="${P.ink('#c9b071')}" stroke-width="${S(1)}"/>`;
@@ -528,12 +578,14 @@ function person(P, x, y, s, kind, o) {
   if (hat === 'sajkaca') out += `<path d="M${f(x - 2.6 * s)} ${f(hy + .6 * s)}l${S(.6)} ${S(-3)}h${S(4)}l${S(.6)} ${S(3)}Z" fill="${P.ink(hatC)}"/>`;
   if (hat === 'shako') out += `<path d="M${f(x - 2.4 * s)} ${f(hy + .6 * s)}v${S(-5)}h${S(4.8)}v${S(5)}Z" fill="${P.ink(hatC)}"/>`;
   if (hat === 'kabalak') out += `<path d="M${f(x - 2.8 * s)} ${f(hy + .8 * s)}q${S(2.8)} ${S(-4.6)} ${S(5.6)} 0Z" fill="${P.ink(hatC)}"/>`;
+  if (hat === 'fez') out += `<path d="M${f(x - 2.3 * s)} ${f(hy + .8 * s)}l${S(.5)} ${S(-3.6)}h${S(3.6)}l${S(.5)} ${S(3.6)}Z" fill="${P.ink(hatC)}" stroke="${key}" stroke-width="${w}"/><path d="M${f(x)} ${f(hy - 2.8 * s)}q${D(1.6)} ${S(.4)} ${D(1.8)} ${S(2.4)}" stroke="${P.ink('#1d1a17')}" stroke-width="${S(.5)}" fill="none"/>`;
   // a rifle on a soldier's shoulder; papers for a newsboy; a parasol for a lady
   if (kind === 'soldier') out += `<path d="M${f(x + 2 * s * dir)} ${f(y - h * .45 * s)}l${D(2.4)} ${S(-14)}" stroke="${P.ink('#3b2c1e')}" stroke-width="${S(1.1)}"/>`;
   if (kind === 'newsboy') out += `<path d="M${f(x + 2 * s * dir)} ${f(y - h * .55 * s)}h${D(5)}v${S(4)}h${D(-5)}Z" fill="${P.ink('#f2efe6')}" stroke="${key}" stroke-width="${w}"/>`;
-  if (o.parasol) {
-    const px = x - 1 * s * dir, py = top - 2 * s;
-    out += `<path d="M${f(px)} ${f(py + 8 * s)}V${f(py)}" stroke="${P.ink('#4a3a30')}" stroke-width="${S(.7)}"/><path d="M${f(px - 8 * s)} ${f(py + 2 * s)}Q${f(px)} ${f(py - 7 * s)} ${f(px + 8 * s)} ${f(py + 2 * s)}Z" fill="${P.ink(o.parasol)}" stroke="${key}" stroke-width="${w}"/>`;
+  const over = uni ? null : overhead(P, o);
+  if (over) {
+    const wet = P.L.rain > 0, px = x - (wet ? 0 : 1) * s * dir, py = top - (wet ? 3 : 2) * s, r = (wet ? 9 : 8) * s;
+    out += `<path d="M${f(px)} ${f(py + 8 * s)}V${f(py)}" stroke="${P.ink('#4a3a30')}" stroke-width="${S(.7)}"/><path d="M${f(px - r)} ${f(py + 2 * s)}Q${f(px)} ${f(py - 7 * s)} ${f(px + r)} ${f(py + 2 * s)}Z" fill="${P.ink(over)}" stroke="${key}" stroke-width="${w}"/>`;
   }
   return out;
 }

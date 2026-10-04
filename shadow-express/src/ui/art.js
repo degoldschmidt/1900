@@ -1,14 +1,8 @@
-// Rasterises art once and keeps it: vignettes (last 8, as PNG object URLs), portraits and glyphs (as images).
-// SVG strings come from src/art; the browser draws each one a single time onto a canvas.
+// Rasterises art once and keeps it: the postcards' layers (for postcard.js), portraits and glyphs (as images); and the
+// day's weather over a city. SVG strings come from src/art; the browser draws each one a single time onto a canvas.
 
-import vignettes from '../art/vignettes/index.js';
-import { renderScene, phase } from '../art/frame.js';
 import { portrait } from '../art/portraits.js';
 import glyphs from '../art/glyphs.js';
-
-const VIG = new Map(vignettes.map((v) => [v.id, v]));
-const lru = new Map(); // key → Promise<url>
-const MAX = 8;
 
 function svgUrl(svg) { return URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' })); }
 
@@ -30,24 +24,6 @@ export function rasterise(svg, w, h, scale = 2) {
     img.src = src;
   });
 }
-
-/** The vignette of a city at an hour and weather, as an image URL (cached per city, phase and weather). */
-export function vignetteUrl(city, hour, weather = 'clear') {
-  const v = VIG.get(city);
-  if (!v) return Promise.resolve(null);
-  weather = weather === 'storm' ? 'rain' : weather === 'heat' ? 'clear' : weather; // the engravings know fewer skies
-  const key = `${city}|${phase(hour)}|${weather}`;
-  if (lru.has(key)) { const p = lru.get(key); lru.delete(key); lru.set(key, p); return p; }
-  let svg;
-  try { svg = renderScene(v, { hour, weather, uid: city.toLowerCase(), seed: skySeed(city) }); } catch { return Promise.resolve(null); }
-  const p = rasterise(svg, 640, 240, Math.min(2, (window.devicePixelRatio || 1) * 1.2));
-  lru.set(key, p);
-  while (lru.size > MAX) { const [k, old] = lru.entries().next().value; lru.delete(k); old.then((u) => u && URL.revokeObjectURL(u)); }
-  return p;
-}
-export const hasVignette = (city) => VIG.has(city);
-/** Each city keeps its own sky: clouds and sun placed by its name. */
-export const skySeed = (city) => [...city].reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7) % 997;
 
 /**
  * The weather over a city on a day: fixed per campaign, foggier in the north-west, smoky once the armies move,

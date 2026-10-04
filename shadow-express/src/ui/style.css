@@ -101,8 +101,6 @@ button { font: inherit; color: inherit; }
 .ledger h2 { font-family: var(--font-display); font-weight: 400; font-size: 25px; margin: 2px 0 0; letter-spacing: .02em; }
 .ledger h3 { font-family: var(--font-display); font-weight: 400; font-size: 17px; margin: 18px 0 6px; letter-spacing: .05em; border-bottom: .5px solid var(--ink); padding-bottom: 2px; }
 .ledger p { margin: 6px 0; line-height: 1.42; font-size: 15px; }
-.vignette { position: relative; margin: 0 -4px 6px; border: 1.5px solid var(--ink); box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--ink); aspect-ratio: 640 / 240; background: var(--paper-2); overflow: hidden; }
-.vignette img { width: 100%; height: 100%; display: block; }
 .cityline { font-family: var(--font-italic); font-style: italic; font-size: 15.5px; color: var(--ink-2); margin: 4px 0 8px; }
 
 /* actions: engraved plates */
