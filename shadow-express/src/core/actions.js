@@ -48,7 +48,7 @@ export function board(G, hours = 36) {
   });
 }
 
-export function book(G, key, cls) {
+export function book(G, key, cls, o = {}) {
   const { S, W } = G;
   const row = board(G).find((r) => r.dp.key === key);
   if (!row) return { ok: false, why: 'That train has gone.' };
@@ -62,7 +62,7 @@ export function book(G, key, cls) {
   S.routine = null;
   S.place = 'station';
   S.stats.decisions++;
-  if (row.next) S.stats.nextTrain++; else S.stats.notNext++;
+  if (!o.trip) { if (row.next) S.stats.nextTrain++; else S.stats.notNext++; }
   const p = aff(G, `class:${cls}`);
   if (p < 0) leave(G, 'sighting', .4, { heat: .5 }); // a count in third class is noticed
   return { ok: true };
@@ -75,8 +75,11 @@ export function bookTrip(G, it, cls) {
   const fares = it.legs.map((l) => { const f = W.service.get(l.svc).fare; return f[cls] ?? f[2] ?? f[3] ?? f[1]; });
   const total = fares.reduce((a, b) => a + b, 0);
   if (S.money < total) return { ok: false, why: 'You cannot afford the whole journey.' };
-  const first = book(G, it.legs[0].key, W.service.get(it.legs[0].svc).fare[cls] !== undefined ? cls : Number(Object.keys(W.service.get(it.legs[0].svc).fare)[0]));
+  // did this journey pass up an earlier way toward the same destination?
+  const soonest = Math.min(it.legs[0].dep, ...plan(G, it.legs.at(-1).to).map((x) => x.legs[0].dep));
+  const first = book(G, it.legs[0].key, W.service.get(it.legs[0].svc).fare[cls] !== undefined ? cls : Number(Object.keys(W.service.get(it.legs[0].svc).fare)[0]), { trip: true });
   if (!first.ok) return first;
+  if (it.legs[0].dep <= soonest) S.stats.nextTrain++; else S.stats.notNext++;
   S.money -= total - fares[0];
   S.trip = { legs: it.legs, i: 0, cls, to: it.legs.at(-1).to };
   return { ok: true, total };
