@@ -35,6 +35,7 @@ export function rasterise(svg, w, h, scale = 2) {
 export function vignetteUrl(city, hour, weather = 'clear') {
   const v = VIG.get(city);
   if (!v) return Promise.resolve(null);
+  weather = weather === 'storm' ? 'rain' : weather === 'heat' ? 'clear' : weather; // the engravings know fewer skies
   const key = `${city}|${phase(hour)}|${weather}`;
   if (lru.has(key)) { const p = lru.get(key); lru.delete(key); lru.set(key, p); return p; }
   let svg;
@@ -48,15 +49,19 @@ export const hasVignette = (city) => VIG.has(city);
 /** Each city keeps its own sky: clouds and sun placed by its name. */
 export const skySeed = (city) => [...city].reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7) % 997;
 
-/** The weather over a city on a day: fixed per campaign, foggier in the north-west, smoky once the armies move. */
+/**
+ * The weather over a city on a day: fixed per campaign, foggier in the north-west, smoky once the armies move,
+ * thunder in the summer's rain and a heat haze on the southern cities' clear days.
+ */
 export function weatherAt(G, city, t) {
-  const day = Math.floor(t / 1440), u = hashU(G.S.seed, city, day);
+  const day = Math.floor(t / 1440), u = hashU(G.S.seed, city, day), v = hashU(G.S.seed + 1, city, day);
   const north = ['LON', 'AMS', 'FLU', 'HAM', 'CPH', 'STO', 'SPB', 'BRU', 'COL'].includes(city);
+  const south = ['MAR', 'BAR', 'MAD', 'LIS', 'ROM', 'VEN', 'TRI', 'ATH', 'IST', 'ODE', 'SAR', 'BEG', 'BUC', 'BUD'].includes(city);
   if (G.W.act(t) === 3 && u < .3) return 'smoke';
-  if (u < (north ? .16 : .1)) return 'rain';
+  if (u < (north ? .16 : .1)) return v < (north ? .2 : .45) ? 'storm' : 'rain';
   if (north && u < .26) return 'fog';
   if (u < .45) return 'cloud';
-  return 'clear';
+  return south && v < .4 ? 'heat' : 'clear';
 }
 function hashU(seed, city, day) { let h = 2166136261 ^ seed; for (const ch of `${city}|${day}`) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return ((h >>> 0) % 10007) / 10007; }
 

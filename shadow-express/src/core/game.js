@@ -55,7 +55,7 @@ export function newGame(D, { seed = 1, sex = 'm', start = 'LON', t = START, hero
     flags: {}, seen: {}, later: [], queue: [], cardN: 0,
     people: {}, ops: {}, intel: [], intelN: 0, sources: {}, records: [], recN: 0,
     enemy: newEnemy(D), tailedBy: null, tailSince: null, knownTail: false,
-    newsSeen: [], log: [], debrief: [], visits: { [start]: 1 }, ended: null,
+    newsSeen: [], log: [], debrief: [], visits: { [start]: 1 }, album: { [start]: t }, ended: null,
     stats: { decisions: 0, journeys: 0, nextTrain: 0, notNext: 0, controls: 0, encounters: 0, nearMisses: 0, detained: 0, records: 0, plants: 0 },
   };
   // the agent: covers from the background, purse and standing from background and traits, papers from paperwork
@@ -84,6 +84,8 @@ export function newGame(D, { seed = 1, sex = 'm', start = 'LON', t = START, hero
 
 export function makeGame(D, S) {
   const W = buildWorld(D, S.seed);
+  // a game saved before the postcard album: every city visited goes in, dated now
+  if (!S.album) S.album = Object.fromEntries(Object.keys(S.visits ?? {}).map((c) => [c, S.t]));
   return { D, W, S, I: indexes(D) };
 }
 

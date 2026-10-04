@@ -1,4 +1,5 @@
-// Frame times under a 4× CPU throttle: idle, and dragging at high zoom. Budgets: median ≤ 33 ms idle, ≤ 50 ms dragging.
+// Frame times under a 4× CPU throttle: idle, dragging at high zoom, and idle with two living postcards on screen (the
+// City tab's and an arrival card's). Budgets: median ≤ 33 ms idle, ≤ 50 ms dragging, ≤ 33 ms with the postcards.
 //   node test/perf.mjs [--release] [--page file.html]
 import fs from 'node:fs';
 import path from 'node:path';
@@ -43,5 +44,15 @@ await p.evaluate(() => { const g = window.__shadow.globe; g.invalidate(); });
 await p.waitForTimeout(1500);
 const st2 = await p.evaluate(() => window.__shadow.globe.stats);
 console.log(`idle median ${med(idle).toFixed(1)} ms, p90 ${p90(idle).toFixed(0)} (${idle.length} frames) · drag at 14× median ${med(drag).toFixed(1)} ms, p90 ${p90(drag).toFixed(0)} (${drag.length} frames) · base renders ${st.bases}, last full ${st2.base.toFixed(0)} ms`);
+// the postcards: the City tab's, then an arrival card's over it; how long until a card shows, then the frames
+const t0 = Date.now();
+await p.evaluate(() => { window.__shadow.ledger.setOpen(true); window.__shadow.ledger.show('city'); });
+const loaded = (sel) => p.waitForFunction((sel) => { const c = document.querySelector(sel); return c && [...c.querySelectorAll('.pc-l')].filter((i) => i.complete && i.naturalWidth > 0).length >= 4; }, sel, { timeout: 20000 }).then(() => Date.now(), () => null);
+const tCity = await loaded('.ledger .pc-host .pc');
+await p.evaluate(() => { const G = window.__shadow.G, S = G.S; S.queue.unshift({ type: 'arrive', city: 'VIE', delay: 0, n: ++S.cardN }); window.__shadow.refresh(); });
+const t1 = Date.now(), tArr = await loaded('.veil:not([hidden]) .card .pc');
+await p.waitForTimeout(1600);
+const cards = await sample(3000);
+console.log(`postcards: City tab shown in ${tCity ? tCity - t0 : 'never'} ms, arrival card in ${tArr ? tArr - t1 : 'never'} ms (4× throttle) · idle with both median ${med(cards).toFixed(1)} ms, p90 ${p90(cards).toFixed(0)} (${cards.length} frames)`);
 await browser.close();
-process.exit(med(idle) <= 33 && med(drag) <= 50 ? 0 : 1);
+process.exit(med(idle) <= 33 && med(drag) <= 50 && med(cards) <= 33 && tCity && tArr ? 0 : 1);

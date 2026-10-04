@@ -94,6 +94,43 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
     if (S.city && !S.j && !S.b && i > 10) break;
   }
   await p.screenshot({ path: path.join(shots, `${name}-6-arrived.png`) });
+  // the postcards: the City tab's card is alive (its pictures load, its parts move); the album keeps the cards and
+  // opens one; under reduced motion a card still shows, and nothing on it moves
+  {
+    await p.evaluate(() => window.__shadow.ledger.show('city'));
+    await p.waitForTimeout(2500);
+    const city = await p.evaluate(() => window.__shadow.G.S.city);
+    const pc = await p.evaluate(() => { const h = document.querySelector('.ledger .pc-host:not([hidden]) .pc'); return h ? { layers: [...h.querySelectorAll('.pc-l')].filter((i) => i.complete && i.naturalWidth > 0).length } : null; });
+    if (!pc) { if (!(await p.locator('.ledger .vignette').count())) errors.push(`no picture of ${city} in the City tab`); }
+    else {
+      if (pc.layers < 4) errors.push(`the postcard of ${city} did not load (${pc.layers} of 4 pictures)`);
+      const tf = () => p.evaluate(() => [...document.querySelectorAll('.ledger .pc-host .pc-s')].filter((e) => getComputedStyle(e).animationName !== 'none').slice(0, 10).map((e) => getComputedStyle(e).transform).join('|'));
+      const a = await tf(); await p.waitForTimeout(1200); const b = await tf();
+      if (!a || a === b) errors.push(`nothing moves on the postcard of ${city}`);
+      await p.screenshot({ path: path.join(shots, `${name}-6b-postcard.png`) });
+    }
+    await p.evaluate(() => window.__shadow.ledger.show('you'));
+    await p.waitForTimeout(900);
+    if (!(await p.locator('.album .pc-thumb').count())) errors.push('the album is empty');
+    else {
+      await p.locator('.album .pc-thumb').first().click({ timeout: 2000 }).catch(() => errors.push('an album card cannot be opened'));
+      await p.waitForTimeout(1200);
+      if (!(await p.locator('.pc-view .pc').isVisible().catch(() => false))) errors.push('the album card did not open');
+      await p.screenshot({ path: path.join(shots, `${name}-6c-album.png`) });
+      await p.keyboard.press('Escape');
+      await p.waitForTimeout(200);
+      if (await p.locator('.pc-view').count()) errors.push('the album card did not close with Escape');
+    }
+    await p.emulateMedia({ reducedMotion: 'reduce' });
+    await p.evaluate(() => { const G = window.__shadow.G, S = G.S; S.queue.unshift({ type: 'arrive', city: 'LON', delay: 0, n: ++S.cardN }); window.__shadow.refresh(); });
+    await p.waitForTimeout(1800);
+    const still = await p.evaluate(() => { const c = document.querySelector('.veil:not([hidden]) .card .pc'); return c ? { running: [...c.querySelectorAll('*')].filter((e) => getComputedStyle(e).animationName !== 'none').length, layers: [...c.querySelectorAll('.pc-l')].filter((i) => i.complete && i.naturalWidth > 0).length } : null; });
+    if (!still) errors.push('no postcard on the arrival card');
+    else { if (still.running) errors.push(`${still.running} animations run under reduced motion`); if (still.layers < 4) errors.push('the arrival card\'s postcard did not load'); }
+    await p.emulateMedia({ reducedMotion: 'no-preference' });
+    await p.locator('.veil:not([hidden]) .card-x').click({ timeout: 2000 }).catch(() => {});
+    await p.waitForTimeout(200);
+  }
   for (const tab of ['people', 'covers', 'dossier', 'orders', 'case']) { await p.evaluate((t) => window.__shadow.ledger.show(t), tab); await p.waitForTimeout(250); await p.screenshot({ path: path.join(shots, `${name}-7-${tab}.png`) }); }
   const overflow = await p.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
   if (overflow) errors.push('horizontal overflow');

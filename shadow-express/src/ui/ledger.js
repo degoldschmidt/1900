@@ -11,6 +11,8 @@ import { currentStep, stepCities } from '../core/ops.js';
 import { when, hm, dayShort, span, T } from '../data/time.js';
 import { HEAT, SUSPECT } from '../core/enemy.js';
 import { vignetteUrl, portraitUrl, weatherAt } from './art.js';
+import { postcard, postcardInput, hasPostcard } from './postcard.js';
+import { albumHtml, fill as fillAlbum } from './album.js';
 import { esc } from './dom.js';
 import { oddsWord } from './cards.js';
 
@@ -24,13 +26,17 @@ export function makeLedger(root, hooks) {
   el.className = 'ledger paper';
   el.dataset.open = 'false';
   el.setAttribute('aria-label', 'Ledger');
-  el.innerHTML = `<button class="grip" aria-label="Open or close the ledger"></button><div class="tabs" role="tablist"></div><div class="body"></div>`;
+  el.innerHTML = `<button class="grip" aria-label="Open or close the ledger"></button><div class="tabs" role="tablist"></div><div class="body"><div class="pc-host" hidden></div><div class="content"></div></div>`;
   root.appendChild(el);
-  const tabsEl = el.querySelector('.tabs'), body = el.querySelector('.body');
+  const tabsEl = el.querySelector('.tabs'), body = el.querySelector('.body'), content = body.querySelector('.content'), pcHost = body.querySelector('.pc-host');
+  let cityPc = null; // the City tab's living postcard: it stays put while the tab redraws below it
   const state = { tab: 'city', sub: 'known', dest: null, open: false, person: null };
   el.querySelector('.grip').addEventListener('click', () => setOpen(!state.open));
 
-  function setOpen(v) { state.open = v; el.dataset.open = v ? 'true' : 'false'; hooks.layout?.(); }
+  function setOpen(v) {
+    state.open = v; el.dataset.open = v ? 'true' : 'false'; hooks.layout?.();
+    if (v && cityPc && !pcHost.hidden) requestAnimationFrame(() => cityPc.h.relock());
+  }
   function show(tab, arg) {
     state.tab = tab;
     if (tab === 'board' && arg !== undefined) state.dest = arg;
@@ -46,9 +52,28 @@ export function makeLedger(root, hooks) {
     tabsEl.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => { state.tab = b.dataset.tab; setOpen(true); hooks.refresh?.(); }));
     const view = { city: cityView, board: boardView, orders: ordersView, people: peopleView, case: caseView, covers: coversView, dossier: dossierView, you: youView }[state.tab];
     const scroll = body.scrollTop;
-    body.innerHTML = view(G, travelling);
+    content.innerHTML = view(G, travelling);
+    cityCard(G, travelling);
+    if (state.tab === 'you') fillAlbum(G, content);
     body.scrollTop = scroll;
     wire(G);
+  }
+  /** The City tab's postcard: mounted once per city, relit as the hours pass, put back in step when shown again. */
+  function cityCard(G, travelling) {
+    const { S } = G;
+    const id = state.tab === 'city' && !travelling && hasPostcard(S.city) ? S.city : null;
+    if (!id) { pcHost.hidden = true; return; }
+    const inp = postcardInput(G, id, S.t, weatherAt(G, id, S.t));
+    const was = pcHost.hidden;
+    pcHost.hidden = false;
+    if (!cityPc || cityPc.id !== id) {
+      cityPc?.h.destroy();
+      cityPc = { id, h: postcard(id, inp, { width: pcHost.clientWidth || 420 }) };
+      pcHost.append(cityPc.h.el);
+    } else {
+      cityPc.h.update(inp);
+      if (was) cityPc.h.relock();
+    }
   }
 
   // ---------- city ----------
@@ -62,14 +87,15 @@ export function makeLedger(root, hooks) {
         <p class="dim">Travelling as ${esc(coverName(G))}, ${esc(coverLegend(G))}.</p>`;
     }
     const c = I.city.get(S.city);
-    setTimeout(() => vignetteUrl(S.city, (S.t % 1440) / 60, weatherAt(G, S.city, S.t)).then((u) => { const im = body.querySelector('.vignette img'); if (!im || im.dataset.city !== S.city) return; if (u) im.src = u; else im.closest('.vignette').hidden = true; }), 0);
+    const card = hasPostcard(S.city);
+    if (!card) setTimeout(() => vignetteUrl(S.city, (S.t % 1440) / 60, weatherAt(G, S.city, S.t)).then((u) => { const im = body.querySelector('.vignette img'); if (!im || im.dataset.city !== S.city) return; if (u) im.src = u; else im.closest('.vignette').hidden = true; }), 0);
     const ops = opActions(G);
     const people = contactsHere(G);
     const lie = canLieLow(G);
     const L = legendOf(G), days = stayDays(G), w = watchOf(S.t);
     const signs = signsHere(G);
     const lodging = S.lodging?.city === S.city ? LODGINGS[S.lodging.kind].label.toLowerCase() : 'none yet: an hotel tonight';
-    let h = `<div class="vignette"><img alt="${esc(c.name)}" data-city="${esc(S.city)}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>
+    let h = `${card ? '' : `<div class="vignette"><img alt="${esc(c.name)}" data-city="${esc(S.city)}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div>`}
       <h2>${esc(c.name)}</h2><p class="cityline">${esc(c.line)}</p>
       ${S.expelled?.city === S.city ? `<p class="red"><b>Ordered to leave</b> by ${esc(when(S.expelled.by))}.</p>` : ''}
       <div class="daybar"><span>${esc(dayShort(S.t))}, ${esc(w.name)} · ${days ? `${days} day${days === 1 ? '' : 's'} here` : 'just arrived'} · lodging: ${esc(lodging)}</span></div>
@@ -305,7 +331,8 @@ export function makeLedger(root, hooks) {
       <div class="dim" style="font-size:13px;margin-top:4px">operations ${won} done, ${lost} failed · standing ${S.standing} · nerve ${S.nerve} · £${Math.round(S.money)}</div></div></div>
       <h3>Skills</h3>${SKILLS.map((k) => `<div class="entry"><b class="sc" style="text-transform:capitalize">${k}</b> ${pip(k, 3)}<div class="src">${esc(SKILL_TEXT[k])}</div></div>`).join('')}
       <h3>Languages</h3>${LANGUAGES.map((k) => `<div class="entry"><b class="sc" style="text-transform:capitalize">${k}</b> ${pip(k, 2)}<div class="src">${esc(SKILL_TEXT[k])}</div></div>`).join('')}
-      <h3>Character</h3>${h.traits.length ? h.traits.map((t) => { const x = TRAITS.find((y) => y.id === t); return `<div class="entry"><b class="sc">${esc(x.name)}</b> <span class="chip ${x.kind === 'vice' ? 'bad' : 'good'}">${x.kind}</span><div class="src">${esc(x.text)}</div></div>`; }).join('') : '<p class="dim">Nothing remarkable.</p>'}`;
+      <h3>Character</h3>${h.traits.length ? h.traits.map((t) => { const x = TRAITS.find((y) => y.id === t); return `<div class="entry"><b class="sc">${esc(x.name)}</b> <span class="chip ${x.kind === 'vice' ? 'bad' : 'good'}">${x.kind}</span><div class="src">${esc(x.text)}</div></div>`; }).join('') : '<p class="dim">Nothing remarkable.</p>'}
+      ${albumHtml(G)}`;
   }
 
   // ---------- events ----------

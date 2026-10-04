@@ -9,6 +9,7 @@ import { when, longDate, hm, span } from '../data/time.js';
 import { vignetteUrl, portraitUrl, glyphSvg, weatherAt } from './art.js';
 import { esc } from './dom.js';
 import { iconSVG } from './icons.js';
+import { postcard, postcardInput, hasPostcard } from './postcard.js';
 import { copyRunReport } from './report-ui.js';
 
 /** Service names carry their own article ('the Calais night mail', 'a Greek island steamer'); this starts a sentence with one. */
@@ -64,6 +65,7 @@ export function makeCards(root, hooks) {
   veil.appendChild(frame);
   root.appendChild(veil);
   let shownN = null, resultShown = false, aside = null, cur = null;
+  let pc = null; // the living postcard on an arrival card
   x.addEventListener('click', () => dismiss());
   veil.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.stopPropagation(); dismiss(); } });
 
@@ -107,6 +109,7 @@ export function makeCards(root, hooks) {
     veil.hidden = false;
     veil.classList.toggle('withledger', !!hooks.ledgerOpen?.());
     card.className = 'card paper';
+    if (pc) { pc.destroy(); pc = null; }
     card.innerHTML = body(G, v) + choicesHtml(G, v);
     wire(G, v);
     card.scrollTop = 0;
@@ -132,6 +135,15 @@ export function makeCards(root, hooks) {
     if (c.type === 'arrive') {
       const city = I.city.get(c.city);
       const late = c.delay > 20 ? ` · ${Math.round(c.delay)} minutes late` : '';
+      if (hasPostcard(c.city)) { // the city's postcard, living: the hour, the weather, the news
+        setTimeout(() => {
+          const host = card.querySelector('.pc-wide');
+          if (!host || pc) return;
+          pc = postcard(c.city, postcardInput(G, c.city, S.t, weatherAt(G, c.city, S.t)), { width: host.clientWidth || 440 });
+          host.append(pc.el);
+        }, 0);
+        return `<div class="kick">Arrived · ${esc(when(S.t))}${esc(late)}</div><div class="wide pc-wide"></div><h2>${esc(city.name)}</h2><p class="it">${esc(city.line)}</p>`;
+      }
       setTimeout(() => vignetteUrl(c.city, (S.t % 1440) / 60, weatherAt(G, c.city, S.t)).then((u) => { const im = card.querySelector('.wide img'); if (!im) return; if (u) im.src = u; else im.closest('.wide').hidden = true; }), 0);
       return `<div class="kick">Arrived · ${esc(when(S.t))}${esc(late)}</div><div class="wide"><img alt="${esc(city.name)}" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></div><h2>${esc(city.name)}</h2><p class="it">${esc(city.line)}</p>`;
     }

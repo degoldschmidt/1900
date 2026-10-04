@@ -43,7 +43,7 @@ const frameUrl = (mod, scale) => lru(framesC, `${mod.id}|${scale}`, () => raster
 
 /** The state of a card from the game: the city's place, the day's weather, the city's nation at peace or war. */
 export function postcardInput(G, cityId, t, weather) {
-  const c = G.W.city(cityId) ?? G.D.cities.find((x) => x.id === cityId);
+  const c = G.I.city.get(cityId);
   return { t, lon: c.ll[0], lat: c.ll[1], weather, war: G.W.state(c.nation, t) };
 }
 
@@ -85,6 +85,7 @@ function part(rec, uid, n, css, now, still) {
   const [x, y, w, h] = rec.inBox ?? [rec.box[0] / 6, rec.box[1] / 4, rec.box[2] / 6, rec.box[3] / 4];
   el.style.cssText = `left:${x}%;top:${y}%;width:${w}%;height:${h}%;transform-origin:${rec.origin[0]}% ${rec.origin[1]}%`;
   const phase = (((now + +rec.offset) % rec.dur) + rec.dur) % rec.dur;
+  if (!still && (rec.spin || rec.keys)) { el.dataset.d = rec.dur; el.dataset.o = rec.offset; }
   if (rec.spin) {
     const deg = (phase / rec.dur) * 360 * rec.spin;
     el.style.transform = `rotate(${deg.toFixed(1)}deg)`;
@@ -99,7 +100,7 @@ function part(rec, uid, n, css, now, still) {
     }
   }
   let inner = el;
-  if (rec.bob && !still) { inner = document.createElement('div'); inner.className = 'pc-b'; inner.style.animation = `pcbob ${rec.bob}s ease-in-out ${(-(now % rec.bob)).toFixed(2)}s infinite alternate`; el.append(inner); }
+  if (rec.bob && !still) { inner = document.createElement('div'); inner.className = 'pc-b'; inner.dataset.d = rec.bob; inner.dataset.o = 0; inner.style.animation = `pcbob ${rec.bob}s ease-in-out ${(-(now % rec.bob)).toFixed(2)}s infinite alternate`; el.append(inner); }
   const nf = rec.frames.length, cycle = nf / (rec.fps || 1);
   rec.frames.forEach((svg, k) => {
     const img = document.createElement('img');
@@ -107,7 +108,7 @@ function part(rec, uid, n, css, now, still) {
     if (nf > 1) {
       const fp = (now % cycle + cycle - k / rec.fps) % cycle;
       img.style.opacity = still ? (k ? '0' : '1') : (fp < 1 / rec.fps ? '1' : '0');
-      if (!still) img.style.animation = `pcf${nf} ${cycle.toFixed(3)}s step-end ${(-fp).toFixed(3)}s infinite`;
+      if (!still) { img.style.animation = `pcf${nf} ${cycle.toFixed(3)}s step-end ${(-fp).toFixed(3)}s infinite`; img.dataset.d = cycle; img.dataset.o = (cycle - k / rec.fps).toFixed(4); }
     }
     inner.append(img);
   });
@@ -189,8 +190,24 @@ export function postcard(id, input, o = {}) {
   return {
     el, ready, mod,
     update(inp) { return show(inp); },
+    /** Put every part back in step with the page clock: after the card was hidden, or taken out and put back. */
+    relock() {
+      const now = performance.now() / 1000;
+      for (const x of el.querySelectorAll('[data-d]')) { const d = +x.dataset.d, ph = (((now + +x.dataset.o) % d) + d) % d; x.style.animationDelay = `${(-ph).toFixed(3)}s`; }
+    },
     destroy() { dead = true; el.remove(); },
   };
+}
+
+// stills are drawn one at a time when the page is idle, so a full album does not stall the game
+const jobs = [];
+let pumping = false;
+function later(fn) { return new Promise((res) => { jobs.push([fn, res]); pump(); }); }
+function pump() {
+  if (pumping || !jobs.length) return;
+  pumping = true;
+  const idle = window.requestIdleCallback ? (f) => window.requestIdleCallback(f, { timeout: 400 }) : (f) => setTimeout(f, 30);
+  idle(async () => { const [fn, res] = jobs.shift(); try { res(await fn()); } catch { res(null); } pumping = false; pump(); });
 }
 
 /** A still card as one picture (for the album): the scene with everything at rest, the frame; the greeting over it. */
@@ -201,7 +218,7 @@ export function postcardStill(id, input, width = 300) {
   if (!mod) return el;
   el.innerHTML = `<img class="pc-l" alt=""><div class="pc-title">${titleSvg(mod)}</div>`;
   const st = cardState(mod, input), scale = scaleFor(width);
-  lru(stills, `${st.key}|${scale}`, () => rasterise(stillSvg(renderCard(mod, st), frameSvg(mod)), 600, 400, scale), 40, revoke)
+  lru(stills, `${st.key}|${scale}`, () => later(() => rasterise(stillSvg(renderCard(mod, st), frameSvg(mod)), 600, 400, scale)), 40, revoke)
     .then((u) => { if (u) el.firstChild.src = u; });
   return el;
 }

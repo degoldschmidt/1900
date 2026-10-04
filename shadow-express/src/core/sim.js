@@ -144,6 +144,9 @@ function turnedBack(G, x, rowId) {
   knowDisruption(G, j.svc, rowId);
 }
 
+/** The first time the agent stops in a city, its postcard goes in the album, dated. */
+function collect(S, city) { S.album ??= {}; if (S.album[city] == null) S.album[city] = S.t; }
+
 function arrive(G) {
   const { S, I } = G;
   const j = S.journey;
@@ -151,6 +154,7 @@ function arrive(G) {
   S.city = j.to;
   if (connect(G, j)) return; // changing trains: the journey goes on
   S.cityArrived = S.t;
+  collect(S, j.to);
   S.place = 'street';
   S.trip = null;
   stationWatch(G);
@@ -180,7 +184,7 @@ function connect(G, j) {
   S.place = 'station';
   S.cityArrived = S.t;
   stationWatch(G);
-  if (cancelled(W, next)) { S.trip = null; note(G, 'No connection', `At ${I.city.get(S.city).name} the board says ${W.service.get(next.svc).name} does not run today. You are on your own from here.`); S.queue.push({ type: 'arrive', city: S.city, delay: j.delay, n: ++S.cardN }); return true; }
+  if (cancelled(W, next)) { S.trip = null; collect(S, S.city); note(G, 'No connection', `At ${I.city.get(S.city).name} the board says ${W.service.get(next.svc).name} does not run today. You are on your own from here.`); S.queue.push({ type: 'arrive', city: S.city, delay: j.delay, n: ++S.cardN }); return true; }
   if (S.t + CHANGE <= next.dep || (trip.held === next.key && S.t <= next.dep + 30)) {
     S.booked = { dp: next, cls: trip.cls, fare: 0, dep: Math.max(next.dep, S.t) };
     log(G, `Changed trains at ${I.city.get(S.city).name}.`);
