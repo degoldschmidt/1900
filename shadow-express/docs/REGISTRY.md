@@ -172,22 +172,25 @@ The agent spends most of the campaign **posted** in one city at a time, living u
 | II | **Belgrade** (`BEG`) | 15 – 26 July |
 | III | **Berlin** (`BER`) | 28 July – 1 August, then the run home |
 
-Main ops arrive by telegram at `issue`; at most two overlap.
+Main ops arrive by telegram at `issue`, with £8 for expenses; at most two overlap.
+- **Arrival scenes**: a step with a `story` completes only after its scene has shown, so a `goto` with a scene is safe.
+- **No `chance` in op conditions**: it re-rolls every tick. Gate twists on stay, watch, flags, the hidden truth or the clock.
+- **A lost document fails its op at once** (cable, plates, stones, amber, tally).
 - **Optional ops** (`optional:true`) may be declined on their telegram.
 - **Step ids in bold** are fixed, because People and Events test them with `['op', id, step]`.
 - **Most steps are city work** in the posting city (`act`, `meet`, `wait`, `observe`). At most one high-stakes journey per op, marked ✈.
 
 | id | act | issue | title | outline |
 |---|---|---|---|---|
-| `op-cable` | 1 | 06-28 17.00 | The Sarajevo Cable | ✈ **reach** Vienna by 1 July 18.00 (take up the post) · ✈ **meet** Jovan in Sarajevo by 4 July (round-ups; Bosnian controls) · **judge** it with Brandl in Vienna by 8 July · **home**: an `act` in Vienna (embassy bag, cipher wire, courier) by 9 July |
-| `op-optics` | 1 | 07-03 09.00 | Coincidence | the Arsenal in **Vienna** is trialling a coincidence rangefinder · **reach** Vienna (already there) · **case** the Arsenal over days (`observe`/`wait`) · an insider (way or `meet`) · **photo** at the Arsenal · **home**: an `act` in Vienna by 12 July |
-| `op-diamonds` | 1 | 07-04 09.00 | Stones for Petersburg | `optional:true`: the one long journey of Act I, for money and the `vessey` cover · **buy** in Amsterdam · ✈ **carry** to St Petersburg by 15 July |
+| `op-cable` | 1 | 06-28 17.00 | The Sarajevo Cable | ✈ **reach** Vienna by 1 July 18.00 (a 2-hour `wait` with the registration scene) · ✈ **meet** Jovan in Sarajevo by 4 July (round-ups; Bosnian controls) · **judge** it in Vienna by 8 July (Brandl, Novák, the telegraph clerk, a jeweller's loupe) · **home**: an `act` in Vienna by 9 July (embassy bag, cipher wire, courier, registered post) |
+| `op-optics` | 1 | 07-03 09.00 | Coincidence | the Arsenal in **Vienna** is trialling a coincidence rangefinder · **reach** Vienna (already there) · **case** the Arsenal for 48 hours, by 11 July 14.00 · **photo** at the Arsenal by 11 July (works visit, Brandl's patient, Novák's pass, a forged pass, a draughtsman, keys at night) · **home**: an `act` in Vienna by 12 July |
+| `op-diamonds` | 1 | 07-04 09.00 | Stones for Petersburg | `optional:true`; the one long journey of Act I, for money and the `vessey` cover · **buy** in Amsterdam by 8 July 18.00 · ✈ **carry** to St Petersburg by 11 July 12.00 · **deliver** there by 11 July 20.00. The telegram warns of the Belgrade posting on the fifteenth, which stays reachable |
 | `op-mole` | 2 | 07-13 09.00 | The Mole | ✈ **reach** Belgrade by 15 July 12.00 (by Semlin) · **feed**: tell Ilić one detail in person, then write to Brandl and Amsler with different ones (`plant`) · **watch** Belgrade for two days: which city do the hunters go to? · **name** the mole to London by 20 July |
 | `op-ultimatum` | 2 | 07-18 09.00 | The Ultimatum | in **Belgrade**: **reach** (already there) · be there when the note is delivered (23 July, 18.00) · **copy** its text that evening · **wire** it to London by 24 July 12.00, every way leaving a different trace (wire through Semlin is read in Vienna; the legation cipher; a courier by Salonika) |
-| `op-student` | 2 | 07-21 09.00 | Get Jovan Out | Jovan has fled to Belgrade · **find** him by 25 July · ✈ **out**: `companion-jovan` to Constantinople, Athens, Italy or London by 28 July. Escort him yourself, or give him to a recruited courier |
-| `op-typist` | 3 | 07-26 09.00 | Fräulein Sauer | ✈ **reach** Berlin by 29 July · **meet** Sauer by 31 July (days of cultivation) · the railway annex (`staff-papers`) · ✈ **out**: `companion-sauer` to neutral ground by 2 August |
-| `op-troops` | 3 | 07-31 09.00 | Count the Trains | **watch** the Hohenzollern bridge at Cologne between 2 August 06.00 and 3 August 18.00, on the run west · ✈ **out**: `troop-tally` to London, Flushing, Amsterdam or Brussels by 4 August 23.00 |
-| `op-lastboat` | 3 | 08-02 09.00 | The Last Boat | ✈ **home**: London before 4 August 23.00 (London time) |
+| `op-student` | 2 | 07-21 09.00 | Get Jovan Out | Jovan has fled to Belgrade · **trace** him · **find** him (a `meet` in Belgrade) by 25 July · ✈ **out**: `companion-jovan` to Constantinople, Athens, Rome, Venice or London by 28 July. Escort him yourself, or wire a recruited courier. Constantinople is nearest, and furthest from the next post |
+| `op-typist` | 3 | 07-26 09.00 | Fräulein Sauer | ✈ **reach** Berlin by Friday 31 July 10.30 · **meet** Sauer by 31 July 18.00 · **annex**: the railway annex (`staff-papers`) · ✈ **out**: `companion-sauer` to neutral ground by 2 August · **deliver** the annex by 3 August |
+| `op-troops` | 3 | 07-31 09.00 | Count the Trains | **reach** Cologne by Sunday 2 August 17.00 · **watch** the Hohenzollern bridge for eight hours between Sunday dawn and Monday evening · **count** · ✈ **out**: `troop-tally` to London, Flushing, Amsterdam or Brussels by 4 August 23.00 |
+| `op-lastboat` | 3 | 08-02 09.00 | The Last Boat | **ready**, anywhere (the consul's list, a Bradshaw plan, a berth wired for, or go now) · ✈ **home**: London before 4 August 23.00 London time; arriving ends the game |
 | `op-letter` | side | — | Odile's Letter | started by Odile |
 | `op-brother` | side | — | The Brother | started by Ilić, in Belgrade |
 | `op-amber` | side | — | Amber for Berlin | started by Kowal, in Berlin |
