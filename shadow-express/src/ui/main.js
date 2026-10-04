@@ -221,7 +221,7 @@ function title(onStart) {
     <p class="dim">Drag the globe to turn it; pinch or scroll to look closer. Tap a city for its trains. Every choice may come back.</p>
     <div class="choices"><button class="choice" data-new><b>Make your agent</b><span>name, looks, past, talents, faults and kit</span></button><button class="choice" data-quick><b>Begin at once</b><span>with a ready-made agent</span></button></div></div>`;
   app.appendChild(t);
-  t.querySelector('[data-new]').addEventListener('click', () => { t.remove(); creator(app, D.items, (hero) => onStart(hero)); });
+  t.querySelector('[data-new]').addEventListener('click', () => { t.remove(); creator(app, D.items, (hero) => onStart(hero), D.people); });
   t.querySelector('[data-quick]').addEventListener('click', () => { t.remove(); onStart(defaultHero(Math.random() < .5 ? 'm' : 'f')); });
 }
 function start(hero, seed = (Date.now() ^ 0x5eed) >>> 0) {

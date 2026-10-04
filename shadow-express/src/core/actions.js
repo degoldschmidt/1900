@@ -429,9 +429,10 @@ export function wireFunds(G) {
 /** The card on top, with its choices (data choices, plus the standard ones for controls and encounters). */
 export function cardView(G) {
   const { S, I } = G;
-  const card = S.queue[0];
+  let card = S.queue[0];
+  while (card && card.type === 'story' && !I.story.get(card.id)) { S.queue.shift(); card = S.queue[0]; } // a storylet that no longer exists
   if (!card) return null;
-  if (card.type === 'story') { const s = I.story.get(card.id); return { card, story: s, choices: storyChoices(G, s, card) }; }
+  if (card.type === 'story') { const s = I.story.get(card.id); const ch = storyChoices(G, s, card); return { card, story: s, choices: ch.length ? ch : [{ label: 'Continue', ok: [], std: 'continue', open: true, afford: true }] }; }
   if (card.type === 'control') { const s = card.story ? I.story.get(card.story) : null; return { card, story: s, choices: [...controlChoices(G, card), ...(s ? storyChoices(G, s, card).slice(0, 2) : [])] }; }
   if (card.type === 'encounter') { const s = card.story ? I.story.get(card.story) : null; return { card, story: s, choices: [...encounterChoices(G, card), ...(s ? storyChoices(G, s, card).slice(0, 2) : [])] }; }
   if (card.type === 'missed') return { card, choices: missedChoices(G, card) };
@@ -499,7 +500,7 @@ function std(G, card, c) {
     return { success: true };
   }
   if (card.type === 'telegram' && c.std === 'decline') { S.ops[card.op].status = 'declined'; S.standing = Math.max(0, S.standing - 2); log(G, `Declined: ${G.I.op.get(card.op).title}.`); return { success: true }; }
-  if (['telegram', 'debrief', 'news', 'note', 'arrive', 'act'].includes(card.type)) {
+  if (['telegram', 'debrief', 'news', 'note', 'arrive', 'act', 'story'].includes(card.type)) {
     if (S.lyingLow && !S.queue.length) { const u = S.lyingLow; S.lyingLow = null; cool(G); S.busyUntil = u; }
     return { success: true };
   }

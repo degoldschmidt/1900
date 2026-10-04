@@ -58,6 +58,17 @@ export const KIT = [ // starting purchases, paid from the starting purse
   { id: 'letter-of-credit', price: 5 }, { id: 'browning', price: 8 }, { id: 'skeleton-keys', price: 6 }, { id: 'slivovitz', price: 1 },
 ];
 
+/** Someone the agent knew before the war: they start with your trust. */
+export const FRIENDS = [
+  { id: 'brandl', why: 'You took the cure at his sanatorium in 1911, and talked half the night about Freud.' },
+  { id: 'platt', why: 'You shared a cab and a bottle with him in Tangier, and he still owes you for both.' },
+  { id: 'novak', why: 'He printed a pamphlet for you once, and asked no questions about what was in it.' },
+  { id: 'amsler', why: 'Your family has banked with his house for two generations.' },
+  { id: 'odile', why: 'She dressed you, or your sister, for three Paris seasons.' },
+  { id: 'kessel', why: 'You hunted boar with him in Silesia; he thinks you are a capital fellow.' },
+  { id: null, why: 'Nobody. You arrive a stranger everywhere, which has its uses.' },
+];
+
 export const AGES = [['young', 'twenty-six'], ['mid', 'thirty-eight'], ['old', 'fifty-one']];
 export const BIRTH = [['england', 'England'], ['scotland', 'Scotland'], ['ireland', 'Ireland'], ['wales', 'Wales'], ['abroad', 'born abroad, of British parents']];
 
@@ -67,7 +78,7 @@ export function defaultHero(sex = 'm') {
     first: sex === 'f' ? 'Evelyn' : 'Thomas', last: 'Kemp', sex, age: 'mid', birth: 'england', background: 'vintner',
     portrait: { seed: 501, sex, hat: sex === 'f' ? 'wide' : 'bowler', hair: sex === 'f' ? 'bun' : 'short', beard: sex === 'f' ? 'none' : 'moustache', collar: sex === 'f' ? 'lace' : 'stiff', age: 'mid' },
     skills: { charm: 1, tradecraft: 1, observation: 1, composure: 1, paperwork: 1, streetwise: 0, commerce: 0 }, langs: { german: 1, french: 1, italian: 0, slavic: 0 },
-    traits: [], kit: ['bradshaw'],
+    traits: [], kit: ['bradshaw'], friend: null,
   };
 }
 

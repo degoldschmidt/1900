@@ -71,6 +71,7 @@ export function newGame(D, { seed = 1, sex = 'm', start = 'LON', t = START, hero
   S.standing = Math.min(80, bg.standing + (trait(hero, 'protege') ? 10 : 0) - (trait(hero, 'debts') ? 8 : 0));
   S.nerve = 7 + (trait(hero, 'iron') ? 2 : 0) - (trait(hero, 'drink') ? 1 : 0);
   for (const p of D.people) S.people[p.id] = { st: 'unknown', trust: 0, exp: 0, loyal: loyal[p.id], told: [] };
+  if (hero.friend && S.people[hero.friend]) Object.assign(S.people[hero.friend], { st: 'met', trust: 2, old: true });
   for (const o of D.ops) S.ops[o.id] = { status: 'pending', done: {}, waitMin: 0, obsMin: 0, way: {}, twists: {} };
   const items = [bg.item, ...(hero.kit ?? [])].filter((id, i, a) => id && a.indexOf(id) === i && D.items.some((x) => x.id === id));
   for (const id of items) S.case.push({ id, t });
