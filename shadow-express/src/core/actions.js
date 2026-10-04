@@ -499,7 +499,7 @@ function controlChoices(G, card) {
   if (card.search && cb.length) out.push({ std: 'declare', label: 'Declare what you carry', sub: `Lose ${cb.map((x) => I.item.get(x.id).name.toLowerCase()).join(', ')}`, open: true, afford: true });
   if (card.search && pouch) out.push({ std: 'pouch', label: 'Claim the diplomatic bag', sub: 'Not searched; but remembered', open: true, afford: true });
   const bribe = 2 + 2 * actOf(G);
-  out.push({ std: 'bribe', label: `Fold £${bribe} into the passport`, sub: N.bribe >= .5 ? 'Officials here are known to oblige' : 'Officials here are not known to oblige', cost: bribe, open: true, afford: S.money >= bribe, p: Math.min(.95, N.bribe + (S.journey?.cls === 1 ? .1 : 0) - (card.alert ? .3 : 0) + .05 * skill(S.hero, 'streetwise')) });
+  out.push({ std: 'bribe', label: `Fold £${bribe} into the passport`, sub: N.bribe >= .5 ? 'Officials here are known to oblige' : 'Officials here are not known to oblige', cost: bribe, open: true, afford: S.money >= bribe, p: Math.max(.02, Math.min(.95, N.bribe + (S.journey?.cls === 1 ? .1 : 0) - (card.alert ? .3 : 0) + .05 * skill(S.hero, 'streetwise'))) });
   if (S.nerve >= 1) out.push({ std: 'talk', label: 'Talk your way through', sub: tongue(S.hero, card.into) === 0 ? 'Costs nerve; you do not speak his language' : 'Costs nerve', open: true, afford: true, p: Math.max(.05, .4 + (coverData(G)?.nation === 'CH' ? .15 : 0) + cmp + lang - (card.alien ? .4 : 0) - (card.alert ? .25 : 0)) });
   return out.map((c) => ({ ...c, spare, lining }));
 }
@@ -548,7 +548,7 @@ function controlOutcome(G, card, c) {
   if (c.std === 'pouch') { leave(G, 'frontier', .6, { heat: .1 }); return { success: true }; }
   // papers
   if (card.papers) {
-    if (card.alien || card.alert || rand(S) >= c.p) {
+    if (rand(S) >= c.p) { // the odds shown on the card already allow for a list or an enemy passport
       leave(G, 'frontier', 1, { heat: card.alert ? 1 : .3 });
       if ((card.alert || card.alien) && G.W.act(S.t) === 3) return arrest(G, card);
       detain(G, card, card.alert || card.alien ? 8 * HOUR : 2 * HOUR, card.alien ? `Your papers make you an enemy alien here.` : card.alert ? 'Your name is on a list in the commissioner\'s pocket.' : 'The papers do not satisfy him.');

@@ -29,8 +29,14 @@ function target(G) {
   }
   cands.sort((a, b) => a.by - b.by);
   if (G.policy !== POLICIES.competent) return cands[0] ?? null;
-  for (const c of cands) if (reachable(G, c)) return c;
-  return cands[0] ?? null;
+  const pick = cands.find((c) => reachable(G, c)) ?? cands[0] ?? null;
+  // where two orders can both be served in one city, go there
+  if (pick && pick.cities.length > 1) for (const o of cands) {
+    if (o === pick) continue;
+    const both = pick.cities.filter((c) => o.cities.includes(c));
+    if (both.length) return { ...pick, cities: both };
+  }
+  return pick;
 }
 function reachable(G, c) {
   const { S } = G;
@@ -81,9 +87,12 @@ export const POLICIES = {
       const open = v.choices.map((c, i) => ({ c, i })).filter((x) => x.c.open && x.c.afford !== false);
       if (v.card.type === 'control') {
         const by = (k) => open.find((x) => x.c.std === k);
-        if (v.card.search && contraband(G).length && !hasUse(G, 'lining') && !hasUse(G, 'pouch')) return (by('bribe') ?? by('declare') ?? open[0]).i;
-        if (v.card.alert || v.card.alien) return (by('bribe') ?? by('talk') ?? open[0]).i;
-        return (by('pouch') ?? by('papers') ?? open[0]).i;
+        if (by('pouch')) return by('pouch').i;
+        if (v.card.search && contraband(G).length && !hasUse(G, 'lining')) { const b = by('bribe'); return (b && b.c.p >= .6 ? b : by('declare') ?? by('papers') ?? open[0]).i; }
+        // otherwise the likeliest way through, as the card's own hints suggest
+        const fatal = (x) => x.c.std === 'papers' && (v.card.alert || v.card.alien) && G.W.act(S.t) === 3; // a failure there is arrest
+        const ranked = open.filter((x) => x.c.p !== undefined).sort((a, b) => (fatal(a) - fatal(b)) || b.c.p - a.c.p);
+        return (ranked[0] ?? open[0]).i;
       }
       if (v.card.type === 'encounter') {
         const named = !!G.S.enemy.dossiers[S.cover]?.name; // a careful agent assumes the worst once traced
@@ -182,6 +191,12 @@ const score2 = (it, kind) => (kind === 'safest' ? it.risk * 600 + it.arr : kind 
 function idle(G, careful) {
   const { S } = G;
   if (canLieLow(G) && lieLow(G)) return true;
+  // on a hunter's own ground once the war has come, a careful agent keeps to the rooms between errands
+  if (careful && G.W.act(S.t) === 3 && G.D.hunters.some((h) => h.ground.includes(G.I.city.get(S.city)?.nation))) {
+    const tg = target(G);
+    const until = tg && tg.after > S.t ? Math.min(tg.after, S.t + 12 * HOUR) : S.t + 6 * HOUR;
+    if (doActivity(G, 'rest')) { advance(G, until); return true; }
+  }
   const people = contactsHere(G);
   if (people.length && rand(S) < .35) { seek(G, people[Math.floor(rand(S) * people.length)].person.id); return true; }
   if (!careful && rand(S) < .3) { walk(G); return true; }
