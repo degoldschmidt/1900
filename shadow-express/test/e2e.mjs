@@ -72,5 +72,30 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
   fails.push(...errors);
   await ctx.close();
 }
+// boots when storage throws; asks no other hosts
+{
+  const ctx = await browser.newContext({ viewport: { width: 1024, height: 768 } });
+  await ctx.addInitScript(() => { for (const k of ['getItem', 'setItem', 'removeItem']) Storage.prototype[k] = () => { throw new Error('storage blocked'); }; });
+  const p = await ctx.newPage();
+  const errors = [], hosts = new Set();
+  p.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+  await p.route('**/*', (r) => {
+    const u = r.request().url();
+    if (/^https?:/.test(u)) hosts.add(new URL(u).host);
+    if (u.includes('cdnjs.cloudflare.com/ajax/libs/d3')) return r.fulfill({ body: D3, contentType: 'application/javascript' });
+    if (/^(file|data|blob):/.test(u)) return r.continue();
+    return r.abort();
+  });
+  await p.goto('file://' + wrapped);
+  await p.waitForTimeout(800);
+  const titled = await p.locator('.title .card').isVisible().catch(() => false);
+  await p.evaluate(() => window.__shadow.start('m', 5));
+  await p.waitForTimeout(500);
+  const bad = [...hosts].filter((h) => !['cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com'].includes(h));
+  const ok = titled && !errors.length && !bad.length;
+  console.log(`storage blocked: ${ok ? 'boots, no errors' : `title ${titled} · ${errors.join(' | ')}`}${bad.length ? ` · other hosts: ${bad.join(', ')}` : ''}`);
+  if (!ok) fails.push('storage or hosts');
+  await ctx.close();
+}
 await browser.close();
 process.exit(fails.length ? 1 : 0);
