@@ -541,6 +541,9 @@ export function validate(D, opts = {}) {
           if (coversOpenTo(x.if) >= Math.min(3, CV.size)) open3 = true;
         }
         if (s.key !== false && s.ways.length < 2) err(sw, 'a key step needs at least two ways (key:false if it is not one)');
+        // an approach is spent once its scene has run, so a step must not hang on one contact alone
+        const free = s.ways.filter((x) => !/\["(st|trust|loyal)"/.test(JSON.stringify(x.if ?? []))).length;
+        if (s.key !== false && free < 2) warn(sw, `only ${free} way(s) need no contact; an approach is spent once tried, so keep two that do not depend on a person`);
         if (!open3) err(sw, 'no way is open to at least three covers');
       }
     }

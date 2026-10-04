@@ -2,6 +2,7 @@
 // splices the bundle and src/ui/style.css into template.html.
 //   node build.mjs            → build/dev.html (for testing)
 //   node build.mjs --release  → index.html (the published page)
+//   node build.mjs --out f    → write the page to f instead (parallel work uses its own file)
 // Guards: no '</script' or '<!--' in the bundle, no hosts outside the allowlist, page ≤ 1.5 MB.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -23,7 +24,9 @@ const res = await esbuild.build({
   define: { 'process.env.NODE_ENV': '"production"' },
 });
 const js = res.outputFiles[0].text;
-const css = fs.readFileSync(path.join(ROOT, 'src/ui/style.css'), 'utf8');
+// style.css first, then every other stylesheet in src/ui in name order (hud.css, hints.css, …)
+const cssFiles = ['style.css', ...fs.readdirSync(path.join(ROOT, 'src/ui')).filter((f) => f.endsWith('.css') && f !== 'style.css').sort()];
+const css = cssFiles.map((f) => fs.readFileSync(path.join(ROOT, 'src/ui', f), 'utf8')).join('\n');
 const fail = (m) => { console.error(`build failed: ${m}`); process.exit(1); };
 if (/<\/script/i.test(js)) fail('the bundle contains "</script"');
 if (js.includes('<!--')) fail('the bundle contains "<!--"');
@@ -36,7 +39,8 @@ const hosts = new Set([...page.matchAll(/https?:\/\/([a-z0-9.-]+)/gi)].map((m) =
 const bad = [...hosts].filter((h) => !ALLOWED.includes(h));
 if (bad.length) fail(`hosts outside the allowlist: ${bad.join(', ')}`);
 if (page.length > LIMIT) { if (release) fail(`page is ${(page.length / 1024).toFixed(0)} KB, over ${LIMIT / 1024} KB`); else console.warn(`note: the dev page is ${(page.length / 1024).toFixed(0)} KB unminified; the limit applies to --release`); }
-const out = release ? path.join(ROOT, 'index.html') : path.join(ROOT, 'build/dev.html');
+const outArg = process.argv.indexOf('--out');
+const out = outArg > 0 ? path.resolve(process.argv[outArg + 1]) : release ? path.join(ROOT, 'index.html') : path.join(ROOT, 'build/dev.html');
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, page);
 console.log(`${path.relative(ROOT, out)}: ${(page.length / 1024).toFixed(0)} KB (script ${(js.length / 1024).toFixed(0)} KB, style ${(css.length / 1024).toFixed(0)} KB)`);

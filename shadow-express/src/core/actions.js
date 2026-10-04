@@ -318,7 +318,7 @@ export function opActions(G) {
 }
 function wayView(G, o, step, w) {
   const ctx = context(G, { op: o.id });
-  const tried = G.S.ops[o.id].way[`${step.id}:${w.id}`] === 'noticed';
+  const tried = !!G.S.ops[o.id].way[`${step.id}:${w.id}`]; // 'noticed' or 'used': an approach is tried once
   const plaus = Math.min(step.venue ? aff(G, step.venue) : 1, w.tag ? aff(G, w.tag) : 1); // the venue and the way's own tag: the worse of the two
   const risk = Math.min(.95, (w.risk ?? 0) + (plaus < 0 ? .2 : plaus === 0 ? .07 : 0) + (G.S.tailedBy ? .15 : 0));
   return { way: w, open: all(w.if, ctx) && !tried, afford: (w.cost?.money ?? 0) <= G.S.money && (w.cost?.nerve ?? 0) <= G.S.nerve, risk, plaus, tried };
@@ -336,7 +336,12 @@ export function doWay(G, opId, wayId) {
   S.busyUntil = Math.max(S.busyUntil, S.t) + (w.cost?.min ?? 60);
   S.ops[opId].wayUsed = { ...(S.ops[opId].wayUsed ?? {}), [step.id]: w.id };
   if (step.kind === 'meet') meetingTrace(G, step.person);
-  if (w.story) { S.queue.push({ type: 'story', id: w.story, op: opId, n: ++S.cardN }); return true; }
+  if (w.story) {
+    // an approach with a scene is spent once the scene has run; if it does not finish the step, find another way
+    S.ops[opId].way[`${step.id}:${w.id}`] = 'used';
+    S.queue.push({ type: 'story', id: w.story, op: opId, n: ++S.cardN });
+    return true;
+  }
   if (step.kind === 'meet' && !step.ways) { finishStep(G, opId, step.id); return true; }
   const noticed = rand(S) < v.risk;
   const rec = w.rec ?? null;

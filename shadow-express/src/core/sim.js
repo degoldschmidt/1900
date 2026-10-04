@@ -103,7 +103,7 @@ function depart(G) {
   // a police shadow on the platform reads your ticket and telegraphs ahead
   if ((S.watch?.[b.dp.from] ?? 0) >= .35 && (S.shookUntil ?? 0) <= S.t) leave(G, 'sighting', .75, { city: S.trip?.legs.at(-1)?.to ?? b.dp.to, t: S.journey.arr, heat: .2 });
   if (trait(S.hero, 'nervous') && S.journey.crossings.length) S.nerve = Math.max(0, S.nerve - 1);
-  log(G, `Left ${I.city.get(b.dp.from).name} by the ${s.name}.`);
+  log(G, `Left ${I.city.get(b.dp.from).name} by ${/^(the|a|an) /i.test(s.name) ? s.name : /^[A-Z][a-z]+'s /.test(s.name) ? s.name : `the ${s.name}`}.`);
 }
 
 function journeyStep(G) {

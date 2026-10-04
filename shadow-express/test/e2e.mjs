@@ -1,5 +1,5 @@
 // Browser checks: boots from file:// with d3 served locally, plays a little, screenshots desktop and phone.
-//   node test/e2e.mjs [--release] [--shots dir]
+//   node test/e2e.mjs [--release] [--page file.html] [--shots dir]
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -9,12 +9,13 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(path.join(ROOT, '../prototype/package.json'));
 const { chromium } = require('playwright');
 const args = process.argv.slice(2);
-const page = path.join(ROOT, args.includes('--release') ? 'index.html' : 'build/dev.html');
+const pageArg = args.indexOf('--page');
+const page = pageArg >= 0 ? path.resolve(args[pageArg + 1]) : path.join(ROOT, args.includes('--release') ? 'index.html' : 'build/dev.html');
 const shots = path.resolve(args.includes('--shots') ? args[args.indexOf('--shots') + 1] : path.join(ROOT, 'build/shots'));
 const D3 = fs.readFileSync(process.env.D3_PATH || '/tmp/claude-0/-home-user-1900/405f5ed7-5f5c-5b9f-97be-e5f97113fe9d/scratchpad/game/d3-7.8.5/package/dist/d3.min.js', 'utf8');
 fs.mkdirSync(shots, { recursive: true });
 const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>${fs.readFileSync(page, 'utf8')}</body></html>`;
-const wrapped = path.join(ROOT, 'build/e2e.html');
+const wrapped = page.replace(/\.html$/, '') + '.e2e.html'; // next to the page it wraps, so parallel runs do not collide
 fs.writeFileSync(wrapped, html);
 
 const browser = await chromium.launch();

@@ -81,7 +81,8 @@ export function makeLedger(root, hooks) {
         for (const v of a.ways) {
           const w = v.way;
           const chips = [w.cost?.money ? `£${w.cost.money}` : null, `risk: ${riskWord(v.risk)}`, w.rec ? REC[w.rec[0]] ?? w.rec[0] : null, v.plaus < 0 ? 'implausible for your cover' : v.plaus === 0 ? 'odd for your cover' : null].filter(Boolean);
-          h += `<button class="act ${v.risk > .4 ? 'danger' : ''}" data-way="${esc(a.op.id)}|${esc(w.id)}" ${!v.open || !v.afford || a.closed ? 'disabled' : ''}><b>${esc(w.label)}</b><span class="chips">${chips.map((x) => `<span class="chip ${/implaus|risk: high/.test(x) ? 'bad' : ''}">${esc(x)}</span>`).join('')}</span></button>`;
+          if (v.tried) chips.unshift('tried: that way is shut');
+          h += `<button class="act ${v.risk > .4 ? 'danger' : ''}" data-way="${esc(a.op.id)}|${esc(w.id)}" ${!v.open || !v.afford || a.closed ? 'disabled' : ''}><b>${esc(w.label)}</b><span class="chips">${chips.map((x) => `<span class="chip ${/implaus|risk: high|^tried/.test(x) ? 'bad' : ''}">${esc(x)}</span>`).join('')}</span></button>`;
         }
         h += `</div>`;
       }
