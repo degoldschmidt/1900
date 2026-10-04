@@ -8,7 +8,11 @@ import { postmortem } from '../core/postmortem.js';
 import { when, longDate, hm, span } from '../data/time.js';
 import { vignetteUrl, portraitUrl, glyphSvg, weatherAt } from './art.js';
 import { esc } from './dom.js';
+import { iconSVG } from './icons.js';
 import { copyRunReport } from './report-ui.js';
+
+/** Service names carry their own article ('the Calais night mail', 'a Greek island steamer'); this starts a sentence with one. */
+const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
 
 export const oddsWord = (p) => (p >= .85 ? 'all but certain' : p >= .65 ? 'likely' : p >= .45 ? 'even chances' : p >= .25 ? 'unlikely' : 'a long shot');
 
@@ -46,19 +50,50 @@ export function makeCards(root, hooks) {
   const veil = document.createElement('div');
   veil.className = 'veil';
   veil.hidden = true;
+  const frame = document.createElement('div'); // holds the card (which scrolls) and its close button (which does not)
+  frame.className = 'card-frame';
   const card = document.createElement('div');
   card.className = 'card paper';
   card.setAttribute('role', 'dialog');
   card.setAttribute('aria-modal', 'true');
-  veil.appendChild(card);
+  const x = document.createElement('button');
+  x.type = 'button';
+  x.className = 'card-x';
+  x.innerHTML = iconSVG('close');
+  frame.append(card, x);
+  veil.appendChild(frame);
   root.appendChild(veil);
-  let shownN = null, resultShown = false;
+  let shownN = null, resultShown = false, aside = null, cur = null;
+  x.addEventListener('click', () => dismiss());
+  veil.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.stopPropagation(); dismiss(); } });
+
+  /** A card that only tells you something, with nothing to decide. */
+  const informs = (v) => v.card.type !== 'end' && v.choices.length === 1 && v.choices[0].std === 'continue';
+  /**
+   * The close button. A card that only informs is done with. One that asks a question is set aside: the map and the
+   * ledger can be looked at, the clock stays stopped, and the HUD offers the way back to it.
+   */
+  function dismiss() {
+    if (!cur || veil.hidden) return;
+    if (resultShown) { card.querySelector('#cardCont')?.click(); return; }
+    if (informs(cur.v)) { card.querySelector('.choice[data-i="0"]')?.click(); return; }
+    aside = cur.v.card.n;
+    veil.hidden = true;
+    hooks.aside?.();
+  }
+  function reopen() { aside = null; shownN = null; hooks.after?.(); }
+  function reset() { aside = null; shownN = null; cur = null; resultShown = false; veil.hidden = true; }
 
   function render(G) {
-    const v = cardView(G);
-    if (!v) { veil.hidden = true; shownN = null; return false; }
+    const v = G ? cardView(G) : null;
+    if (!v) { veil.hidden = true; shownN = null; aside = null; cur = null; return false; }
+    if (aside === v.card.n) { veil.hidden = true; return false; }
+    aside = null;
     if (shownN === v.card.n && !veil.hidden) return true;
     shownN = v.card.n; resultShown = false;
+    cur = { G, v };
+    const label = informs(v) ? 'Close' : 'Set aside: the card waits for your answer';
+    x.setAttribute('aria-label', label); x.title = informs(v) ? 'Close' : 'Set aside for now';
     veil.hidden = false;
     veil.classList.toggle('withledger', !!hooks.ledgerOpen?.());
     card.className = 'card paper';
@@ -97,8 +132,8 @@ export function makeCards(root, hooks) {
       return `<div class="kick">Debrief · ${esc(when(S.t))}</div><span class="stamp ${c.won ? 'ok' : ''}" style="float:right">${c.won ? 'ACCOMPLISHED' : 'FAILED'}</span><h2>${esc(o.title)}</h2>${lines}<div class="rule"></div><p class="it">${esc(o.debrief)}</p>`;
     }
     if (c.type === 'act') { card.classList.add('title-card'); return `<div class="kick">${esc(longDate(S.t))}</div><h1>${esc(c.title.split(' · ')[1] ?? c.title)}</h1><div class="kick" style="text-align:center">${esc(c.title.split(' · ')[0])}</div><div class="rule"></div><p>${esc(c.text)}</p>`; }
-    if (c.type === 'missed') { card.classList.add('danger'); return `<div class="kick">${esc(I.city.get(c.city).name)} · ${esc(when(S.t))}</div><h2>Missed connection</h2><p>The ${esc(G.W.service.get(c.svc).name)} for ${esc(I.city.get(c.to).name)} left at ${esc(hm(c.dep))}${S.t > c.dep ? `, ${esc(span(S.t - c.dep))} before you stepped down` : ''}. A porter shrugs. The station clock does not care about your orders.</p>`; }
-    if (c.type === 'late') return `<div class="kick">${esc(G.W.service.get(S.journey?.svc)?.name ?? '')}</div><h2>Running late</h2><p>The guard says the train is ${esc(span(c.delay))} behind time. At ${esc(I.city.get(c.at).name)} the ${esc(G.W.service.get(c.svc).name)} leaves at ${esc(hm(c.dep))}: you will not make it, unless it waits.</p>`;
+    if (c.type === 'missed') { card.classList.add('danger'); return `<div class="kick">${esc(I.city.get(c.city).name)} · ${esc(when(S.t))}</div><h2>Missed connection</h2><p>${esc(cap(G.W.service.get(c.svc).name))} for ${esc(I.city.get(c.to).name)} left at ${esc(hm(c.dep))}${S.t > c.dep ? `, ${esc(span(S.t - c.dep))} before you stepped down` : ''}. A porter shrugs. The station clock does not care about your orders.</p>`; }
+    if (c.type === 'late') return `<div class="kick">${esc(G.W.service.get(S.journey?.svc)?.name ?? '')}</div><h2>Running late</h2><p>The guard says the train is ${esc(span(c.delay))} behind time. At ${esc(I.city.get(c.at).name)} ${esc(G.W.service.get(c.svc).name)} leaves at ${esc(hm(c.dep))}: you will not make it, unless it waits.</p>`;
     if (c.type === 'inspector') { card.classList.add('danger'); return `<div class="kick">${esc(I.city.get(S.city)?.name ?? '')} · ${esc(when(S.t))}</div><h2>An inspector calls</h2><p>A man in a good overcoat is waiting in your rooms, hat on his knee. Police. He has a list of questions and all the time in the world: your business here, your friends, the letters you post, and why ${esc(coverName(G))} keeps the hours ${S.sex === 'f' ? 'she' : 'he'} does.</p>`; }
     if (c.type === 'note') return `<div class="kick">${esc(when(S.t))}</div><h2>${esc(c.title)}</h2><p>${esc(c.text)}</p>`;
     if (c.type === 'end') return endText(G, c);
@@ -160,7 +195,7 @@ export function makeCards(root, hooks) {
     }));
   }
 
-  return { render, isOpen: () => !veil.hidden, el: veil };
+  return { render, isOpen: () => !veil.hidden, isAside: () => aside !== null, reopen, reset, dismiss, el: veil };
 }
 
 // ---------- the end card ----------

@@ -14,6 +14,7 @@ import { checkOps } from './ops.js';
 import { dailyTurn, watchEvents, completeActivity, watchOf, shadowed, addWatch, legendOf, LODGINGS, needsRegistration, stayDays, watchLevel } from './residence.js';
 import { skill, has as trait, tongue } from './hero.js';
 import { departuresFrom, CHANGE } from './timetable.js';
+const capFirst = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s); // service names carry their own article
 
 export const TICK = 30;
 const HOUR = 60;
@@ -81,7 +82,7 @@ function depart(G) {
   if (why) {
     S.money += b.fare; // refunded
     const row = W.rows.find((r) => r.id === why);
-    note(G, 'No train', why === 'military' ? `The ${W.service.get(b.dp.svc).name} is cancelled: the line is wanted for the army. Your fare is returned.` : `The ${W.service.get(b.dp.svc).name} does not run: ${row ? row.news.toLowerCase() : 'the line is closed'}. Your fare is returned.`);
+    note(G, 'No train', why === 'military' ? `${capFirst(W.service.get(b.dp.svc).name)} is cancelled: the line is wanted for the army. Your fare is returned.` : `${capFirst(W.service.get(b.dp.svc).name)} does not run: ${row ? row.news.toLowerCase() : 'the line is closed'}. Your fare is returned.`);
     knowDisruption(G, b.dp.svc, why);
     return;
   }
@@ -178,7 +179,7 @@ function connect(G, j) {
   S.place = 'station';
   S.cityArrived = S.t;
   stationWatch(G);
-  if (cancelled(W, next)) { S.trip = null; note(G, 'No connection', `At ${I.city.get(S.city).name} the board says the ${W.service.get(next.svc).name} does not run today. You are on your own from here.`); S.queue.push({ type: 'arrive', city: S.city, delay: j.delay, n: ++S.cardN }); return true; }
+  if (cancelled(W, next)) { S.trip = null; note(G, 'No connection', `At ${I.city.get(S.city).name} the board says ${W.service.get(next.svc).name} does not run today. You are on your own from here.`); S.queue.push({ type: 'arrive', city: S.city, delay: j.delay, n: ++S.cardN }); return true; }
   if (S.t + CHANGE <= next.dep || (trip.held === next.key && S.t <= next.dep + 30)) {
     S.booked = { dp: next, cls: trip.cls, fare: 0, dep: Math.max(next.dep, S.t) };
     log(G, `Changed trains at ${I.city.get(S.city).name}.`);

@@ -61,6 +61,13 @@ export const ICONS = {
     for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, r = i % 2 ? 4.4 : 10, x = 12 + r * Math.cos(a), y = 12.6 + r * Math.sin(a); if (i) p.lineTo(x, y); else p.moveTo(x, y); }
     p.closePath();
   },
+  /** A cross: close. */
+  close(p) {
+    const t = 1.5, L = 8.2, c = Math.SQRT1_2;
+    [[t, L], [t, t], [L, t], [L, -t], [t, -t], [t, -L], [-t, -L], [-t, -t], [-L, -t], [-L, t], [-t, t], [-t, L]]
+      .forEach(([x, y], i) => { const X = 12 + (x - y) * c, Y = 12 + (x + y) * c; if (i) p.lineTo(X, Y); else p.moveTo(X, Y); });
+    p.closePath();
+  },
   /** A crosshair: back to where you are. */
   locate(p) {
     circle(p, 12, 12, 8); circle(p, 12, 12, 6.2);

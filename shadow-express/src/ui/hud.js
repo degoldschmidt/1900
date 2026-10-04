@@ -34,6 +34,7 @@ export function makeHud(app, hooks) {
     <button class="rbtn light hcase" aria-label="The ledger" title="The ledger">${iconSVG('case')}</button>
     <button class="hcover" title="The name you are using: what they may know of it"><span class="hc-k">as</span><span class="hc-n"></span><span class="hc-heat"><i></i></span></button>
     <button class="hhero" aria-label="Your file" title="Your file"><span class="hh-tab"><span class="hh-nerve">${iconSVG('heart')}<b></b></span><span class="hh-stand">${iconSVG('star')}<b></b></span></span><img alt="" src="${BLANK}"></button>
+    <button class="hwait" hidden title="Back to the card"><i></i><b>A card waits for you</b><span>Back to it</span></button>
     <div class="hstatus" hidden><div class="hs-main"></div><div class="hs-ctl"><button class="hs-speed" aria-label="Faster"></button><button class="hs-pause" aria-label="Pause"></button></div></div>
     <div class="callout" hidden><div class="co-box"><div class="co-name"></div><button class="co-badge" aria-label="Trains from here in the next six hours">${iconSVG('train')}<b></b></button><div class="co-sub"></div><div class="co-due"></div></div><i class="co-stem"></i></div>`;
   app.appendChild(root);
@@ -43,13 +44,14 @@ export function makeHud(app, hooks) {
     gear: q('.hgear'), kase: q('.hcase'), cover: q('.hcover'), coverName: q('.hc-n'), heat: q('.hc-heat i'),
     hero: q('.hhero'), img: q('.hhero img'), nerve: q('.hh-nerve b'), stand: q('.hh-stand b'), nerveBox: q('.hh-nerve'),
     status: q('.hstatus'), smain: q('.hs-main'), speed: q('.hs-speed'), pause: q('.hs-pause'),
-    co: q('.callout'), coName: q('.co-name'), coBadge: q('.co-badge'), coN: q('.co-badge b'), coSub: q('.co-sub'), coDue: q('.co-due'),
+    wait: q('.hwait'), co: q('.callout'), coName: q('.co-name'), coBadge: q('.co-badge'), coN: q('.co-badge b'), coSub: q('.co-sub'), coDue: q('.co-due'),
   };
   E.gear.addEventListener('click', () => hooks.about());
   E.kase.addEventListener('click', () => hooks.toggleLedger());
   E.cover.addEventListener('click', () => hooks.open('covers'));
   E.hero.addEventListener('click', () => hooks.open('you'));
   E.coBadge.addEventListener('click', () => hooks.open('board'));
+  E.wait.addEventListener('click', () => hooks.reopenCard?.());
   E.speed.addEventListener('click', () => { const s = hooks.speed(); hooks.setSpeed(s === 1 ? 3 : s === 3 ? 8 : 1); last = ''; });
   E.pause.addEventListener('click', () => {
     const G = hooks.game();
@@ -117,6 +119,10 @@ export function makeHud(app, hooks) {
     const fk = S.hero ? `hero-${JSON.stringify(S.hero.portrait)}` : '';
     if (fk && fk !== faceKey) { faceKey = fk; portraitUrl(fk, S.hero.portrait).then((u) => { if (u && faceKey === fk) E.img.src = u; }); }
     if (E.hero.hidden !== !fk) E.hero.hidden = !fk;
+    // a card set aside: the way back to it
+    const waiting = !!hooks.cardAside?.();
+    if (E.wait.hidden === waiting) E.wait.hidden = !waiting;
+    root.classList.toggle('waiting', waiting);
     // the status bar
     const key = [Math.floor(S.t), speed, paused, !!S.journey, !!S.booked, !!S.routine, S.busyUntil].join('|');
     if (key !== last) { last = key; status(G, speed, paused, moving); }
@@ -152,7 +158,7 @@ export function makeHud(app, hooks) {
         ${next ? `<div class="hs-l dim"><span>change at ${city(next.from)} for the ${esc(hm(next.dep))}</span><span>${S.trip.legs.length - S.trip.i - 1} more</span></div>` : ''}`;
     } else if (S.booked) {
       const r = S.booked.dp;
-      h = `<div class="hs-l"><b>Waiting for the ${esc(G.W.service.get(r.svc).name)}</b><span>${esc(hm(r.dep))}</span></div>
+      h = `<div class="hs-l"><b>Waiting for ${esc(G.W.service.get(r.svc).name)}</b><span>${esc(hm(r.dep))}</span></div>
         <div class="hs-l dim"><span>to ${city(r.to)}</span><span>in ${esc(span(r.dep - S.t))}</span></div>`;
     } else if (S.routine) {
       const r = S.routine;

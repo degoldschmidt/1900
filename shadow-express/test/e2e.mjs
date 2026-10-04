@@ -49,6 +49,14 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
   await p.evaluate(() => window.__shadow.start('f', 7));
   await p.waitForTimeout(1200);
   await p.screenshot({ path: path.join(shots, `${name}-1-start.png`) });
+  // a card that only informs closes with its X, and the game moves on
+  {
+    const before = await p.evaluate(() => window.__shadow.G.S.queue[0]?.n ?? null);
+    await p.locator('.veil:not([hidden]) .card-x').click({ timeout: 2000 }).catch(() => errors.push('the first card has no close button'));
+    await p.waitForTimeout(250);
+    const after = await p.evaluate(() => window.__shadow.G.S.queue[0]?.n ?? null);
+    if (before !== null && after === before) errors.push('closing a card that only informs did not move on');
+  }
   // answer cards until none, then open the board and book the first train
   for (let i = 0; i < 8; i++) { if (!(await answer(p))) break; await p.waitForTimeout(200); }
   await p.screenshot({ path: path.join(shots, `${name}-2-city.png`) });
@@ -69,6 +77,39 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
   for (const tab of ['people', 'covers', 'dossier', 'orders', 'case']) { await p.evaluate((t) => window.__shadow.ledger.show(t), tab); await p.waitForTimeout(250); await p.screenshot({ path: path.join(shots, `${name}-7-${tab}.png`) }); }
   const overflow = await p.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
   if (overflow) errors.push('horizontal overflow');
+  // a card that asks is set aside by its X: the clock waits, the ledger's buttons lead back to it, the HUD brings it back
+  for (let i = 0; i < 6; i++) if (!(await answer(p))) break;
+  await p.evaluate(() => { const G = window.__shadow.G, S = G.S; S.queue.unshift({ type: 'late', delay: 40, at: S.city ?? 'PAR', svc: G.D.services[0].id, dep: S.t + 60, n: ++S.cardN }); window.__shadow.refresh(); });
+  await p.waitForTimeout(300);
+  await p.locator('.veil:not([hidden]) .card-x').click({ timeout: 2000 }).catch(() => errors.push('a question card has no close button'));
+  await p.waitForTimeout(250);
+  if (!(await p.locator('.hwait').isVisible().catch(() => false))) errors.push('a card set aside leaves no way back');
+  await p.screenshot({ path: path.join(shots, `${name}-7b-aside.png`) });
+  await p.evaluate(() => window.__shadow.ledger.show('city'));
+  await p.waitForTimeout(250);
+  const blocked = await p.evaluate(() => {
+    const b = document.querySelector('.ledger [data-do="walk"], .ledger [data-pass]');
+    if (!b) return 'none';
+    const S = window.__shadow.G.S, t0 = S.t, q = S.queue.length, busy = S.busyUntil;
+    b.click();
+    return S.queue.length === q && S.t === t0 && S.busyUntil === busy;
+  });
+  if (blocked === false) errors.push('a ledger action went through while a card waited');
+  await p.waitForTimeout(250);
+  if (blocked !== 'none' && !(await p.locator('.veil:not([hidden]) .card').isVisible().catch(() => false))) errors.push('the ledger did not lead back to the waiting card');
+  await p.locator('.veil:not([hidden]) .card-x').click({ timeout: 2000 }).catch(() => {});
+  await p.waitForTimeout(200);
+  await p.locator('.hwait').click({ timeout: 2000 }).catch(() => errors.push('the way back to the card cannot be pressed'));
+  await p.waitForTimeout(250);
+  if (!(await p.locator('.veil:not([hidden]) .card').isVisible().catch(() => false))) errors.push('the waiting card did not come back');
+  await p.evaluate(() => { window.__shadow.G.S.queue.shift(); window.__shadow.refresh(); });
+  await p.waitForTimeout(250);
+  // the ledger closes with its own button
+  await p.evaluate(() => window.__shadow.ledger.setOpen(true));
+  await p.waitForTimeout(300);
+  await p.locator('.ledger .ledger-x').click({ timeout: 2000 }).catch(() => errors.push('the ledger has no close button'));
+  await p.waitForTimeout(200);
+  if (await p.evaluate(() => window.__shadow.ledger.isOpen())) errors.push('the ledger did not close');
   // the HUD: the pill, the gear's About page with the run report; then the end card leads back to the title
   for (let i = 0; i < 6; i++) if (!(await answer(p))) break;
   if (!(await p.locator('.hpill').isVisible().catch(() => false))) errors.push('no HUD pill');
@@ -76,7 +117,9 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
   await p.waitForTimeout(200);
   if (!(await p.locator('.title [data-report]').isVisible().catch(() => false))) errors.push('About has no run report');
   await p.screenshot({ path: path.join(shots, `${name}-8-about.png`) });
-  await p.locator('.title [data-close]').click({ timeout: 2000 }).catch(() => {});
+  await p.locator('.title .card-x').click({ timeout: 2000 }).catch(() => errors.push('About has no close button'));
+  await p.waitForTimeout(150);
+  if (await p.locator('.title').count()) errors.push('About did not close');
   await p.waitForTimeout(150);
   await p.evaluate(() => { const G = window.__shadow.G; G.endGame(G, 'recalled'); window.__shadow.refresh(); });
   await p.waitForTimeout(500);
@@ -106,6 +149,12 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
   const shot = async (k) => { await p.screenshot({ path: path.join(shots, `cr-${name}-${k}.png`) }); };
   const overflow = async (k) => { if (await p.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) errors.push(`horizontal overflow on ${k}`); };
   await click('[data-new]');
+  if (!(await p.locator('.title.creator .card-x').count())) errors.push('the creator has no way back');
+  else {
+    await click('.title.creator .card-x');
+    if (!(await p.locator('.title [data-new]').isVisible().catch(() => false))) errors.push('the creator did not go back to the title');
+    await click('[data-new]');
+  }
   await p.locator('[data-f="first"]').fill('Hester');
   await p.locator('[data-f="first"]').dispatchEvent('change');
   await click('[data-sex="f"]');

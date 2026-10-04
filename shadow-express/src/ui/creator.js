@@ -5,6 +5,7 @@ import { BACKGROUNDS, TRAITS, KIT, AGES, BIRTH, FRIENDS, SKILL_TEXT, SKILL_MAX, 
 import { SKILLS, LANGUAGES, HATS, HAIR, BEARDS, COLLARS } from '../core/spec.js';
 import { portraitUrl } from './art.js';
 import { esc, el } from './dom.js';
+import { iconSVG } from './icons.js';
 
 const FIRST = { m: ['Thomas', 'Arthur', 'Edmund', 'Hugh', 'Lionel', 'Rupert', 'Walter', 'Basil', 'Gerald', 'Ivo', 'Cecil', 'Hector'],
   f: ['Evelyn', 'Constance', 'Winifred', 'Agnes', 'Beatrice', 'Muriel', 'Violet', 'Hester', 'Sybil', 'Marjorie', 'Ottoline', 'Rosamund'] };
@@ -13,7 +14,7 @@ const STEPS = [['who', 'Identity'], ['bg', 'Background'], ['skills', 'Skills'], 
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const WORDS = { hat: { none: 'bareheaded', bowler: 'bowler', top: 'top hat', cap: 'cloth cap', boater: 'boater', fez: 'fez', veil: 'veil', kepi: 'kepi', wide: 'picture hat' }, hair: { short: 'short', long: 'long', bun: 'pinned up', bald: 'bald' }, beard: { none: 'clean-shaven', moustache: 'moustache', full: 'full beard', goatee: 'goatee' }, collar: { lace: 'lace collar', stiff: 'stiff collar', uniform: 'tunic', cassock: 'cassock', fur: 'fur collar' } };
 
-export function creator(root, items, onDone, people = []) {
+export function creator(root, items, onDone, people = [], onCancel = null) {
   const h = defaultHero(Math.random() < .5 ? 'm' : 'f');
   h.first = pick(FIRST[h.sex]); h.last = pick(LAST); h.portrait.seed = Math.floor(Math.random() * 9000) + 100;
   let step = 'who';
@@ -39,7 +40,7 @@ export function creator(root, items, onDone, people = []) {
     const pts = points(h);
     const scroll = shownStep === step ? wrap.scrollTop : 0;
     const B = bg();
-    wrap.innerHTML = `<div class="card paper cr"><div class="kick">Secret Service Bureau · Personnel</div>
+    wrap.innerHTML = `${onCancel ? `<button type="button" class="card-x fixed" data-cancel aria-label="Back to the title" title="Back to the title">${iconSVG('close')}</button>` : ''}<div class="card paper cr"><div class="kick">Secret Service Bureau · Personnel</div>
       <div class="cr-top"><div class="cr-face"><img alt="Your portrait" src="${faceSrc()}"><div class="cr-name sc">${esc(fullName(h) || 'Unnamed')}</div><div class="dim cr-sub">${esc(B.name)}</div></div>
       <div class="cr-main"><nav class="cr-steps">${STEPS.map(([k, l], i) => `<button data-step="${k}" aria-current="${step === k}">${i + 1}. ${l}</button>`).join('')}</nav><div class="cr-body">${body(pts)}</div></div></div>
       <div class="cr-foot"><span class="dim">${step === 'skills' || step === 'char' ? `${pts.left} point${pts.left === 1 ? '' : 's'} to spend` : ''}</span>
@@ -128,6 +129,7 @@ export function creator(root, items, onDone, people = []) {
     q('[data-dec]').forEach((b) => b.addEventListener('click', () => { const k = b.dataset.dec, t = SKILLS.includes(k) ? h.skills : h.langs; t[k] = Math.max(0, (t[k] ?? 0) - 1); render(); }));
     q('[data-trait]').forEach((b) => b.addEventListener('click', () => { const t = b.dataset.trait; h.traits = h.traits.includes(t) ? h.traits.filter((x) => x !== t) : [...h.traits, t]; if (points(h).left < 0) trimSkills(); render(); }));
     q('[data-kit]').forEach((b) => b.addEventListener('click', () => { const k = b.dataset.kit; h.kit = h.kit.includes(k) ? h.kit.filter((x) => x !== k) : [...h.kit, k]; render(); }));
+    wrap.querySelector('[data-cancel]')?.addEventListener('click', () => { wrap.remove(); onCancel(); });
     wrap.querySelector('[data-go]')?.addEventListener('click', () => { if (points(h).left < 0) return; wrap.remove(); onDone(JSON.parse(JSON.stringify(h))); });
   }
   /** Keep spending within points and caps when the background or vices change. */

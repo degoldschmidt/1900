@@ -16,6 +16,7 @@ import { copyRunReport } from './report-ui.js';
 import { creator } from './creator.js';
 import { defaultHero } from '../core/hero.js';
 import { $, esc, el, store } from './dom.js';
+import { iconSVG } from './icons.js';
 
 const KEY = 'shadow-express-v2';
 const app = $('#app');
@@ -65,6 +66,29 @@ const hud = makeHud(app, {
   speed: () => speed, setSpeed: (v) => { speed = v; },
   paused: () => paused, setPaused: (v) => { paused = v; },
   stopRoutine: () => { if (G) { A.stopRoutine(G); save(); refresh(); } },
+  cardAside: () => !!G && cards.isAside(),
+  reopenCard: () => cards.reopen(),
+});
+
+// the ledger closes with its own button too
+const ledgerX = el('button', 'ledger-x', iconSVG('close'));
+ledgerX.type = 'button'; ledgerX.setAttribute('aria-label', 'Close the ledger'); ledgerX.title = 'Close the ledger';
+ledgerX.addEventListener('click', () => { ledger.setOpen(false); refresh(); });
+ledger.el.appendChild(ledgerX);
+// while a card waits for an answer, the ledger can be read but not acted on: its buttons lead back to the card
+const ACTS = ['do', 'seek', 'activity', 'pass', 'trip', 'wait', 'lodge', 'way', 'book', 'switch', 'stash', 'retrieve', 'sendfor', 'buy', 'sell', 'use', 'mend', 'courier', 'query'].map((k) => `[data-${k}]`).join(',');
+ledger.el.addEventListener('click', (e) => {
+  if (!G || !cardView(G) || !e.target.closest?.(ACTS)) return;
+  e.stopPropagation(); e.preventDefault();
+  cards.reopen();
+}, true);
+// Escape closes what is on top: About or the creator, then a card, then the ledger
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape' || e.defaultPrevented) return;
+  const top = [...app.querySelectorAll('.title')].at(-1);
+  if (top) { top.querySelector('.card-x')?.click(); return; }
+  if (G && cards.isOpen()) { cards.dismiss(); return; }
+  if (G && ledger.isOpen()) { ledger.setOpen(false); refresh(); }
 });
 app.appendChild(toasts); // toasts above the HUD
 
@@ -175,15 +199,17 @@ function save() { if (G) store.set(KEY, JSON.stringify(G.S)); }
 
 function about() {
   const t = el('div', 'title');
-  t.innerHTML = `<div class="card paper"><div class="kick">About</div><h2>Shadow Express</h2><div class="rule"></div>
+  t.innerHTML = `<div class="card-frame"><button type="button" class="card-x" data-close aria-label="Close" title="Close">${iconSVG('close')}</button><div class="card paper"><div class="kick">About</div><h2>Shadow Express</h2><div class="rule"></div>
     <p>A spy journey through the July Crisis of 1914. The dates and headlines in the newspapers are real; the people you meet are invented, and so is what the crisis does to each train, frontier and price: that is the game's design, not history.</p>
     <p>What you know is in the dossier: what you have seen, what you only suspect, and the traces you have left behind you, with your guess at when each will reach the other side. Hunters on the map are drawn as you last heard of them; the dotted rings are where they could be by now.</p>
     <p>Living under cover: every name you use has a legend in every city, which grows while you work it and wears thin when you do not. The local police watch you more closely after each slip and less after each quiet day; past a point they follow you, search your rooms, or call. Spare papers are safest left with the Bureau in London and sent for by the embassy bag.</p>
     <p class="dim">On the map: the callout over your city counts its trains in the next six hours (tap it for the departures); the pill at the top keeps your money, the day and the hour; the briefcase opens the ledger; your portrait opens your file, with your nerve (♥) and your standing with the Bureau (★).</p>
     <p class="dim">An original game in the manner of the great travel-and-choice games. Art, words and code made for this prototype.</p>
-    <div class="choices"><button class="choice" data-close><b>Back to the game</b></button>${G ? '<button class="choice" data-report><b>Copy run report</b><span>a plain account of this campaign, to paste to the developer</span></button>' : ''}<button class="choice" data-new><b>Begin a new campaign</b><span>this one will be lost</span></button></div></div>`;
+    <div class="choices"><button class="choice" data-close><b>Back to the game</b></button>${G ? '<button class="choice" data-report><b>Copy run report</b><span>a plain account of this campaign, to paste to the developer</span></button>' : ''}<button class="choice" data-new><b>Begin a new campaign</b><span>this one will be lost</span></button></div></div></div>`;
   app.appendChild(t);
-  t.querySelector('[data-close]').addEventListener('click', () => t.remove());
+  t.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => t.remove()));
+  t.addEventListener('click', (e) => { if (e.target === t) t.remove(); }); // a click beside the page closes it too
+  t.querySelector('.choice[data-close]')?.focus({ preventScroll: true });
   t.querySelector('[data-report]')?.addEventListener('click', (e) => { const sub = e.currentTarget.querySelector('span'); copyRunReport(G).then((m) => { sub.textContent = m; sub.setAttribute('role', 'status'); }); });
   t.querySelector('[data-new]').addEventListener('click', () => { t.remove(); newCampaign(); });
 }
@@ -191,7 +217,7 @@ function about() {
 function newCampaign() {
   store.del(KEY);
   G = null;
-  cards.el.hidden = true;
+  cards.reset();
   ledger.setOpen(false);
   title((hero) => start(hero));
 }
@@ -207,13 +233,14 @@ function title(onStart) {
     <p class="dim">Drag the globe to turn it; pinch or scroll to look closer. Tap a city for its trains. Every choice may come back.</p>
     <div class="choices"><button class="choice" data-new><b>Make your agent</b><span>name, looks, past, talents, faults and kit</span></button><button class="choice" data-quick><b>Begin at once</b><span>with a ready-made agent</span></button></div></div>`;
   app.appendChild(t);
-  t.querySelector('[data-new]').addEventListener('click', () => { t.remove(); creator(app, D.items, (hero) => onStart(hero), D.people); });
+  t.querySelector('[data-new]').addEventListener('click', () => { t.remove(); creator(app, D.items, (hero) => onStart(hero), D.people, () => title(onStart)); });
   t.querySelector('[data-quick]').addEventListener('click', () => { t.remove(); onStart(defaultHero(Math.random() < .5 ? 'm' : 'f')); });
 }
 function start(hero, seed = (Date.now() ^ 0x5eed) >>> 0) {
   if (typeof hero === 'string') hero = defaultHero(hero);
   G = makeGame(D, newGame(D, { seed, hero }));
   G.endGame = endGame;
+  cards.reset();
   hud.show(true);
   highlightTo = null;
   ledger.state.tab = 'city';
