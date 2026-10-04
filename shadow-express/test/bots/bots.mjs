@@ -4,10 +4,10 @@
 //   exploit-*: one trick spammed (third class only, bribe everything, plant false trails, never sleep in hotels).
 
 import { advance } from '../../src/core/sim.js';
-import { board, book, bookTrip, plan, cardView, choose, walk, opActions, doWay, canLieLow, lieLow, wireFunds, switchCover, stash, retrieve, sendFor, checkTail, shakeTail, setLodging, safehouseHere, contactsHere, seek, passDays, doActivity } from '../../src/core/actions.js';
+import { board, book, bookTrip, plan, cardView, choose, walk, opActions, doWay, canLieLow, lieLow, wireFunds, switchCover, stash, retrieve, sendFor, checkTail, shakeTail, setLodging, safehouseHere, contactsHere, seek, passDays, doActivity, stopRoutine } from '../../src/core/actions.js';
 import { legendOf, stayDays } from '../../src/core/residence.js';
 import { currentStep, stepCities, activeOps } from '../../src/core/ops.js';
-import { T } from '../../src/data/time.js';
+import { T, DAY } from '../../src/data/time.js';
 import { rand } from '../../src/core/rng.js';
 import { carriedCovers, contraband, hasUse } from '../../src/core/game.js';
 
@@ -28,8 +28,15 @@ function target(G) {
     cands.push({ op: o, step: st, cities, by: st.by ? T(st.by) : Infinity, after: st.after ? T(st.after) : 0 });
   }
   cands.sort((a, b) => a.by - b.by);
-  if (G.policy !== POLICIES.competent) return cands[0] ?? null;
-  const pick = cands.find((c) => reachable(G, c)) ?? cands[0] ?? null;
+  if (G.policy !== POLICIES.competent && G.policy !== POLICIES['exploit-plant']) return cands[0] ?? null;
+  const main = cands.filter((c) => !c.op.side);
+  // the last boat comes first once there is barely a day in hand to reach it
+  const boat = main.find((c) => c.op.id === 'op-lastboat');
+  if (boat && S.city && !boat.cities.includes(S.city)) {
+    const arr = Math.min(...boat.cities.flatMap((c) => plan(G, c).map((it) => it.arr)));
+    if (boat.by - arr < 30 * HOUR) return boat;
+  }
+  const pick = main.find((c) => reachable(G, c)) ?? main[0] ?? cands[0] ?? null; // favours wait while an order is open
   // where two orders can both be served in one city, go there
   if (pick && pick.cities.length > 1) for (const o of cands) {
     if (o === pick) continue;
@@ -49,10 +56,9 @@ function reachable(G, c) {
   return (G._reach[k] = ok);
 }
 
-/** Score a data choice by its visible effects (what a careful reader of the sub-text would infer). */
-function score(c) {
+/** Score a list of effects as a careful reader of the sub-text would. */
+function scoreFx(eff = []) {
   let s = 0;
-  const eff = [...(c.ok ?? [])];
   for (const e of eff) {
     if (e[0] === 'standing') s += e[1] * .8;
     if (e[0] === 'money') s += e[1] * .3;
@@ -68,10 +74,26 @@ function score(c) {
     if (e[0] === 'cover') s += 3;
     if (e[0] === 'papers') s += e[2] * 4;
   }
+  return s;
+}
+/** A choice's worth: with a roll, the chance-weighted value of success and failure. */
+function score(c) {
+  let s = c.roll ? c.roll.p * scoreFx(c.ok) + (1 - c.roll.p) * scoreFx(c.fail) : scoreFx(c.ok);
   if (c.cost?.money) s -= c.cost.money * .3;
-  if (c.roll) s *= c.roll.p;
   if (c.next) s += .5;
   return s;
+}
+
+/** Ways a careful agent chooses by evidence rather than by risk: naming the mole. */
+function pickWay(G, a) {
+  if (a.op.id !== 'op-mole' || a.step.id !== 'name') return null;
+  const sc = { brandl: 0, ilic: 0, amsler: 0 };
+  for (const e of G.S.intel) {
+    const m = /^person:(brandl|ilic|amsler)$/.exec(e.subj ?? '');
+    if (m && e.claim?.loyal) sc[m[1]] += (String(e.claim.loyal).startsWith('enemy') ? 1 : -1) * e.rel;
+  }
+  const [best, v] = Object.entries(sc).sort((x, y) => y[1] - x[1])[0];
+  return a.ways.find((w) => w.open && w.way.id === (v >= 0 ? best : 'nobody')) ?? null;
 }
 
 export const POLICIES = {
@@ -107,6 +129,7 @@ export const POLICIES = {
     },
     city(G) {
       const { S } = G;
+      stopRoutine(G);
       const tg = target(G);
       const posted = tg && tg.cities.includes(S.city);
       // spare papers are kept in the posting city, and travel with you when you move on
@@ -116,20 +139,21 @@ export const POLICIES = {
       // a name the enemy has, or a cover that has left too many sharp traces, is retired
       const named = !!S.enemy.dossiers[S.cover]?.name;
       const heat = S.records.filter((r) => r.cover === S.cover && S.t - r.t < 5 * 24 * HOUR).reduce((a, r) => a + (r.heat ?? (r.kind === 'bribe' ? .45 : r.kind === 'sighting' ? .2 : 0)) * r.fid, 0);
-      if (named || heat > .45) {
+      if ((named || heat > .45) && S.t - (S._switched ?? -1e9) > 24 * HOUR) {
         const alts = Object.entries(S.covers).filter(([id, c]) => id !== S.cover && !c.burned && (c.carried || (c.stash === S.city && (c.ready ?? 0) <= S.t)));
-        const alt = alts.find(([id]) => !S.enemy.dossiers[id]?.name) ?? (named ? null : alts[0]);
+        const cool = (id) => !S.enemy.dossiers[id]?.name && (S.enemy.dossiers[id]?.susp ?? 0) < (S.enemy.dossiers[S.cover]?.susp ?? 0) * .7;
+        const alt = alts.find(([id]) => cool(id)) ?? null;
         if (alt) {
           if (!alt[1].carried) retrieve(G, alt[0]);
           const old = S.cover;
-          if (switchCover(G, alt[0]).ok) { if (posted) stash(G, old); return true; }
+          if (switchCover(G, alt[0]).ok) { S._switched = S.t; if (posted) stash(G, old); return true; }
         }
       }
       if (S.stats.nearMisses > (S._nm ?? 0)) { S._nm = S.stats.nearMisses; if (checkTail(G) && S.tailedBy) shakeTail(G); return true; }
       if (safehouseHere(G)) setLodging(G, 'safehouse');
       else if (S.lodging?.city !== S.city) setLodging(G, 'pension');
       const slack = tg ? tg.by - S.t : Infinity;
-      return goTo(G, slack > 30 * HOUR ? 'safest' : 'fastest', null) || idle(G, true);
+      return goTo(G, slack > 30 * HOUR || G.W.act(S.t) === 3 ? 'safest' : 'fastest', null) || idle(G, true); // in the war, the safe road if it is in time
     },
     way: (ways) => ways.filter((w) => w.open && w.afford).sort((a, b) => a.risk + (a.way.cost?.money ?? 0) / 60 - (b.risk + (b.way.cost?.money ?? 0) / 60))[0],
   },
@@ -181,7 +205,7 @@ function goTo(G, kind, cls) {
   const { S } = G;
   for (const a of opActions(G)) {
     if (a.closed) continue;
-    const w = G.policy.way(a.ways);
+    const w = pickWay(G, a) ?? G.policy.way(a.ways);
     if (w && doWay(G, a.op.id, w.way.id)) return true;
   }
   const tg = target(G);
@@ -192,7 +216,11 @@ function goTo(G, kind, cls) {
     return false;
   }
   let best = null;
-  for (const c of tg.cities) for (const it of plan(G, c)) if (!best || score2(it, kind) < score2(best, kind)) best = it;
+  let its = tg.cities.flatMap((c) => plan(G, c));
+  // a careful agent believes the rumours about lines and frontiers, if another way serves in time
+  if (G.policy !== POLICIES.careless) { const clear = its.filter((it) => !it.rumoured && it.arr + 2 * HOUR <= tg.by); if (clear.length) its = clear; }
+  const inTime = its.filter((it) => it.arr + 2 * HOUR <= tg.by);
+  for (const it of (kind === 'safest' && inTime.length ? inTime : its)) if (!best || score2(it, kind === 'safest' && !inTime.length ? 'fastest' : kind) < score2(best, kind === 'safest' && !inTime.length ? 'fastest' : kind)) best = it;
   if (!best) return false;
   if (best.legs.length > 1 && G.policy !== POLICIES.careless) {
     const want = cls ?? G.I.cover.get(S.cover)?.cls ?? 2;
@@ -228,9 +256,15 @@ function idle(G, careful) {
   if (people.length && rand(S) < .35) { seek(G, people[Math.floor(rand(S) * people.length)].person.id); return true; }
   if (!careful && rand(S) < .3) { walk(G); return true; }
   const tg = target(G);
-  // waiting for a window to open in this city, or for the next order: let the days pass
-  const until = tg && tg.after > S.t ? Math.min(tg.after, S.t + 2 * 1440) : S.t + 1440;
-  passDays(G, Math.max(.25, (until - S.t) / 1440));
+  // waiting for a window to open in this city, or for the next order: let the days pass, but never through a deadline
+  let until = S.t + DAY;
+  if (tg) {
+    if (tg.after > S.t) until = Math.min(tg.after, S.t + 2 * DAY);
+    else if (tg.cities.includes(S.city)) until = S.t + 3 * HOUR; // the step is here and open: look again soon
+    if (tg.by !== Infinity) until = Math.min(until, tg.by - 2 * HOUR);
+  }
+  until = Math.max(until, S.t + HOUR);
+  passDays(G, Math.max(.05, (until - S.t) / DAY));
   advance(G, until);
   return true;
 }

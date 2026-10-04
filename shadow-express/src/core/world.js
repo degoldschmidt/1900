@@ -63,19 +63,24 @@ export function buildWorld(D, seed) {
       return on;
     },
     price(item, c, t) { let m = 1; for (const e of fx) if (e.name === 'price' && e.a[0] === item && e.a[1] === c && live(e, t)) m *= e.a[2]; return m; },
+    /** Does a suspension target ('service:…', 'line:…', 'frontier:…', 'border:AA-BB') stop service s? */
+    touches(target, s) {
+      const l = line.get(s.line);
+      const [k, v] = target.split(/:(.*)/s);
+      if (k === 'service') return v === s.id;
+      if (k === 'line') return v === s.line;
+      if (k === 'frontier') return l.frontiers.some((f) => f.id === v);
+      if (k === 'border') { const [x, y] = v.split('-'); return l.frontiers.some((f) => (f.from === x && f.into === y) || (f.from === y && f.into === x)); }
+      return false;
+    },
     /** Suspensions in force: is this departure of service s (from the a or b end) cancelled at t? */
     suspended(s, t) {
-      const l = line.get(s.line);
       for (const e of fx) {
         if (e.name !== 'suspend') continue;
         const from = e.a[1] === null ? e.t : T(e.a[1]), until = e.a[2] === null ? (e.until ?? Infinity) : T(e.a[2]);
         if (from >= until) continue;
         if (t < from || t >= until) continue;
-        const [k, v] = e.a[0].split(/:(.*)/s);
-        if (k === 'service' && v === s.id) return e.row;
-        if (k === 'line' && v === s.line) return e.row;
-        if (k === 'frontier' && l.frontiers.some((f) => f.id === v)) return e.row;
-        if (k === 'border') { const [x, y] = v.split('-'); if (l.frontiers.some((f) => (f.from === x && f.into === y) || (f.from === y && f.into === x))) return e.row; }
+        if (W.touches(e.a[0], s)) return e.row;
       }
       return null;
     },

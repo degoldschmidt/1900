@@ -202,7 +202,7 @@ export function makeLedger(root, hooks) {
         ${st.st === 'recruited' && p.perks.length ? `<div class="dim" style="font-size:12.5px">offers: ${esc(p.perks.join(', '))}</div>` : ''}
         ${here ? `<button class="act" style="margin-top:5px" data-seek="${esc(p.id)}"><b>Seek out</b><span>here now</span></button>` : ''}
         ${here && st.st === 'recruited' && p.perks.includes('papers') ? `<button class="act" data-mend="${esc(p.id)}" ${S.money < 5 ? 'disabled' : ''}><b>Have your papers mended</b><span>£5, three hours</span></button>` : ''}
-        ${here && st.st === 'recruited' && p.perks.includes('courier') ? S.case.filter((x) => I.item.get(x.id)?.fn === 'doc').map((x) => `<button class="act" data-courier="${esc(p.id)}" data-item="${esc(x.id)}"><b>Send ${esc(I.item.get(x.id).name.toLowerCase())} to London</b><span>two days; if all goes well</span></button>`).join('') : ''}
+        ${S.city && st.st === 'recruited' && p.perks.includes('courier') ? S.case.filter((x) => I.item.get(x.id)?.fn === 'doc').map((x) => `<button class="act" data-courier="${esc(p.id)}" data-item="${esc(x.id)}"><b>Send ${esc(I.item.get(x.id).name.toLowerCase())} to London</b><span>${here ? 'two days; if all goes well' : 'three days: they must come to you first'}</span></button>`).join('') : ''}
         ${S.city && !(S.queries ?? []).some((q) => q.person === p.id && !q.done) ? `<button class="act" data-query="${esc(p.id)}" ${S.money < 2 ? 'disabled' : ''}><b>Ask London about ${esc(p.name.split(' ').at(-1))}</b><span>£2; an answer in a day or two</span></button>` : ''}</div></div>`;
     }
     return h;

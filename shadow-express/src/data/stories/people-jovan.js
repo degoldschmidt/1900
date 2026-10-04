@@ -85,7 +85,7 @@ export default [
     text: "'I do not want money,' Jovan says, before you have offered any. 'I want Bosnia free, and I want to live to see it, and tonight I am not sure which I want more.' He looks at his hands. 'If I work for you, will you get me out when they come for me?'",
     choices: [
       { label: 'Swear the Bureau will get you out', sub: 'Ashby never promised that. You do.',
-        ok: [['st', 'jovan', 'recruited'], ['flag', 'jovan-promise'], ['trust', 'jovan', 1]] },
+        ok: [['st', 'jovan', 'recruited'], ['flag', 'jovan-promise'], ['flag', 'op-cable-promise'], ['trust', 'jovan', 1]] },
       { label: 'Promise only what you can keep', sub: 'Honest; it may not be enough',
         roll: { p: 0.5, mods: [[['trust', 'jovan', '>=', 4], 0.3], SLAVIC] },
         ok: [['st', 'jovan', 'recruited']],

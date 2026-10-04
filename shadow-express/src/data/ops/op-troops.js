@@ -3,7 +3,8 @@
 // On the run west from the Berlin post: Herbesthal closes on the 4th, Emmerich perhaps that night (calendar).
 // The search at the frontier is a `later` continuation armed when the tally is made: it waits for Tuesday in Germany.
 // Eight hours of watching on Sunday leaves a train home the same evening; counting on into Monday risks the last boat.
-// Reaching Cologne by Sunday evening leaves room to see Sauer over the Dutch frontier first (op-typist out closes at 18.00).
+// From Berlin the run is: Cologne by Sunday afternoon, then Sauer over the Dutch frontier on the 22.20 (op-typist out closes
+// Sunday 18.00 at Amsterdam, 04.50), and back to the bridge on the 07.05; or Sauer first, if the annex is out early.
 
 const OUT = ['later', 1, 'op-troops.border'];
 
@@ -12,7 +13,7 @@ export default {
   title: 'Count the Trains',
   brief: 'WHEN GERMANY MOBILISES HER WESTERN ARMIES WILL CROSS THE RHINE AT COLOGNE STOP WATCH THE HOHENZOLLERN BRIDGE FOR EIGHT HOURS BETWEEN SUNDAY DAWN AND MONDAY EVENING STOP COUNT TRAINS BY HOUR AND DIRECTION STOP TALLY TO LONDON FLUSHING AMSTERDAM OR BRUSSELS BY TUESDAY NIGHT STOP THEY SHOOT SPIES NOW ASHBY',
   steps: [
-    { id: 'reach', kind: 'wait', city: 'COL', min: 120, by: '08-02 20.00', label: 'Reach Cologne by Sunday evening', story: 'op-troops.reach' },
+    { id: 'reach', kind: 'wait', city: 'COL', min: 120, by: '08-02 17.00', label: 'Reach Cologne by Sunday afternoon', story: 'op-troops.reach' },
     { id: 'watch', kind: 'observe', city: 'COL', after: '08-02 06.00', by: '08-03 18.00', min: 480,
       label: 'Watch the bridge for eight hours', story: 'op-troops.watch' },
     { id: 'count', kind: 'act', city: 'COL', venue: 'venue:station', by: '08-03 20.00', gives: 'troop-tally',

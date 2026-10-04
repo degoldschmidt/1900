@@ -28,10 +28,11 @@ export function checkOps(G) {
     if (here && early && !st.early?.[step.id]) { (st.early ??= {})[step.id] = true; note(G, 'Too early', `${o.title}: nothing can be done here before ${whenText(step.after)}. Waiting in one place is how agents are noticed.`); }
     if (step.story && here && !st.shown?.[step.id] && !S.queue.length && !early) { (st.shown ??= {})[step.id] = true; S.queue.push({ type: 'story', id: step.story, op: o.id, n: ++S.cardN }); }
     if (!here || early) continue;
-    if (step.kind === 'goto') done(G, o.id, step.id);
-    if (step.kind === 'carry' && has(G, step.item)) { done(G, o.id, step.id); applyEffects([['item', `-${step.item}`]], context(G, { op: o.id })); } // delivered: handed over
-    if (step.kind === 'wait') { st.waitMin += dt; if (st.waitMin >= step.min) done(G, o.id, step.id); }
-    if (step.kind === 'observe') { st.obsMin += dt; if (st.obsMin >= (step.min ?? 60)) done(G, o.id, step.id); }
+    const sceneDue = !!step.story && !st.shown?.[step.id]; // a step with a scene waits for it (an arrival card may still be in the queue)
+    if (step.kind === 'goto' && !sceneDue) done(G, o.id, step.id);
+    if (step.kind === 'carry' && !sceneDue && has(G, step.item)) { done(G, o.id, step.id); applyEffects([['item', `-${step.item}`]], context(G, { op: o.id })); } // delivered: handed over
+    if (step.kind === 'wait') { st.waitMin += dt; if (st.waitMin >= step.min && !sceneDue) done(G, o.id, step.id); }
+    if (step.kind === 'observe') { st.obsMin += dt; if (st.obsMin >= (step.min ?? 60) && !sceneDue) done(G, o.id, step.id); }
     // twists
     o.twists.forEach((tw, i) => {
       if (st.twists[i] || S.queue.length) return;

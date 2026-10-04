@@ -103,14 +103,14 @@ export function dailyTurn(G) {
   const d = S.enemy.dossiers[S.cover];
   if (d?.name && G.I.ground.includes(nat)) addWatch(G, .07); // they have asked the police to find this name
   for (const h of G.D.hunters) { const st = S.enemy.hunters[h.id]; if (G.W.hunterActive(h, S.t) && !st.leg && st.city === S.city) addWatch(G, .05); }
-  addWatch(G, -.06 * (1 + L));
+  addWatch(G, -.08 * (1 + L));
 }
 
 /** A record left in a city tells its police something too. */
 export function noticeRecord(G, r) {
   if (!r.city || r.kind === 'calm' || r.planted) return;
   const heat = (r.heat ?? { bribe: .45, sighting: .2, meeting: .35, photo: .6, wire: .12 }[r.kind] ?? 0) * r.fid;
-  if (heat > 0) addWatch(G, heat * .4, r.city);
+  if (heat > 0) addWatch(G, heat * .25, r.city);
 }
 
 /** Lodgings: an hotel registers you each arrival; a pension's landlady notices; rented rooms need the police. */

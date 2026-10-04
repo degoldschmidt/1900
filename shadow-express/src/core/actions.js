@@ -37,7 +37,7 @@ export function board(G, hours = 36) {
     const xs = crossings(W, dp).map((x) => ({ ...x, odds: controlOdds(G, x, { t: x.t, cls: s.fare[2] ? 2 : Number(Object.keys(s.fare)[0]), svc: s.id }) }));
     const recs = [...s.records, ...xs.map(() => 'frontier')];
     const lag = W.lagH(dp.from, dp.dep);
-    const rumour = W.rumours(S.t).some((r) => r.fx.some((e) => e[0] === 'suspend' && (e[1] === `line:${dp.line}` || e[1] === `service:${dp.svc}`)));
+    const rumour = W.rumours(S.t).some((r) => r.fx.some((e) => e[0] === 'suspend' && W.touches(e[1], s)));
     const isNext = !firstTo.has(dp.to) && !known;
     if (isNext) firstTo.set(dp.to, dp.key);
     const c = coverData(G);
@@ -99,7 +99,8 @@ export function plan(G, to, from = G.S.city, t = G.S.t) {
     if (!legs.length) continue;
     const sig = legs.map((l) => l.key).join(',');
     if (out.some((o) => o.sig === sig)) { out.find((o) => o.sig === sig).kinds.push(kind); continue; }
-    out.push({ kinds: [kind], sig, legs, arr: legs.at(-1).arr, fare: legs.reduce((a, l) => a + fare(l), 0), risk: legs.reduce((a, l) => a + risk(l), 0) });
+    const rumoured = legs.some((l) => W.rumours(t).some((r) => r.t <= l.arr && r.fx.some((e) => e[0] === 'suspend' && W.touches(e[1], W.service.get(l.svc)))));
+    out.push({ kinds: [kind], sig, legs, arr: legs.at(-1).arr, fare: legs.reduce((a, l) => a + fare(l), 0), risk: legs.reduce((a, l) => a + risk(l), 0), rumoured });
   }
   return out;
 }
@@ -318,7 +319,7 @@ export function opActions(G) {
 function wayView(G, o, step, w) {
   const ctx = context(G, { op: o.id });
   const tried = G.S.ops[o.id].way[`${step.id}:${w.id}`] === 'noticed';
-  const plaus = step.venue ? aff(G, step.venue) : 1;
+  const plaus = Math.min(step.venue ? aff(G, step.venue) : 1, w.tag ? aff(G, w.tag) : 1); // the venue and the way's own tag: the worse of the two
   const risk = Math.min(.95, (w.risk ?? 0) + (plaus < 0 ? .2 : plaus === 0 ? .07 : 0) + (G.S.tailedBy ? .15 : 0));
   return { way: w, open: all(w.if, ctx) && !tried, afford: (w.cost?.money ?? 0) <= G.S.money && (w.cost?.nerve ?? 0) <= G.S.nerve, risk, plaus, tried };
 }
@@ -346,7 +347,7 @@ export function doWay(G, opId, wayId) {
     note(G, 'Noticed', `${w.label}: it did not go unseen. The way is shut; you will have to find another.`);
   } else {
     if (rec) leave(G, rec[0], rec[1]);
-    if (v.plaus === 0 && step.venue) leave(G, 'sighting', .3, { heat: .2 });
+    if (v.plaus === 0 && (step.venue || w.tag)) leave(G, 'sighting', .3, { heat: .2 });
     applyEffects(w.ok, ctx);
     finishStep(G, opId, step.id);
   }
@@ -405,13 +406,14 @@ export function mendPapers(G, person) {
 export function sendCourier(G, person, item) {
   const { S } = G;
   const p = G.I.person.get(person);
-  if (!p?.perks.includes('courier') || S.people[person].st !== 'recruited' || !personHere(G, person) || !has(G, item)) return false;
+  if (!p?.perks.includes('courier') || S.people[person].st !== 'recruited' || !S.city || !has(G, item)) return false;
+  const away = !personHere(G, person); // a courier elsewhere comes to you first: a day more
   S.case.splice(S.case.findIndex((x) => x.id === item), 1);
   const companion = G.I.item.get(item)?.fn === 'companion';
   const dest = companion ? (G.D.ops.map((o) => o.steps.find((st) => st.kind === 'carry' && st.item === item)).find(Boolean)?.to ?? 'LON') : 'LON';
-  S.later.push({ at: S.t + (companion ? 60 : 48) * HOUR, until: S.t + 100 * HOUR, courier: { person, item, to: [dest].flat()[0] } });
+  S.later.push({ at: S.t + ((companion ? 60 : 48) + (away ? 24 : 0)) * HOUR, until: S.t + 130 * HOUR, courier: { person, item, to: [dest].flat()[0] } });
   S.stats.decisions++;
-  log(G, `${p.name} takes ${G.I.item.get(item).name.replace(/,.*$/, '').toLowerCase()} on, out of your hands.`);
+  log(G, away ? `Wired ${p.name} to come to ${G.I.city.get(S.city).name}; the ${G.I.item.get(item).name.replace(/,.*$/, '').toLowerCase()} waits with the hall porter until then.` : `${p.name} takes ${G.I.item.get(item).name.replace(/,.*$/, '').toLowerCase()} on, out of your hands.`);
   return true;
 }
 
@@ -708,8 +710,10 @@ function detainedByHunter(G, h, onGround) {
   S.nerve = Math.max(0, S.nerve - 2);
   S.tailedBy = null;
   note(G, 'Questioned', `${h.name} keeps you ${onGround ? 'a day and a half' : 'half a day'} in a room without a window. A photographer comes. Then a door opens, and you are let go: the name of ${coverName(G)} is worth nothing now.`);
-  const next = Object.entries(S.covers).find(([, v]) => !v.burned && v.carried);
-  if (next) S.cover = next[0];
+  // the next name: papers you carry, or papers left in this city (you go back for them once they let you go)
+  const next = Object.entries(S.covers).find(([, v]) => !v.burned && v.carried)
+    ?? Object.entries(S.covers).find(([, v]) => !v.burned && !v.carried && v.stash === S.city && (v.ready ?? 0) <= S.t);
+  if (next) { if (!next[1].carried) { next[1].carried = true; next[1].stash = null; next[1].ready = null; } S.cover = next[0]; }
   else if (!S.covers.self) { S.covers.self = { papers: .9, carried: true, burned: false, gained: S.t }; S.cover = 'self'; note(G, 'Your own name', 'No borrowed name is left to you. From here you travel as yourself, on a British passport that is perfectly genuine, and perfectly easy to trace.'); }
   else endGame(G, 'exposed');
   return { success: false };

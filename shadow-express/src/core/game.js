@@ -245,7 +245,7 @@ function effects(G, card) {
     cover: (d) => { const id = d.slice(1); if (!S.covers[id]) S.covers[id] = { papers: I.cover.get(id).papers, carried: true, burned: false, gained: S.t }; },
     papers: (c, n) => { const id = c === 'active' ? S.cover : c; if (S.covers[id]) S.covers[id].papers = Math.max(0, Math.min(1, S.covers[id].papers + n)); },
     op: (id, a) => opControl(G, id, a),
-    later: (h, story) => { S.later.push({ at: S.t + Math.round(h * 60), story, until: S.t + Math.round(h * 60) + 2 * DAY }); },
+    later: (h, story) => { S.later.push({ at: S.t + Math.round(h * 60), story, until: S.t + Math.round(h * 60) + 2 * DAY, op: card.op ?? null }); }, // keeps the scheduling card's op
     delay: (n) => { if (S.journey) { S.journey.arr += n; for (const x of S.journey.crossings) if (!x.done) x.t += Math.round(n / 2); } },
     debrief: (text) => { S.debrief.push({ t: S.t, op: opOf() ?? null, text }); },
     legend: (n) => addLegend(G, n),

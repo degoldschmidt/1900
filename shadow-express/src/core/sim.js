@@ -112,6 +112,9 @@ function journeyStep(G) {
   for (const x of j.crossings) {
     if (x.done || S.t < x.t) continue;
     x.done = true;
+    // a frontier closed since the train left: it goes no further, and takes you back
+    const shut = W.suspended(W.service.get(j.svc), x.t);
+    if (shut) { turnedBack(G, x, shut); return; }
     frontier(G, x);
     if (S.queue.length) return;
   }
@@ -126,6 +129,17 @@ function journeyStep(G) {
   delayWarning(G);
   if (S.queue.length) return;
   if (S.t >= j.arr) arrive(G);
+}
+
+function turnedBack(G, x, rowId) {
+  const { S, I, W } = G;
+  const j = S.journey;
+  const back = Math.max(60, x.t - j.dep);
+  S.journey = { ...j, to: j.from, from: j.to, dep: S.t, sched: S.t + back, arr: S.t + back, delay: 0, crossings: [], eventAt: null, event2At: null };
+  S.trip = null;
+  const row = W.rows.find((r) => r.id === rowId);
+  note(G, `Stopped at ${x.name}`, `The train goes no further: ${row ? row.news.toLowerCase().replace(/^./, (c) => c.toUpperCase()) : 'the frontier is closed'}. Soldiers on the platform, the engine uncoupled and turned. You are carried back to ${I.city.get(j.from).name}.`);
+  knowDisruption(G, j.svc, rowId);
 }
 
 function arrive(G) {
@@ -390,7 +404,7 @@ function dueLaters(G) {
     if (!kindOk || S.queue.length) continue;
     if (!all(st.if, context(G))) continue;
     S.later.splice(i--, 1);
-    S.queue.push({ type: 'story', id: st.id, n: ++S.cardN });
+    S.queue.push({ type: 'story', id: st.id, ...(l.op ? { op: l.op } : {}), n: ++S.cardN });
     return;
   }
 }

@@ -166,7 +166,11 @@ export function makeCards(root, hooks) {
       const fate = { recruited: 'stood by you to the end', cultivated: 'remembers you kindly', met: 'never quite knew who you were', compromised: 'lives under watch', arrested: 'was taken, and talked', dead: 'is dead', turned: 'works for the other side now' }[st.st] ?? st.st;
       return `<p><b class="sc">${esc(p.name)}</b> ${esc(fate)}.</p>`;
     }).join('');
-    return `<div class="kick">${esc(longDate(S.t))} · ${esc(hm(S.t))}</div><h1>${esc(why)}</h1><div class="rule"></div><p>Operations accomplished: ${won} of ${G.D.ops.filter((o) => !o.side).length}. Standing with the Bureau: ${S.standing}.</p>${people}`;
+    const verdict = c.why !== 'home' ? '' : S.standing >= 70 ? 'Ashby puts your name forward for a decoration that will never be gazetted. You have done very well.'
+      : S.standing >= 50 ? 'Ashby shakes your hand and says the Bureau will want you again. From him, it is a great deal.'
+      : S.standing >= 30 ? 'Ashby thanks you, coolly. You are home, and alive, and not much else can be said for the summer.'
+      : 'Ashby does not come down to meet the boat. A clerk takes your papers and your key to the Bureau door.';
+    return `<div class="kick">${esc(longDate(S.t))} · ${esc(hm(S.t))}</div><h1>${esc(why)}</h1><div class="rule"></div>${verdict ? `<p>${esc(verdict)}</p>` : ''}<p>Operations accomplished: ${won} of ${G.D.ops.filter((o) => !o.side).length}. Standing with the Bureau: ${S.standing}.</p>${people}`;
   }
 
   return { render, isOpen: () => !veil.hidden, el: veil };
