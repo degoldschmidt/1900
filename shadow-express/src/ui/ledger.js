@@ -14,7 +14,7 @@ import { vignetteUrl, portraitUrl, weatherAt } from './art.js';
 import { esc } from './dom.js';
 import { oddsWord } from './cards.js';
 
-const TABS = [['city', 'City'], ['board', 'Departures'], ['orders', 'Orders'], ['people', 'People'], ['case', 'Case'], ['covers', 'Covers'], ['dossier', 'Dossier'], ['you', 'You']];
+const TABS = [['city', 'City'], ['board', 'Trains'], ['orders', 'Orders'], ['people', 'People'], ['case', 'Case'], ['covers', 'Covers'], ['dossier', 'Dossier'], ['you', 'You']];
 const KIND = { express: 'Express', mail: 'Mail', night: 'Night train', slow: 'Omnibus', steamer: 'Steamer', coach: 'Post coach', path: 'On foot' };
 const REC = { list: 'passenger list', berth: 'sleeping-car berth', frontier: 'frontier book', register: 'hotel register', wire: 'telegram', sighting: 'seen', bribe: 'bribe', meeting: 'meeting watched', photo: 'photograph', talk: 'a contact talked', link: 'two names linked' };
 const NAT = { GB: 'British', CH: 'Swiss', FR: 'French', AH: 'Austro-Hungarian', DE: 'German', RU: 'Russian', IT: 'Italian', US: 'American' };
@@ -98,7 +98,7 @@ export function makeLedger(root, hooks) {
       h += `<button class="act" data-pass="7"><b>Let the days pass</b><span>until something needs you, a week at most</span></button>`;
       if (lie) h += `<button class="act" data-do="lielow"><b>Lie low until the next order</b><span>about ${esc(span(lie - S.t))}; the trail cools</span></button>`;
     }
-    h += `<button class="act" data-tab-go="board"><b>Departures</b><span>trains and boats from ${esc(c.name)}</span></button>`;
+    h += `<button class="act" data-tab-go="board"><b>Trains</b><span>trains and boats from ${esc(c.name)}</span></button>`;
     if (market(G).buy.length || market(G).sell.length) h += `<button class="act" data-tab-go="case"><b>The market</b><span>${esc(market(G).buy.map((x) => x.item.name).join(', ') || 'buyers for what you carry')}</span></button>`;
     h += `</div><h3>Lodgings</h3><div class="acts">`;
     for (const k of ['hotel', 'pension', 'rooms', ...(safehouseHere(G) ? ['safehouse'] : []), 'rough']) {
