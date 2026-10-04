@@ -59,7 +59,7 @@ CAL = { id:'ultimatum', at:'07-23 18.00', until?:'07-30 00.00', p:1, fact:true,
              ['hunter','orlova',true], ['price','diamonds','IST',1.4], ['neutral','IT'] ] }
 ```
 - `fact:true` rows are real dated events: their headlines and dates must be accurate. Their *effects* are game design. `fact:false` rows are invented disruptions (strikes, floods, quarantine, requisitions) with `p < 1`; whether they happen is drawn once per campaign.
-- `suspend` targets: `'line:ID'`, `'service:ID'`, `'frontier:ID'` (every line through that station) or `'border:FR-DE'` (every frontier between two nations); then from (null = `at`) and until (null = for good).
+- `suspend` targets: `'line:ID'`, `'service:ID'`, `'frontier:ID'` (every line through that station) or `'border:FR-DE'` (every frontier between two nations); then from (null = `at`) and until (null = the row's `until`; for a fact row with none, for good; for an invented disruption with none, a day or two).
 - `control` adds to control intensity (0..1) for a nation or one frontier station; `lag` multiplies record delays in a nation; `alien` makes nationals of the first nation enemy aliens in the second; `credit:false` stops letters of credit; `hunter` activates or retires a hunter; `price` multiplies an item's sale price in a city.
 
 ## 4. Covers, people, hunters, items

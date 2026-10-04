@@ -50,10 +50,11 @@ test('frontier chains and geometry', () => {
 });
 test('op steps: windows, ways, covers', () => {
   const d = clone();
-  const op = d.ops.find((o) => o.id === 'op-optics');
-  op.steps[1].ways = [op.steps[1].ways[0]];
+  const op = d.ops.find((o) => o.steps.some((s) => s.kind === 'act' && (s.ways?.length ?? 0) >= 2 && s.key !== false));
+  const step = op.steps.find((s) => s.kind === 'act' && (s.ways?.length ?? 0) >= 2 && s.key !== false);
+  step.ways = [step.ways[0]];
   has(d, /at least two ways/);
-  op.steps[1].ways.push({ id: 'b', label: 'Only Weiss', if: [['cover', 'weiss']], risk: .1 });
+  step.ways = [{ id: 'a', label: 'Only Weiss', if: [['cover', 'weiss']], risk: .1 }, { id: 'b', label: 'Only Hale', if: [['cover', 'hale']], risk: .1 }];
   has(d, /no way is open to at least three covers/);
   const d2 = clone();
   d2.ops.find((o) => o.id === 'op-cable').steps[1].by = '06-27 10.00';

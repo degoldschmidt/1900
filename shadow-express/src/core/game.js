@@ -183,15 +183,18 @@ function autoTruth(G, o) {
   const [ck, cv] = Object.entries(o.claim)[0];
   if (k === 'hunter') { const h = S.enemy.hunters[v]; if (ck === 'at') return h && !h.leg && h.city === cv; if (ck === 'heading') return h && (h.target === cv || h.leg?.to === cv); }
   if (k === 'person' && ck === 'loyal') return (S.people[v]?.loyal ?? '').startsWith(cv);
-  if (k === 'line' && ck === 'closed') return D_lineClosed(G, v, cv);
+  if (['line', 'service', 'frontier'].includes(k) && ck === 'closed') return closedTruth(G, k, v, cv);
   if (k === 'cover' && ck === 'knows') { const d = S.enemy.dossiers[v === 'active' ? S.cover : v]; return cv === 'name' ? !!d?.name : cv === 'photo' ? S.enemy.photo : S.enemy.desc > .4; }
   return hash(S.seed, 'intel', S.intelN) < .5;
 }
-function D_lineClosed(G, lineId, [a, b]) {
-  const s = G.D.services.find((x) => x.line === lineId);
-  if (!s) return false;
-  const t = a ? T(a) : G.S.t;
-  return !!G.W.suspended(s, t + 60);
+/** Is a line (all its regular services), a service, or every line through a frontier station suspended at the claimed time? */
+function closedTruth(G, k, id, [a]) {
+  const { D, W } = G;
+  const t = (a ? T(a) : G.S.t) + 60;
+  const svcs = k === 'service' ? D.services.filter((x) => x.id === id)
+    : k === 'line' ? D.services.filter((x) => x.line === id && x.kind !== 'path')
+    : D.services.filter((x) => x.kind !== 'path' && W.line.get(x.line).frontiers.some((f) => f.id === id));
+  return svcs.length > 0 && svcs.every((x) => !!W.suspended(x, t));
 }
 
 /** Leave a record of the player under the active cover (or as given). It reaches the enemy after the local lag. */

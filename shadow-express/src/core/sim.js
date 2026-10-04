@@ -37,6 +37,7 @@ function nextEvent(G) {
   if (j) {
     for (const x of j.crossings) if (!x.done) n = Math.min(n, x.t);
     if (j.eventAt && !j.eventDone) n = Math.min(n, j.eventAt);
+    if (j.event2At && !j.event2Done) n = Math.min(n, j.event2At);
     n = Math.min(n, j.arr);
   }
   if (S.booked) n = Math.min(n, S.booked.dep);
@@ -90,7 +91,8 @@ function depart(G) {
     crossings: nCross.map((x) => ({ ...x, done: false })), eventAt: null, eventDone: false };
   S.stats.journeys++;
   const dur = S.journey.arr - S.journey.dep;
-  if (dur >= 120) S.journey.eventAt = S.journey.dep + Math.round(dur * (.3 + .4 * rand(S)));
+  if (dur >= 120) S.journey.eventAt = S.journey.dep + Math.round(dur * (.2 + .3 * rand(S)));
+  if (dur >= 8 * HOUR) S.journey.event2At = S.journey.dep + Math.round(dur * (.6 + .25 * rand(S))); // a long journey has room for two
   // the service's own records: a passenger list, a sleeping-car berth
   for (const k of s.records) leave(G, k, k === 'berth' ? .75 : b.cls === 1 ? .55 : .4, { city: b.dp.from });
   if (S.tailedBy) { const h = S.enemy.hunters[S.tailedBy]; h.leg = { svc: s.id, key: b.dp.key, from: b.dp.from, to: b.dp.to, dep: b.dp.dep, arr: S.journey.arr }; }
@@ -111,7 +113,11 @@ function journeyStep(G) {
   }
   if (j.eventAt && !j.eventDone && S.t >= j.eventAt) {
     j.eventDone = true;
-    if (rand(S) < .75) { const st = pickStory(G, 'train'); if (st) { S.queue.push({ type: 'story', id: st.id, n: ++S.cardN }); return; } }
+    if (rand(S) < .8) { const st = pickStory(G, 'train'); if (st) { S.queue.push({ type: 'story', id: st.id, n: ++S.cardN }); return; } }
+  }
+  if (j.event2At && !j.event2Done && S.t >= j.event2At) {
+    j.event2Done = true;
+    if (rand(S) < .6) { const st = pickStory(G, 'train'); if (st) { S.queue.push({ type: 'story', id: st.id, n: ++S.cardN }); return; } }
   }
   delayWarning(G);
   if (S.queue.length) return;

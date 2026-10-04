@@ -22,7 +22,11 @@ export function buildWorld(D, seed) {
   // calendar rows that happen in this campaign, in time order
   const rows = D.calendar.filter((r) => r.fact || hash(seed, 'cal', r.id) < r.p).map((r) => ({ ...r, t: T(r.at), until: at(r.until) })).sort((a, b) => a.t - b.t);
   const fx = [];
-  for (const r of rows) for (const e of r.fx) fx.push({ row: r.id, t: r.t, until: r.until, name: e[0], a: e.slice(1) });
+  for (const r of rows) {
+    // an invented disruption without an end lasts a day or two, not for good
+    const until = r.until ?? (r.fact ? null : r.t + Math.round((24 + 24 * hash(seed, 'end', r.id)) * 60));
+    for (const e of r.fx) fx.push({ row: r.id, t: r.t, until, name: e[0], a: e.slice(1) });
+  }
 
   const live = (e, t) => e.t <= t && (e.until === null || t < e.until);
 
@@ -65,6 +69,7 @@ export function buildWorld(D, seed) {
       for (const e of fx) {
         if (e.name !== 'suspend') continue;
         const from = e.a[1] === null ? e.t : T(e.a[1]), until = e.a[2] === null ? (e.until ?? Infinity) : T(e.a[2]);
+        if (from >= until) continue;
         if (t < from || t >= until) continue;
         const [k, v] = e.a[0].split(/:(.*)/s);
         if (k === 'service' && v === s.id) return e.row;
