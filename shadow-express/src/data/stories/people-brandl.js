@@ -119,7 +119,7 @@ export default [
     text: "'A councillor at the Ballhausplatz sleeps two hours a night,' Brandl says, 'because he is drafting something for Belgrade that will not let him. He tells me about it. Doctors are furniture.' He smiles. 'Furniture has a price. And if he is ever asked who he talked to, he will remember my name before yours.'",
     choices: [
       { label: 'Engage him, at his price', sub: '£30; the councillor is his patient, and now yours', cost: { money: 30 },
-        if: [['not', ['st', 'brandl', 'recruited']]],
+        if: [['not', ['st', 'brandl', 'recruited']], ['trust', 'brandl', '>=', 3]],
         ok: [['st', 'brandl', 'recruited'], ['trust', 'brandl', 1]] },
       { label: 'Ask what the councillor says', sub: 'Asking marks him, and Brandl',
         ok: [['expose', 'brandl', 0.2],

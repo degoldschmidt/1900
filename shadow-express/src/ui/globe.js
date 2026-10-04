@@ -2,8 +2,7 @@
 // railways drawn as the old maps drew them, frontier posts, the night, hunters as the player knows them, the train.
 // The base layer is cached per view; the overlay is redrawn when something moves.
 
-import land from '../../land.json';
-import landLo from '../../land-lo.json';
+import { land, landLo } from './land.js';
 import { glyph } from './art.js';
 import { lineCourse, earliest } from '../core/timetable.js';
 import { DAY } from '../data/time.js';

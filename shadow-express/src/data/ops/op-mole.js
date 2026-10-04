@@ -3,7 +3,7 @@
 // Ilić (in person, Belgrade) → the Belgrade quay; Brandl (letter) → Budapest; Amsler (letter) → Trieste.
 // Exactly one of them is the enemy each campaign; the hunters go where their informant sent them.
 
-const TOLD_ILIC = [['plant', { via: 'ilic', subj: 'op:op-mole', claim: { at: 'BEG' } }], ['flag', 'op-mole-ilic']];
+const TOLD_ILIC = [['plant', { via: 'ilic', subj: 'op:op-mole', claim: { at: 'BEG' } }]];
 const LETTERS = [['plant', { via: 'brandl', subj: 'op:op-mole', claim: { at: 'BUD' } }], ['plant', { via: 'amsler', subj: 'op:op-mole', claim: { at: 'TRI' } }],
   ['flag', 'op-mole-brandl'], ['flag', 'op-mole-amsler']];
 
@@ -20,7 +20,7 @@ export default {
         { id: 'batman', label: 'Through his batman', sub: '£2; less convincing, and less of you in it',
           tag: 'topic:military', cost: { money: 2 }, risk: 0.2, rec: ['bribe', 0.4],
           ok: TOLD_ILIC },
-        { id: 'note', label: 'A note left at the Ministry of War', sub: 'Cheap; anyone may read it on the way',
+        { id: 'note', label: 'A note left at the War Ministry', sub: 'Cheap; anyone may read it on the way',
           risk: 0.15, rec: ['wire', 0.4],
           ok: TOLD_ILIC },
       ] },

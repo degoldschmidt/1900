@@ -133,9 +133,27 @@ export default [
         ok: [["watch", -0.15], ["record", "register", 0.5]], fail: [["watch", 0.2], ["record", "register", 0.9]] },
       { label: "Let the Portier vouch for you", sub: "Paid for, and worth it", if: [["flag", "ev-ber-portier"]],
         ok: [["watch", -0.15]] },
+      { label: "Let your landlady speak for you", sub: "You sat with her the morning her son left", if: [["flag", "ev-ber-landlady"]],
+        ok: [["unflag", "ev-ber-landlady"], ["watch", -0.15]] },
       { label: "Insist on seeing your consul", sub: "Your consul may soon be gone",
         roll: { p: 0.4, mods: [[["cover", "weiss"], 0.3], [["cover", "vessey"], 0.3]] },
         ok: [["watch", -0.05]], fail: [["watch", 0.2], ["susp", "active", 0.1]] },
+    ] },
+
+  { id: "ev.city.ber-night-search", at: "city", if: [["city", "BER"], ["act", 3], ["watched"]], w: 3,
+    title: "Boots on the Stairs",
+    text: "At two in the morning there are boots on the stairs and a fist on every door: the police are searching the house for Russians, by order of the military governor. Doors open; somebody's wife is crying. Your door is the fourth on the landing. You have perhaps three minutes, and a window onto the courtyard roof.",
+    choices: [
+      { label: "Open the door with your papers", sub: "Neutrals and allies sleep again; others do not",
+        roll: { p: 0.5, mods: [[["legend", ">=", 0.5], 0.2], [["cover", "vessey"], 0.2], [["cover", "weiss"], 0.15], [["skill", "composure", ">=", 2], 0.1]] },
+        ok: [["watch", -0.05], ["record", "register", 0.7]], fail: [["watch", 0.2], ["record", "register", 1], ["susp", "active", 0.1]] },
+      { label: "Let your landlady answer for you", sub: "She has not forgotten your kindness", if: [["flag", "ev-ber-landlady"]],
+        ok: [["unflag", "ev-ber-landlady"], ["watch", -0.1]] },
+      { label: "Send them to the Charité's night porter", sub: "He saw you on the wards till midnight", if: [["flag", "ev-ber-charite"]],
+        ok: [["unflag", "ev-ber-charite"], ["watch", -0.1], ["legend", 0.05]] },
+      { label: "Out over the courtyard roof", sub: "Slates, gutters, and a long drop",
+        roll: { p: 0.5, mods: [[["skill", "streetwise", ">=", 2], 0.15], [["skill", "tradecraft", ">=", 2], 0.15]] },
+        ok: [["nerve", -1], ["watch", 0.05]], fail: [["watch", 0.3], ["record", "sighting", 0.8], ["nerve", -2]] },
     ] },
 
   // ---------- cover work ----------

@@ -4,6 +4,8 @@
 
 import { board, book, bookTrip, plan, walk, contactsHere, seek, setLodging, safehouseHere, switchCover, stash, retrieve, checkTail, shakeTail, market, buy, sell, opActions, doWay, canLieLow, lieLow, wireFunds, wireQuery, mendPapers, sendCourier, useItem, usable, activities, doActivity, passDays, stopRoutine, PUNCT_WORDS } from '../core/actions.js';
 import { legendOf, watchOf, LODGINGS, needsRegistration, stayDays } from '../core/residence.js';
+import { BACKGROUNDS, TRAITS, SKILL_TEXT, AGES, BIRTH, skill, fullName } from '../core/hero.js';
+import { SKILLS, LANGUAGES } from '../core/spec.js';
 import { coverName, coverLegend, coverData, aff, caseSize, CASE_SIZE, has, act as actOf, personHere } from '../core/game.js';
 import { currentStep, stepCities } from '../core/ops.js';
 import { when, hm, dayShort, span, T } from '../data/time.js';
@@ -12,7 +14,7 @@ import { vignetteUrl, portraitUrl, weatherAt } from './art.js';
 import { esc } from './dom.js';
 import { oddsWord } from './cards.js';
 
-const TABS = [['city', 'City'], ['board', 'Departures'], ['orders', 'Orders'], ['people', 'People'], ['case', 'Case'], ['covers', 'Covers'], ['dossier', 'Dossier']];
+const TABS = [['city', 'City'], ['board', 'Departures'], ['orders', 'Orders'], ['people', 'People'], ['case', 'Case'], ['covers', 'Covers'], ['dossier', 'Dossier'], ['you', 'You']];
 const KIND = { express: 'Express', mail: 'Mail', night: 'Night train', slow: 'Omnibus', steamer: 'Steamer', coach: 'Post coach', path: 'On foot' };
 const REC = { list: 'passenger list', berth: 'sleeping-car berth', frontier: 'frontier book', register: 'hotel register', wire: 'telegram', sighting: 'seen', bribe: 'bribe', meeting: 'meeting watched', photo: 'photograph', talk: 'a contact talked', link: 'two names linked' };
 const NAT = { GB: 'British', CH: 'Swiss', FR: 'French', AH: 'Austro-Hungarian', DE: 'German', RU: 'Russian', IT: 'Italian', US: 'American' };
@@ -42,7 +44,7 @@ export function makeLedger(root, hooks) {
     const travelling = !!S.journey;
     tabsEl.innerHTML = TABS.map(([k, label]) => `<button class="tab" role="tab" data-tab="${k}" aria-selected="${state.tab === k}">${label}${k === 'orders' && G.D.ops.some((o) => S.ops[o.id].status === 'active') ? '<span class="dot"></span>' : ''}</button>`).join('');
     tabsEl.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => { state.tab = b.dataset.tab; setOpen(true); hooks.refresh?.(); }));
-    const view = { city: cityView, board: boardView, orders: ordersView, people: peopleView, case: caseView, covers: coversView, dossier: dossierView }[state.tab];
+    const view = { city: cityView, board: boardView, orders: ordersView, people: peopleView, case: caseView, covers: coversView, dossier: dossierView, you: youView }[state.tab];
     const scroll = body.scrollTop;
     body.innerHTML = view(G, travelling);
     body.scrollTop = scroll;
@@ -287,6 +289,22 @@ export function makeLedger(root, hooks) {
       }
     }
     return h;
+  }
+
+  // ---------- the agent ----------
+  function youView(G) {
+    const { S } = G;
+    const h = S.hero;
+    if (!h) return '<p class="dim">No file.</p>';
+    const B = BACKGROUNDS.find((b) => b.id === h.background);
+    setTimeout(() => portraitUrl(`hero-${JSON.stringify(h.portrait)}`, h.portrait).then((u) => { const im = body.querySelector('[data-hero]'); if (u && im) im.src = u; }), 0);
+    const pip = (k, max) => `<span class="pips">${Array.from({ length: max }, (_, i) => `<i class="${i < skill(h, k) ? 'on' : ''}"></i>`).join('')}</span>`;
+    const won = Object.values(S.ops).filter((o) => o.status === 'won').length, lost = Object.values(S.ops).filter((o) => o.status === 'failed').length;
+    return `<div class="person" style="grid-template-columns:96px 1fr;border:0"><img data-hero alt="" style="width:96px;height:120px" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><div><div class="nm" style="font-size:21px">${esc(fullName(h))}</div><div class="rl">${esc(B?.name ?? '')}; aged ${esc((AGES.find((a) => a[0] === h.age) ?? AGES[1])[1])}; ${esc((BIRTH.find((b) => b[0] === h.birth) ?? BIRTH[0])[1])}</div>
+      <div class="dim" style="font-size:13px;margin-top:4px">operations ${won} done, ${lost} failed · standing ${S.standing} · nerve ${S.nerve} · £${Math.round(S.money)}</div></div></div>
+      <h3>Skills</h3>${SKILLS.map((k) => `<div class="entry"><b class="sc" style="text-transform:capitalize">${k}</b> ${pip(k, 3)}<div class="src">${esc(SKILL_TEXT[k])}</div></div>`).join('')}
+      <h3>Languages</h3>${LANGUAGES.map((k) => `<div class="entry"><b class="sc" style="text-transform:capitalize">${k}</b> ${pip(k, 2)}<div class="src">${esc(SKILL_TEXT[k])}</div></div>`).join('')}
+      <h3>Character</h3>${h.traits.length ? h.traits.map((t) => { const x = TRAITS.find((y) => y.id === t); return `<div class="entry"><b class="sc">${esc(x.name)}</b> <span class="chip ${x.kind === 'vice' ? 'bad' : 'good'}">${x.kind}</span><div class="src">${esc(x.text)}</div></div>`; }).join('') : '<p class="dim">Nothing remarkable.</p>'}`;
   }
 
   // ---------- events ----------

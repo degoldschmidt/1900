@@ -81,12 +81,15 @@ function renderHud() {
   const moving = !!S.journey || !!S.booked || S.t < S.busyUntil;
   const compact = innerWidth < 600;
   hud.classList.toggle('compact', compact);
-  hud.innerHTML = `<div class="plate paper"><div class="date">${esc(compact ? d.dayName.slice(0, 3) : d.dayName)} ${d.day} ${esc(compact ? d.monthName.slice(0, 4).replace(/e$/, '') : d.monthName)} · ${esc(hm(S.t))}<small>Act ${['I', 'II', 'III'][act - 1]}: ${['A Shot in Sarajevo', 'The Ultimatum', 'Mobilisation'][act - 1]}</small></div>
+  const faceKey = S.hero ? `hero-${JSON.stringify(S.hero.portrait)}` : null;
+  hud.innerHTML = `${faceKey && !compact ? `<button class="plate paper" data-you title="Your file" style="padding:4px"><img class="face" alt="" data-hface src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></button>` : ''}<div class="plate paper"><div class="date">${esc(compact ? d.dayName.slice(0, 3) : d.dayName)} ${d.day} ${esc(compact ? d.monthName.slice(0, 4).replace(/e$/, '') : d.monthName)} · ${esc(hm(S.t))}<small>Act ${['I', 'II', 'III'][act - 1]}: ${['A Shot in Sarajevo', 'The Ultimatum', 'Mobilisation'][act - 1]}</small></div>
     <div class="stats"><span>£<b>${Math.round(S.money)}</b></span><span title="Nerve">${compact ? '' : 'nerve '}<span class="pips ${S.nerve <= 2 ? 'low' : ''}">${nerve}</span></span><span title="Standing with the Bureau">${compact ? '' : 'standing '}<span class="gauge"><i style="width:${S.standing}%"></i></span></span></div></div>
     <button class="plate paper coverbadge" data-covers title="Your cover"><div class="nm">${esc(coverName(G))}</div>${compact ? '' : `<div class="lg">${esc(coverLegend(G))}</div>`}<div class="lg">${compact ? '' : 'what they may know '}<span class="heat"><i style="left:0;width:${Math.round(heatOf(S.cover) * 100)}%"></i></span></div></button>
     <div class="speed">${compact ? '' : `<button class="iconbtn" data-ledger aria-pressed="${ledger.isOpen()}">Ledger</button>`}<button class="iconbtn" data-about aria-label="About">${compact ? '?' : 'About'}</button></div>
     ${moving ? `<div class="speed"><button class="iconbtn" data-speed aria-pressed="${speed > 1}">${compact ? ['»', '»»', '»»»'][[1, 3, 8].indexOf(speed)] : speed === 1 ? '» faster' : speed === 3 ? '»» fast' : '»»» fastest'}</button><button class="iconbtn" data-pause aria-pressed="${paused}">${paused ? '▶' + (compact ? '' : ' go on') : '❚❚' + (compact ? '' : ' pause')}</button></div>` : ''}`;
   hud.querySelector('[data-covers]').addEventListener('click', () => ledger.show('covers'));
+  hud.querySelector('[data-you]')?.addEventListener('click', () => ledger.show('you'));
+  if (faceKey) portraitUrl(faceKey, S.hero.portrait).then((u) => { const im = hud.querySelector('[data-hface]'); if (u && im) im.src = u; });
   hud.querySelector('[data-ledger]')?.addEventListener('click', () => { ledger.setOpen(!ledger.isOpen()); hudKey = ''; refresh(); });
   hud.querySelector('[data-about]').addEventListener('click', about);
   hud.querySelector('[data-speed]')?.addEventListener('click', () => { speed = speed === 1 ? 3 : speed === 3 ? 8 : 1; hudKey = ''; renderHud(); });
@@ -99,7 +102,9 @@ function renderJourney() {
   if (S.booked) { const r = S.booked.dp; journeyEl.innerHTML = `<div class="ln"><span class="sc">Waiting for the ${esc(G.W.service.get(r.svc).name)}</span><span>${esc(hm(r.dep))}</span></div><div class="ln dim"><span>to ${esc(G.I.city.get(r.to).name)}</span><span>in ${esc(span(r.dep - S.t))}</span></div>`; return; }
   const j = S.journey, f = Math.max(0, Math.min(1, (S.t - j.dep) / Math.max(1, j.arr - j.dep)));
   const marks = j.crossings.map((x) => `<s style="left:${Math.round(((x.t - j.dep) / Math.max(1, j.arr - j.dep)) * 100)}%" title="${esc(x.name)}"></s>`).join('');
-  journeyEl.innerHTML = `<div class="ln"><span class="sc">${esc(G.W.service.get(j.svc).name)}</span><span>${esc(G.I.city.get(j.to).name)}</span></div><div class="bar"><i style="width:${Math.round(f * 100)}%"></i>${marks}</div><div class="ln dim"><span>${esc(G.I.city.get(j.from).name)} ${esc(hm(j.dep))}</span><span>due ${esc(hm(j.sched))}</span></div>`;
+  const trip = S.trip, next = trip?.legs[trip.i + 1];
+  const conn = next ? `<div class="ln dim"><span>change at ${esc(G.I.city.get(next.from).name)} for the ${esc(hm(next.dep))} to ${esc(G.I.city.get(next.to).name)}</span><span>${esc(trip.legs.length - trip.i - 1)} more</span></div>` : '';
+  journeyEl.innerHTML = `<div class="ln"><span class="sc">${esc(G.W.service.get(j.svc).name)}</span><span>${esc(G.I.city.get(j.to).name)}</span></div><div class="bar"><i style="width:${Math.round(f * 100)}%"></i>${marks}</div><div class="ln dim"><span>${esc(G.I.city.get(j.from).name)} ${esc(hm(j.dep))}</span><span>due ${esc(hm(j.sched))}</span></div>${conn}`;
 }
 
 // ---------- what the globe shows ----------

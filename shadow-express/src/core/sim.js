@@ -337,8 +337,8 @@ function dueLaters(G) {
 }
 
 const ACTS = [null, null,
-  ['Act II · The Ultimatum', 'Three weeks after Sarajevo, Vienna is drafting a note that Belgrade cannot accept. Police on every frontier are told to look harder. In Zurich, a woman in widow\'s black takes rooms by the lake and starts buying information.'],
-  ['Act III · Mobilisation', 'Serbia has refused, Austria has mobilised, and Russia will follow. Lines are wanted for the army; frontiers close at a day\'s notice; a foreigner\'s papers can make him a prisoner. The hunters may now take you on their own ground.']];
+  ['Act II · The Ultimatum', 'Three weeks after Sarajevo, Vienna is drafting a note that Belgrade cannot accept, and London wants you in Belgrade when it is delivered. Police on every frontier are told to look harder. In Zurich, a woman in widow\'s black takes rooms by the lake and starts buying information.'],
+  ['Act III · Mobilisation', 'Serbia has refused, Austria has mobilised, and Russia will follow. London wants you in Berlin, of all places, for a few days more. Lines are wanted for the army; frontiers close at a day\'s notice; a foreigner\'s papers can make him a prisoner. The hunters may now take you on their own ground.']];
 function acts(G) {
   const { S, W } = G;
   const a = W.act(S.t);

@@ -1,7 +1,179 @@
-// Storylets with kowal (owner: People). Stub.
+// Storylets with Szymon Kowal (owner: People). Blunt and superstitious.
+// Arc: a smuggler between Warsaw and Berlin with a path over the Prussian frontier (kowal-path); helps op-diamonds,
+// gives the side op op-amber, and is in Berlin for the Act III posting. Routine (repeatable): the omens.
+// Flags: kowal-path (shared unlock), kowal-cat, kowal-planted, kowal-sold.
+
+const MET = ['any', ['st', 'kowal', 'met'], ['st', 'kowal', 'cultivated'], ['st', 'kowal', 'recruited']];
+const SELL = [['money', 25], ['susp', 'active', -0.2], ['st', 'kowal', 'arrested'], ['unflag', 'kowal-path'], ['trust', 'novak', -2], ['trust', 'platt', -2],
+  ['flag', 'kowal-sold'], ['later', 30, 'kowal.letter']];
 
 export default [
-  { "id": "kowal.meet", "at": "person", "speaker": "kowal", "title": "A stub storylet", "text": "Stub text, to be replaced by its owner.", "choices": [
-  { "label": "Spend a little", "sub": "£1", "cost": { "money": 1 }, "ok": [ [ "nerve", 1 ], [ "unlock", "flag:kowal-path" ] ] },
-  { "label": "Walk away", "ok": [ [ "nerve", -1 ] ] } ] },
+  { id: 'kowal.meet', at: 'person', speaker: 'kowal', if: [['st', 'kowal', 'unknown']], w: 10, once: true,
+    title: "Behind the tobacconist's",
+    text: "A back room behind a tobacconist's: a samovar, a crate of church candles, a fat cat he calls Bismarck. Kowal is broad, bearded and unsmiling. 'You want something across. Everybody wants something across. First, spit three times. This room has ears, and the ears have cousins.'",
+    choices: [
+      { label: 'Talk prices like a merchant', sub: 'He respects a hard bargain', tag: 'topic:trade',
+        if: [['aff', 'topic:trade', '>=', 1]],
+        ok: [['st', 'kowal', 'met'], ['trust', 'kowal', 2]] },
+      { label: 'Bless the cat', sub: 'He may think it luck, or mockery', tag: 'topic:religion',
+        if: [['aff', 'venue:church', '>=', 1]],
+        roll: { p: 0.6 },
+        ok: [['st', 'kowal', 'met'], ['trust', 'kowal', 2], ['flag', 'kowal-cat']],
+        fail: [['st', 'kowal', 'met'], ['trust', 'kowal', -1]] },
+      { label: 'Spit three times, and sit', sub: 'Superstition is cheap; so is respect',
+        ok: [['st', 'kowal', 'met'], ['trust', 'kowal', 1], ['flag', 'kowal-cat']] },
+      { label: 'Put Dutch cigars on the table', sub: 'A smuggler admires good contraband', if: [['item', 'dutch-cigars']],
+        ok: [['item', '-dutch-cigars'], ['st', 'kowal', 'met'], ['trust', 'kowal', 2]] },
+      { label: 'Mention the Okhrana, lightly', sub: 'A threat, or a joke; he decides which',
+        roll: { p: 0.4 },
+        ok: [['st', 'kowal', 'met'], ['trust', 'kowal', 1]],
+        fail: [['st', 'kowal', 'met'], ['trust', 'kowal', -2], ['expose', 'kowal', 0.1]] },
+    ] },
+
+  { id: 'kowal.path', at: 'person', speaker: 'kowal', if: [MET, ['trust', 'kowal', '>=', 2], ['not', ['flag', 'kowal-path']]], w: 6, once: true,
+    title: 'Across by Thorn',
+    text: "'There is a path,' Kowal says. 'Marsh, a ferryman who owes me, a customs post that drinks on Saturdays. Prussia one side, the Tsar the other, and frogs in between.' He holds up a thick finger. 'Money first. Talk after. And never on a Friday.'",
+    choices: [
+      { label: 'Pay for the path', sub: '£15; he counts it twice', cost: { money: 15 },
+        ok: [['unlock', 'flag:kowal-path'], ['trust', 'kowal', 1]] },
+      { label: 'Pay in plum brandy', sub: 'The ferryman drinks it; so does Kowal', if: [['item', 'slivovitz']],
+        ok: [['item', '-slivovitz'], ['unlock', 'flag:kowal-path'], ['trust', 'kowal', 1]] },
+      { label: 'Swear on your mother’s grave', sub: 'He believes in graves',
+        roll: { p: 0.5, mods: [[['flag', 'kowal-cat'], 0.2]] },
+        ok: [['unlock', 'flag:kowal-path']],
+        fail: [['trust', 'kowal', -1]] },
+    ] },
+
+  { id: 'kowal.diamonds', at: 'person', speaker: 'kowal', if: [['op', 'op-diamonds'], MET], w: 8, once: true,
+    title: 'Stones for the Tsar',
+    text: "Kowal weighs the idea of stones in his hand as if they were already there. 'In Petersburg they pay more for stones than for souls. At Eydtkuhnen the Russians search first class with tweezers, and third class with boots. My cousin in the Haymarket asks no questions.' He waits. 'My cousin asks money.'",
+    choices: [
+      { label: 'Ask about the Russian searches', sub: 'He crosses every week',
+        ok: [['intel', { subj: 'frontier:EYD', claim: { note: 'Kowal: since Sarajevo, Eydtkuhnen searches every first-class case to the lining.' }, src: 'person:kowal', rel: 0.8, truth: true }]] },
+      { label: 'Engage his cousin for the delivery', sub: '£15; Kowal becomes your man in this', cost: { money: 15 },
+        if: [['trust', 'kowal', '>=', 3], ['not', ['st', 'kowal', 'recruited']]],
+        ok: [['st', 'kowal', 'recruited'], ['trust', 'kowal', 1]] },
+      { label: 'Have him watch your back at Alexandrowo', sub: '£5; he knows the guards by name', cost: { money: 5 },
+        roll: { p: 0.7 },
+        ok: [['intel', { subj: 'frontier:ALX', claim: { note: 'Kowal: the night guard at Alexandrowo takes roubles, not marks.' }, src: 'person:kowal', rel: 0.7, truth: true }]],
+        fail: [['expose', 'kowal', 0.3]] },
+    ] },
+
+  { id: 'kowal.amber', at: 'person', speaker: 'kowal', if: [MET, ['trust', 'kowal', '>=', 2], ['not', ['op', 'op-amber']], ['not', ['flag', 'op-amber-won']], ['not', ['flag', 'op-amber-failed']]], w: 7, once: true,
+    title: 'Amber, only amber',
+    text: "'A parcel,' Kowal says. 'Amber, only amber, for a jeweller in Berlin who pays well and asks nothing. You travel with good papers. I travel with a face the police know.' He does not smile. 'Do not open it. Opened parcels are unlucky. Very unlucky.'",
+    choices: [
+      { label: 'Take the job', sub: 'His parcel, your risk',
+        ok: [['op', 'op-amber', 'start'], ['trust', 'kowal', 1]] },
+      { label: 'Take it; ask what else is inside', sub: 'He may tell you; he may take offence',
+        roll: { p: 0.5 },
+        ok: [['op', 'op-amber', 'start'],
+          ['intel', { subj: 'op:op-amber', claim: { note: 'Kowal: there are letters in the amber parcel, in Polish, for a printer.' }, src: 'person:kowal', rel: 0.6, truth: true }]],
+        fail: [['op', 'op-amber', 'start'], ['trust', 'kowal', -2]] },
+      { label: 'Refuse: you carry nothing blind', sub: 'Prudent; he will not ask again',
+        ok: [['trust', 'kowal', -1], ['nerve', 1]] },
+    ] },
+
+  { id: 'kowal.recruit', at: 'person', speaker: 'kowal', if: [['st', 'kowal', 'cultivated'], ['trust', 'kowal', '>=', 3]], w: 6, once: true,
+    title: 'A smuggler on a retainer',
+    text: "'You want me regular,' Kowal says. 'Regular costs. I like money, and I like the frontier at night, when the frogs stop and the guards start. Pay me, and give me something worth carrying. Bore me, and I go back to candles.'",
+    choices: [
+      { label: 'Put him on a retainer', sub: '£15 a month, counted twice', cost: { money: 15 },
+        ok: [['st', 'kowal', 'recruited'], ['trust', 'kowal', 1]] },
+      { label: 'Promise him the run of his life', sub: 'Thrills are cheaper than money, at first',
+        roll: { p: 0.5, mods: [[['flag', 'kowal-path'], 0.2]] },
+        ok: [['st', 'kowal', 'recruited']],
+        fail: [['trust', 'kowal', -1]] },
+      { label: 'Not yet', sub: 'He takes no for an insult',
+        ok: [['trust', 'kowal', -1], ['nerve', 1]] },
+    ] },
+
+  { id: 'kowal.omen', at: 'person', speaker: 'kowal', if: [MET, ['chance', 0.4]], w: 2,
+    title: 'A bad sign',
+    text: "Kowal will not work today. A crow sat on his windowsill at dawn and looked at him with its left eye, and a priest passed him on the stairs, and it is very nearly Friday. 'You laugh,' he says. 'My uncle laughed. They buried him with his boots on.'",
+    choices: [
+      { label: 'Wait a day for him', sub: 'A day lost; his luck restored', cost: { min: 720 },
+        ok: [['trust', 'kowal', 1]] },
+      { label: 'Pay a priest to bless the venture', sub: '£2; Kowal approves of priests, after', cost: { money: 2 },
+        ok: [['trust', 'kowal', 1], ['nerve', 1]] },
+      { label: 'Mock his crow', sub: 'He will remember it at the frontier',
+        ok: [['trust', 'kowal', -2], ['nerve', 1]] },
+    ] },
+
+  { id: 'kowal.call', at: 'person', speaker: 'kowal', if: [MET], w: 1,
+    title: 'Kowal, counting',
+    text: "Kowal is counting something: candles, coins or crows. He does not stop when you come in. 'Talk,' he says. 'I count and listen. It is the same muscle.' Bismarck the cat watches you from the samovar with open contempt.",
+    choices: [
+      { label: 'Bring him Dutch cigars', sub: 'Contraband for a smuggler', if: [['item', 'dutch-cigars'], ['trust', 'kowal', '<', 4]],
+        ok: [['item', '-dutch-cigars'], ['trust', 'kowal', 2], ['st', 'kowal', 'cultivated']] },
+      { label: 'Bring him plum brandy', sub: 'He drinks it neat, and talks', if: [['item', 'slivovitz'], ['trust', 'kowal', '<', 4]],
+        ok: [['item', '-slivovitz'], ['trust', 'kowal', 2], ['st', 'kowal', 'cultivated']] },
+      { label: 'Tell him you go back to Warsaw', sub: 'Smugglers sell news like candles', if: [['not', ['flag', 'kowal-planted']]],
+        ok: [['plant', { via: 'kowal', subj: 'cover:active', claim: { at: 'WAR' } }], ['expose', 'kowal', 0.3], ['flag', 'kowal-planted']] },
+      { label: 'Sell him to the Prussians', sub: '£25; his path dies with him', ok: SELL },
+      { label: 'Leave him to his counting', sub: 'A visit less is a risk less',
+        ok: [['nerve', 1], ['watch', -0.05]] },
+    ] },
+
+  { id: 'kowal.train', at: 'train', speaker: 'kowal', if: [['st', 'kowal', 'met']], once: true,
+    title: 'Church candles at Alexandrowo',
+    text: "Kowal is in the third-class carriage with a crate stencilled CHURCH CANDLES and the face of a man whose candles are not candles. The Russian customs men are coming down the train at Alexandrowo. He looks at you, then at the crate, then at you. He does not ask. He would never ask.",
+    choices: [
+      { label: 'Claim the crate as yours', sub: 'Your papers against his candles',
+        roll: { p: 0.55, mods: [[['aff', 'topic:trade', '>=', 1], 0.15]] },
+        ok: [['trust', 'kowal', 3], ['st', 'kowal', 'cultivated']],
+        fail: [['record', 'frontier', 1], ['money', -5], ['trust', 'kowal', 1]] },
+      { label: 'Share your flask with the customs men', sub: 'Plum brandy makes a slow search', if: [['item', 'slivovitz']],
+        ok: [['item', '-slivovitz'], ['trust', 'kowal', 2], ['st', 'kowal', 'cultivated']] },
+      { label: 'Look the other way', sub: 'He will notice which way you looked',
+        ok: [['trust', 'kowal', -1], ['nerve', 1], ['later', 24, 'kowal.debt']] },
+    ] },
+
+  { id: 'kowal.debt', at: 'then', speaker: 'kowal', if: [MET], once: true,
+    title: 'Candles, delivered',
+    text: "A boy brings a single church candle to your lodgings, wrapped in newspaper. Pinned to it, in capitals: THE CANDLES CROSSED. NO THANKS TO YOU. NEXT TIME, LOOK AT ME, NOT THE WINDOW. K. Kowal is not a man who forgets which way you looked.",
+    choices: [
+      { label: 'Send him cigars by the boy', sub: 'An apology he can smoke', if: [['item', 'dutch-cigars']],
+        ok: [['item', '-dutch-cigars'], ['trust', 'kowal', 2]] },
+      { label: 'Light the candle for luck', sub: 'He will hear that you did',
+        ok: [['trust', 'kowal', 1], ['nerve', 1]] },
+      { label: 'Burn the note', sub: 'Capitals are easy to remember',
+        ok: [['trust', 'kowal', -1]] },
+    ] },
+
+  { id: 'kowal.paid', at: 'person', speaker: 'kowal', if: [['flag', 'op-amber-won'], MET], w: 8, once: true,
+    title: 'A wolf’s tooth',
+    text: "Kowal pays exactly what he promised, counted twice, and then pushes something else across the table: a wolf's tooth on a leather thong. 'For luck. My grandfather's. It kept him alive in two wars and a marriage.' He does not say thank you. This is thank you.",
+    choices: [
+      { label: 'Wear it', sub: 'Superstition, or courage on a string',
+        ok: [['nerve', 2], ['trust', 'kowal', 1]] },
+      { label: 'Give it back: it is his luck', sub: 'Yours is your own affair, he will say',
+        ok: [['trust', 'kowal', 2], ['nerve', -1]] },
+    ] },
+
+  // ---------- protect and betray ----------
+  { id: 'kowal.compromised', at: 'person', speaker: 'kowal', if: [['st', 'kowal', 'compromised']], w: 9,
+    title: 'They took the ferryman',
+    text: "'They took my ferryman,' Kowal says. 'Prussian gendarmes, with a tall gentleman who did not get his boots wet. He asked the ferryman about me, and about a foreigner.' He crosses himself, twice. 'The path is dead, or it is a trap. Either way someone is counting me now.'",
+    choices: [
+      { label: 'Pay to close the path', sub: '£10; no path, no trap', cost: { money: 10 },
+        ok: [['unflag', 'kowal-path'], ['st', 'kowal', 'cultivated'], ['trust', 'kowal', 1]] },
+      { label: 'Lie low with him in Praga', sub: 'A day in a cellar, off the streets', cost: { min: 480 },
+        ok: [['st', 'kowal', 'cultivated'], ['trust', 'kowal', 1], ['watch', -0.1]] },
+      { label: 'Keep using the path', sub: 'Traps can be crossed, once',
+        roll: { p: 0.5 },
+        ok: [['st', 'kowal', 'cultivated'], ['nerve', 1]],
+        fail: [['st', 'kowal', 'arrested'], ['unflag', 'kowal-path'], ['trust', 'novak', -1]] },
+      { label: 'Sell him to the Prussians', sub: '£25; his path dies with him', ok: SELL },
+    ] },
+
+  { id: 'kowal.letter', at: 'then', speaker: 'kowal', if: [['flag', 'kowal-sold']],
+    title: 'From Moabit, in pencil',
+    text: "A letter in pencil from Moabit prison, in capitals, because Kowal writes nothing he cannot also shout. THEY SAY A FOREIGNER SOLD ME. I SAY NOTHING. BISMARCK IS WITH MY SISTER. I HAVE TOLD HER YOUR FACE. SHE HAS A GOOD MEMORY AND FOUR SONS. K.",
+    choices: [
+      { label: 'Burn it', sub: 'Four sons have long memories too',
+        ok: [['nerve', -2]] },
+      { label: 'Send money to his sister', sub: '£10, unsigned; she will guess', cost: { money: 10 },
+        ok: [['trust', 'novak', 1], ['nerve', 1]] },
+    ] },
 ];

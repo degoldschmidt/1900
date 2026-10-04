@@ -171,7 +171,7 @@ export default [
         roll: { p: 0.4, mods: [[['trust', 'kessel', '>=', 3], 0.3], GERMAN, [['skill', 'composure', '>=', 2], 0.1]] },
         ok: [['nerve', 1]],
         fail: [['record', 'sighting', 1], ['susp', 'active', 0.2], ['trust', 'kessel', -3]] },
-      { label: 'Confide in him, a little', sub: 'A gamble on his debts and his vanity',
+      { label: 'Confide in him, a little', sub: 'A gamble on his debts and his vanity', if: [['trust', 'kessel', '>=', 3]],
         roll: { p: 0.35, mods: [[['st', 'kessel', 'recruited'], 0.4], [['flag', 'kessel-debt'], 0.15]] },
         ok: [['trust', 'kessel', 1], ['st', 'kessel', 'recruited']],
         fail: [['record', 'sighting', 1], ['susp', 'active', 0.3], ['st', 'kessel', 'compromised']] },
