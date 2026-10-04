@@ -199,6 +199,21 @@ export default [
         ok: [['trust', 'brandl', -1], ['nerve', 1]] },
     ] },
 
+  { id: 'brandl.heuriger', at: 'person', speaker: 'brandl', if: [MET, ['legend', '>=', 0.5], ['trust', 'brandl', '>=', 2]], w: 4, once: true,
+    title: 'New wine in Grinzing',
+    text: "'You have become respectable,' Brandl says, with mild disappointment. 'My housekeeper approves of you. So, I hear, does your hall porter.' He takes you out to a Heuriger in Grinzing, where the new wine is sour and the colonels sing. A settled patient may be shown to the family table.",
+    choices: [
+      { label: 'Sing with the colonels', sub: 'Badly, loudly, and remembered fondly',
+        roll: { p: 0.6, mods: [CHARM, [['skill', 'german', '>=', 1], 0.1]] },
+        ok: [['trust', 'brandl', 2], ['legend', 0.1],
+          ['intel', { subj: 'city:VIE', claim: { note: 'A colonel at the Heuriger: the reservists of the Danube corps will be called first.' }, src: 'rumour', rel: 0.5, truth: true }]],
+        fail: [['trust', 'brandl', 1], ['record', 'meeting', 0.4]] },
+      { label: 'Ask who sits at the family table', sub: 'Brandl collects people as he collects glass',
+        ok: [['intel', { subj: 'person:brandl', claim: { note: "Brandl's family table at Grinzing: two colonels, a councillor, and a stout man who left early." }, src: 'seen', rel: 0.8, truth: true }], ['trust', 'brandl', -1]] },
+      { label: 'Plead a headache and go home', sub: 'He will prescribe something, and note it',
+        ok: [['trust', 'brandl', -1], ['watch', -0.05]] },
+    ] },
+
   { id: 'brandl.cold', at: 'person', speaker: 'brandl', if: [MET, ['trust', 'brandl', '<=', -1]], w: 4,
     title: 'The doctor is not at home',
     text: "The housekeeper says the Herr Doktor is not at home, in the voice that means he is. Through the frosted glass you can see the shape of his head, bent over his notes. In Vienna a closed door is a sentence, and the sentence is rarely short.",

@@ -1,6 +1,8 @@
 // Storylets with Szymon Kowal (owner: People). Blunt and superstitious.
 // Arc: a smuggler between Warsaw and Berlin with a path over the Prussian frontier (kowal-path); helps op-diamonds,
 // gives the side op op-amber, and is in Berlin for the Act III posting. Routine (repeatable): the omens.
+// His home is Warsaw, so the engine lets you seek him out only there (kowal.meet, kowal.call); everywhere else among his
+// places (Berlin) he comes to you, as city cards.
 // Flags: kowal-path (shared unlock), kowal-cat, kowal-planted, kowal-sold.
 
 const MET = ['any', ['st', 'kowal', 'met'], ['st', 'kowal', 'cultivated'], ['st', 'kowal', 'recruited']];
@@ -30,7 +32,23 @@ export default [
         fail: [['st', 'kowal', 'met'], ['trust', 'kowal', -2], ['expose', 'kowal', 0.1]] },
     ] },
 
-  { id: 'kowal.path', at: 'person', speaker: 'kowal', if: [MET, ['trust', 'kowal', '>=', 2], ['not', ['flag', 'kowal-path']]], w: 6, once: true,
+  { id: 'kowal.berlin', at: 'city', speaker: 'kowal', if: [['st', 'kowal', 'unknown']], w: 2, once: true,
+    title: 'Candles on the pavement',
+    text: "A broad man with a handcart of church candles blocks the pavement and does not apologise. He looks you over, spits three times over his shoulder and says, in bad German, 'You are the one who wants things carried. Kowal. Do not shake hands; it is unlucky on a Tuesday.' It is not Tuesday.",
+    choices: [
+      { label: 'Spit three times, and give your name', sub: 'Superstition is cheap; so is respect',
+        ok: [['st', 'kowal', 'met'], ['trust', 'kowal', 1], ['flag', 'kowal-cat']] },
+      { label: 'Offer him Dutch cigars', sub: 'A smuggler admires good contraband', if: [['item', 'dutch-cigars']],
+        ok: [['item', '-dutch-cigars'], ['st', 'kowal', 'met'], ['trust', 'kowal', 2]] },
+      { label: 'Ask who told him about you', sub: 'He may tell you; he may take offence',
+        roll: { p: 0.5 },
+        ok: [['st', 'kowal', 'met'], ['intel', { subj: 'person:kowal', claim: { note: 'Kowal heard of you from a Prague printer, he says, who praised your papers.' }, src: 'person:kowal', rel: 0.5, truth: true }]],
+        fail: [['st', 'kowal', 'met'], ['trust', 'kowal', -2], ['record', 'sighting', 0.3]] },
+      { label: 'Walk on without a word', sub: 'He will remember the back of your coat',
+        ok: [['st', 'kowal', 'met'], ['trust', 'kowal', -1]] },
+    ] },
+
+  { id: 'kowal.path', at: 'city', speaker: 'kowal', if: [MET, ['trust', 'kowal', '>=', 2], ['not', ['flag', 'kowal-path']]], w: 6, once: true,
     title: 'Across by Thorn',
     text: "'There is a path,' Kowal says. 'Marsh, a ferryman who owes me, a customs post that drinks on Saturdays. Prussia one side, the Tsar the other, and frogs in between.' He holds up a thick finger. 'Money first. Talk after. And never on a Friday.'",
     choices: [
@@ -44,7 +62,7 @@ export default [
         fail: [['trust', 'kowal', -1]] },
     ] },
 
-  { id: 'kowal.diamonds', at: 'person', speaker: 'kowal', if: [['op', 'op-diamonds'], MET], w: 8, once: true,
+  { id: 'kowal.diamonds', at: 'city', speaker: 'kowal', if: [['op', 'op-diamonds'], MET], w: 8, once: true,
     title: 'Stones for the Tsar',
     text: "Kowal weighs the idea of stones in his hand as if they were already there. 'In Petersburg they pay more for stones than for souls. At Eydtkuhnen the Russians search first class with tweezers, and third class with boots. My cousin in the Haymarket asks no questions.' He waits. 'My cousin asks money.'",
     choices: [
@@ -59,7 +77,7 @@ export default [
         fail: [['expose', 'kowal', 0.3]] },
     ] },
 
-  { id: 'kowal.amber', at: 'person', speaker: 'kowal', if: [MET, ['trust', 'kowal', '>=', 2], ['not', ['op', 'op-amber']], ['not', ['flag', 'op-amber-won']], ['not', ['flag', 'op-amber-failed']]], w: 7, once: true,
+  { id: 'kowal.amber', at: 'city', speaker: 'kowal', if: [MET, ['trust', 'kowal', '>=', 2], ['not', ['op', 'op-amber']], ['not', ['flag', 'op-amber-won']], ['not', ['flag', 'op-amber-failed']]], w: 7, once: true,
     title: 'Amber, only amber',
     text: "'A parcel,' Kowal says. 'Amber, only amber, for a jeweller in Berlin who pays well and asks nothing. You travel with good papers. I travel with a face the police know.' He does not smile. 'Do not open it. Opened parcels are unlucky. Very unlucky.'",
     choices: [
@@ -74,7 +92,7 @@ export default [
         ok: [['trust', 'kowal', -1], ['nerve', 1]] },
     ] },
 
-  { id: 'kowal.vodka', at: 'person', speaker: 'kowal', if: [['st', 'kowal', 'met'], ['trust', 'kowal', '>=', 1]], w: 4, once: true,
+  { id: 'kowal.vodka', at: 'city', speaker: 'kowal', if: [['st', 'kowal', 'met'], ['trust', 'kowal', '>=', 1]], w: 4, once: true,
     title: 'Vodka, and an uncle',
     text: "Kowal pours two glasses of vodka without asking and tells you about his uncle, who smuggled tea, then guns, then a bishop, and was buried with his boots on because nobody could get them off. It is a test. He watches how you drink and where you laugh.",
     choices: [
@@ -86,7 +104,7 @@ export default [
         ok: [['trust', 'kowal', -2], ['nerve', 1]] },
     ] },
 
-  { id: 'kowal.recruit', at: 'person', speaker: 'kowal', if: [['st', 'kowal', 'cultivated'], ['trust', 'kowal', '>=', 3]], w: 6, once: true,
+  { id: 'kowal.recruit', at: 'city', speaker: 'kowal', if: [['st', 'kowal', 'cultivated'], ['trust', 'kowal', '>=', 3]], w: 6, once: true,
     title: 'A smuggler on a retainer',
     text: "'You want me regular,' Kowal says. 'Regular costs. I like money, and I like the frontier at night, when the frogs stop and the guards start. Pay me, and give me something worth carrying. Bore me, and I go back to candles.'",
     choices: [
@@ -100,7 +118,7 @@ export default [
         ok: [['trust', 'kowal', -1], ['nerve', 1]] },
     ] },
 
-  { id: 'kowal.omen', at: 'person', speaker: 'kowal', if: [MET, ['chance', 0.4]], w: 2,
+  { id: 'kowal.omen', at: 'city', speaker: 'kowal', if: [MET, ['chance', 0.4]], w: 2,
     title: 'A bad sign',
     text: "Kowal will not work today. A crow sat on his windowsill at dawn and looked at him with its left eye, and a priest passed him on the stairs, and it is very nearly Friday. 'You laugh,' he says. 'My uncle laughed. They buried him with his boots on.'",
     choices: [
@@ -153,7 +171,7 @@ export default [
         ok: [['trust', 'kowal', -1]] },
     ] },
 
-  { id: 'kowal.paid', at: 'person', speaker: 'kowal', if: [['flag', 'op-amber-won'], MET], w: 8, once: true,
+  { id: 'kowal.paid', at: 'city', speaker: 'kowal', if: [['flag', 'op-amber-won'], MET], w: 8, once: true,
     title: 'A wolf’s tooth',
     text: "Kowal pays exactly what he promised, counted twice, and then pushes something else across the table: a wolf's tooth on a leather thong. 'For luck. My grandfather's. It kept him alive in two wars and a marriage.' He does not say thank you. This is thank you.",
     choices: [
@@ -164,7 +182,7 @@ export default [
     ] },
 
   // ---------- protect and betray ----------
-  { id: 'kowal.compromised', at: 'person', speaker: 'kowal', if: [['st', 'kowal', 'compromised']], w: 9,
+  { id: 'kowal.compromised', at: 'city', speaker: 'kowal', if: [['st', 'kowal', 'compromised']], w: 9,
     title: 'They took the ferryman',
     text: "'They took my ferryman,' Kowal says. 'Prussian gendarmes, with a tall gentleman who did not get his boots wet. He asked the ferryman about me, and about a foreigner.' He crosses himself, twice. 'The path is dead, or it is a trap. Either way someone is counting me now.'",
     choices: [

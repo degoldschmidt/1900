@@ -100,7 +100,7 @@ export default [
         ok: [['trust', 'odile', -1], ['nerve', 1]] },
     ] },
 
-  { id: 'odile.post', at: 'interlude', speaker: 'odile', if: [MET, ['act', 2]], once: true,
+  { id: 'odile.post', at: 'interlude', if: [MET, ['act', 2]], once: true,
     title: 'A letter that smells of violets',
     text: "A letter from Paris that smells of violets and millinery size. Odile writes as she talks, in a rush, underlining: the general's wife has bought a black hat, just in case; the colonel's wife has bought two. 'Nobody buys black in July,' she writes, 'unless somebody has told them something. Write to me!'",
     choices: [
@@ -111,7 +111,7 @@ export default [
         ok: [['trust', 'odile', -1], ['nerve', 1]] },
     ] },
 
-  { id: 'odile.warning', at: 'interlude', speaker: 'odile', if: [MET, ['act', 3], ['trust', 'odile', '>=', 2]], once: true,
+  { id: 'odile.warning', at: 'interlude', if: [MET, ['act', 3], ['trust', 'odile', '>=', 2]], once: true,
     title: 'A lady asked about you',
     text: "Odile writes in pencil, in a hurry. 'A German lady bought the dearest hat in the shop and asked, while I pinned it, whether a friend of yours still came in. She knew your face. She did not know your name, I think. I said I sell hats, not friends. Take care. O.'",
     choices: [

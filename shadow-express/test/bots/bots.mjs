@@ -45,7 +45,7 @@ function score(c) {
     if (e[0] === 'intel') s += .8;
     if (e[0] === 'item') s += e[1][0] === '+' ? 1 : -1;
     if (e[0] === 'st' && e[2] === 'recruited') s += 3;
-    if (e[0] === 'op') s += 4;
+    if (e[0] === 'op') s += e[2] === 'fail' ? -25 : e[2] === 'win' ? 8 : 4;
     if (e[0] === 'cover') s += 3;
     if (e[0] === 'papers') s += e[2] * 4;
   }

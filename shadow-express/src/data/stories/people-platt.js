@@ -59,7 +59,7 @@ export default [
         ok: [['intel', { subj: 'cover:active', claim: { knows: 'name' }, src: 'person:platt', rel: 0.4, truth: 'auto' }]],
         fail: [['record', 'meeting', 0.4]] },
       { label: 'Steer him off your affairs', sub: 'He takes a hint the way a dog takes a bone',
-        roll: { p: 0.5 },
+        roll: { p: 0.5, mods: [[['legend', '>=', 0.5], 0.15], [['watched'], -0.15]] },
         ok: [['watch', -0.05], ['nerve', 1]],
         fail: [['trust', 'platt', -1], ['watch', 0.1]] },
     ] },

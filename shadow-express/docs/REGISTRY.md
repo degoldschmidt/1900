@@ -134,7 +134,7 @@ Each person appears in at least two places. A person's `city` and `train` storyl
 | `ilic` | Lieutenant Dragan Ilić | BEG, SAR, train:BUD-BEG | a Serbian officer, patriot, careless talker; knows the Drina path (`ilic-path`). Gives the side op op-brother. Perhaps the mole | `{ cause:.6, 'enemy:heller':.4 }` | intel, warn |
 | `odile` | Odile Vasseur | PAR, BRU, train:PAR-BRU | a milliner who hears the officers' wives. Gives the side op op-letter | self | intel, safehouse |
 | `agathe` | Sister Agathe | train:MUN-VEN, train:ZUR-VEN, ROM | a Belgian nursing nun who carries parcels for the poor. Can carry for you; grants the Doyle cover | cause | courier |
-| `kessel` | Rittmeister von Kessel | train:COL-BER, train:BER-MUN, COL | a talkative Prussian cavalry officer. Remembers faces; in Act III he is at Cologne with the troop trains (op-troops) | self | intel |
+| `kessel` | Rittmeister von Kessel | train:COL-BER, train:BER-MUN, COL, BER (on leave, half the days) | a talkative Prussian cavalry officer. Remembers faces; in Act III he is at Cologne with the troop trains (op-troops) | self | intel |
 | `platt` | Lyman Platt | PAR, BER, VIE, train:PAR-VIE | an American newspaperman, friendly and nosy. Trades rumours, some false; an unwitting carrier of a false trail | self | intel |
 | `morel` | Dr Achille Morel | MAR, train:PAR-MAR, train:ROM-MAR | a dentist from Lyon who photographs stations and asks odd questions. A red herring: harmless, but he looks like a hunter | self | (none) |
 

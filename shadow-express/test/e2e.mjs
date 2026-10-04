@@ -72,6 +72,61 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
   fails.push(...errors);
   await ctx.close();
 }
+// the creator, by real clicks: every step renders, choices stick, points cannot go negative, the hero reaches the game
+for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false], ['phone', { width: 390, height: 844 }, true]]) {
+  const ctx = await browser.newContext({ viewport: vp, hasTouch: touch, deviceScaleFactor: touch ? 2 : 1 });
+  const p = await ctx.newPage();
+  const errors = [];
+  p.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
+  await p.route('**/*', (r) => {
+    const u = r.request().url();
+    if (u.includes('cdnjs.cloudflare.com/ajax/libs/d3')) return r.fulfill({ body: D3, contentType: 'application/javascript' });
+    if (/^(file|data|blob):/.test(u)) return r.continue();
+    return r.abort();
+  });
+  await p.goto('file://' + wrapped);
+  await p.waitForTimeout(600);
+  const click = async (sel) => { await p.locator(sel).first().click({ timeout: 2000 }); await p.waitForTimeout(120); };
+  const shot = async (k) => { await p.screenshot({ path: path.join(shots, `cr-${name}-${k}.png`) }); };
+  const overflow = async (k) => { if (await p.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) errors.push(`horizontal overflow on ${k}`); };
+  await click('[data-new]');
+  await p.locator('[data-f="first"]').fill('Hester');
+  await p.locator('[data-f="first"]').dispatchEvent('change');
+  await click('[data-sex="f"]');
+  await click('[data-age="old"]');
+  await shot('1-who'); await overflow('who');
+  await click('[data-nav="1"]');
+  await click('[data-bg="cleric"]');
+  await click('[data-friend="novak"]');
+  await shot('2-bg'); await overflow('bg');
+  await click('[data-nav="1"]');
+  for (let i = 0; i < 12; i++) { const b = p.locator('[data-inc="tradecraft"]:not([disabled])'); if (!(await b.count())) break; await b.first().click(); await p.waitForTimeout(60); }
+  await shot('3-skills'); await overflow('skills');
+  await click('[data-nav="1"]');
+  await click('[data-trait="forgettable"]');
+  await click('[data-trait="drink"]');
+  await shot('4-char'); await overflow('char');
+  await click('[data-nav="1"]');
+  await click('[data-kit="skeleton-keys"]');
+  await shot('5-kit'); await overflow('kit');
+  await click('[data-nav="1"]');
+  await shot('6-file'); await overflow('file');
+  const left = await p.locator('.cr-go').isDisabled();
+  if (left) errors.push('Accept disabled with a legal hero');
+  await click('[data-go]');
+  await p.waitForTimeout(900);
+  const hero = await p.evaluate(() => window.__shadow.G?.S?.hero ?? null);
+  if (!hero) errors.push('no game after the creator');
+  else {
+    if (hero.first !== 'Hester' || hero.sex !== 'f' || hero.background !== 'cleric' || hero.friend !== 'novak') errors.push(`hero lost choices: ${JSON.stringify({ f: hero.first, s: hero.sex, b: hero.background, fr: hero.friend })}`);
+    if (!hero.traits.includes('forgettable') || !hero.traits.includes('drink') || !hero.kit.includes('skeleton-keys')) errors.push('traits or kit lost');
+    if ((hero.skills.tradecraft ?? 0) < 1) errors.push('skill points did not stick');
+  }
+  await shot('7-city');
+  console.log(`creator ${name}: ${errors.length ? errors.join(' | ') : 'no errors'}`);
+  fails.push(...errors);
+  await ctx.close();
+}
 // boots when storage throws; asks no other hosts
 {
   const ctx = await browser.newContext({ viewport: { width: 1024, height: 768 } });

@@ -1,6 +1,8 @@
 // Storylets with Jovan Marić (owner: People). Young, idealistic, frightened.
 // Arc: op-cable (the Ops scene hands over the cable in Sarajevo), then the Belgrade posting, where he has fled,
 // and op-student (get him out). Routines in Belgrade: the walls at dusk, the student café, his nerves.
+// His home is Sarajevo, so the engine lets you seek him out only there (jovan.meet, jovan.call); in Belgrade he comes to you,
+// as city cards.
 // Flags: jovan-sanctuary, jovan-timetable, jovan-burned, jovan-pavle, jovan-vouched, jovan-promise, jovan-taught,
 // jovan-careful, jovan-mother, jovan-cassock, jovan-valet, jovan-shorn, jovan-planted, jovan-sold.
 
@@ -31,7 +33,23 @@ export default [
         fail: [['st', 'jovan', 'met'], ['trust', 'jovan', -2], ['expose', 'jovan', 0.2]] },
     ] },
 
-  { id: 'jovan.bradshaw', at: 'person', speaker: 'jovan', if: [['st', 'jovan', 'met'], ['trust', 'jovan', '>=', 1]], w: 4, once: true,
+  { id: 'jovan.belgrade', at: 'city', speaker: 'jovan', if: [['st', 'jovan', 'unknown']], w: 2, once: true,
+    title: 'A student in a borrowed coat',
+    text: "A thin young man in a borrowed coat has followed you from the Kalemegdan for twenty minutes, very badly. When you stop, he stops; when you turn, he goes scarlet. 'Forgive me,' he says in careful French. 'Jovan Marić, from Sarajevo. They say you are from London. I have nobody else to ask.'",
+    choices: [
+      { label: 'Take him somewhere quiet', sub: 'An hour, and his whole story', cost: { min: 60 },
+        ok: [['st', 'jovan', 'met'], ['trust', 'jovan', 1]] },
+      { label: 'Answer him in Serbian', sub: 'Your Serbian will tell him more than your papers', if: [['skill', 'slavic', '>=', 1]],
+        ok: [['st', 'jovan', 'met'], ['trust', 'jovan', 2]] },
+      { label: 'Ask who told him about you', sub: 'If a student knows, who else does?',
+        roll: { p: 0.6, mods: [SLAVIC] },
+        ok: [['st', 'jovan', 'met'], ['intel', { subj: 'cover:active', claim: { note: 'Jovan heard of you from students who drink with Lieutenant Ilić.' }, src: 'person:jovan', rel: 0.6, truth: true }]],
+        fail: [['st', 'jovan', 'met'], ['trust', 'jovan', -1], ['watch', 0.1]] },
+      { label: 'Tell him he has the wrong person', sub: 'He will not believe you, and will remember',
+        ok: [['st', 'jovan', 'met'], ['trust', 'jovan', -2], ['nerve', 1]] },
+    ] },
+
+  { id: 'jovan.bradshaw', at: 'city', speaker: 'jovan', if: [['st', 'jovan', 'met'], ['trust', 'jovan', '>=', 1]], w: 4, once: true,
     title: 'The timetable of escape',
     text: "Jovan has a map of the railways torn from a schoolbook, and no timetable at all. He traces the lines with a bitten fingernail: Niš, Salonika, Trieste, the sea. 'If they come for me I will not know which train. I know the Code Napoléon by heart and not one departure.'",
     choices: [
@@ -43,7 +61,7 @@ export default [
         ok: [['trust', 'jovan', -1], ['flag', 'jovan-burned']] },
     ] },
 
-  { id: 'jovan.ask', at: 'person', speaker: 'jovan', if: [MET, ['trust', 'jovan', '>=', 2]], w: 5, once: true,
+  { id: 'jovan.ask', at: 'city', speaker: 'jovan', if: [MET, ['trust', 'jovan', '>=', 2]], w: 5, once: true,
     title: 'What a frightened student knows',
     text: "He has stopped standing when you come in. He talks quickly, as frightened people do, and much of it is useful: who has been taken, who was released too soon, which gendarme drinks. 'Ask me,' he says. 'I can still do something, even from a cupboard.'",
     choices: [
@@ -62,7 +80,7 @@ export default [
         fail: [['st', 'jovan', 'compromised'], ['expose', 'jovan', 0.4]] },
     ] },
 
-  { id: 'jovan.recruit', at: 'person', speaker: 'jovan', if: [['st', 'jovan', 'cultivated'], ['trust', 'jovan', '>=', 3]], w: 6, once: true,
+  { id: 'jovan.recruit', at: 'city', speaker: 'jovan', if: [['st', 'jovan', 'cultivated'], ['trust', 'jovan', '>=', 3]], w: 6, once: true,
     title: 'What he wants is a promise',
     text: "'I do not want money,' Jovan says, before you have offered any. 'I want Bosnia free, and I want to live to see it, and tonight I am not sure which I want more.' He looks at his hands. 'If I work for you, will you get me out when they come for me?'",
     choices: [
@@ -77,7 +95,7 @@ export default [
     ] },
 
   // ---------- Belgrade routines (repeatable) ----------
-  { id: 'jovan.walls', at: 'person', speaker: 'jovan', if: [MET, ['clock', '17.00', '22.00']], w: 3,
+  { id: 'jovan.walls', at: 'city', speaker: 'jovan', if: [MET, ['clock', '17.00', '22.00']], w: 3,
     title: 'Dusk on the Kalemegdan',
     text: "Jovan walks the old fortress walls at dusk, where the Sava meets the Danube and the Austrian shore is near enough to see the sentries' cigarettes. He talks about law, girls and the end of empires, in no particular order, and keeps glancing at the far bank as if it might come across.",
     choices: [
@@ -91,7 +109,7 @@ export default [
         ok: [['trust', 'jovan', -1], ['watch', -0.1]] },
     ] },
 
-  { id: 'jovan.cafe', at: 'person', speaker: 'jovan', if: [MET, ['chance', 0.6]], w: 2,
+  { id: 'jovan.cafe', at: 'city', speaker: 'jovan', if: [MET, ['chance', 0.6]], w: 2,
     title: 'The students’ café',
     text: "The café by the University is full of Bosnian students arguing about bombs and Bergson. Jovan is the quietest of them, which is not saying much. When you come in the talk stops, and then starts again in a different language.",
     choices: [
@@ -105,7 +123,7 @@ export default [
         fail: [['record', 'sighting', 0.5]] },
     ] },
 
-  { id: 'jovan.nerves', at: 'person', speaker: 'jovan', if: [MET, ['stay', '>=', 2], ['chance', 0.5]], w: 2,
+  { id: 'jovan.nerves', at: 'city', speaker: 'jovan', if: [MET, ['stay', '>=', 2], ['chance', 0.5]], w: 2,
     title: 'He has not slept',
     text: "Jovan has not slept. Every cart in the street is a police wagon and every knock is for him. He sits on his bed in his coat, with his shoes on, ready to run, and apologises for it twice.",
     choices: [
@@ -119,7 +137,7 @@ export default [
         fail: [['trust', 'jovan', -2]] },
     ] },
 
-  { id: 'jovan.mother', at: 'person', speaker: 'jovan', if: [MET, ['stay', '>=', 3], ['trust', 'jovan', '>=', 2]], w: 4, once: true,
+  { id: 'jovan.mother', at: 'city', speaker: 'jovan', if: [MET, ['stay', '>=', 3], ['trust', 'jovan', '>=', 2]], w: 4, once: true,
     title: 'Three lines to his mother',
     text: "'Three lines,' Jovan says. 'Only to tell her I am alive. She will not sleep until she knows.' A letter from Belgrade to a widow in Sarajevo will be opened by the Austrian post, read and copied, and the widow's house watched. He knows this. He asks anyway.",
     choices: [
@@ -163,7 +181,7 @@ export default [
     ] },
 
   // ---------- protect and betray ----------
-  { id: 'jovan.compromised', at: 'person', speaker: 'jovan', if: [['st', 'jovan', 'compromised']], w: 9,
+  { id: 'jovan.compromised', at: 'city', speaker: 'jovan', if: [['st', 'jovan', 'compromised']], w: 9,
     title: 'They have his name',
     text: "Jovan sits on the floor with his knees drawn up and his shoes on. 'A policeman asked for me by name, and by my father's name. Someone talked, or someone wrote it down.' He looks up at you, and you watch him wonder whether it was you.",
     choices: [
@@ -213,7 +231,7 @@ export default [
     ] },
 
   // ---------- op-student ----------
-  { id: 'jovan.student', at: 'person', speaker: 'jovan', if: [['op', 'op-student'], ['any', MET, ['st', 'jovan', 'compromised']]], w: 8, once: true,
+  { id: 'jovan.student', at: 'city', speaker: 'jovan', if: [['op', 'op-student'], ['any', MET, ['st', 'jovan', 'compromised']]], w: 8, once: true,
     title: 'Vienna sent a list',
     text: "Jovan has one small bag packed and very little courage left. 'The police came to the student house with a list. Vienna's list. My name was third.' He laughs, badly. 'Is it time, then?' He holds the bag in both hands like a schoolboy on the first day of term, and waits to be told who he is going to be.",
     choices: [

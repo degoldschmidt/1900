@@ -56,7 +56,7 @@ export default [
     "wants": [ "debt", "fame" ], "loyalty": "self", "courage": 0.8, "greed": 0.5,
     "likes": [ "punsch", "dutch-cigars", "caviar" ], "perks": [ "intel" ],
     "portrait": { "seed": 1171, "sex": "m", "hat": "none", "hair": "short", "beard": "moustache", "collar": "uniform", "age": "mid" },
-    "entry": "kessel.meet", "places": [ "train:COL-BER", "train:BER-MUN", "COL" ] },
+    "entry": "kessel.meet", "places": [ "train:COL-BER", "train:BER-MUN", "COL", "BER" ] },
   { "id": "platt", "name": "Lyman Platt", "city": null, "role": "American newspaperman", "nation": "US",
     "wants": [ "fame", "thrill" ], "loyalty": "self", "courage": 0.6, "greed": 0.4,
     "likes": [ "amber", "caviar", "opera-tickets" ], "perks": [ "intel" ],

@@ -29,8 +29,13 @@ export function creator(root, items, onDone, people = []) {
   const faceSrc = () => (faceKey === `hero-${JSON.stringify(h.portrait)}` && faceUrl ? faceUrl : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
   const bg = () => BACKGROUNDS.find((b) => b.id === h.background);
 
-  let shownStep = null;
+  let shownStep = null, rendering = false;
   function render() {
+    if (rendering) return; // removing a focused field fires blur and change mid-render
+    rendering = true;
+    try { draw(); } finally { rendering = false; }
+  }
+  function draw() {
     const pts = points(h);
     const scroll = shownStep === step ? wrap.scrollTop : 0;
     const B = bg();
@@ -101,11 +106,16 @@ export function creator(root, items, onDone, people = []) {
     const q = (s) => wrap.querySelectorAll(s);
     q('[data-step]').forEach((b) => b.addEventListener('click', () => { step = b.dataset.step; render(); }));
     q('[data-nav]').forEach((b) => b.addEventListener('click', () => { const i = STEPS.findIndex(([k]) => k === step) + Number(b.dataset.nav); step = STEPS[Math.max(0, Math.min(STEPS.length - 1, i))][0]; render(); }));
-    q('[data-f]').forEach((i) => i.addEventListener('change', () => { h[i.dataset.f] = i.value.trim().slice(0, 22); render(); }));
+    // typing updates the file in place: a full redraw would steal the click that ends the typing
+    q('[data-f]').forEach((i) => i.addEventListener(i.tagName === 'SELECT' ? 'change' : 'input', () => {
+      h[i.dataset.f] = i.value.trim().slice(0, 22);
+      const n = wrap.querySelector('.cr-name'); if (n) n.textContent = fullName(h) || 'Unnamed';
+    }));
     q('[data-dice]').forEach((b) => b.addEventListener('click', () => { if (b.dataset.dice === 'name') { h.first = pick(FIRST[h.sex]); h.last = pick(LAST); } else h.portrait.seed = Math.floor(Math.random() * 9000) + 100; render(); }));
     q('[data-sex]').forEach((b) => b.addEventListener('click', () => {
       if (h.sex === b.dataset.sex) return;
-      h.sex = b.dataset.sex; h.portrait.sex = h.sex; h.first = pick(FIRST[h.sex]);
+      if (!h.first || FIRST[h.sex].includes(h.first)) h.first = pick(FIRST[b.dataset.sex]); // a name the player typed stays
+      h.sex = b.dataset.sex; h.portrait.sex = h.sex;
       if (h.sex === 'f') { h.portrait.beard = 'none'; if (['kepi', 'fez', 'top', 'cap'].includes(h.portrait.hat)) h.portrait.hat = 'wide'; if (h.portrait.hair === 'bald') h.portrait.hair = 'bun'; if (h.portrait.collar === 'stiff' || h.portrait.collar === 'cassock') h.portrait.collar = 'lace'; }
       else { if (['veil', 'wide'].includes(h.portrait.hat)) h.portrait.hat = 'bowler'; if (h.portrait.collar === 'lace') h.portrait.collar = 'stiff'; if (h.portrait.hair === 'bun' || h.portrait.hair === 'long') h.portrait.hair = 'short'; }
       render();

@@ -46,7 +46,7 @@ export default [
         ok: [['item', '-dutch-cigars'], ['trust', 'ashby', 2], ['standing', 2]] },
     ] },
 
-  { id: 'ashby.well-done', at: 'interlude', speaker: 'ashby', if: [WON, ['standing', '>=', 50]], once: true,
+  { id: 'ashby.well-done', at: 'interlude', if: [WON, ['standing', '>=', 50]], once: true,
     title: 'A telegram, unusually long',
     text: "A telegram, unusually long for Ashby: SATISFACTORY STOP FOREIGN OFFICE PLEASED WHICH IS RARE STOP DO NOT LET IT GO TO YOUR HEAD STOP IT IS A SMALL HEAD AND THERE IS A GREAT DEAL STILL TO DO STOP ASHBY",
     choices: [
@@ -59,7 +59,7 @@ export default [
         ok: [['standing', 1], ['trust', 'ashby', 1]] },
     ] },
 
-  { id: 'ashby.carpet', at: 'interlude', speaker: 'ashby', if: [FAILED], once: true,
+  { id: 'ashby.carpet', at: 'interlude', if: [FAILED], once: true,
     title: 'On the carpet, by wire',
     text: "A telegram: YOU WERE SENT TO FETCH A THING AND HAVE FETCHED EXCUSES STOP FOREIGN OFFICE ASKS WHY WE PAY YOU STOP SO DO I STOP EXPLAIN BRIEFLY STOP ASHBY. The clerk who handed it over has read it, and looks at you with a kind of sympathy.",
     choices: [
@@ -73,7 +73,7 @@ export default [
         ok: [['standing', 5], ['trust', 'ashby', 1]] },
     ] },
 
-  { id: 'ashby.bag', at: 'interlude', speaker: 'ashby', if: [['standing', '>=', 60], ['not', ['item', 'diplomatic-bag']], ['not', ['flag', 'ashby-bag']]], once: true,
+  { id: 'ashby.bag', at: 'interlude', if: [['standing', '>=', 60], ['not', ['item', 'diplomatic-bag']], ['not', ['flag', 'ashby-bag']]], once: true,
     title: "A King's Messenger calls",
     text: "A King's Messenger in a bowler hat calls with a canvas bag sealed in red, and a note: 'The bag. One errand. Customs may not open it; you may not lose it. Return it when asked. If it is lost I shall see you hanged at Portsmouth, and I shall not hurry the knot. A.'",
     choices: [
@@ -93,7 +93,7 @@ export default [
         ok: [['standing', -6], ['trust', 'ashby', -1]] },
     ] },
 
-  { id: 'ashby.sold', at: 'interlude', speaker: 'ashby', if: [SOLD], once: true,
+  { id: 'ashby.sold', at: 'interlude', if: [SOLD], once: true,
     title: 'Ashby hears what you sold',
     text: "A letter from Ashby, which is worse than a telegram, because he had time to think. 'I hear one of our friends is in a cell and you are in funds. I do not run a charity. Neither do I run a market. Agents who sell their friends are sold in their turn. Explain. A.'",
     choices: [
@@ -108,7 +108,7 @@ export default [
         ok: [['standing', -3]] },
     ] },
 
-  { id: 'ashby.network', at: 'interlude', speaker: 'ashby', if: [RECRUITED, ['standing', '>=', 40]], once: true,
+  { id: 'ashby.network', at: 'interlude', if: [RECRUITED, ['standing', '>=', 40]], once: true,
     title: 'Keep them warm',
     text: "A telegram: UNDERSTAND YOU HAVE A NEW FRIEND STOP GOOD STOP KEEP THEM WARM BUT NOT TOO WARM STOP FRIENDS WHO ARE PAID TOO MUCH SELL TO THE HIGHER BIDDER STOP THE OTHER SIDE BIDS HIGHER STOP ASHBY",
     choices: [
@@ -118,7 +118,7 @@ export default [
         ok: [['standing', 1]] },
     ] },
 
-  { id: 'ashby.promise', at: 'interlude', speaker: 'ashby', if: [['op', 'op-student'], ['flag', 'jovan-promise']], once: true,
+  { id: 'ashby.promise', at: 'interlude', if: [['op', 'op-student'], ['flag', 'jovan-promise']], once: true,
     title: 'You promised the boy',
     text: "A telegram: UNDERSTAND YOU PROMISED THE MARIC BOY HIS PASSAGE STOP I DID NOT STOP THE BUREAU DOES NOT MAKE PROMISES STOP KEEP IT ANYWAY STOP TWENTY POUNDS AT THE LEGATION STOP DO NOT THANK ME STOP ASHBY",
     choices: [
@@ -128,7 +128,7 @@ export default [
         ok: [['standing', 2], ['trust', 'ashby', 1]] },
     ] },
 
-  { id: 'ashby.grete', at: 'interlude', speaker: 'ashby', if: [['op', 'op-typist'], ['flag', 'sauer-grete']], once: true,
+  { id: 'ashby.grete', at: 'interlude', if: [['op', 'op-typist'], ['flag', 'sauer-grete']], once: true,
     title: 'One typist, not four',
     text: "A telegram: BUREAU PAYS FOR ONE TYPIST STOP NOT A TYPIST A SISTER AND TWO CHILDREN STOP FRONTIERS CLOSING STOP EVERY EXTRA PASSENGER IS A QUESTION AT A BARRIER STOP YOUR DECISION STOP YOUR RISK STOP ASHBY",
     choices: [

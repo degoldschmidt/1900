@@ -145,7 +145,7 @@ export default [
         ok: [['flag', 'ilic-budapest'],
           ['intel', { subj: 'person:ilic', claim: { note: "Ilić says he went to Budapest to see Pavle's lawyer, and lost." }, src: 'person:ilic', rel: 0.5, truth: true }]] },
       { label: 'Keep him off the subject of you', sub: 'Before he toasts his English friend aloud',
-        roll: { p: 0.5 },
+        roll: { p: 0.5, mods: [[['watched'], -0.2], [['legend', '>=', 0.5], 0.1]] },
         ok: [['watch', -0.05], ['nerve', 1]],
         fail: [['record', 'meeting', 0.5], ['watch', 0.1]] },
     ] },

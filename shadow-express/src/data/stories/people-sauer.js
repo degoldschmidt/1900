@@ -90,7 +90,7 @@ export default [
         fail: [['trust', 'sauer', -1], ['money', -1]] },
       { label: 'Ask her one small question', sub: 'In German, quietly, between mouthfuls',
         if: [['trust', 'sauer', '>=', 1]],
-        roll: { p: 0.5, mods: [GERMAN, [['trust', 'sauer', '>=', 3], 0.2]] },
+        roll: { p: 0.5, mods: [GERMAN, [['trust', 'sauer', '>=', 3], 0.2], [['legend', '>=', 0.5], 0.1], [['watched'], -0.15]] },
         ok: [['intel', { subj: 'city:BER', claim: { note: 'Sauer: the Staff has stopped all leave, and the typists sleep at their desks.' }, src: 'person:sauer', rel: 0.8, truth: true }]],
         fail: [['trust', 'sauer', -1], ['record', 'meeting', 0.3]] },
       { label: 'Sit at another table and watch', sub: 'Who else takes lunch at fifty minutes?',
