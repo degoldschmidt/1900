@@ -7,6 +7,9 @@
 const SB = { y: 300, l: 252, r: 348 }, ST = { y: 168, l: 283, r: 317 };
 // the funicular's track, beside them
 const FB = { x: 226, y: 300 }, FT = { x: 266, y: 168 };
+/** How far the two tracks have parted at t (0 at the foot, 1 at the head): together at the ends, apart on the loop. */
+const loopAt = (t) => (t < .2 || t > .8 ? 0 : t >= .35 && t <= .65 ? 1 : t < .35 ? (t - .2) / .15 : (.8 - t) / .15);
+const LOOP = 6.4;
 
 export default {
   id: 'ODE',
@@ -66,8 +69,8 @@ export default {
     s += P.far(.22, () => acacias(P));
     s += P.far(.2, () => stairs(P) + funicular(P));
     // the funicular's two cars, passing on the loop halfway
-    const along = (t, dx) => [f(FB.x + (FT.x - FB.x) * t + dx * (1 - Math.abs(t - .5) * 2)), f(FB.y + (FT.y - FB.y) * t), f(1 - t * .48)];
-    const pathOf = (rev) => { const pts = []; for (let k = 0; k <= 10; k++) { const t = k / 10; pts.push([...along(rev ? 1 - t : t, rev ? -3.2 : 3.2), .1 + t * .45]); } return [[...along(rev ? 1 : 0, 0), 0], ...pts, [...along(rev ? 0 : 1, 0), 1]]; };
+    const along = (t, dx) => [f(FB.x + (FT.x - FB.x) * t + dx * loopAt(t) * (1 - t * .48)), f(FB.y + (FT.y - FB.y) * t), f(1 - t * .48)];
+    const pathOf = (rev) => { const pts = []; for (let k = 0; k <= 20; k++) { const t = k / 20; pts.push([...along(rev ? 1 - t : t, rev ? -LOOP : LOOP), .1 + t * .45]); } return [[...along(rev ? 1 : 0, 0), 0], ...pts, [...along(rev ? 0 : 1, 0), 1]]; };
     s += P.mover(funCar(P, { s: .95, n: 1 }), { path: pathOf(false), dur: 60, offset: 0 });
     s += P.mover(funCar(P, { s: .95, n: 2 }), { path: pathOf(true), dur: 60, offset: 0 });
     // the harbour street: warehouses, the stairs' foot, the tram and the grain carts
@@ -216,15 +219,15 @@ function funicular(P) {
   let s = '';
   // the track on its stone embankment, sleepers across, two rails parting into the passing loop halfway
   const pt = (t, dx) => [FB.x + (FT.x - FB.x) * t + dx, FB.y + (FT.y - FB.y) * t];
-  const half = (t) => (1 - t * .48) * 7;
-  s += P.fill(P.poly([[...pt(1, -half(1))], [...pt(1, half(1))], [...pt(0, half(0))], [...pt(0, -half(0))]]), 'granite', { w: .45 }) + P.shade(P.poly([[...pt(1, half(1) * .3)], [...pt(1, half(1))], [...pt(0, half(0))], [...pt(0, half(0) * .3)]]), 'granite', .15);
+  const half = (t) => (1 - t * .48) * (5 + 6 * loopAt(t));
+  const edge = (side, k) => Array.from({ length: 21 }, (_, i) => pt(i / 20, side * half(i / 20) * k));
+  s += P.fill(P.poly([...edge(-1, 1), ...edge(1, 1).reverse()]), 'granite', { w: .45 }) + P.shade(P.poly([...edge(1, .3), ...edge(1, 1).reverse()]), 'granite', .15);
   let sl = '';
   for (let t = .02; t < 1; t += .028) { const w = half(t) * .8, [x, y] = pt(t, 0); sl += `M${f(x - w)} ${f(y)}h${f(w * 2)}`; }
   s += P.line(sl, '#6a5a4a', .7, { op: .8 });
-  const loop = (t) => (t > .3 && t < .7 ? 1 : Math.max(0, 1 - Math.abs(t - .5) * 5));
   for (const side of [-1, 1]) for (const g of [-1, 1]) {
     let d = '';
-    for (let k = 0; k <= 24; k++) { const t = k / 24, w = (1 - t * .48), [x, y] = pt(t, side * 3.2 * loop(t) * w + g * 1.5 * w); d += `${k ? 'L' : 'M'}${f(x)} ${f(y)}`; }
+    for (let k = 0; k <= 30; k++) { const t = k / 30, w = (1 - t * .48), [x, y] = pt(t, side * LOOP * loopAt(t) * w + g * 1.5 * w); d += `${k ? 'L' : 'M'}${f(x)} ${f(y)}`; }
     s += P.line(d, '#3a3a38', .6);
   }
   s += P.fill(P.rect(FT.x - 12, FT.y - 14, 24, 14), 'trim') + P.fill(P.gable(FT.x - 13, FT.y - 13, 26, 7), 'roof2', { w: .45 }) + P.windows(FT.x - 10, FT.y - 11, 20, 8, 3, 1, { arched: true, ww: .5 });
