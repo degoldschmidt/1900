@@ -101,6 +101,7 @@ export const POLICIES = {
       }
       if (v.card.type === 'inspector') { const by = (k) => open.find((x) => x.c.std === k); return ((legendOf(G) >= .45 ? by('answer') : by('papers')) ?? open[0]).i; }
       if (v.card.type === 'missed') return (open.find((x) => x.c.std === 'reroute') ?? open[0]).i;
+      if (v.card.type === 'telegram' && open.some((x) => x.c.std === 'decline')) return open.find((x) => x.c.std === 'decline').i; // a careful agent keeps to the posting
       if (!open.length) return -1;
       return open.reduce((a, b) => (score(b.c) > score(a.c) ? b : a)).i;
     },
