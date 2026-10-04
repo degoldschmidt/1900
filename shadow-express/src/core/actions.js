@@ -131,15 +131,24 @@ function personStory(G, id) {
   if (!list.length) return null;
   return list.reduce((a, b) => ((b.w ?? 1) > (a.w ?? 1) ? b : a));
 }
+/**
+ * Go and find someone. The meeting is not settled until the player answers the card: "Never mind" (or the close
+ * button) leaves no trace and gives back the time; any other answer marks the scene seen and leaves the meeting's trace.
+ */
 export function seek(G, id) {
   const { S } = G;
   const s = personStory(G, id);
   if (!s) return null;
-  if (s.once) S.seen[s.id] = true;
+  const was = S.busyUntil;
   S.busyUntil = S.t + 45;
-  meetingTrace(G, id);
-  S.queue.push({ type: 'story', id: s.id, person: id, n: ++S.cardN });
+  S.queue.push({ type: 'story', id: s.id, person: id, n: ++S.cardN, sought: { was } });
   return s;
+}
+/** The meeting goes ahead: what seek used to settle at once. */
+function keepAppointment(G, card) {
+  const s = G.I.story.get(card.id);
+  if (s?.once) G.S.seen[s.id] = true;
+  meetingTrace(G, card.person);
 }
 /** Meeting a contact leaves a trace only if someone is watching: a tail, a watched contact, a traitor. */
 function meetingTrace(G, id) {
@@ -452,13 +461,40 @@ export function wireFunds(G) {
 }
 
 // ---------- cards ----------
-/** The card on top, with its choices (data choices, plus the standard ones for controls and encounters). */
+/** The card on top, with its choices (data choices, plus the standard ones for controls and encounters) and what its close button does. */
 export function cardView(G) {
+  const v = viewOf(G);
+  if (v) v.close = closeOf(v);
+  return v;
+}
+const NEVER_MIND = { std: 'nevermind', label: 'Never mind', sub: 'leave them be; no time lost', ok: [], open: true, afford: true };
+/**
+ * What the close button does with a card. 'continue': the card only informs. 'decline': the player could walk away
+ * from it, so the button closes it with no effect and no time lost. 'aside': it needs an answer, and the button only
+ * sets it aside. Forced: frontier controls, hunters, the police, a missed connection, an order's own scenes, a
+ * consequence coming due, and any scene written with no way out (no choice free of a roll, any cost or a sequel).
+ */
+function closeOf(v) {
+  const { card, story, choices } = v;
+  if (card.type === 'end') return 'aside';
+  if (choices.length === 1 && choices[0].std === 'continue') return 'continue';
+  if (card.sought) return 'decline';
+  if (card.type === 'late') return 'decline'; // its "sit back and hope" changes nothing
+  if (card.type !== 'story' || card.op || card.hunter || card.later) return 'aside';
+  if (!story || story.choices.some((c) => [...(c.ok ?? []), ...(c.fail ?? [])].some((e) => e[0] === 'op'))) return 'aside'; // an order's scene in all but name
+  const free = choices.some((c) => !c.std && c.afford !== false && !c.roll && !c.next && !c.cost); // a way out: no gamble, no price, not even time
+  return free ? 'decline' : 'aside';
+}
+function viewOf(G) {
   const { S, I } = G;
   let card = S.queue[0];
   while (card && card.type === 'story' && !I.story.get(card.id)) { S.queue.shift(); card = S.queue[0]; } // a storylet that no longer exists
   if (!card) return null;
-  if (card.type === 'story') { const s = I.story.get(card.id); const ch = storyChoices(G, s, card); return { card, story: s, choices: ch.length ? ch : [{ label: 'Continue', ok: [], std: 'continue', open: true, afford: true }] }; }
+  if (card.type === 'story') {
+    const s = I.story.get(card.id), ch = storyChoices(G, s, card);
+    const choices = ch.length ? ch : [{ label: 'Continue', ok: [], std: 'continue', open: true, afford: true }];
+    return { card, story: s, choices: card.sought ? [...choices, NEVER_MIND] : choices };
+  }
   if (card.type === 'control') { const s = card.story ? I.story.get(card.story) : null; return { card, story: s, choices: [...controlChoices(G, card), ...(s ? storyChoices(G, s, card).slice(0, 2) : [])] }; }
   if (card.type === 'encounter') { const s = card.story ? I.story.get(card.story) : null; return { card, story: s, choices: [...encounterChoices(G, card), ...(s ? storyChoices(G, s, card).slice(0, 2) : [])] }; }
   if (card.type === 'missed') return { card, choices: missedChoices(G, card) };
@@ -478,20 +514,38 @@ export function choose(G, i) {
   if (!view) return null;
   const c = view.choices[i];
   if (!c || !c.open || c.afford === false) return null;
+  if (c.std === 'nevermind') return decline(G) ? { success: true, declined: true } : null;
   const card = S.queue.shift();
   if (card.type === 'end') { S.queue.unshift(card); return null; }
+  if (card.sought) keepAppointment(G, card);
   if (card.person && card.type === 'story') { const ps = S.people[card.person]; (ps.covers ??= []).includes(S.cover) || ps.covers.push(S.cover); }
   if (c.std) return std(G, card, c);
   const res = resolveChoice(G, c, card);
   if (res.next) {
     const n = G.I.story.get(res.next);
-    if (n && all(n.if, context(G, card))) S.queue.unshift({ type: 'story', id: n.id, op: card.op, person: card.person, hunter: card.hunter, n: ++S.cardN });
+    if (n && all(n.if, context(G, card))) S.queue.unshift({ type: 'story', id: n.id, op: card.op, person: card.person, hunter: card.hunter, ...(card.later ? { later: true } : {}), n: ++S.cardN });
   }
   if (card.type === 'control' && !S.queue.some((q) => q.type === 'control')) passControl(G, card, 'story');
   if (S.lyingLow && card.type === 'story' && !S.queue.length) { const u = S.lyingLow; S.lyingLow = null; G.S.enemy && cool(G); S.busyUntil = u; }
   return res;
 }
 function cool(G) { for (const d of Object.values(G.S.enemy.dossiers)) if (!d.name) d.susp *= .7; G.S.enemy.desc *= .85; }
+
+/**
+ * Close the top card without answering it, where the player could walk away (cardView's close is 'decline'): no
+ * effect, and a meeting not kept gives back its time. Returns false, changing nothing, for any other card.
+ */
+export function decline(G) {
+  const { S } = G;
+  const v = cardView(G);
+  if (!v || v.close !== 'decline') return false;
+  if (v.card.type === 'late') return !!choose(G, v.choices.findIndex((c) => c.std === 'continue'));
+  const card = S.queue.shift();
+  if (card.sought) S.busyUntil = card.sought.was;
+  S.stats.declined = (S.stats.declined ?? 0) + 1;
+  if (S.lyingLow && !S.queue.length) { const u = S.lyingLow; S.lyingLow = null; G.S.enemy && cool(G); S.busyUntil = u; }
+  return true;
+}
 
 // ---------- frontier control choices ----------
 function controlChoices(G, card) {

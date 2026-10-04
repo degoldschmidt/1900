@@ -191,6 +191,11 @@ STORY = { id:'kowal.meet', at:'city'|'train'|'person'|'op'|'interlude'|'control'
 
 **Rolls**: chance = p + the deltas of the mods whose condition holds, clamped to 0.05–0.95.
 
+**Closing a card** (the engine decides, in `cardView(G).close`; writers only need to know the rule). The X on a card:
+- **Closes it, as Continue would**, when the card only informs (one `continue`).
+- **Walks away, with no effect and no time lost**, when the player could plausibly leave: a scene sought with "Seek out" (it also offers "Never mind", and its time and trace are spent only once the player answers), a late train ("sit back and hope"), and any other scene with at least one free choice (no roll, no `cost` of any kind, no `next`).
+- **Sets it aside until answered** for everything that cannot be walked away from: frontier controls, hunters, the police, a missed connection, an order's own scenes and twists, a hunter's scenes, consequences coming due (`later`), any storylet with a choice carrying an `['op', …]` effect, and any scene written with no free choice. So: to force a scene, give it no free choice; a scene with a free choice can always be walked away from without that choice's effects.
+
 ## 6. Operations
 
 ```js

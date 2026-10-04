@@ -276,7 +276,7 @@ export function play(G, name, maxSteps = 40000) {
   P.start?.(G);
   let guard = 0;
   while (!S.ended && guard++ < maxSteps) {
-    const v = cardView(G);
+    const v0 = cardView(G), v = v0 && { ...v0, choices: v0.choices.filter((c) => c.std !== 'nevermind') }; // "Never mind" is last: indices hold
     if (v) { const i = P.card(G, v); if (i < 0 || !choose(G, i)) S.queue.shift(); continue; }
     if (S.t < S.busyUntil) { advance(G, S.busyUntil); continue; }
     if (S.booked) { advance(G, S.booked.dep + 1); continue; }

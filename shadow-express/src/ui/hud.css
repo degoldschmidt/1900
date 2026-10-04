@@ -148,3 +148,9 @@
 .ledger[data-open="false"] .ledger-x { display: none; }
 .ledger .tabs { padding-right: 50px; }
 @media (max-width: 899px) { .ledger .ledger-x { top: 8px; right: 8px; } }
+
+/* the close button's two faces: a cross closes; a chevron (amber ring) sets aside what needs an answer */
+.card-x.aside { background: #2b1d12; box-shadow: 0 0 0 2px rgba(255, 196, 81, .55), 0 3px 10px rgba(0, 0, 0, .55); }
+/* a way out that costs nothing: quieter than the choices that matter */
+.choice.quiet { background: transparent; border-style: dashed; border-color: var(--ink-2, #5a4632); }
+.choice.quiet b { font-size: 16px; color: var(--ink-2, #5a4632); }

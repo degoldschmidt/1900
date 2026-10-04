@@ -406,7 +406,7 @@ function dueLaters(G) {
     if (!kindOk || S.queue.length) continue;
     if (!all(st.if, context(G))) continue;
     S.later.splice(i--, 1);
-    S.queue.push({ type: 'story', id: st.id, ...(l.op ? { op: l.op } : {}), n: ++S.cardN });
+    S.queue.push({ type: 'story', id: st.id, ...(l.op ? { op: l.op } : {}), later: true, n: ++S.cardN }); // a consequence: it cannot be walked away from
     return;
   }
 }

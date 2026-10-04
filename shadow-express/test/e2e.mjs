@@ -60,6 +60,26 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
   // answer cards until none, then open the board and book the first train
   for (let i = 0; i < 8; i++) { if (!(await answer(p))) break; await p.waitForTimeout(200); }
   await p.screenshot({ path: path.join(shots, `${name}-2-city.png`) });
+  // seeking someone and thinking better of it: the X closes the card, no time passes, the meeting is still to be had;
+  // then the same with the Never mind button
+  for (const how of ['x', 'button']) {
+    const s0 = await p.evaluate(() => { const G = window.__shadow.G, S = G.S, id = S.city ? G.D.people.find((x) => x.city === S.city && S.people[x.id].st === 'unknown')?.id : null; if (!id) return null; const t = S.t, recs = S.records.length; window.__shadow.ledger.show('city'); return { id, t, recs }; });
+    if (!s0) { errors.push('nobody to seek in the opening city'); break; }
+    await p.waitForTimeout(250);
+    const seekBtn = p.locator(`.ledger [data-seek="${s0.id}"]`).first();
+    if (!(await seekBtn.isVisible().catch(() => false))) { errors.push(`no Seek out for ${s0.id}`); break; }
+    await seekBtn.click({ timeout: 2000 });
+    await p.waitForTimeout(300);
+    if (!(await p.locator('.veil:not([hidden]) .choice.quiet', { hasText: 'Never mind' }).isVisible().catch(() => false))) errors.push('the seek card has no Never mind');
+    if (how === 'x') { await p.screenshot({ path: path.join(shots, `${name}-7a-seek.png`) }); await p.locator('.veil:not([hidden]) .card-x').click({ timeout: 2000 }).catch(() => errors.push('the seek card has no close button')); }
+    else await p.locator('.veil:not([hidden]) .choice.quiet').click({ timeout: 2000 }).catch(() => errors.push('Never mind cannot be pressed'));
+    await p.waitForTimeout(400);
+    const after = await p.evaluate((id) => { const S = window.__shadow.G.S; return { open: !!document.querySelector('.veil:not([hidden])'), q: S.queue.length, t: S.t, busy: S.busyUntil > S.t, st: S.people[id].st, recs: S.records.length, seek: !!document.querySelector(`.ledger [data-seek="${id}"]`) }; }, s0.id);
+    if (after.open || after.q) errors.push(`${how}: the seek card did not close`);
+    if (after.t !== s0.t || after.busy) errors.push(`${how}: time passed for a meeting not kept`);
+    if (after.st !== 'unknown' || after.recs !== s0.recs) errors.push(`${how}: a meeting not kept left a mark`);
+    if (!after.seek) errors.push(`${how}: Seek out is gone after Never mind`);
+  }
   await p.evaluate(() => { window.__shadow.ledger.show('board'); });
   await p.waitForTimeout(400);
   await p.screenshot({ path: path.join(shots, `${name}-3-board.png`) });
@@ -77,10 +97,11 @@ for (const [name, vp, touch] of [['desktop', { width: 1440, height: 900 }, false
   for (const tab of ['people', 'covers', 'dossier', 'orders', 'case']) { await p.evaluate((t) => window.__shadow.ledger.show(t), tab); await p.waitForTimeout(250); await p.screenshot({ path: path.join(shots, `${name}-7-${tab}.png`) }); }
   const overflow = await p.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
   if (overflow) errors.push('horizontal overflow');
-  // a card that asks is set aside by its X: the clock waits, the ledger's buttons lead back to it, the HUD brings it back
   for (let i = 0; i < 6; i++) if (!(await answer(p))) break;
-  await p.evaluate(() => { const G = window.__shadow.G, S = G.S; S.queue.unshift({ type: 'late', delay: 40, at: S.city ?? 'PAR', svc: G.D.services[0].id, dep: S.t + 60, n: ++S.cardN }); window.__shadow.refresh(); });
+  // a card that must be answered is set aside by its X: the clock waits, the ledger's buttons lead back to it, the HUD brings it back
+  await p.evaluate(() => { const G = window.__shadow.G, S = G.S; S.queue.unshift({ type: 'inspector', n: ++S.cardN }); window.__shadow.refresh(); });
   await p.waitForTimeout(300);
+  if (!(await p.locator('.veil:not([hidden]) .card-x.aside').isVisible().catch(() => false))) errors.push('a forced card does not show the set-aside button');
   await p.locator('.veil:not([hidden]) .card-x').click({ timeout: 2000 }).catch(() => errors.push('a question card has no close button'));
   await p.waitForTimeout(250);
   if (!(await p.locator('.hwait').isVisible().catch(() => false))) errors.push('a card set aside leaves no way back');

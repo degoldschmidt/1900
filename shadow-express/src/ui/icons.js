@@ -68,6 +68,12 @@ export const ICONS = {
       .forEach(([x, y], i) => { const X = 12 + (x - y) * c, Y = 12 + (x + y) * c; if (i) p.lineTo(X, Y); else p.moveTo(X, Y); });
     p.closePath();
   },
+  /** A chevron, pointing down: set aside for now. */
+  aside(p) {
+    [[4.4, 8.4], [6.6, 6.2], [12, 11.6], [17.4, 6.2], [19.6, 8.4], [12, 16]].forEach(([x, y], i) => { if (i) p.lineTo(x, y); else p.moveTo(x, y); });
+    p.closePath();
+    rect(p, 6, 18.2, 18, 20.2);
+  },
   /** A crosshair: back to where you are. */
   locate(p) {
     circle(p, 12, 12, 8); circle(p, 12, 12, 6.2);

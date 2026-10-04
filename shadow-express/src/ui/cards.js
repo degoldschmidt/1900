@@ -1,7 +1,7 @@
 // Cards over the globe: storylets, frontier controls, encounters, telegrams, newspapers, arrival postcards, debriefs.
 // Each choice shows its stakes; after a roll the card says how it went and what changed.
 
-import { cardView, choose } from '../core/actions.js';
+import { cardView, choose, decline } from '../core/actions.js';
 import { context, text, coverName, aff } from '../core/game.js';
 import { chanceOf } from '../core/storylet.js';
 import { postmortem } from '../core/postmortem.js';
@@ -67,19 +67,30 @@ export function makeCards(root, hooks) {
   x.addEventListener('click', () => dismiss());
   veil.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.stopPropagation(); dismiss(); } });
 
-  /** A card that only tells you something, with nothing to decide. */
-  const informs = (v) => v.card.type !== 'end' && v.choices.length === 1 && v.choices[0].std === 'continue';
   /**
-   * The close button. A card that only informs is done with. One that asks a question is set aside: the map and the
-   * ledger can be looked at, the clock stays stopped, and the HUD offers the way back to it.
+   * The close button, as the engine rules it (cardView's close). 'continue': a card that only informs is done with.
+   * 'decline': one the player could walk away from closes with no effect (a meeting sought and thought better of gives
+   * back its time). 'aside': one that needs an answer is set aside; the map and the ledger can be looked at, the clock
+   * stays stopped, and the HUD offers the way back to it.
    */
   function dismiss() {
     if (!cur || veil.hidden) return;
     if (resultShown) { card.querySelector('#cardCont')?.click(); return; }
-    if (informs(cur.v)) { card.querySelector('.choice[data-i="0"]')?.click(); return; }
+    const kind = cur.v.close;
+    if (kind === 'continue') { card.querySelector('.choice[data-i="0"]')?.click(); return; }
+    if (kind === 'decline') { if (decline(cur.G)) { shownN = null; hooks.after?.(); } return; }
     aside = cur.v.card.n;
     veil.hidden = true;
     hooks.aside?.();
+  }
+  /** The close button's look and words: a cross closes; a chevron sets aside what needs an answer. */
+  function closeButton(v) {
+    const kind = v.close;
+    const label = kind === 'aside' ? 'This needs your answer: set it aside for now' : kind === 'decline' ? (v.card.sought ? 'Never mind' : 'Walk away') : 'Close';
+    x.innerHTML = iconSVG(kind === 'aside' ? 'aside' : 'close');
+    x.classList.toggle('aside', kind === 'aside');
+    x.setAttribute('aria-label', label);
+    x.title = kind === 'aside' ? 'Set aside: this needs your answer' : label;
   }
   function reopen() { aside = null; shownN = null; hooks.after?.(); }
   function reset() { aside = null; shownN = null; cur = null; resultShown = false; veil.hidden = true; }
@@ -92,8 +103,7 @@ export function makeCards(root, hooks) {
     if (shownN === v.card.n && !veil.hidden) return true;
     shownN = v.card.n; resultShown = false;
     cur = { G, v };
-    const label = informs(v) ? 'Close' : 'Set aside: the card waits for your answer';
-    x.setAttribute('aria-label', label); x.title = informs(v) ? 'Close' : 'Set aside for now';
+    closeButton(v);
     veil.hidden = false;
     veil.classList.toggle('withledger', !!hooks.ledgerOpen?.());
     card.className = 'card paper';
@@ -165,6 +175,7 @@ export function makeCards(root, hooks) {
       const cost = [c.cost?.money ? `£${c.cost.money}` : null, c.cost?.nerve ? `nerve ${c.cost.nerve}` : null, c.cost?.min >= 60 ? `${Math.round(c.cost.min / 60)}h` : c.cost?.min ? `${c.cost.min} min` : null].filter(Boolean).join(' · ');
       const sub = [c.sub ? text(G, c.sub, v.card) : null, cost && !(c.sub ?? '').includes('£') ? cost : null, fitNote].filter(Boolean).join(' — ');
       if (v.card.type === 'end') return `<button class="choice" data-i="${i}"><b>Begin a new campaign</b><span>another agent, another summer</span></button>`;
+      if (c.std === 'nevermind') return `<button class="choice quiet" data-i="${i}"><b>${esc(c.label)}</b><span>${esc(c.sub)}</span></button>`;
       return `<button class="choice" data-i="${i}" ${c.open === false || c.afford === false ? 'disabled' : ''}>${p !== null && p !== undefined ? `<span class="odds">${oddsWord(p)}</span>` : ''}<b>${esc(text(G, c.label, v.card))}</b>${sub ? `<span>${esc(sub)}</span>` : ''}</button>`;
     }).join('')}</div>`;
   }
